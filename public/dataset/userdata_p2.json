@@ -1,0 +1,62 @@
+{
+    "pagination": {
+        "page": 1,
+        "rowCount": 4,
+        "perPage": 5,
+        "totalCount": 9,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"   
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 6,
+            "userName": "test1",
+            "fullName": "张三丰",
+            "password": "123456",
+            "ip": "192.168.0.1",
+            "bargainCode": "",
+            "lastLogin": "",
+            "memo": "测试用户",
+            "isActive": true,
+            "role_id": 1
+        },
+        {
+            "id": 7,
+            "userName": "test2",
+            "fullName": "赵二狗",
+            "password": "123456",
+            "ip": "192.168.0.2",
+            "bargainCode": "",
+            "lastLogin": "",
+            "memo": "测试用户2",
+            "isActive": false,
+            "role_id": 1
+        },
+        {
+            "id": 8,
+            "userName": "test3",
+            "fullName": "胡广生",
+            "password": "123456",
+            "ip": "192.168.0.2",
+            "bargainCode": "",
+            "lastLogin": "",
+            "memo": "测试用户2",
+            "isActive": false,
+            "role_id": 1
+        },
+        {
+            "id": 9,
+            "userName": "test3",
+            "fullName": "常有德",
+            "password": "123456",
+            "ip": "192.168.0.2",
+            "bargainCode": "",
+            "lastLogin": "",
+            "memo": "测试用户2",
+            "isActive": false,
+            "role_id": 1
+        }
+    ]
+}
