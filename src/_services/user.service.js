@@ -36,7 +36,8 @@ function login(userName, password) {
             role_id: 1
          }, // test    
     }
-    localStorage.setItem('user', JSON.stringify(response.data));
+
+    localStorage.setItem('user', JSON.stringify(response.payload));
 
     return new Promise((resolve, reject)=>{
         resolve(response);

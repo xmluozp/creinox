@@ -1,6 +1,6 @@
 import { LOADING } from '../_constants';
 
-export const alertActions = {
+export const loadingActions = {
     loading,
     success,
     error,

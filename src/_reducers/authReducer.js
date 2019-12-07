@@ -1,6 +1,12 @@
 import {AUTH} from '../_constants'
 
-let user = JSON.parse(localStorage.getItem('user'));
+let user
+try {
+  user = JSON.parse(localStorage.getItem('user'));
+  console.log("user:", user)
+} catch (error) {
+  user = {};
+}
 const defaultState = user ? { loggedIn: true, user } : {};
 
 // 数据传到界面上显示. 只有这里用"user"作为关键字，其他都用data。因为登录的user可能和页面的data同时使用

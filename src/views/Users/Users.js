@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { userActions } from '../../_actions'
 import { history } from '../../_helper'
 
-import { CreinoxTable } from '../../components'
+import { CreinoxTable, TABLE_ICONS } from '../../components'
 
 
 
@@ -12,18 +12,14 @@ import { CreinoxTable } from '../../components'
 const Users = ({ onReadAll, onDelete, data }) => {
 
   // ============================================= handles
-  const handleOnEdit = (id) => {
-    history.push({ pathname: `/users/users/${id}`, })
-  }
-
   const handleOnDelete = (pagination, id) => {
     onDelete(pagination, id)
   }
 
   // ============================================= Settings
   const buttons = [
-    { label: "修改", color:"primary", onClick: handleOnEdit },
-    { label: "删除", color:"secondary", onClick: handleOnDelete }
+    { label: "修改", color:"primary", type:'Link', url: `/users/users` , icon: TABLE_ICONS.edit},
+    { label: "删除", color:"danger", onClick: handleOnDelete , icon: TABLE_ICONS.delete}
   ];
 
   const headCells = [

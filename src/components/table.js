@@ -13,6 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import { Link } from 'react-router-dom';
 
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -25,8 +26,9 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { Button } from '@material-ui/core';
-
+import { Button } from 'reactstrap';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from '@material-ui/icons/Edit';
 
 // 表头，包含排序
 function EnhancedTableHead(props) {
@@ -441,11 +443,25 @@ export const CreinoxTable = ({ headCells, tableTitle, data, onReadAll, buttons =
   );
 }
 
-// ============================================================右边按钮
-const ActionButton = ({ id, label, onClick, color, getPaginationString }) => {
-  return (
-  <Button color={color} size="small" style={{margin: "0px 0px 0px 3px"}} variant="contained"
-  onClick={() => { 
-    onClick(getPaginationString(), id) // 传入pagination因为删除后页面刷新
-    }}> {label}</Button>)
+
+export const TABLE_ICONS = {
+  delete: <i className="cui-trash icons mr-1"></i>,
+  edit: <i className="cui-settings icons mr-1"></i>,
+}
+
+
+// ============================================================右边按钮. 给button传入pagination因为删除后, 页面刷新
+const ActionButton = ({ id, label, onClick, color, getPaginationString,  url, icon }) => { 
+
+  let returnValue = label;
+  if(onClick){
+    returnValue= ( <Button color={color} style={{margin: "0px 0px 0px 3px"}} className="btn btn-sm "
+        onClick={() => { 
+          onClick(getPaginationString(), id)
+          }}> {icon}{label}</Button>)
+  } else if(url){
+    returnValue= <Link to={`${url}/${id}`} color={color} className={`btn btn-sm btn-${color}`} role="button" style={{margin: "0px 0px 0px 3px"}} aria-pressed="true">{icon}{label}</Link>
+  }
+
+  return returnValue
 }

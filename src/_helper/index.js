@@ -6,12 +6,16 @@ export const history = createHashHistory({ forceRefresh: true });
 
 export function authHeader() {
     // return authorization header with jwt token
-    let user = JSON.parse(localStorage.getItem('user'));
+    try {
+        let user = JSON.parse(localStorage.getItem('user'));
 
-    if (user && user.token) {
-        return { 'Authorization': 'Bearer ' + user.token };
-    } else {
-        return {};
+        if (user && user.token) {
+            return { 'Authorization': 'Bearer ' + user.token };
+        } else {
+            return {};
+        }  
+    } catch (error) {
+        console.log(error)
     }
 }
 
