@@ -1,26 +1,26 @@
 import { authHeader, handleResponse } from '../_helper';
-import axios from 'axios'
+// import axios from 'axios'
 
 export const userService = {
     login,
     logout,
-    readAll,
-    readSearch,
-    readById,
-    create,
-    update,
+    get_all,
+    get_bySearch,
+    get_byId,
+    post_create,
+    put_update,
     _delete: _delete
 };
 
-const url = 'http://localhost:3000/api/';
+// const url = 'http://localhost:3000/api/';
 
 function login(userName, password) {
 
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userName, password})
-    };
+    // const requestOptions = {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ userName, password})
+    // };
 
     const response = {
         status: 200,
@@ -39,7 +39,7 @@ function login(userName, password) {
 
     localStorage.setItem('user', JSON.stringify(response.payload));
 
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve)=>{
         resolve(response);
     }) ;
 
@@ -58,50 +58,52 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function readAll(pagination = "") {
+function get_all(pagination = "") {
 
     const requestOptions = {
         method: 'GET',
         headers: authHeader(),
     };
 
-    const url = './dataset/userdata_p1.json'
+    console.log("get_all service:", pagination);
+    const url = './dataset/userdata_p2.json'
     // pagination也可以在这里拆开了放进uri
 
     return fetch(`${url}?${pagination}`, requestOptions).then(handleResponse);
     // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
 }
 
-function readSearch(pagination = "", searchTerms = {}) {
+function get_bySearch(pagination = "", searchTerms = "") {
 
+    // search应该是返回pagination，但不应该提交，因为要刷新。这里pagination备用暂时用不到
     const requestOptions = {
-        method: 'PUT',
+        method: 'GET',
         headers: authHeader(),
-        body: searchTerms
+        // body: searchTerms
     };
 
+    console.log("search service:", searchTerms);
     const url = './dataset/userdata_p1.json'
 
-    // pagination也可以在这里拆开了放进uri
-    return fetch(`${url}?${pagination}`, requestOptions).then(handleResponse);
-    // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
+    return fetch(`${url}?${searchTerms}`, requestOptions).then(handleResponse);
 }
 
 
-function readById(id) {
+function get_byId(id) {
 
 }
 
-function create(user) {
+function post_create(item) {
 
 }
 
-function update(user) {
+function put_update(item) {
 
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(pagination, id) {
-    return new Promise(resolve=>resolve("test"))
+    console.log("on delete service:", id);
+    return new Promise(resolve=>resolve("on delete service"))
 }
 

@@ -9,12 +9,13 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 //=========================================================REDUX
-import { createStore, applyMiddleware } from 'redux';
+// import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';  // passes store down
-import thunk from 'redux-thunk';  // async
-import rootReducer from './_reducers';
+// import thunk from 'redux-thunk';  // async
+// import rootReducer from './_reducers';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+// const store = createStore(rootReducer, applyMiddleware(thunk));
+import store from './_helper/store';
 
 //=========================================================REDUX
 

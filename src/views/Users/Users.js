@@ -1,52 +1,116 @@
 import React from 'react'
 
+import _ from 'lodash'
+// import { format } from 'date-fns'
+import TextField from '@material-ui/core/TextField';
+
+//------redux
 import { connect } from 'react-redux'
 import { userActions } from '../../_actions'
-import { history } from '../../_helper'
+import { userModel } from '../../_dataModel'
 
-import { CreinoxTable, TABLE_ICONS } from '../../components'
+import { ICONS } from '../../_constants'
+import { h_confirm } from '../../_helper'
+import { CreinoxTable } from '../../components'
 
 
-
-// ============================================= Render
-const Users = ({ onReadAll, onDelete, data }) => {
-
+const Users = ({ onGetAll, onGetBySearch, onDelete, userData }) => {
   // ============================================= handles
   const handleOnDelete = (pagination, id) => {
-    onDelete(pagination, id)
+
+    h_confirm("是否删除？").then(resolve=>{
+      if(resolve) {
+        onDelete(pagination, id)
+      }
+    })
+  }
+  const handleSwitchActive = (id) => {
+    console.log("switch", id);
+  }
+  const handleSelectAction = (list) => {
+    console.log(list);
   }
 
-  // ============================================= Settings
-  const buttons = [
-    { label: "修改", color:"primary", type:'Link', url: `/users/users` , icon: TABLE_ICONS.edit},
-    { label: "删除", color:"danger", onClick: handleOnDelete , icon: TABLE_ICONS.delete}
+  const handleOnShowRole = (content, row) => {
+    return `[${row.role_id}] ${content}`
+  }
+  const handleOnShowMemo = (content) => {
+    return <span title={content}>{_.truncate(content, {length: 10})}</span>
+  }
+
+  // ============================================= Table Settings
+  const rowButtons = [
+    { label: "修改", color: "primary", url: `/users/users`, icon: ICONS.EDIT("mr-1") },
+    { label: "删除", color: "danger", onClick: handleOnDelete, icon: ICONS.DELETE() }
   ];
 
+  const selectBox = {
+    icon: ICONS.ACTIVE(),
+    title: "批量启用",
+    onAction: handleSelectAction,
+  }
+
+  const toolbarButtons = [
+    { label: "Create", url: `/users/create`, color: "success", icon: ICONS.ADD() }
+  ]
+
+  // TODO: 看看maker如何设计，既能快速生成又能定制. 如何方便地取到列名？  定制的目的是为了快速生成那些发票之类的功能。所以可以走极端。完全根据model生成
   const headCells = [
-    { id: 'id', disablePadding: true, label: 'ID' },
-    { id: 'userName', label: '用户名' },
-    { id: 'fullName', label: '姓名' },
-    { id: 'ip', label: '登录IP' },
-    { id: 'lastLogin', label: '上次登录' },
-    { id: 'memo', label: '备注' },
-    { id: 'isActive', label: '状态', lookup: { true: '是', false: '否' } }
+    { name: 'id', disablePadding: true, className: 'ml-2' },
+    { name: 'role_id', onShow: handleOnShowRole},
+    { name: 'userName' },
+    { name: 'fullName' },
+    { name: 'ip' },
+    { name: 'lastLogin' },
+    { name: 'memo', onShow: handleOnShowMemo },
+    {
+      name: 'isActive', 
+      align: 'center', 
+      label: '状态', 
+      onClick: handleSwitchActive,
+      className: { true: 'text-success', false: 'text-danger' }, 
+      lookup: { true: ICONS.TRUE("mr-4"), false: ICONS.FALSE("mr-4") }
+    }
   ];
-
-  // TODO: 搜索框。每个页面的都不一样，在这里设定。因为要用到pagination所以在table里实现
+ 
+  // ============================================= Render
   return (
-    <CreinoxTable tableTitle = "用户列表" headCells={headCells} data={data} onReadAll={onReadAll} buttons={buttons} />
+    <CreinoxTable
+      tableTitle="用户列表"
+      headCells={headCells}
+      data={userData}
+      dataModel={userModel}
+      onGetAll={onGetAll}
+      onGetBySearch={onGetBySearch}
+      rowButtons={rowButtons}
+      toolbarButtons={toolbarButtons}
+      searchBar={searchBar}
+      selectBox={selectBox}
+    />
   )
 }
+
+// ============================================= Search Panel
+// 搜索框
+const searchBar =
+  <> 
+    <TextField autoFocus margin="dense" id="userName" type="text" />
+    <TextField margin="dense" id="fullName" type="text" />
+  </>;
+
 
 
 // ============================================= Redux
 function mapState(state) {
-  return { data: state.userData.data };
+  return { 
+    userData: state.userData.data
+   };
 }
 
 const actionCreators = {
-  onReadAll: userActions.readAll,
+  onGetAll: userActions.get_all,
   onDelete: userActions._delete,
+  onGetBySearch: userActions.get_bySearch
 };
 
 export default connect(mapState, actionCreators)(Users);

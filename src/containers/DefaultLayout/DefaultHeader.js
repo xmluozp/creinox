@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { DropdownItem, DropdownMenu, DropdownToggle, Nav, UncontrolledDropdown } from 'reactstrap';
+// import { DropdownItem, DropdownMenu, DropdownToggle, Nav, UncontrolledDropdown } from 'reactstrap';
+// import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
+
+import { Nav } from 'reactstrap';
+
 import PropTypes from 'prop-types';
 
-import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
+import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import DefaultHeaderDropdown  from './DefaultHeaderDropdown'
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
-import avatar from '../../assets/img/avatars/6.jpg'
+// import avatar from '../../assets/img/avatars/6.jpg'
 
 import { connect } from 'react-redux';
 import { userActions } from '../../_actions';
@@ -35,7 +39,7 @@ class DefaultHeader extends Component {
         <DefaultHeaderDropdown mssgs/>
         <DefaultHeaderDropdown onLogout={this.props.onLogout} accnt/>
         </Nav>
-        <AppAsideToggler className="d-md-down-none" />
+        {/* <AppAsideToggler className="d-md-down-none" /> */}
       </React.Fragment>
     );
   }

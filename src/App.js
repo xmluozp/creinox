@@ -36,9 +36,10 @@ const App = ({ user, loadingBar }) => {
       <React.Suspense fallback={loading()}>
         <Switch>
           <UnauthenticatedRoute exact path="/login" name="Login Page" component={LoginPage} user = {user} />
-          <Route exact path="/404" name="Page 404" component={Page404} />
+           <Route exact path="/404" name="Page 404" component={Page404} />
           <Route exact path="/500" name="Page 500" component={Page500} />
           <AuthenticatedRoute path="/" name="Home" component={DefaultLayout} user = {user}/>
+          <Route exact path="*" name="Page 404" component={Page404} />
         </Switch>
       </React.Suspense>
     </HashRouter>

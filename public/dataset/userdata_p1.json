@@ -8,7 +8,7 @@
         "order": "desc",
         "orderBy": "id"
     },
-    "searchTerms": {},
+    "searchTerms": {"fullName":"王思聪"},
     "rows": [
         {
             "id": 1,
@@ -17,10 +17,11 @@
             "password": "123456",
             "ip": "192.168.0.1",
             "bargainCode": "",
-            "lastLogin": "",
+            "lastLogin": "2018-07-17 23:51:21",
             "memo": "测试用户",
             "isActive": true,
-            "role_id": 1
+            "role_id": 1,
+            "role_id.name": "管理员"
         },
         {
             "id": 2,
@@ -29,10 +30,11 @@
             "password": "123456",
             "ip": "192.168.0.2",
             "bargainCode": "",
-            "lastLogin": "",
+            "lastLogin": "2018-07-17 23:51:22",
             "memo": "测试用户2",
             "isActive": false,
-            "role_id": 1
+            "role_id": 2,
+            "role_id.name": "张郁晟"
         },
         {
             "id": 3,
@@ -42,9 +44,10 @@
             "ip": "192.168.0.2",
             "bargainCode": "",
             "lastLogin": "",
-            "memo": "测试用户2",
+            "memo": "测试很长很长很长很长的字符串测试很长很长很长很长的字符串",
             "isActive": false,
-            "role_id": 1
+            "role_id": 4,
+            "role_id.name": "操作员"
         },
         {
             "id": 4,
@@ -56,7 +59,8 @@
             "lastLogin": "",
             "memo": "测试用户2",
             "isActive": false,
-            "role_id": 1
+            "role_id": 3,
+            "role_id.name": "经理"
         },
         {
             "id": 5,
@@ -68,7 +72,8 @@
             "lastLogin": "",
             "memo": "测试用户2",
             "isActive": false,
-            "role_id": 1
+            "role_id": 1,
+            "role_id.name": "管理员"
         }
     ]
 }

@@ -1,0 +1,32 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "name": "管理员",
+            "rank": 0,
+            "auth": "*"
+        },
+        {
+            "id": 2,
+            "name": "经理",
+            "rank": 1,
+            "auth": "*"
+        },
+        {
+            "id": 3,
+            "name": "操作员",
+            "rank": 2,
+            "auth": "*"
+        }
+    ]
+}

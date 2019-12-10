@@ -1,21 +1,17 @@
-import { LOADING } from '../_constants'
+import { LOADING as CONST} from '../_constants'
 
-const loading = (state = {}, action) => {
+export default (state = {}, action) => {
     switch (action.type) {
-        case LOADING.LOADING:
+        case CONST.LOADING:
             return { ...state, status: 'loading' }
-        case LOADING.SUCCESS:
+        case CONST.SUCCESS:
             return { ...state, status: 'success' }
-        case LOADING.FAILURE:
+        case CONST.FAILURE:
             return { ...state, status: 'failure' }
-        case LOADING.CLEAR:
+        case CONST.CLEAR:
             return { ...state, status: 'clear' }
 
         default:
             return state;
     }
-
-
 }
-
-export default loading;

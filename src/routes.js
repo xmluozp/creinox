@@ -4,7 +4,8 @@ const Dashboard = React.lazy(() => import('./views/Dashboard'));
 //================ user
 const Users = React.lazy(() => import('./views/Users/Users'));
 const User = React.lazy(() => import('./views/Users/User'));
-
+// const Page404 = React.lazy(() => import('./views/Pages/Page404'));
+// const Page500 = React.lazy(() => import('./views/Pages/Page500'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [

@@ -1,5 +1,5 @@
-import { AUTH, USER, LOADING } from '../_constants'
-import { userService } from '../_services'
+import { AUTH, USER as CONST, LOADING } from '../_constants'
+import { userService as service } from '../_services'
 import { alertActions } from './';
 import { history } from '../_helper';
 
@@ -9,22 +9,25 @@ import { history } from '../_helper';
 export const userActions = {
     login,
     logout,
-    readAll,
-    readSearch,
+    get_all,
+    get_bySearch,
+    get_byId,
+    post_create,
+    put_update,
     _delete
 }
 
 
 // LOGIN ---------------------------------------------
 
-function login (userName, password) {
+function login(userName, password) {
 
     return (dispatch) => {
 
         // 登录中
-        dispatch(request({ userName}));
-        userService.login(userName, password).then(
-            response=> {
+        dispatch(request({ userName }));
+        return service.login(userName, password).then(
+            response => {
                 dispatch(success(response));
                 history.push('/');
             },
@@ -59,18 +62,18 @@ function login (userName, password) {
 
 // LOGOUT ---------------------------------------------
 function logout() {
-    userService.logout();
+    service.logout();
     return { type: AUTH.LOGOUT };
 }
 
 // FETCH  ---------------------------------------------
-function readAll(pagination) { // pagination: page, perPage, orderBy, searchTerms:object
-    return (dispatch) => {
-        // 登录中
-        console.log("读数据翻页", pagination)
+function get_all(pagination) { // pagination: page, perPage, orderBy, searchTerms:object
+    
+    return (dispatch) => {  
+        dispatch(alertActions.info("测试：读取数据"));
         dispatch({ type: LOADING.LOADING });
-        userService.readAll(pagination).then(
-            response=> {
+        return service.get_all(pagination).then(
+            response => {
                 dispatch({ type: LOADING.SUCCESS });
                 dispatch(success(response));
             },
@@ -81,17 +84,16 @@ function readAll(pagination) { // pagination: page, perPage, orderBy, searchTerm
         )
     }
 
-    function success(payload) { return { type: USER.READALL_SUCCESS, payload } }
-    function failure(payload) { return { type: USER.READALL_FAILURE, payload } }
+    function success(payload) { return { type: CONST.GETALL_SUCCESS, payload } }
+    function failure(payload) { return { type: CONST.GETALL_FAILURE, payload } }
 }
 
-function readSearch(pagination, searchTerms = {}) { // pagination: page, perPage, orderBy, searchTerms:object
+function get_bySearch(pagination, searchTerms = {}) { // pagination: page, perPage, orderBy, searchTerms:object
     return (dispatch) => {
         // 登录中
-        console.log("搜索翻页", pagination, "搜索条件", searchTerms)
         dispatch({ type: LOADING.LOADING });
-        userService.readSearch(pagination).then(
-            response=> {
+        return service.get_bySearch(pagination, searchTerms).then(
+            response => {
                 dispatch({ type: LOADING.SUCCESS });
                 dispatch(success(response));
             },
@@ -102,22 +104,51 @@ function readSearch(pagination, searchTerms = {}) { // pagination: page, perPage
         )
     }
 
-    function success(payload) { return { type: USER.READALL_SUCCESS, payload } }
-    function failure(payload) { return { type: USER.READALL_FAILURE, payload } }
+    function success(payload) { return { type: CONST.GETALL_SUCCESS, payload } }
+    function failure(payload) { return { type: CONST.GETALL_FAILURE, payload } }
 }
 
-function _delete(pagination, id) { // pagination 刷新用
+function get_byId(pagination, searchTerms = {}) { // pagination: page, perPage, orderBy, searchTerms:object
     return (dispatch) => {
-
+        // 登录中
         dispatch({ type: LOADING.LOADING });
-        userService._delete(pagination, id). then(
-            response=> {
+        return service.get_bySearch(pagination, searchTerms).then(
+            response => {
                 dispatch({ type: LOADING.SUCCESS });
-                dispatch({ type:USER.DELETE_SUCCESS, payload: response});
+                dispatch(success(response));
             },
             error => {
                 dispatch({ type: LOADING.FAILURE });
-                dispatch({ type:USER.DELETE_FAILURE, payload: error});
+                dispatch(failure(error));
+            }
+        )
+    }
+
+    function success(payload) { return { type: CONST.GET_SUCCESS, payload } }
+    function failure(payload) { return { type: CONST.GET_FAILURE, payload } }
+}
+
+function post_create(item) {
+    return (dispatch) => {dispatch(alertActions.success("测试：新建成功"));}
+}
+
+function put_update(item) {
+    return (dispatch) => {dispatch(alertActions.success("测试：保存成功"));}
+}
+
+
+function _delete(pagination, id) { // pagination: 删除后刷新列表用
+    return (dispatch) => {
+
+        dispatch({ type: LOADING.LOADING });
+        return service._delete(pagination, id).then(
+            response => {
+                dispatch({ type: LOADING.SUCCESS });
+                dispatch({ type: CONST.DELETE_SUCCESS, payload: response });
+            },
+            error => {
+                dispatch({ type: LOADING.FAILURE });
+                dispatch({ type: CONST.DELETE_FAILURE, payload: error });
             }
         )
     }
