@@ -1,7 +1,6 @@
 import { ROLE as CONST, LOADING } from '../_constants'
 import { roleService as service } from '../_services'
 // import { alertActions } from './';
-// import { history } from '../_helper';
 
 
 export const roleActions = {

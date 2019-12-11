@@ -1,4 +1,4 @@
-import { authHeader, handleResponse } from '../_helper';
+import { authHeader, handleResponse, h_queryString} from '../_helper';
 // import axios from 'axios'
 
 export const roleService = {
@@ -12,7 +12,7 @@ export const roleService = {
 
 // const url = 'http://localhost:3000/api/role';
 
-function get_all(pagination = "") {
+function get_all(pagination) {
 
     const requestOptions = {
         method: 'GET',
@@ -20,14 +20,16 @@ function get_all(pagination = "") {
     };
 
     console.log("get_all service:", pagination);
+
+    const queryString = h_queryString(pagination);
     const url = './dataset/roledata.json'
     // pagination也可以在这里拆开了放进uri
 
-    return fetch(`${url}?${pagination}`, requestOptions).then(handleResponse);
+    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
     // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
 }
 
-function get_bySearch(pagination = "", searchTerms = {}) {
+function get_bySearch(pagination, searchTerms = {}) {
 
     const requestOptions = {
         method: 'PUT',
@@ -35,10 +37,13 @@ function get_bySearch(pagination = "", searchTerms = {}) {
         body: searchTerms
     };
 
-    console.log("search service:", searchTerms);
+    
+    const queryString = h_queryString(pagination,searchTerms)
     const url = './dataset/roledata.json'
+    console.log("search service:", queryString);
 
-    return fetch(`${url}?${pagination}`, requestOptions).then(handleResponse);
+    
+    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 

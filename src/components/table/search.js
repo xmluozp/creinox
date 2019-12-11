@@ -1,5 +1,5 @@
 import React from 'react';
-import CreinoxForm from './creinoxForm'
+import CreinoxForm from '../creinoxForm'
 
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';

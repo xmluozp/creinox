@@ -68,7 +68,7 @@ function TablePaginationActions(props) {
           <Input type="text"
           value={inputPage} 
           onChange={(e)=>{setInputPage(parseInt(e.target.value) || 1)}}
-          onFocus={e=>{e.target.select()}}
+          onClick={e=>{e.target.select()}}
           onKeyDown={handleJumpToPage}
           inputProps={{
             'aria-label': '页' ,

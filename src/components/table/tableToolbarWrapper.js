@@ -44,7 +44,7 @@ const TableToolbarWrapper = ({
   searchBar,
   onSearch,
   toolbarButtons,
-  getPaginationString }) => {
+  getPaginationFromState }) => {
 
   const classes = useToolbarStyles();
 
@@ -79,7 +79,7 @@ const TableToolbarWrapper = ({
             {
               toolbarButtons && toolbarButtons.map((item, index) => {
 
-                const SolveRef = React.forwardRef((props, ref) => <div {...props} ref={ref}><ToolbarButton {...item} getPaginationString= {getPaginationString }/></div>);
+                const SolveRef = React.forwardRef((props, ref) => <div {...props} ref={ref}><ToolbarButton {...item} getPaginationFromState= {getPaginationFromState }/></div>);
                 return <Tooltip title={item.label} key={index} ><SolveRef/></Tooltip>;
               })
             }
@@ -96,12 +96,12 @@ TableToolbarWrapper.propTypes = {
 
 
 // ============================================================
-const ToolbarButton = ({ label, onClick, color, url, icon, getPaginationString }) => {
+const ToolbarButton = ({ label, onClick, color, url, icon, getPaginationFromState }) => {
 
   let returnValue = label;
 
   // if there is onClick, pass pagination and id back (in case need to refresh)
-  const propsOnClick = onClick ? onClick = () => { onClick(getPaginationString()) } : null;
+  const propsOnClick = onClick ? onClick = () => { onClick(getPaginationFromState()) } : null;
 
   returnValue = (<IconButton className={`text-${color}`} aria-label={label} onClick={propsOnClick} >
     {icon}</IconButton>)

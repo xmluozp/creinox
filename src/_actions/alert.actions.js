@@ -6,8 +6,10 @@ export const alertActions = {
     notify,
     clear,
     info,
+    dispatchNotify,
     dispatchClear,
     dispatchInfo,
+
 };
 
 function success(message) {
@@ -38,5 +40,11 @@ function dispatchClear() {
 function dispatchInfo(message) {
     return (dispatch) => {
         dispatch({ type: ALERT.INFO, message })
+    }    
+}
+
+function dispatchNotify(message) {
+    return (dispatch) => {
+        dispatch({ type: ALERT.NOTIFY, message })
     }    
 }

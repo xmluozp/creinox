@@ -51,12 +51,25 @@ export function handleOnChange(e, setFunc) {
     // console.log("funcs:", test);
 }
 
+export function h_queryString(pagination = {page:0, order: 'desc', orderBy: 'id',}, searchTerms = {}) {
+
+    let searchString; 
+
+    searchString = encodeURIComponent(JSON.stringify(searchTerms));
+
+    const paginationString = Object.keys(pagination).map(key => key + '=' + pagination[key]).join('&');
+
+    return paginationString +"&" + searchString;
+}
+
 export function h_keyNames(object) {
     const returnValue = {}
-    Object.keys(object).map((value, index) => {
+
+    Object.keys(object).map((value) => {
         returnValue[value] = value;
         return null;
     })
+
     return returnValue;
 }
 
@@ -90,7 +103,7 @@ export function h_datetimeToMySql(datetime = Date.now()) {
 export function h_confirm(textMessage="确认操作") {
 
     const promise = new Promise(
-        (resolve,reject )=> {
+        (resolve, reject) => {
             if (window.confirm(textMessage)){
                 resolve(true);
             } else {

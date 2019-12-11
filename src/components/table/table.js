@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import _ from 'lodash'
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
@@ -19,8 +19,8 @@ import TablePaginationWrapper from './tablePaginationWrapper'
 
 
 // 所有pagination信息都从data来而不是本地
-export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll, onGetBySearch, dataModel, rowButtons = [], selectBox, toolbarButtons = [] }) => {
-
+export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySearch, dataModel, rowButtons = [], selectBox, toolbarButtons = [], ...props }) => {
+  console.log("render child")
   // 默认数据（如果是页面，则从params里取）
   const defaultPagination = {
     page: 0,
@@ -44,31 +44,60 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
   }
 
   // 以下信息是用来提交pagination请求的，不涉及页面显示；页面如何显示完全来自于data
-  const [page, setPage] = React.useState(dataPagination.page);
-  const [perPage, setPerPage] = React.useState(dataPagination.perPage);
-  const [order, setOrder] = React.useState(dataPagination.order);
-  const [orderBy, setOrderBy] = React.useState(dataPagination.orderBy);
-  const [listOnShow, setListOnShow] = React.useState([])
-  const classes = useStyles();
-  const [selected, setSelected] = React.useState([]);
+  const [loaded, setLoaded] = useState(false) // 配合useEffect绕过无法callBack的问题。
+  const [page, setPage] = useState(dataPagination.page);
+  const [perPage, setPerPage] = useState(dataPagination.perPage);
+  const [order, setOrder] = useState(dataPagination.order);
+  const [orderBy, setOrderBy] = useState(dataPagination.orderBy);
+  const [nextSearchTerms, setNextSearchTerms] = useState(_.get(data, "searchTerms"));
+  const [listOnShow, setListOnShow] = useState([])
+  const [selected, setSelected] = useState([]);
   // --------------- DISPLAY
+  const classes = useStyles();
   const isSelected = name => selected.indexOf(name) !== -1;
 
-  // 这些数据是不会跟进的
+  // 静态数据
   const dataRows = data && data.rows ? data.rows : [];
   const rowLength = data && data.rows ? data.rows.length : 0;
   const dataSearchTerms = data && data.searchTerms ? data.searchTerms : {};
   const emptyRows = dataPagination.perPage - Math.min(dataPagination.perPage, dataPagination.totalCount - page * dataPagination.perPage);
 
-  const p_fetchData = () => {
-    console.log("p_fetchData")
-    onGetAll(getPaginationString());
+  const getPaginationFromState = React.useCallback(
+    (pg = { page, perPage, order, orderBy }) => {return pg},
+    [ page, perPage, order, orderBy],
+  )
+
+  // 提交this的翻页信息，更新data (翻页触发)
+  const p_updateData = React.useCallback( 
+    () => {
+      console.log("触发")
+      onGetBySearch(getPaginationFromState(), nextSearchTerms); // 当前翻页信息，新的搜索信息
+      return true;
+    },
+    [onGetBySearch, getPaginationFromState, nextSearchTerms],
+  )
+
+  const p_testUpdate = (fn) => {
+    console.log("run test")
+    fn();
   }
 
+  // 根据store的翻页信息更新data (刷新触发)
+  const p_fetchData = React.useCallback(
+    () => {
+      const { page, perPage, order, orderBy } = dataPagination
+      onGetBySearch(getPaginationFromState( { page, perPage, order, orderBy }), nextSearchTerms);
+    },
+    [dataPagination, onGetBySearch, getPaginationFromState, nextSearchTerms],
+  )
+
+  // render数据预处理
   React.useEffect(() => {
 
     // 数据预处理。防止每次render都调用一遍
     const listOnShowTemp = []
+    const dataRows = data && data.rows ? data.rows : [];
+
     dataRows.map((row) => {
       const rowObj = {}
       headCells.map((column) => {
@@ -81,7 +110,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
         // 如果是外键，就取 外键.labelName 的字段。这个数据API预生成
         const refLabel = _.get(dataModel,["columns", columnName, "refLabel"]);
         if (refLabel) {
-          originalContent = row[`${columnName}.${refLabel}`];
+          originalContent = row[`${columnName}.${refLabel}`] || originalContent;
         } 
         // 如果是callBak，预先生成结果
         if (typeof (column.onShow) === "function") columnContent = column.onShow(originalContent, row);
@@ -98,41 +127,34 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
       return null;
     })
 
+    // 用以渲染表格数据
     setListOnShow(listOnShowTemp);
-  }, [data])
+  }, [data, headCells, dataModel])
 
+  // fetch data first time
   React.useEffect(() => {
+    if (!data) p_updateData();
+  }, [p_updateData, data])
 
-    // TODO: 如果isPage === true，就从url读信息。否则就直接read all
-    // 防止用户点到别的页面又返回：如果store有数据就不从远程抓数据，除非点刷新
-    // (目前因为没有后台，请求到的data永远是第一页所以没效果)
+  // fetch data after change page
+  React.useEffect(() => {
+    // p_testUpdate(()=>{console.log("hello")});
+    if(loaded) p_updateData();
+  }, [page, perPage, order, orderBy, p_updateData])
 
-    if (!data) { p_fetchData();}
-    return () => { };
+  // guard boolean: if loaded
+  React.useEffect(()=>{
+    setLoaded(true);
   }, [])
 
-  React.useEffect(() => {
-    p_fetchData();
-  }, [page, perPage, order, orderBy])
-
-  // --------------- onGetAll(pagination) EVENTS
-  const getPaginationString = () => {
-
-    // 当前页面的state里的数据
-    const pg = { page, perPage, order, orderBy }
-    const queryString = Object.keys(pg).map(key => key + '=' + pg[key]).join('&');
-    return queryString
-  }
-
   const handleOnRefresh = e => {
+    p_testUpdate(() => {onGetBySearch()});
     p_fetchData();
   }
-  const handleOnSearch = (data) => {
-
-    // 搜索是GET数据。其实不需要pagination。这里只是以防万一后面要用
-    const searchTermsString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
-
-    onGetBySearch(getPaginationString(), searchTermsString);
+  const handleOnSearch = (searchTerms) => {
+    // 分别更新本地和远程
+    setNextSearchTerms(searchTerms); // work with paginatitor
+    onGetBySearch(getPaginationFromState(), searchTerms);
   }
 
   // ----------------------- handle for query
@@ -202,7 +224,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
           onSearch={handleOnSearch}
           dataModel={dataModel}
           toolbarButtons={toolbarButtons}
-          getPaginationString={getPaginationString}
+          getPaginationFromState={getPaginationFromState}
         />
 
         <div className={classes.tableWrapper}>
@@ -276,7 +298,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
                     { // 放操作按钮的格子
                       rowButtons ? <TableCell align="right">
                         {
-                          rowButtons.map((buttonObj, index) => <ActionButton key={`button_${rowId}_${index}`} {...buttonObj} id={rowId} getPaginationString={getPaginationString} />)
+                          rowButtons.map((buttonObj, index) => <ActionButton key={`button_${rowId}_${index}`} {...buttonObj} id={rowId} getPaginationFromState={getPaginationFromState} />)
                         }
                       </TableCell> : null
                     }
@@ -285,7 +307,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
               })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 33 * emptyRows }}>
-                  <TableCell colSpan={headCells.length + 1} />
+                  <TableCell colSpan={headCells.length + 1 + (selectBox&&1) || 0 } />
                 </TableRow>
               )}
             </TableBody>
@@ -305,7 +327,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetAll,
 }
 
 // ============================================================右边按钮. 给button传入pagination因为删除后, 页面刷新
-const ActionButton = ({ id, label, onClick, color, url, icon, getPaginationString }) => {
+const ActionButton = ({ id, label, onClick, color, url, icon, getPaginationFromState }) => {
 
   let returnValue = label;
   if (url) {
@@ -313,7 +335,7 @@ const ActionButton = ({ id, label, onClick, color, url, icon, getPaginationStrin
     returnValue = <Link to={`${url}/${id}`} className={`btn btn-sm btn-${color}`}
       role="button" style={{ margin: "0px 0px 0px 3px" }} aria-pressed="true">{icon}{label}</Link>
   } else {
-    const propsOnClick = typeof (onClick) === 'function' ? onClick.bind(null, getPaginationString(), id) : null;
+    const propsOnClick = typeof (onClick) === 'function' ? onClick.bind(null, getPaginationFromState(), id) : null;
 
     returnValue = (<Button style={{ margin: "0px 0px 0px 3px" }} className={`btn btn-sm btn-${color}`}
       onClick={propsOnClick}> {icon}{label}</Button>)

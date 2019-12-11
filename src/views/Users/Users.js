@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 
 //------redux
 import { connect } from 'react-redux'
-import { userActions } from '../../_actions'
+import { userActions, alertActions } from '../../_actions'
 import { userModel } from '../../_dataModel'
 
 import { ICONS } from '../../_constants'
@@ -14,23 +14,19 @@ import { h_confirm } from '../../_helper'
 import { CreinoxTable } from '../../components'
 
 
-const Users = ({ onGetAll, onGetBySearch, onDelete, userData }) => {
+const Users = ({ onGetBySearch, onDelete, userData, onAlertNotify}) => {
   // ============================================= handles
   const handleOnDelete = (pagination, id) => {
-
     h_confirm("是否删除？").then(resolve=>{
-      if(resolve) {
-        onDelete(pagination, id)
-      }
+      if(resolve) onDelete(pagination, id)
     })
-  }
-  const handleSwitchActive = (id) => {
-    console.log("switch", id);
   }
   const handleSelectAction = (list) => {
     console.log(list);
+    onAlertNotify(`选中了 ${list.join(",")}`)
   }
 
+  // ============================================= render cell
   const handleOnShowRole = (content, row) => {
     return `[${row.role_id}] ${content}`
   }
@@ -54,6 +50,7 @@ const Users = ({ onGetAll, onGetBySearch, onDelete, userData }) => {
     { label: "Create", url: `/users/create`, color: "success", icon: ICONS.ADD() }
   ]
 
+
   // TODO: 看看maker如何设计，既能快速生成又能定制. 如何方便地取到列名？  定制的目的是为了快速生成那些发票之类的功能。所以可以走极端。完全根据model生成
   const headCells = [
     { name: 'id', disablePadding: true, className: 'ml-2' },
@@ -67,7 +64,7 @@ const Users = ({ onGetAll, onGetBySearch, onDelete, userData }) => {
       name: 'isActive', 
       align: 'center', 
       label: '状态', 
-      onClick: handleSwitchActive,
+      // onClick: handleSwitchActive,
       className: { true: 'text-success', false: 'text-danger' }, 
       lookup: { true: ICONS.TRUE("mr-4"), false: ICONS.FALSE("mr-4") }
     }
@@ -75,18 +72,20 @@ const Users = ({ onGetAll, onGetBySearch, onDelete, userData }) => {
  
   // ============================================= Render
   return (
+    <>
     <CreinoxTable
       tableTitle="用户列表"
       headCells={headCells}
       data={userData}
       dataModel={userModel}
-      onGetAll={onGetAll}
       onGetBySearch={onGetBySearch}
       rowButtons={rowButtons}
       toolbarButtons={toolbarButtons}
       searchBar={searchBar}
       selectBox={selectBox}
     />
+    <button onClick = {() => { onGetBySearch()}}>test</button>
+    </>
   )
 }
 
@@ -98,6 +97,8 @@ const searchBar =
     <TextField margin="dense" id="fullName" type="text" />
   </>;
 
+// ============================================= propTypes
+
 
 
 // ============================================= Redux
@@ -108,9 +109,10 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  onGetAll: userActions.get_all,
+  onGetBySearch: userActions.get_bySearch,
   onDelete: userActions._delete,
-  onGetBySearch: userActions.get_bySearch
+  onAlertNotify: alertActions.dispatchNotify
 };
+
 
 export default connect(mapState, actionCreators)(Users);
