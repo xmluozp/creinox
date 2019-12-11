@@ -91,6 +91,8 @@ function get_all(pagination) { // pagination: page, perPage, orderBy, searchTerm
 function get_bySearch(pagination, searchTerms = {}) { // pagination: page, perPage, orderBy, searchTerms:object
     return (dispatch) => {
         // 登录中
+
+        console.log("action,", pagination, searchTerms)
         dispatch({ type: LOADING.LOADING });
         return service.get_bySearch(pagination, searchTerms).then(
             response => {

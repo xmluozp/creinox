@@ -59,7 +59,7 @@ export function h_queryString(pagination = {page:0, order: 'desc', orderBy: 'id'
 
     const paginationString = Object.keys(pagination).map(key => key + '=' + pagination[key]).join('&');
 
-    return paginationString +"&" + searchString;
+    return paginationString +"&q=" + searchString;
 }
 
 export function h_keyNames(object) {

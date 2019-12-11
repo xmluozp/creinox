@@ -20,7 +20,7 @@ import TablePaginationWrapper from './tablePaginationWrapper'
 
 // 所有pagination信息都从data来而不是本地
 export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySearch, dataModel, rowButtons = [], selectBox, toolbarButtons = [], ...props }) => {
-  console.log("render child")
+
   // 默认数据（如果是页面，则从params里取）
   const defaultPagination = {
     page: 0,
@@ -70,17 +70,10 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
   // 提交this的翻页信息，更新data (翻页触发)
   const p_updateData = React.useCallback( 
     () => {
-      console.log("触发")
       onGetBySearch(getPaginationFromState(), nextSearchTerms); // 当前翻页信息，新的搜索信息
-      return true;
     },
     [onGetBySearch, getPaginationFromState, nextSearchTerms],
   )
-
-  const p_testUpdate = (fn) => {
-    console.log("run test")
-    fn();
-  }
 
   // 根据store的翻页信息更新data (刷新触发)
   const p_fetchData = React.useCallback(
@@ -136,11 +129,12 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
     if (!data) p_updateData();
   }, [p_updateData, data])
 
+
   // fetch data after change page
   React.useEffect(() => {
-    // p_testUpdate(()=>{console.log("hello")});
     if(loaded) p_updateData();
-  }, [page, perPage, order, orderBy, p_updateData])
+  }, [onGetBySearch, getPaginationFromState, , nextSearchTerms, p_updateData])
+
 
   // guard boolean: if loaded
   React.useEffect(()=>{
@@ -148,13 +142,12 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
   }, [])
 
   const handleOnRefresh = e => {
-    p_testUpdate(() => {onGetBySearch()});
     p_fetchData();
   }
   const handleOnSearch = (searchTerms) => {
     // 分别更新本地和远程
     setNextSearchTerms(searchTerms); // work with paginatitor
-    onGetBySearch(getPaginationFromState(), searchTerms);
+    // onGetBySearch(getPaginationFromState(), searchTerms);
   }
 
   // ----------------------- handle for query
@@ -343,10 +336,6 @@ const ActionButton = ({ id, label, onClick, color, url, icon, getPaginationFromS
 
   return returnValue
 }
-
-
-
-
 
 // =========================================styles of material-ui
 

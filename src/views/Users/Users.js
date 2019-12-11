@@ -72,7 +72,6 @@ const Users = ({ onGetBySearch, onDelete, userData, onAlertNotify}) => {
  
   // ============================================= Render
   return (
-    <>
     <CreinoxTable
       tableTitle="用户列表"
       headCells={headCells}
@@ -84,8 +83,6 @@ const Users = ({ onGetBySearch, onDelete, userData, onAlertNotify}) => {
       searchBar={searchBar}
       selectBox={selectBox}
     />
-    <button onClick = {() => { onGetBySearch()}}>test</button>
-    </>
   )
 }
 
