@@ -79,13 +79,13 @@ function get_all(pagination) { // pagination: page, perPage, orderBy, searchTerm
             },
             error => {
                 dispatch({ type: LOADING.FAILURE });
-                dispatch(failure(error));
+                dispatch(failure(error.toString()));
             }
         )
     }
 
     function success(payload) { return { type: CONST.GETALL_SUCCESS, payload } }
-    function failure(payload) { return { type: CONST.GETALL_FAILURE, payload } }
+    function failure(payload) { return alertActions.error(payload) }
 }
 
 function get_bySearch(pagination, searchTerms = {}) { // pagination: page, perPage, orderBy, searchTerms:object
@@ -101,33 +101,36 @@ function get_bySearch(pagination, searchTerms = {}) { // pagination: page, perPa
             },
             error => {
                 dispatch({ type: LOADING.FAILURE });
-                dispatch(failure(error));
+                dispatch(failure(error.toString()));
             }
         )
     }
 
     function success(payload) { return { type: CONST.GETALL_SUCCESS, payload } }
-    function failure(payload) { return { type: CONST.GETALL_FAILURE, payload } }
+    function failure(payload) { return alertActions.error(payload) }
 }
 
-function get_byId(pagination, searchTerms = {}) { // pagination: page, perPage, orderBy, searchTerms:object
+function get_byId(id) { //
     return (dispatch) => {
-        // 登录中
+
+        console.log("action getbyid")
+
         dispatch({ type: LOADING.LOADING });
-        return service.get_bySearch(pagination, searchTerms).then(
+        return service.get_byId(id).then(
             response => {
                 dispatch({ type: LOADING.SUCCESS });
                 dispatch(success(response));
             },
             error => {
+                console.log(error);
                 dispatch({ type: LOADING.FAILURE });
-                dispatch(failure(error));
+                dispatch(failure(error.toString()));
             }
         )
     }
 
     function success(payload) { return { type: CONST.GET_SUCCESS, payload } }
-    function failure(payload) { return { type: CONST.GET_FAILURE, payload } }
+    function failure(payload) { return alertActions.error(payload) }
 }
 
 function post_create(item) {

@@ -1,47 +1,145 @@
-import React from 'react';
-import _ from 'lodash';
-import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
+import React, { useEffect, useState } from "react";
+import _ from "lodash";
+
+import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 
 //------redux
-import { connect } from 'react-redux'
-import { userActions } from '../../_actions'
-// import { userModel } from '../../_dataModel'
+import { connect } from "react-redux";
+import { userActions } from "../../_actions";
+import { userModel as dataModel } from "../../_dataModel";
+import { CreinoxForm, Inputs } from "../../components";
 
 // import { h_confirm } from '../../_helper'
 
-const User = ({userData, onPostCreate, onPutUpdate, onGetById, ...props}) => {
+const User = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
+  const id = _.get(props, "match.params.id");
+  const [disabled, setdisabled] = useState(id && true);
+  // const [disabled, setdisabled] = useState( false )
 
+  useEffect(() => {
+    // if there is ID, fetch data
+    if (!dataById && id) {
+      onGetById(id);
+    }
+    console.log(dataById && dataById.row);
+  }, [onGetById, dataById, id]);
 
-  // const user = usersData.find(user => user.id.toString() === this.props.match.params.id)
+  // ********************************
 
-  // const userDetails = user ? Object.entries(user) : [['id', (<span><i className="text-muted icon-ban"></i> Not found</span>)]]
-
-  const id = _.get(props, "match.params.id")
+  const handleOnSubmit = values => {
+    console.log("submit:", values);
+  };
 
   return (
     <div className="animated fadeIn">
       <Row>
-        <Col lg={6}>
+        <Col lg={12}>
           <Card>
             <CardHeader>
-              <strong><i className="icon-info pr-1"></i>User id: {id}</strong>
+              <strong>
+                <i className="icon-info pr-1"></i>User id: {id}
+              </strong>
             </CardHeader>
-            <CardBody>
-              hihihi
-            </CardBody>
+            <CreinoxForm
+              dataModel={dataModel}
+              defaultValues={dataById && { ...dataById.row }}
+              actionSubmit={handleOnSubmit}
+            >
+              <CardBody>
+                {/* form */}
+
+                <Grid container spacing={2}>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyInput inputid="userName" disabled={disabled} />
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyInputPassword
+                      inputid="password"
+                      disabled={disabled}
+                    />
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyInput inputid="role_id" disabled={disabled} />
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyInput inputid="fullName" disabled={disabled} />
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyInput inputid="ip" disabled={disabled} />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Inputs.MyInput
+                      inputid="memo"
+                      multiline
+                      rows={3}
+                      disabled={disabled}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyDatePicker
+                      inputid="lastLogin"
+                      disabled={disabled}
+                    />
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyDatePicker
+                      inputid="createAt"
+                      disabled={disabled}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Inputs.MySwitch inputid="isActive" disabled={disabled} />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <MySubmitButton disabled={disabled} setdisabled={setdisabled}  />
+                </Grid>
+              </CardBody>
+            </CreinoxForm>
           </Card>
         </Col>
       </Row>
     </div>
-  )
-}
-
-
+  );
+};
 
 // ============================================= Redux
+
+const MySubmitButton = ({ disabled = false, setdisabled = () => {}, onSbumit }) => {
+  return (
+    <>
+      <Grid item>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setdisabled(!disabled);
+          }}
+        >
+          {disabled ? "进入编辑模式" : "回到浏览模式"}
+        </Button>
+      </Grid>
+      {disabled ? null : (
+        <Grid item>
+          <Button type="submit" variant="contained" color="primary">
+            保存
+          </Button>
+        </Grid>
+      )}
+    </>
+  );
+};
+
 function mapState(state) {
   return {
-    userData: state.userData.data
+    dataById: state.userData.dataById
   };
 }
 

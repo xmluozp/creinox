@@ -10,7 +10,8 @@ export const roleService = {
     _delete: _delete
 };
 
-// const url = 'http://localhost:3000/api/role';
+const TABLENAME = "user"
+// const URL = 'http://localhost:3000/api/role';
 
 function get_all(pagination) {
 
@@ -21,7 +22,7 @@ function get_all(pagination) {
 
     console.log("get_all service:", pagination);
 
-    const queryString = h_queryString(pagination);
+    const queryString = h_queryString(pagination, {}, TABLENAME);
     const url = './dataset/roledata.json'
     // pagination也可以在这里拆开了放进uri
 
@@ -38,7 +39,7 @@ function get_bySearch(pagination, searchTerms = {}) {
     };
 
     
-    const queryString = h_queryString(pagination,searchTerms)
+    const queryString = h_queryString(pagination,searchTerms, TABLENAME)
     const url = './dataset/roledata.json'
     console.log("search service:", queryString);
 

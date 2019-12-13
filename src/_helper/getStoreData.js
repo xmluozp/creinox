@@ -46,6 +46,38 @@ export async function h_fkFetchOnce(table) {
     return rows;
 }
 
+export function h_dataPagination(table) {
+    const state = store.getState();
+    return _.get(state, [`${table}Data`, "data", "pagination"]);
+}
+
+export function h_dataSearchTerms(table) {
+    const state = store.getState();
+    return _.get(state, [`${table}Data`, "data", "searchTerms"]);
+}
+
+export function h_queryString(pagination = {}, searchTerm = {}, table) {
+
+    // cover old data
+    const oldPagination = h_dataPagination(table);
+    const oldSearchTerms = h_dataSearchTerms(table);
+
+    const newPagination = {...oldPagination, ...pagination}
+    const newSearchTerms = {...oldSearchTerms, ...searchTerm} 
+
+    let searchString; 
+    searchString = encodeURIComponent(JSON.stringify(newSearchTerms));
+
+    const paginationString = Object.keys(newPagination).map(key => key + '=' + newPagination[key]).join('&');
+
+    return paginationString +"&q=" + searchString;
+}
+
+
+
+
+
+
 
 // import React, {useEffect} from 'react'
 // import { connect } from 'react-redux'

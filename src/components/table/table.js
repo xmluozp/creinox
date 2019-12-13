@@ -13,9 +13,9 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
 
-import TableHeadWrapper from './tableHeadWrapper'
-import TableToolbarWrapper from './tableToolbarWrapper'
-import TablePaginationWrapper from './tablePaginationWrapper'
+import TableHeadWrapper from './TableHeadWrapper'
+import TableToolbarWrapper from './TableToolbarWrapper'
+import TablePaginationWrapper from './TablePaginationWrapper'
 
 
 // 所有pagination信息都从data来而不是本地
@@ -31,6 +31,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
     orderBy: 'id',
   }
 
+
   // const isData = data && data.pagination
 
   // 本页用来显示的数据。唯一可信数据来源是从store传下来的data
@@ -44,12 +45,12 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
   }
 
   // 以下信息是用来提交pagination请求的，不涉及页面显示；页面如何显示完全来自于data
-  const [loaded, setLoaded] = useState(false) // 配合useEffect绕过无法callBack的问题。
+  // const [loaded, setLoaded] = useState(false) // 配合useEffect绕过无法callBack的问题。
   const [page, setPage] = useState(dataPagination.page);
   const [perPage, setPerPage] = useState(dataPagination.perPage);
   const [order, setOrder] = useState(dataPagination.order);
   const [orderBy, setOrderBy] = useState(dataPagination.orderBy);
-  const [nextSearchTerms, setNextSearchTerms] = useState(_.get(data, "searchTerms"));
+  // const [nextSearchTerms, setNextSearchTerms] = useState(_.get(data, "searchTerms"));
   const [listOnShow, setListOnShow] = useState([])
   const [selected, setSelected] = useState([]);
   // --------------- DISPLAY
@@ -61,28 +62,6 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
   const rowLength = data && data.rows ? data.rows.length : 0;
   const dataSearchTerms = data && data.searchTerms ? data.searchTerms : {};
   const emptyRows = dataPagination.perPage - Math.min(dataPagination.perPage, dataPagination.totalCount - page * dataPagination.perPage);
-
-  const getPaginationFromState = React.useCallback(
-    (pg = { page, perPage, order, orderBy }) => {return pg},
-    [ page, perPage, order, orderBy],
-  )
-
-  // 提交this的翻页信息，更新data (翻页触发)
-  const p_updateData = React.useCallback( 
-    () => {
-      onGetBySearch(getPaginationFromState(), nextSearchTerms); // 当前翻页信息，新的搜索信息
-    },
-    [onGetBySearch, getPaginationFromState, nextSearchTerms],
-  )
-
-  // 根据store的翻页信息更新data (刷新触发)
-  const p_fetchData = React.useCallback(
-    () => {
-      const { page, perPage, order, orderBy } = dataPagination
-      onGetBySearch(getPaginationFromState( { page, perPage, order, orderBy }), nextSearchTerms);
-    },
-    [dataPagination, onGetBySearch, getPaginationFromState, nextSearchTerms],
-  )
 
   // render数据预处理
   React.useEffect(() => {
@@ -124,48 +103,80 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
     setListOnShow(listOnShowTemp);
   }, [data, headCells, dataModel])
 
+
+  const getPaginationFromState = React.useCallback(
+    (pg = { page, perPage, order, orderBy }) => {return pg},
+    [ page, perPage, order, orderBy],
+  )
+
+  const p_updateData = (newPagination = {}, newSearchTerms = {}) => {
+      onGetBySearch(newPagination, newSearchTerms); 
+  }
+
+  // 根据store的翻页信息更新data (刷新触发)
+  const p_fetchData = React.useCallback(
+    () => onGetBySearch({page:0}), // submit empty. refresh by store
+    [onGetBySearch],
+  )
+
+
   // fetch data first time
   React.useEffect(() => {
-    if (!data) p_updateData();
-  }, [p_updateData, data])
+    if (!data) p_fetchData();
+  }, [p_fetchData, data])
 
 
   // fetch data after change page
-  React.useEffect(() => {
-    if(loaded) p_updateData();
-  }, [onGetBySearch, getPaginationFromState, , nextSearchTerms, p_updateData])
+  // React.useEffect(() => {
+  //   if(loaded) p_updateData();
+  // }, [onGetBySearch, getPaginationFromState, nextSearchTerms, p_updateData])
 
 
-  // guard boolean: if loaded
-  React.useEffect(()=>{
-    setLoaded(true);
-  }, [])
-
+  // *********************************************** handle for fetchData ****************************************
   const handleOnRefresh = e => {
     p_fetchData();
   }
+
   const handleOnSearch = (searchTerms) => {
     // 分别更新本地和远程
-    setNextSearchTerms(searchTerms); // work with paginatitor
+    // setNextSearchTerms(searchTerms); // work with paginatitor
     // onGetBySearch(getPaginationFromState(), searchTerms);
+
+    p_updateData({}, searchTerms)
   }
 
-  // ----------------------- handle for query
-  const handleRequestSort = (e, property) => {
-    const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
-    setOrderBy(property);
+  const handleRequestSort = (e, newOrderBy) => {
+    const isDesc = orderBy === newOrderBy && order === 'desc';
+    const newOrder = isDesc ? 'asc' : 'desc'
+    if(order === newOrder && orderBy === newOrderBy) return;
+    setOrder(newOrder);
+    setOrderBy(newOrderBy);
+
+    // fetchData
+    p_updateData({...getPaginationFromState(), order: newOrder, orderBy: newOrderBy}, {});
   };
 
   const handleChangePage = (e, newPage) => {
+
+    if (page === newPage) return;
+    
     setPage(newPage);
+
+    // fetchData
+    p_updateData({...getPaginationFromState(), page: newPage}, {});
   };
 
   const handleChangeRowsPerPage = e => {
-    setPerPage(parseInt(e.target.value, 10));
-    setPage(0);
-  };
+    const newPerPage = parseInt(e.target.value, 10)
+    if (perPage === newPerPage) return;
 
+    setPerPage(newPerPage);
+    setPage(0);
+
+    // fetchData
+    p_updateData({...getPaginationFromState(), page: 0, perPage: newPerPage });
+  };
+// *********************************************** handle for fetchData ****************************************
 
   // ----------------------- handle for table component
   const handleSelectAllClick = e => {

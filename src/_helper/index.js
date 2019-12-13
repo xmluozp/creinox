@@ -5,7 +5,7 @@ import {userService} from '../_services'
 import { format } from 'date-fns'
 
 
-export * from './fkPicker'
+export * from './getStoreData'
 export * from './store'
 
 export const history = createHashHistory({ forceRefresh: true });
@@ -51,16 +51,7 @@ export function handleOnChange(e, setFunc) {
     // console.log("funcs:", test);
 }
 
-export function h_queryString(pagination = {page:0, order: 'desc', orderBy: 'id',}, searchTerms = {}) {
 
-    let searchString; 
-
-    searchString = encodeURIComponent(JSON.stringify(searchTerms));
-
-    const paginationString = Object.keys(pagination).map(key => key + '=' + pagination[key]).join('&');
-
-    return paginationString +"&q=" + searchString;
-}
 
 export function h_keyNames(object) {
     const returnValue = {}

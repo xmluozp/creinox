@@ -1,14 +1,14 @@
 import React from 'react';
 import { Formik } from 'formik';
+import _ from 'lodash';
 
 /**
  * actionSubmit: redux action passed from parent. When submitting, form will call: fn(data)
  * @param {*} props 
  */
-const CreinoxForm = (props) => {
+export const CreinoxForm = (props) => {
 
     const { children, dataModel, defaultValues, actionSubmit } = props;
-
 
     // Formik 要求的提交函数
     const submitForm = (values, actions) => {
@@ -35,13 +35,16 @@ const CreinoxForm = (props) => {
     }
 
     // depends on what input components passed in, generate initialValues. 根据输入控件，生成state
+    // use "inputid" in case of name conflict with "id"
     recursiveMap(children, (item) => {
-        if (item.props && item.props.id && dataModel && dataModel.columns.hasOwnProperty(item.props.id) && defaultValues) {
-            initialValues[item.props.id] = defaultValues[item.props.id] || "" ;
-        }
+        if (item.props && item.props.inputid && dataModel && dataModel.columns.hasOwnProperty(item.props.inputid) && defaultValues) { 
+            initialValues[item.props.inputid] = defaultValues[item.props.inputid] || "" ;
+        }        
     })
 
-    return (<Formik
+
+    if (_.isEmpty(initialValues)) { return null}
+    else {return (<Formik
         initialValues={initialValues}
         validate={values => {
             let errors = {};
@@ -54,45 +57,50 @@ const CreinoxForm = (props) => {
 
                 
                 {recursiveMap(children, (item) => {
-                    return injectedInputs(
+
+                    const isInput = item.props && initialValues.hasOwnProperty(item.props.inputid)
+
+                    return isInput? injectedInputs( // 如果有id就注入，否则原样返回
                         {
                             item: item,
-                            isInput: item.props && item.props.id && initialValues.hasOwnProperty(item.props.id),
                             handleChange: handleChange,
                             dataModel: dataModel,
                             values: values,
                         }
-                    )
+                    ) : item
                 })}
             </form>
         )}
     </Formik>
-    )
-
+    )}
 }
 
 
-const injectedInputs = ({ item, isInput, handleChange, dataModel, values }) => {
+const injectedInputs = ({ item, handleChange, dataModel, values }) => {
 
-    let returnValue = item;
-    if (!isInput) return returnValue;
+    let returnValue = item;   
+    const columnId = item.props.inputid  
 
-    const columnId = item.props.id
+    // 判断类型，进行注入
 
-    // TODO: 判断类型
+    // 如果id 和model对得上号;
     if (dataModel.columns[columnId]) {
+
+        // TODO: 判断component类型。不同类型注入不同的东西
         returnValue = React.cloneElement(item, {
-            key: item.props.id,
+            id: item.props.inputid,
+            key: item.props.inputid,
             label: dataModel.columns[columnId].label,
             value: values[columnId],
             onChange: handleChange,
             fullWidth: true,
         });
     }
-
+    
     return returnValue;
 }
 
+// literate all children
 function recursiveMap(children, fn) {
     return React.Children.map(children, child => {
         if (!React.isValidElement(child)) {

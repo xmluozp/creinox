@@ -17,6 +17,10 @@ export default {
         {
           name: '用户列表',
           url: '/users/users',
+        },
+        {
+          name: '用户新增',
+          url: '/users/user',
         }
       ]
     }

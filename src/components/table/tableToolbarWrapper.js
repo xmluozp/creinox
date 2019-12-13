@@ -10,7 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import Search from './search';
+import Search from './Search';
 
 
 const useToolbarStyles = makeStyles(theme => ({

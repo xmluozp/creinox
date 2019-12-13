@@ -13,6 +13,8 @@ export const userService = {
     _delete: _delete
 };
 
+const TABLENAME = "user";
+
 // const url = 'http://localhost:3000/api/';
 
 function login(userName, password) {
@@ -66,7 +68,7 @@ function get_all(pagination) {
         headers: authHeader(),
     };
 
-    const queryString = h_queryString(pagination)
+    const queryString = h_queryString(pagination, {}, TABLENAME)
     const url = './dataset/userdata_p2.json'
     console.log("search service:", queryString);
 
@@ -77,7 +79,7 @@ function get_all(pagination) {
     // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
 }
 
-function get_bySearch(pagination, searchTerms) {
+function get_bySearch(pagination, searchTerms, reNew = false) {
 
 
     // search应该是返回pagination，但不应该提交，因为要刷新。这里pagination备用暂时用不到
@@ -87,7 +89,8 @@ function get_bySearch(pagination, searchTerms) {
         // body: searchTerms
     };
 
-    const queryString = h_queryString(pagination, searchTerms)
+    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
+
     const url = './dataset/userdata_p1.json'
     console.log("search service:", queryString);
 
@@ -98,6 +101,16 @@ function get_bySearch(pagination, searchTerms) {
 
 function get_byId(id) {
 
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    const url = './dataset/userdata_byId.json'
+    console.log("getId service,", id)
+
+    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${url}?id=${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {

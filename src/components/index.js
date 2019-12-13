@@ -1,2 +1,4 @@
-export * from './table/table';
-export * from './creinoxForm';
+export * from './Table/Table';
+export * from './CreinoxForm';
+export * from './Inputs';
+export * from './withDatatableStore';

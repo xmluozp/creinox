@@ -1,0 +1,15 @@
+{
+    "row": {
+            "id": 1,
+            "userName": "test1",
+            "fullName": "老王",
+            "password": "123456",
+            "ip": "192.168.0.1",
+            "bargainCode": "",
+            "lastLogin": "2018-07-17 23:51:21",
+            "memo": "测试用户",
+            "isActive": true,
+            "role_id": 1,
+            "role_id.name": "管理员"
+        }
+}
