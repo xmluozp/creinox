@@ -9,7 +9,7 @@
             "lastLogin": "2018-07-17 23:51:21",
             "memo": "测试用户",
             "isActive": true,
-            "role_id": 1,
+            "role_id": 2,
             "role_id.name": "管理员"
         }
 }

@@ -134,10 +134,12 @@ function get_byId(id) { //
 }
 
 function post_create(item) {
+    console.log("actio create:", item);
     return (dispatch) => {dispatch(alertActions.success("测试：新建成功"));}
 }
 
 function put_update(item) {
+    console.log("actio update:", item);
     return (dispatch) => {dispatch(alertActions.success("测试：保存成功"));}
 }
 

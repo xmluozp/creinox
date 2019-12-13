@@ -12,28 +12,37 @@ import {
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
-import Switch from '@material-ui/core/Switch';
+import Switch from "@material-ui/core/Switch";
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
+import {MyCombobox, MyComboboxFK} from './MyCombobox';
+
 // ==================================================================================Date picker
 const MyDatePicker = ({
   id,
-  key,
   label = "选择日期",
   value,
   onChange = () => {},
   fullWidth = true,
   disabled = false
 }) => {
+
+  const handleOnChange = (timeString,timeObject) => {
+
+    if (typeof(onChange)==='function'){
+      onChange(null, id, timeObject)
+    }
+  }
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} style={{ marginTop: "0px" }}>
       <KeyboardDatePicker
@@ -44,7 +53,7 @@ const MyDatePicker = ({
         label={label}
         format="yyyy/MM/dd"
         value={value || new Date()}
-        onChange={onChange}
+        onChange={handleOnChange}
         KeyboardButtonProps={{
           "aria-label": "select date"
         }}
@@ -56,7 +65,6 @@ const MyDatePicker = ({
 // ==================================================================================Date picker for range
 const MyDateRangePicker = ({
   id,
-  key,
   label,
   value, // in case of endless loop, only used for default
   onChange,
@@ -78,7 +86,7 @@ const MyDateRangePicker = ({
   // otherwise only submit
   useEffect(() => {
     const newCombineDate = `${startDate},${endDate}`;
-    if (typeof onChange === "function") onChange(newCombineDate);
+    if (typeof onChange === "function") onChange(null, id, newCombineDate);
   }, [startDate, endDate, onChange]);
 
   const handleChangeStart = date => {
@@ -129,7 +137,6 @@ const MyDateRangePicker = ({
 // ================================================================================== regular text
 const MyInput = ({
   id,
-  key,
   label = "输入",
   value = "",
   onChange = () => {},
@@ -167,7 +174,6 @@ const useStyles = makeStyles(theme => ({
 
 const MyInputPassword = ({
   id,
-  key,
   label = "密码",
   value = "",
   onChange = () => {},
@@ -220,42 +226,37 @@ const MyInputPassword = ({
 // ================================================================================== switch
 const MySwitch = ({
   id,
-  key,
   label = "",
   value = false,
   onChange = () => {},
-  disabled = false,
+  disabled = false
 }) => {
+  const isChecked = value === true || value === "true";
+  const handleOnChange = (e, value) => {
+    onChange(e, id, value);
+  }
 
-  const isChecked = value || value ==='true'
   return (
     <FormControlLabel
       control={
         <Switch
-          id = {id}
+          id={id}
           checked={isChecked}
-          onChange={onChange}
-          value= {label}
-          disabled = {disabled}
+          onChange={handleOnChange}
+          value={value}
+          disabled={disabled}
           color="primary"
         />
       }
-      label= {`${label} : ${isChecked? "是": "否"}`}
+      label={`${label} : ${isChecked ? "是" : "否"}`}
     />
   );
 };
-// ================================================================================== Save button
-
-
-
-
-
-
-
-
 
 
 export const Inputs = {
+  MyCombobox,
+  MyComboboxFK,
   MyDatePicker,
   MyDateRangePicker,
   MyInput,

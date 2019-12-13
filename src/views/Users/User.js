@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 
 //------redux
 import { connect } from "react-redux";
-import { userActions } from "../../_actions";
+import { userActions as dataActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs } from "../../components";
 
@@ -15,21 +15,29 @@ import { CreinoxForm, Inputs } from "../../components";
 
 const User = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
   const id = _.get(props, "match.params.id");
+  const hasDefault = id ? true : false;
   const [disabled, setdisabled] = useState(id && true);
   // const [disabled, setdisabled] = useState( false )
+
+  console.log("id=", id)
+  console.log("dataById=", dataById)
+
 
   useEffect(() => {
     // if there is ID, fetch data
     if (!dataById && id) {
       onGetById(id);
     }
-    console.log(dataById && dataById.row);
   }, [onGetById, dataById, id]);
 
   // ********************************
 
   const handleOnSubmit = values => {
-    console.log("submit:", values);
+    if (hasDefault) {
+      onPutUpdate(values);
+    } else {
+      onPostCreate(values);
+    }
   };
 
   return (
@@ -44,7 +52,8 @@ const User = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
             </CardHeader>
             <CreinoxForm
               dataModel={dataModel}
-              defaultValues={dataById && { ...dataById.row }}
+              defaultValues={hasDefault && dataById && { ...dataById.row }}
+              hasDefault = {hasDefault}
               actionSubmit={handleOnSubmit}
             >
               <CardBody>
@@ -61,13 +70,13 @@ const User = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
                     />
                   </Grid>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyInput inputid="role_id" disabled={disabled} />
-                  </Grid>
-                  <Grid item lg={4} xs={12}>
                     <Inputs.MyInput inputid="fullName" disabled={disabled} />
                   </Grid>
                   <Grid item lg={4} xs={12}>
                     <Inputs.MyInput inputid="ip" disabled={disabled} />
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Inputs.MyComboboxFK inputid="role_id" optionLabel="name" tableName="role" disabled={disabled} />
                   </Grid>
 
                   <Grid item xs={12}>
@@ -99,7 +108,21 @@ const User = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <MySubmitButton disabled={disabled} setdisabled={setdisabled}  />
+                  {hasDefault && ( // only show edit button when update
+                    <Grid item>
+                      <MyEditButton
+                        disabled={disabled}
+                        setdisabled={setdisabled}
+                      />
+                    </Grid>
+                  )}
+                  {disabled || ( // when browsering, hide save button
+                    <Grid item>
+                      <Button type="submit" variant="contained" color="primary">
+                        保存
+                      </Button>
+                    </Grid>
+                  )}
                 </Grid>
               </CardBody>
             </CreinoxForm>
@@ -112,27 +135,22 @@ const User = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
 
 // ============================================= Redux
 
-const MySubmitButton = ({ disabled = false, setdisabled = () => {}, onSbumit }) => {
+const MyEditButton = ({
+  disabled = false,
+  setdisabled = () => {},
+  onSbumit
+}) => {
   return (
     <>
-      <Grid item>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => {
-            setdisabled(!disabled);
-          }}
-        >
-          {disabled ? "进入编辑模式" : "回到浏览模式"}
-        </Button>
-      </Grid>
-      {disabled ? null : (
-        <Grid item>
-          <Button type="submit" variant="contained" color="primary">
-            保存
-          </Button>
-        </Grid>
-      )}
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setdisabled(!disabled);
+        }}
+      >
+        {disabled ? "进入编辑模式" : "回到浏览模式"}
+      </Button>
     </>
   );
 };
@@ -144,9 +162,9 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  onPostCreate: userActions.post_create,
-  onPutUpdate: userActions.put_update,
-  onGetById: userActions.get_byId
+  onPostCreate: dataActions.post_create,
+  onPutUpdate: dataActions.put_update,
+  onGetById: dataActions.get_byId
 };
 
 export default connect(mapState, actionCreators)(User);
