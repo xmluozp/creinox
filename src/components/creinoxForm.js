@@ -52,7 +52,7 @@ export class CreinoxForm extends React.Component {
       }
     });
     this.setState({
-      isComponentLoaded: !this.props.hasDefault, // 如果表单是空的，直接显示加载完毕，否则等待加载
+      isComponentLoaded: !this.props.isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
       ...initialValues
     });
   }

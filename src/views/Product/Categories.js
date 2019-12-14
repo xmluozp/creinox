@@ -10,10 +10,10 @@ import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import { CreinoxTable, Inputs, withDatatableStore} from "../../components";
 
+
 // ******************************************************************* page setting
 import { userActions as dataActions, alertActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
-
 
 const EDITURL = "/users/user";
 const CREATEURL = "/users/user";
@@ -110,8 +110,7 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
 // 搜索框
 const searchBar = (
   <>
-    <Inputs.MyInput inputid= "userName" />
-    <Inputs.MyInput inputid= "fullName"/>
+    <TextField margin="dense" id="fullName" type="text" inputid= "fullName"/>
   </>
 );
 

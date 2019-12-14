@@ -10,7 +10,7 @@ export const roleService = {
     _delete: _delete
 };
 
-const TABLENAME = "user"
+const TABLENAME = "role"
 // const URL = 'http://localhost:3000/api/role';
 
 function get_all(pagination) {

@@ -20,11 +20,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 import Switch from "@material-ui/core/Switch";
+import Button from "@material-ui/core/Button";
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
-import {MyCombobox, MyComboboxFK} from './MyCombobox';
+import {MyCombobox, MyComboboxFK, MySelect} from './MyCombobox';
 
 // ==================================================================================Date picker
 const MyDatePicker = ({
@@ -87,7 +88,7 @@ const MyDateRangePicker = ({
   useEffect(() => {
     const newCombineDate = `${startDate},${endDate}`;
     if (typeof onChange === "function") onChange(null, id, newCombineDate);
-  }, [startDate, endDate, onChange]);
+  }, [startDate, endDate, onChange, id]);
 
   const handleChangeStart = date => {
     setStartDate(date);
@@ -145,7 +146,8 @@ const MyInput = ({
   fullWidth = true,
   disabled = false,
   multiline = false,
-  rows = 1
+  rows,
+  rowsMax = 5
 }) => {
   return (
     <TextField
@@ -160,6 +162,7 @@ const MyInput = ({
       helperText={helperText}
       multiline={multiline}
       rows={rows}
+      rowsMax={rowsMax}
     />
   );
 };
@@ -253,12 +256,36 @@ const MySwitch = ({
   );
 };
 
+// ================================================================================== switch
+const MyEditButton = ({
+  disabled = false,
+  setdisabled = () => {},
+}) => {
+  return (
+    <>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setdisabled(!disabled);
+        }}
+      >
+        {disabled ? "进入编辑模式" : "回到浏览模式"}
+      </Button>
+    </>
+  );
+};
+
+
+
 
 export const Inputs = {
   MyCombobox,
   MyComboboxFK,
+  MySelect,
   MyDatePicker,
   MyDateRangePicker,
+  MyEditButton,
   MyInput,
   MyInputPassword,
   MySwitch

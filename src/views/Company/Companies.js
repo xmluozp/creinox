@@ -6,22 +6,22 @@ import TextField from "@material-ui/core/TextField";
 
 //------redux
 import { connect } from "react-redux";
-import { ICONS } from "../../_constants";
+
+import { ICONS, _DATATYPES } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import { CreinoxTable, Inputs, withDatatableStore} from "../../components";
 
 // ******************************************************************* page setting
-import { userActions as dataActions, alertActions } from "../../_actions";
-import { userModel as dataModel } from "../../_dataModel";
+import { companyActions as dataActions, alertActions } from "../../_actions";
+import { companyModel as dataModel } from "../../_dataModel";
 
-
-const EDITURL = "/users/user";
-const CREATEURL = "/users/user";
+const EDITURL = "/company/company";
+const CREATEURL = "/company/company";
 
 // inject data
 const MyTable = withDatatableStore(
   CreinoxTable,               // tablecomponent
-  { data: "userData" },       // data source
+  { data: "companyData" },       // data source
   dataActions.get_bySearch    // fetch action
 );
 // ******************************************************************* page setting
@@ -39,39 +39,22 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
       if (resolve) onDelete(pagination, id);
     });
   };
-  const handleSelectAction = list => {
-    onAlertNotify(`选中了 ${list.join(",")}`);
-  };
-
-  const selectBox = {
-    icon: ICONS.ACTIVE(),
-    title: "批量启用",
-    onAction: handleSelectAction
-  };
 
   // ============================================= render cell
-  const renderOnShowRole = (content, row) => {
-    return `[${row.role_id}] ${content}`;
-  };
-  const renderOnShowMemo = content => {
-    return <span title={content}>{_.truncate(content, { length: 10 })}</span>;
+  const renderOnShowType = (content, row) => {
+    return content;
   };
 
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
-    { name: "role_id", onShow: renderOnShowRole },
-    { name: "userName" },
-    { name: "fullName" },
-    { name: "ip" },
-    { name: "lastLogin" },
-    { name: "memo", onShow: renderOnShowMemo },
-    {
-      name: "isActive",
-      align: "center",
-      label: "状态",
-      className: { true: "text-success", false: "text-danger" },
-      lookup: { true: ICONS.TRUE("mr-4"), false: ICONS.FALSE("mr-4") }
-    }
+    { name: "code"},
+    { name: "companyType", onShow: renderOnShowType},
+    { name: "name" },
+    { name: "shortname" },
+    { name: "address" },
+    { name: "retriveTime" },
+    { name: "retriever_id" }, // 从取回的数据 retriever_id.userName 显示
+    { name: "imageLicense" }
   ];
 
   // ============================================= Table Settings
@@ -100,7 +83,6 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
         rowButtons={rowButtons}
         toolbarButtons={toolbarButtons}
         searchBar={searchBar}
-        selectBox={selectBox}
       />
     </>
   );
@@ -110,8 +92,8 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
 // 搜索框
 const searchBar = (
   <>
-    <Inputs.MyInput inputid= "userName" />
-    <Inputs.MyInput inputid= "fullName"/>
+    <Inputs.MySelect inputid= "companyType" options={_DATATYPES.ENUM.companyType}/>
+    <Inputs.MyComboboxFK inputid="retriever_id" optionLabel="userName" tableName="user" />
   </>
 );
 

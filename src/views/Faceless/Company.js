@@ -11,7 +11,6 @@ import { userActions as dataActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs } from "../../components";
 
-// import { h_confirm } from '../../_helper'
 
 const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
   const id = _.get(props, "match.params.id");
@@ -43,7 +42,7 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
           <Card>
             <CardHeader>
               <strong>
-                <i className="icon-info pr-1"></i>id: {id}
+                <i className="icon-info pr-1"></i>User id: {id}
               </strong>
             </CardHeader>
             <CreinoxForm

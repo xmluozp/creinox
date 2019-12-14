@@ -1,16 +1,16 @@
 import { ROLE as CONST, LOADING } from '../_constants'
 import { roleService as service } from '../_services'
-// import { alertActions } from './';
+import { alertActions } from './';
 
 
 export const roleActions = {
-    get_all,
+    get_dropdown,
     get_bySearch,
     _delete
 }
 
 // FETCH  ---------------------------------------------
-function get_all(pagination) { // pagination: page, perPage, orderBy, searchTerms:object
+function get_dropdown(pagination) { // pagination: page, perPage, orderBy, searchTerms:object
     return (dispatch) => {
         dispatch({ type: LOADING.LOADING });
         return service.get_all(pagination).then(
@@ -26,8 +26,8 @@ function get_all(pagination) { // pagination: page, perPage, orderBy, searchTerm
         )
     }
 
-    function success(payload) { return { type: CONST.GETALL_SUCCESS, payload } }
-    function failure(payload) { return { type: CONST.GETALL_FAILURE, payload } }
+    function success(payload) { return { type: CONST.GETDROPDOWN_SUCCESS, payload } }
+    function failure(payload) { return alertActions.error(payload) }
 }
 
 
@@ -47,8 +47,8 @@ function get_bySearch(pagination, searchTerms = {}) { // pagination: page, perPa
         )
     }
 
-    function success(payload) { return { type: CONST.GETALL_SUCCESS, payload } }
-    function failure(payload) { return { type: CONST.GETALL_FAILURE, payload } }
+    function success(payload) { return { type: CONST.GETBYSEARCH_SUCCESS, payload } }
+    function failure(payload) { return alertActions.error(payload) }
 }
 
 function _delete(pagination, id) { // pagination 刷新用

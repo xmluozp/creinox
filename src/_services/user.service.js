@@ -5,7 +5,7 @@ import { authHeader, handleResponse, h_queryString } from '../_helper';
 export const userService = {
     login,
     logout,
-    get_all,
+    get_dropdown,
     get_bySearch,
     get_byId,
     post_create,
@@ -61,7 +61,7 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function get_all(pagination) {
+function get_dropdown(pagination) {
 
     const requestOptions = {
         method: 'GET',
@@ -69,7 +69,7 @@ function get_all(pagination) {
     };
 
     const queryString = h_queryString(pagination, {}, TABLENAME)
-    const url = './dataset/userdata_p2.json'
+    const url = './dataset/userdata_p1.json'
     console.log("search service:", queryString);
 
     // 要带searchTerm
@@ -114,11 +114,11 @@ function get_byId(id) {
 }
 
 function post_create(item) {
-
+    return new Promise(resolve => resolve("on create service"))
 }
 
 function put_update(item) {
-
+    return new Promise(resolve => resolve("on update service"))
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

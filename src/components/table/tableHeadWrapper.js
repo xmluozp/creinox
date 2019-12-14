@@ -41,12 +41,14 @@ const TableHeadWrapper = (props) => {
                 headCell.align ? headCell.align : 'left'}
               padding={headCell.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === headCell.name ? order : false}
+              style={{whiteSpace: "nowrap"}}
             >
               <TableSortLabel
                 active={orderBy === headCell.name}
                 direction={order}
                 onClick={createSortHandler(headCell.name)}
                 className = {className}
+                
               >
                 {label}
                 {orderBy === headCell.name ? (

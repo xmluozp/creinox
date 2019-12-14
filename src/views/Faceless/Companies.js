@@ -8,13 +8,14 @@ import TextField from "@material-ui/core/TextField";
 import { connect } from "react-redux";
 import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore} from "../../components";
+import { CreinoxTable } from "../../components";
+import {withDatatableStore} from "../../components";
 
 // ******************************************************************* page setting
 import { userActions as dataActions, alertActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
 
-
+const TABLETITLE = "用户列表";
 const EDITURL = "/users/user";
 const CREATEURL = "/users/user";
 
@@ -31,7 +32,7 @@ const MyTable = withDatatableStore(
  * Basic page for list
  * @param {} param0
  */
-const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
+const CurrentPage = ({ onDelete, onAlertNotify }) => {
 
   // ============================================= handles
   const handleOnDelete = (pagination, id) => {
@@ -93,8 +94,7 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
   return (
     <>
       <MyTable
-        editUrl={EDITURL}
-        tableTitle={pageName}
+        tableTitle={TABLETITLE}
         headCells={headCells}
         dataModel={dataModel}
         rowButtons={rowButtons}
@@ -110,8 +110,8 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
 // 搜索框
 const searchBar = (
   <>
-    <Inputs.MyInput inputid= "userName" />
-    <Inputs.MyInput inputid= "fullName"/>
+    <TextField autoFocus margin="dense" id="userName" type="text" inputid= "userName" />
+    <TextField margin="dense" id="fullName" type="text" inputid= "fullName"/>
   </>
 );
 

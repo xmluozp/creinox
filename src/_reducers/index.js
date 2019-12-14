@@ -6,6 +6,11 @@ import alert from './alertReducer'
 import role from './roleReducer'
 import user from './userReducer'
 
+import company from './companyReducer'
+
+import product from './productReducer'
+import category from './categoryReducer'
+
 
 // 多表格的时候这里是所有的reducer
 export default combineReducers({
@@ -14,4 +19,7 @@ export default combineReducers({
     alertData: alert,
     roleData: role,
     userData: user,
+    companyData: company,
+    productData: product,
+    categoryData: category,
 });

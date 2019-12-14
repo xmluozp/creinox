@@ -41,7 +41,7 @@ export default function Search({ onSearch, dataModel, searchTerms, searchBar }) 
                 <Popper open={open} anchorEl={anchorEl} placement="bottom-end" transition>
                     {({ TransitionProps }) => (
                         <Fade {...TransitionProps} timeout={350}>
-                            <Paper>
+                            <Paper style={{minWidth: "200pt", maxWidth: "80vw"}}>
                                 <CreinoxForm dataModel={dataModel} defaultValues={searchTerms} actionSubmit={onSearch}>
                                     <DialogContent>
                                         <DialogContentText>

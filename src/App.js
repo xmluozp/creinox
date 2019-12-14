@@ -2,6 +2,7 @@ import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { loadingActions } from "./_actions";
+import {h_initializeDropDownTables} from "./_helper";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import "./App.scss";
@@ -17,6 +18,9 @@ const DefaultLayout = React.lazy(() => import("./containers/DefaultLayout"));
 const Page404 = React.lazy(() => import("./views/Pages/Page500"));
 const Page500 = React.lazy(() => import("./views/Pages/Page500"));
 const LoginPage = React.lazy(() => import("./views/Pages/Login"));
+
+// will initialize dropdown tables, but only those tables with few data.
+h_initializeDropDownTables();
 
 const App = ({ user, loadingBar }) => {
   React.useEffect(() => {

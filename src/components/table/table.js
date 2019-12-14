@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import _ from 'lodash'
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
+import { history } from "../../_helper";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -12,6 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import {_DATATYPES} from "../../_constants/_dataTypes"
 
 import TableHeadWrapper from './TableHeadWrapper'
 import TableToolbarWrapper from './TableToolbarWrapper'
@@ -19,7 +21,7 @@ import TablePaginationWrapper from './TablePaginationWrapper'
 
 
 // 所有pagination信息都从data来而不是本地
-export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySearch, dataModel, rowButtons = [], selectBox, toolbarButtons = [], ...props }) => {
+export const CreinoxTable = ({ headCells, editUrl, searchBar, tableTitle, data, onGetBySearch, dataModel, rowButtons = [], selectBox, toolbarButtons = [], ...props }) => {
 
   // 默认数据（如果是页面，则从params里取）
   const defaultPagination = {
@@ -84,6 +86,13 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
         if (refLabel) {
           originalContent = row[`${columnName}.${refLabel}`] || originalContent;
         } 
+
+        // 如果是Enum，根据列名从datatypes里取文本
+        const dataModelColumn = _.get(dataModel,["columns", columnName]);
+        if (dataModelColumn && dataModelColumn.type === _DATATYPES.ENUM) {
+          originalContent = _DATATYPES.ENUM[columnName][originalContent];
+        } 
+
         // 如果是callBak，预先生成结果
         if (typeof (column.onShow) === "function") columnContent = column.onShow(originalContent, row);
         // 如果是lookup预先翻译内容。但样式要在下面取
@@ -238,6 +247,7 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
             stickyHeader={false}
             size="small"
             aria-label={tableTitle}
+            style={{minWidth: '1200px'}}
           >
             {/* -------------------head (on select; headCells)----------------- */}
             <TableHeadWrapper
@@ -289,18 +299,22 @@ export const CreinoxTable = ({ headCells, searchBar, tableTitle, data, onGetBySe
                         columnContent = listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值           
 
                         const handleCellClick = column.onClick ? column.onClick.bind(null, rowId) : null; 
+                        const handleCellDbClick = () => {if(editUrl) history.push(`${editUrl}/${rowId}`); } 
                         const SolveRef = React.forwardRef((props, ref) => <div {...props} ref={ref}>{columnContent}</div>); // 显示tip强制需要这段
 
                         return index >= 0
                           && index < headCells.length
-                          && <TableCell key={`${rowId}_${index}`} align={column.align} onClick={handleCellClick} className={className}>
+                          && <TableCell key={`${rowId}_${index}`} align={column.align} 
+                          onClick={handleCellClick} 
+                          onDoubleClick={handleCellDbClick}
+                          className={className}>
                             <Tooltip title={`${originalContent}`}>
                               <SolveRef />
                             </Tooltip>
                           </TableCell>
                       })}
                     { // 放操作按钮的格子
-                      rowButtons ? <TableCell align="right">
+                      rowButtons ? <TableCell align="right" style={{minWidth: 80 * rowButtons.length}}>
                         {
                           rowButtons.map((buttonObj, index) => <ActionButton key={`button_${rowId}_${index}`} {...buttonObj} id={rowId} getPaginationFromState={getPaginationFromState} />)
                         }
