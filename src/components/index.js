@@ -1,7 +1,7 @@
-// import './table'
-// import './creinoxform'
-// import './Inputs'
-// import './withDatatableStore'
+import './table'
+import './creinoxform'
+import './Inputs'
+import './withDatatableStore'
 
 export * from './table';
 export * from './creinoxform';
