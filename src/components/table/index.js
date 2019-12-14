@@ -1,3 +1,3 @@
 import React from 'react'
 
-export * from './Table';
+export {CreinoxTable} from './Table';
