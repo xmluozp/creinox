@@ -78,7 +78,7 @@
     "react-scripts": "^2.1.8"
   },
   "devDependencies": {
-    "mutationobserver-shim": "^0.3.3",
+    "mutationobserver-shim": "^0.3.3"
     
   },
   "scripts": {
