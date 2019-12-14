@@ -1,4 +1,4 @@
-import {CreinoxTable as testTable} from './table/Table';
+import {CreinoxTable as testTable} from './Table';
 
 export const CreinoxTable = testTable;
 export * from './CreinoxForm';

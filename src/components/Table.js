@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import _ from 'lodash'
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
-import { history } from "../../_helper";
+import { history } from "../_helper";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import {_DATATYPES} from "../../_constants/_dataTypes"
+import {_DATATYPES} from "../_constants/_dataTypes"
 
 import TableHeadWrapper from './TableHeadWrapper'
 import TableToolbarWrapper from './TableToolbarWrapper'
