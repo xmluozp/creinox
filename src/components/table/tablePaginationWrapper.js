@@ -1,18 +1,18 @@
-import React from './node_modules/react';
+import React from 'react';
 
-import { makeStyles, useTheme } from './node_modules/@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import { ICONS } from '../_constants'
 
 
-import TablePagination from './node_modules/@material-ui/core/TablePagination';
+import TablePagination from '@material-ui/core/TablePagination';
 
-import IconButton from './node_modules/@material-ui/core/IconButton';
-import Input from './node_modules/@material-ui/core/Input'
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input'
 
-import FirstPageIcon from './node_modules/@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from './node_modules/@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from './node_modules/@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from './node_modules/@material-ui/icons/LastPage';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
 
 
 const TablePaginationWrapper = (props) => {

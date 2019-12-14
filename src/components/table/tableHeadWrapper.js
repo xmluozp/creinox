@@ -1,12 +1,12 @@
-import React from './node_modules/react';
-import PropTypes from './node_modules/prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import TableCell from './node_modules/@material-ui/core/TableCell';
-import TableRow from './node_modules/@material-ui/core/TableRow';
-import TableHead from './node_modules/@material-ui/core/TableHead';
-import TableSortLabel from './node_modules/@material-ui/core/TableSortLabel';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableHead from '@material-ui/core/TableHead';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import Checkbox from './node_modules/@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 
 // 表头，包含排序
 const TableHeadWrapper = (props) => {
