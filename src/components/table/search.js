@@ -1,21 +1,21 @@
-import React from 'react';
+import React from './node_modules/react';
 import {CreinoxForm} from '../CreinoxForm'
 
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from './node_modules/@material-ui/core/DialogActions';
+import DialogContent from './node_modules/@material-ui/core/DialogContent';
+import DialogContentText from './node_modules/@material-ui/core/DialogContentText';
 
 
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from './node_modules/@material-ui/core/IconButton';
+import Tooltip from './node_modules/@material-ui/core/Tooltip';
 
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SearchIcon from '@material-ui/icons/Search';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import FilterListIcon from './node_modules/@material-ui/icons/FilterList';
+import SearchIcon from './node_modules/@material-ui/icons/Search';
+import ClickAwayListener from './node_modules/@material-ui/core/ClickAwayListener';
 
-import Popper from '@material-ui/core/Popper';
-import Fade from '@material-ui/core/Fade';
-import Paper from '@material-ui/core/Paper';
+import Popper from './node_modules/@material-ui/core/Popper';
+import Fade from './node_modules/@material-ui/core/Fade';
+import Paper from './node_modules/@material-ui/core/Paper';
 
 export default function Search({ onSearch, dataModel, searchTerms, searchBar }) {
 

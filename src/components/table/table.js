@@ -1,17 +1,17 @@
-import React, {useState} from 'react';
-import _ from 'lodash'
-import { Link } from 'react-router-dom';
-import { Button } from 'reactstrap';
+import React, {useState} from './node_modules/react';
+import _ from './node_modules/lodash'
+import { Link } from './node_modules/react-router-dom';
+import { Button } from './node_modules/reactstrap';
 import { history } from "../../_helper";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
+import { makeStyles } from './node_modules/@material-ui/core/styles';
+import Table from './node_modules/@material-ui/core/Table';
+import TableBody from './node_modules/@material-ui/core/TableBody';
+import TableCell from './node_modules/@material-ui/core/TableCell';
+import TableRow from './node_modules/@material-ui/core/TableRow';
+import Tooltip from './node_modules/@material-ui/core/Tooltip';
+import Paper from './node_modules/@material-ui/core/Paper';
+import Checkbox from './node_modules/@material-ui/core/Checkbox';
 
 import {_DATATYPES} from "../../_constants/_dataTypes"
 

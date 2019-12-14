@@ -1,14 +1,14 @@
-import React from 'react';
+import React from './node_modules/react';
 
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import clsx from 'clsx';
+import PropTypes from './node_modules/prop-types';
+import { Link } from './node_modules/react-router-dom';
+import clsx from './node_modules/clsx';
 
-import { lighten, makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
+import { lighten, makeStyles } from './node_modules/@material-ui/core/styles';
+import IconButton from './node_modules/@material-ui/core/IconButton';
+import Toolbar from './node_modules/@material-ui/core/Toolbar';
+import Typography from './node_modules/@material-ui/core/Typography';
+import Tooltip from './node_modules/@material-ui/core/Tooltip';
 
 import Search from './Search';
 
