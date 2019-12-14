@@ -1,9 +1,6 @@
-import './table'
-import './creinoxform'
-import './Inputs'
-import './withDatatableStore'
+import {CreinoxTable as testTable} from './table';
 
-export * from './table';
-export * from './creinoxform';
+export const CreinoxTable = testTable;
+export * from './CreinoxForm';
 export * from './Inputs';
 export * from './withDatatableStore';
