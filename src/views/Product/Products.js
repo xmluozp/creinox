@@ -92,7 +92,7 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
   return (
     <>
       <MyTable
-        editUrl={EDITURL}
+        editUrl={EDITURL} //j
         tableTitle={pageName}
         headCells={headCells}
         dataModel={dataModel}

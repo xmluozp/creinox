@@ -17,9 +17,12 @@ export default combineReducers({
     authData: auth, // login status
     loadingData: loading,
     alertData: alert,
+
     roleData: role,
     userData: user,
+    
     companyData: company,
+    
     productData: product,
     categoryData: category,
 });

@@ -12,11 +12,11 @@ export default (state = {}, action) => {
     case CONST.UPDATE_SUCCESS:
       return { ...state, dataById: action.payload };
     case CONST.UPDATE_FAILURE:
-      return { ...state, dataById: action.payload }; // error message included
+      return { ...state, errorById: action.payload }; // error message included
     case CONST.CREATE_SUCCESS:
       return { ...state, dataById: action.payload }; // jump to a new page (edit or create page)
     case CONST.CREATE_FAILURE:
-      return { ...state, dataById: action.payload }; // error message included
+      return { ...state, errorById: action.payload }; // error message included
     case CONST.DELETE_SUCCESS:
       return { ...state, data: action.payload };
     case CONST.DELETE_FAILURE:

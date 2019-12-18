@@ -1,12 +1,12 @@
-import { COMPANY as CONST, LOADING } from "../_constants";
-import { companyService as service } from "../_services";
+import { CATEGORY as CONST, LOADING } from "../_constants";
+import { categoryService as service } from "../_services";
 import { alertActions } from "./";
 import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'
 
-export const companyActions = {
+export const categoryActions = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -48,6 +48,7 @@ function get_bySearch(pagination, searchTerms = {}) {
     return service.get_bySearch(pagination, searchTerms).then(
       response => {
         dispatch(loaded);
+        console.log("getbysearch", response)
         dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
       },
       error => {
@@ -75,7 +76,7 @@ function get_byId(id) {
 }
 
 function post_create(item, page) {
-  console.log("actio create:", item);
+  console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
     return service.post_create(item).then(
@@ -87,14 +88,15 @@ function post_create(item, page) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(done(error.message, CONST.CREATE_FAILURE));
+        dispatch(failure("保存失败"));
+        dispatch(done(error, CONST.CREATE_FAILURE));
       }
     );
   };
 }
 
 function put_update(item, page) {
-  console.log("actio update:", item);
+  console.log("action update:", item);
   return dispatch => {
     dispatch(loading);
     return service.put_update(item).then(
@@ -106,7 +108,8 @@ function put_update(item, page) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(done(error.message, CONST.UPDATE_FAILURE));
+        dispatch(failure("保存失败"));
+        dispatch(done(error, CONST.UPDATE_FAILURE));
       }
     );
   };

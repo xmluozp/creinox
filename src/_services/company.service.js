@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, h_queryString } from '../_helper';
+import { authHeader, handleResponse, handleResponseTestError, h_queryString } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -48,8 +48,19 @@ function post_create(item) {
     return new Promise(resolve => resolve("on create service"))
 }
 
+// 测试错误信息
 function put_update(item) {
-    return new Promise(resolve => resolve("on update service"))
+
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    const url = './dataset/companyerror_byId.json'
+    const updateReturn = fetch(`${url}`, requestOptions).then(handleResponseTestError);
+    return updateReturn
+
+    // return new Promise(resolve => resolve("on update service"))
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

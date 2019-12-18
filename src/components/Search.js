@@ -17,7 +17,12 @@ import Popper from '@material-ui/core/Popper';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
 
+
+
+
 export default function Search({ onSearch, dataModel, searchTerms, searchBar }) {
+
+    
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false);
@@ -27,6 +32,21 @@ export default function Search({ onSearch, dataModel, searchTerms, searchBar }) 
     };
     const tipRef = React.useRef(null)
 
+    const keyPressListener = ({ code }) => {
+        if (code === 'Escape') {setOpen(false)}
+    };
+    const memoizedListener = React.useMemo(() => keyPressListener, []);
+    React.useEffect(() => {
+
+        if (open) {document.addEventListener("keydown",memoizedListener);} 
+        else {document.removeEventListener("keydown",memoizedListener);}
+
+        return () => {
+            document.removeEventListener("keydown",memoizedListener);
+        };
+    }, [open])
+
+
     return (
         <>
             <Tooltip title="Advanced Search" ref={tipRef}>
@@ -34,10 +54,10 @@ export default function Search({ onSearch, dataModel, searchTerms, searchBar }) 
                     <FilterListIcon />
                 </IconButton>
             </Tooltip>
-            <ClickAwayListener onClickAway={e => {
+            {/* <ClickAwayListener onClickAway={e => {
                 // 加个判断，看有没有点在开启按钮上。否则一打开就会瞬间关闭
                 if (open && !tipRef.current.contains(e.target)) { setOpen(false) }
-            }}>
+            }}> */}
                 <Popper open={open} anchorEl={anchorEl} placement="bottom-end" transition>
                     {({ TransitionProps }) => (
                         <Fade {...TransitionProps} timeout={350}>
@@ -46,7 +66,7 @@ export default function Search({ onSearch, dataModel, searchTerms, searchBar }) 
                                     <DialogContent>
                                         <DialogContentText>
                                             搜索
-                                    </DialogContentText>
+                                        </DialogContentText>
                                         {searchBar}
                                     </DialogContent>
                                     <DialogActions>
@@ -59,7 +79,6 @@ export default function Search({ onSearch, dataModel, searchTerms, searchBar }) 
                         </Fade>
                     )}
                 </Popper>
-            </ClickAwayListener>
         </>
     )
 }

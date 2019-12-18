@@ -1,4 +1,4 @@
-import {enums} from './enum'
+import {enumsLabel} from './enum'
 
 export const _DATATYPES = {
     INT: "INT",
@@ -8,5 +8,5 @@ export const _DATATYPES = {
     BOOLEAN: "BOOLEAN",
     SELECT: "SELECT",
     GALLERY: "GALLERY",
-    ENUM: enums
+    ENUM: enumsLabel
 }

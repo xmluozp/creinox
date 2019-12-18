@@ -75,30 +75,40 @@ function get_byId(id) {
 }
 
 function post_create(item, page) {
-  console.log("actio create:", item);
+  console.log("action create:", item);
   return dispatch => {
+    dispatch(loading);
     return service.post_create(item).then(
       response => {
+        dispatch(loaded);
+        dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
         if (page) history.push(page);
       },
       error => {
-        dispatch(done(error.message, CONST.CREATE_FAILURE));
+        dispatch(loadedFailure);
+        dispatch(failure("保存失败"));
+        dispatch(done(error, CONST.CREATE_FAILURE));
       }
     );
   };
 }
 
 function put_update(item, page) {
-  console.log("actio update:", item);
+  console.log("action update:", item);
   return dispatch => {
+    dispatch(loading);
     return service.put_update(item).then(
       response => {
+        dispatch(loaded);
+        dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
         if (page) history.push(page);
       },
       error => {
-        dispatch(done(error.message, CONST.UPDATE_FAILURE));
+        dispatch(loadedFailure);
+        dispatch(failure("保存失败"));
+        dispatch(done(error, CONST.UPDATE_FAILURE));
       }
     );
   };

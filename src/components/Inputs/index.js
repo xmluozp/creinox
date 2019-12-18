@@ -84,17 +84,17 @@ const MyDateRangePicker = ({
   const [startDate, setStartDate] = useState(getDateArray(value)[0]);
   const [endDate, setEndDate] = useState(getDateArray(value)[1]);
 
-  // otherwise only submit
-  useEffect(() => {
-    const newCombineDate = `${startDate},${endDate}`;
-    if (typeof onChange === "function") onChange(null, id, newCombineDate);
-  }, [startDate, endDate, onChange, id]);
 
-  const handleChangeStart = date => {
-    setStartDate(date);
+  // otherwise only submit
+  const handleChangeStart = (timeString,timeObject)  => {
+    const newCombineDate = `${timeObject},${endDate}`;
+    if (typeof onChange === "function") onChange(null, id, newCombineDate);
+    setStartDate(timeObject);
   };
-  const handleChangeEnd = date => {
-    setEndDate(date);
+  const handleChangeEnd = (timeString,timeObject)  => {
+    const newCombineDate = `${startDate},${timeObject}`;
+    if (typeof onChange === "function") onChange(null, id, newCombineDate);
+    setEndDate(timeObject);
   };
 
   return (
@@ -109,7 +109,7 @@ const MyDateRangePicker = ({
             label={`${label || ""} 从`}
             format="yyyy/MM/dd"
             value={startDate}
-            onChange={date => handleChangeStart(date)}
+            onChange={handleChangeStart}
             KeyboardButtonProps={{
               "aria-label": "change date"
             }}
@@ -124,7 +124,7 @@ const MyDateRangePicker = ({
             label="到"
             format="yyyy/MM/dd"
             value={endDate}
-            onChange={date => handleChangeEnd(date)}
+            onChange={handleChangeEnd}
             KeyboardButtonProps={{
               "aria-label": "change date"
             }}
@@ -149,17 +149,18 @@ const MyInput = ({
   rows,
   rowsMax = 5
 }) => {
+
   return (
     <TextField
       fullWidth={fullWidth}
-      error={error}
+      error={!disabled && error}
       disabled={disabled}
       id={id}
       label={label}
       onChange={onChange}
       margin="dense"
       value={value}
-      helperText={helperText}
+      helperText={!disabled && helperText}
       multiline={multiline}
       rows={rows}
       rowsMax={rowsMax}
@@ -198,7 +199,7 @@ const MyInputPassword = ({
     <FormControl
       className={clsx(classes.margin, classes.textField)}
       margin="dense"
-      error={error}
+      error={!disabled && error}
       fullWidth={fullWidth}
     >
       <InputLabel htmlFor="standard-adornment-password">{label}</InputLabel>
@@ -221,7 +222,7 @@ const MyInputPassword = ({
         }
         disabled={disabled}
       />
-      <FormHelperText>{helperText}</FormHelperText>
+      <FormHelperText>{!disabled && helperText}</FormHelperText>
     </FormControl>
   );
 };

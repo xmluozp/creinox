@@ -9,6 +9,8 @@ import { format } from 'date-fns'
 export * from './getStoreData'
 export * from './initializeDropDownTables'
 export * from './store'
+export * from './authCheck'
+export * from './facelessMaker'
 
 export const history = createHashHistory({ forceRefresh: true });
 
@@ -45,6 +47,28 @@ export function handleResponse(response) {
         return data;
     });
 }
+
+// test
+export function handleResponseTestError(response) {
+
+    return response.text().then(text => {
+        const data = text && JSON.parse(text);
+        if (!response.ok) {
+            if (response.status === 401) {
+                // auto logout if 401 response returned from api
+                userService.logout();
+                window.location.reload(true);
+            }
+
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+        }
+        
+        const error = (data && data.message) || response.statusText;
+        return Promise.reject(error);
+    });
+}
+
 
 export function handleOnChange(e, setFunc) {
     e.preventDefault();

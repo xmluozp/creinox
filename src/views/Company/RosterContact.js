@@ -1,34 +1,28 @@
 import React from "react";
-
 import _ from "lodash";
 // import { format } from 'date-fns'
-import TextField from "@material-ui/core/TextField";
+
 
 //------redux
 import { connect } from "react-redux";
 
 import { ICONS, _DATATYPES } from "../../_constants";
 import { h_confirm } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
+import { CreinoxTable } from "../../components";
 
 // ******************************************************************* page setting
-import { companyActions as dataActions, alertActions } from "../../_actions";
+import { companyActions as dataActions } from "../../_actions";
 import { companyModel as dataModel } from "../../_dataModel";
 
 
-
 // ******************************************************************* page setting
 
-export const withCompanyList = (pagetype = 0, EDITURL = "/company/company", CREATEURL = EDITURL) => {
+export const withCompanyContactList = (pagetype = 0, EDITURL = "/companycontact/contact", CREATEURL = EDITURL) => {
   
-  // inject data
-  const MyTable = withDatatableStore(
-    CreinoxTable, // tablecomponent
-    { data: "companyData" }, // data source
-    dataActions.get_bySearch // fetch action
-  );
+  // not inject data
+  const MyTable = CreinoxTable;
 
-  const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
+  const CurrentPage = ({ onDelete, dataSource, pageName }) => {
     // ============================================= handles
     const handleOnDelete = (pagination, id) => {
       h_confirm("是否删除？").then(resolve => {
@@ -37,9 +31,6 @@ export const withCompanyList = (pagetype = 0, EDITURL = "/company/company", CREA
     };
 
     // ============================================= render cell
-    const renderOnShowType = (content, row) => {
-      return content;
-    };
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
@@ -75,44 +66,30 @@ export const withCompanyList = (pagetype = 0, EDITURL = "/company/company", CREA
 
     // ============================================= Render
     return (
+      <>
         <MyTable
           editUrl={EDITURL}
           tableTitle={pageName}
           headCells={headCells}
           dataModel={dataModel}
+          data = {dataSource}
           preConditions = {{companyType:pagetype} }
           rowButtons={rowButtons}
           toolbarButtons={toolbarButtons}
           searchBar={searchBar}
         />
+      </>
     );
   };
-
-  // ============================================= Search Panel
-  // 搜索框
-  const searchBar = (
-    <>
-      <Inputs.MyComboboxFK
-        inputid="retriever_id"
-        optionLabel="userName"
-        tableName="user"
-      />
-      <Inputs.MyDateRangePicker
-        inputid="retriveTime"
-      />
-      
-    </>
-  );
 
   // ============================================= propTypes
 
   // ============================================= Redux
   const actionCreators = {
     onDelete: dataActions._delete,
-    onAlertNotify: alertActions.dispatchNotify
   };
 
   return connect(null, actionCreators)(CurrentPage);
 };
 
-export default withCompanyList();
+export default withCompanyContactList();

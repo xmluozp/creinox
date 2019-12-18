@@ -1,7 +1,8 @@
-import React, { Component, Suspense } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { Container } from 'reactstrap';
-import Toastr from '../../components/toastr'
+import React, { Component, Suspense } from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { Container } from "reactstrap";
+import Toastr from "../../components/toastr";
+import { authCheck } from "../../_helper";
 
 import {
   // AppAside,
@@ -13,19 +14,23 @@ import {
   AppSidebarForm,
   AppSidebarHeader,
   AppSidebarMinimizer,
-  AppSidebarNav,
-} from '@coreui/react';
+  AppSidebarNav
+} from "@coreui/react";
 // sidebar nav config
-import navigation from '../../_nav';
+import navigation from "../../_nav";
 // routes config
-import routes from '../../routes';
+import routes from "../../routes";
 
 // const DefaultAside = React.lazy(() => import('./DefaultAside'));
-const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
-const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
+const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
+const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 
 class DefaultLayout extends Component {
-  loading = () => <div className="animated fadeIn pt-1 text-center"><div className="sk-spinner sk-spinner-pulse"></div></div>;
+  loading = () => (
+    <div className="animated fadeIn pt-1 text-center">
+      <div className="sk-spinner sk-spinner-pulse"></div>
+    </div>
+  );
 
   render() {
     return (
@@ -46,13 +51,14 @@ class DefaultLayout extends Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           <main className="main">
-            <AppBreadcrumb appRoutes={routes}/>
+            <AppBreadcrumb appRoutes={routes} />
             <Container fluid>
               <Suspense fallback={this.loading()}>
-                <Toastr/>
+                <Toastr />
                 <Switch>
                   {routes.map((route, idx) => {
-                    return route.component ? (
+                    let returnValue;
+                    returnValue = route.component ? (
                       <Route
                         key={idx}
                         path={route.path}
@@ -60,8 +66,11 @@ class DefaultLayout extends Component {
                         name={route.name}
                         render={props => (
                           <route.component {...props} pageName={route.name} />
-                        )} />
-                    ) : (null);
+                        )}
+                      />
+                    ) : null;
+                    if (!authCheck(route.authTag)) returnValue = "";
+                    return returnValue;
                   })}
                   <Redirect from="/" to="/dashboard" />
                 </Switch>
@@ -85,3 +94,5 @@ class DefaultLayout extends Component {
 }
 
 export default DefaultLayout;
+
+//  if (!authCheck(route.authTag)) returnValue = "";

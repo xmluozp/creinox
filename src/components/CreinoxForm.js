@@ -22,7 +22,7 @@ export class CreinoxForm extends React.Component {
   submitForm(e) {
     e.preventDefault();
     if (typeof this.props.actionSubmit === "function") {
-      this.props.actionSubmit(this.state);
+      this.props.actionSubmit({...this.state, ...this.props.preStates});
     }
   }
 
@@ -59,6 +59,7 @@ export class CreinoxForm extends React.Component {
 
   // step 2/3: generate empty items ********************************************
   componentDidUpdate() {
+    
     if (!this.state.isComponentLoaded && !_.isEmpty(this.props.defaultValues)) {
       // 默认表单不为空。表示加载完毕
       this.readValues();
@@ -87,7 +88,7 @@ export class CreinoxForm extends React.Component {
   }
 
   render() {
-    const { children, dataModel } = this.props;
+    const { children, dataModel, errors } = this.props;
 
     const values = this.state;
     const handleChange = this.handleChange.bind();
@@ -105,6 +106,7 @@ export class CreinoxForm extends React.Component {
                   // 如果是控件就注入，否则原样返回
                   {
                     item: item,
+                    errorMessages: errors, // 从props取到的返回错误信息
                     handleChange: handleChange,
                     dataModel: dataModel,
                     values: values
@@ -118,7 +120,7 @@ export class CreinoxForm extends React.Component {
   }
 }
 
-const injectedInputs = ({ item, handleChange, dataModel, values }) => {
+const injectedInputs = ({ item, handleChange, dataModel, values, errorMessages }) => {
   let returnValue = item;
   const columnId = item.props.inputid;
 
@@ -131,6 +133,8 @@ const injectedInputs = ({ item, handleChange, dataModel, values }) => {
       id: item.props.inputid,
       key: item.props.inputid,
       label: dataModel.columns[columnId].label,
+      error: errorMessages && errorMessages.hasOwnProperty(columnId),
+      helperText: errorMessages && errorMessages[columnId],
       value: values[columnId],
       onChange: handleChange,
       fullWidth: true

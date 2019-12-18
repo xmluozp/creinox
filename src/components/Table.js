@@ -21,7 +21,9 @@ import TablePaginationWrapper from './TablePaginationWrapper'
 
 
 // 所有pagination信息都从data来而不是本地
-export const CreinoxTable = ({ headCells, editUrl, searchBar, tableTitle, data, onGetBySearch, dataModel, rowButtons = [], selectBox, toolbarButtons = [], ...props }) => {
+export const CreinoxTable = ({ 
+  headCells, editUrl, searchBar, tableTitle, data, onGetBySearch, 
+  dataModel, rowButtons = [], selectBox, toolbarButtons = [], preConditions = {}, ...props }) => {
 
   // 默认数据（如果是页面，则从params里取）
   const defaultPagination = {
@@ -47,7 +49,6 @@ export const CreinoxTable = ({ headCells, editUrl, searchBar, tableTitle, data, 
   }
 
   // 以下信息是用来提交pagination请求的，不涉及页面显示；页面如何显示完全来自于data
-  // const [loaded, setLoaded] = useState(false) // 配合useEffect绕过无法callBack的问题。
   const [page, setPage] = useState(dataPagination.page);
   const [perPage, setPerPage] = useState(dataPagination.perPage);
   const [order, setOrder] = useState(dataPagination.order);
@@ -119,13 +120,13 @@ export const CreinoxTable = ({ headCells, editUrl, searchBar, tableTitle, data, 
   )
 
   const p_updateData = (newPagination = {}, newSearchTerms = {}) => {
-      onGetBySearch(newPagination, newSearchTerms); 
+      onGetBySearch(newPagination, {...newSearchTerms, ...preConditions}); 
   }
 
   // 根据store的翻页信息更新data (刷新触发)
   const p_fetchData = React.useCallback(
-    () => onGetBySearch({page:0}), // submit empty. refresh by store
-    [onGetBySearch],
+    () => onGetBySearch({page:0}, preConditions), // submit empty. refresh by store
+    [onGetBySearch, preConditions],
   )
 
 

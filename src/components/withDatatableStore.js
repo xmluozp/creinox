@@ -14,7 +14,7 @@ export const withDatatableStore = (
 
   // ============================================= Redux
   const actionCreators = {
-    onGetBySearch: fetchAction, // action need to import so put it outside
+    onGetBySearch: fetchAction, 
   };
 
   const mapState = state => {

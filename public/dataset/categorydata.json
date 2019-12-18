@@ -1,0 +1,107 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "name": "厨具",
+            "ename": "Kitchenware",
+            "startCode": "CR20",
+            "treeRank": 0,
+            "treeLock": true,
+            "memo": "普通S + P罐",
+            "ememo": "Sadt&Pepper",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0",
+            "parent_id": 0
+        },
+        {
+            "id": 2,
+            "name": "浴室工具",
+            "ename": "Bathroom",
+            "startCode": "CR33",
+            "treeRank": 0,
+            "treeLock": true,
+            "memo": "浴室组系列，纸巾架",
+            "ememo": "Bath Set & Tissue Holder",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0",
+            "parent_id": 0
+        },
+        {
+            "id": 3,
+            "name": "铁线制品",
+            "ename": "Iron Wire",
+            "startCode": "CR70",
+            "treeRank": 1,
+            "treeLock": false,
+            "memo": "普通S + P罐",
+            "ememo": "Sadt&Pepper",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0,2",
+            "parent_id": 2
+        },
+        {
+            "id": 4,
+            "name": "咖啡茶具",
+            "ename": "Coffee&Tea Ware",
+            "startCode": "CR35",
+            "treeRank": 1,
+            "treeLock": true,
+            "memo": "普通S + P罐",
+            "ememo": "Sadt&Pepper",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0,2",
+            "parent_id": 2
+        },
+        {
+            "id": 5,
+            "name": "木头系列",
+            "ename": "Coffee&Tea Ware",
+            "startCode": "MD001",
+            "treeRank": 2,
+            "treeLock": true,
+            "memo": "普通S + P罐",
+            "ememo": "Sadt&Pepper",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0,2,3",
+            "parent_id": 3
+        }
+        ,
+        {
+            "id": 6,
+            "name": "陶瓷系列",
+            "ename": "Ceramic Ware",
+            "startCode": "TC001",
+            "treeRank": 1,
+            "treeLock": true,
+            "memo": "普通S + P罐",
+            "ememo": "Sadt&Pepper",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0,1",
+            "parent_id": 1
+        }
+        ,
+        {
+            "id": 7,
+            "name": "测试系列",
+            "ename": "Ceramic Ware",
+            "startCode": "TC001",
+            "treeRank": 2,
+            "treeLock": true,
+            "memo": "普通S + P罐",
+            "ememo": "Sadt&Pepper",
+            "updateAt": "2018-07-17 23:51:22",
+            "path": "0,1,6",
+            "parent_id": 2
+        }       
+    ]
+}
