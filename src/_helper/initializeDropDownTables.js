@@ -1,4 +1,4 @@
-import {userActions, roleActions, productActions, companyActions} from '../_actions';
+import {userActions, roleActions} from '../_actions';
 import store from './store';
 
 

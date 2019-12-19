@@ -11,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import Popper from '@material-ui/core/Popper';
 import Fade from '@material-ui/core/Fade';

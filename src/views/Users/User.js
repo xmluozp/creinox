@@ -16,7 +16,7 @@ import { CreinoxForm, Inputs } from "../../components";
 const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
   const id = _.get(props, "match.params.id");
   const isFromEdit = id ? true : false;
-  const [disabled, setdisabled] = useState(id && true);
+  const [disabled, setdisabled] = useState(isFromEdit && true);
 
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 
   const handleOnSubmit = values => {
     if (isFromEdit) {
-      onPutUpdate(values);
+      onPutUpdate({...values});
     } else {
       onPostCreate(values);
     }

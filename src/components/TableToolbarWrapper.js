@@ -75,13 +75,10 @@ const TableToolbarWrapper = ({
         )}
 
           <>
-
+                {/* const SolveRef = React.forwardRef((props, ref) => <div {...props} ref={ref}><ToolbarButton {...item} getPaginationFromState= {getPaginationFromState }/></div>); */}
+                {/* return <Tooltip title={item.label} key={index} ><SolveRef/></Tooltip>; */}
             {
-              toolbarButtons && toolbarButtons.map((item, index) => {
-
-                const SolveRef = React.forwardRef((props, ref) => <div {...props} ref={ref}><ToolbarButton {...item} getPaginationFromState= {getPaginationFromState }/></div>);
-                return <Tooltip title={item.label} key={index} ><SolveRef/></Tooltip>;
-              })
+              toolbarButtons && toolbarButtons.map((item, index) => <ToolbarButton {...item} key={index} getPaginationFromState= {getPaginationFromState }/>)
             }
             <Search dataModel={dataModel} searchTerms={searchTerms} searchBar={searchBar} onSearch={onSearch} />
           </>
@@ -96,13 +93,18 @@ TableToolbarWrapper.propTypes = {
 
 
 // ============================================================
-const ToolbarButton = ({ label, onClick, color, url, icon, getPaginationFromState }) => {
+const ToolbarButton = ({ label, onClick, color, url, icon, getPaginationFromState,  }) => {
 
   let returnValue = label;
 
   // if there is onClick, pass pagination and id back (in case need to refresh)
-  const propsOnClick = onClick ? onClick = () => { onClick(getPaginationFromState()) } : null;
+  let propsOnClick = null;
+  // propsOnClick = onClick ? onClick = () => { onClick(getPaginationFromState()) } : null;
 
+  if (typeof(onClick) === 'function') {
+    propsOnClick = onClick.bind(null, getPaginationFromState());
+  }
+  
   returnValue = (<IconButton className={`text-${color}`} aria-label={label} onClick={propsOnClick} >
     {icon}</IconButton>)
 

@@ -12,7 +12,9 @@ export const categoryActions = {
   get_byId,
   post_create,
   put_update,
-  _delete
+  _delete,
+  // customized
+  get_byCategory
 };
 
 const done = (payload, type) => {
@@ -84,6 +86,7 @@ function post_create(item, page) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
+
         if (page) history.push(page);
       },
       error => {
@@ -125,6 +128,26 @@ function _delete(pagination, id) {
       },
       error => {
         dispatch(alertActions.error("删除失败"));
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
+
+
+//======================== customized
+
+function get_byCategory(categoryId = 0) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_byCategory(categoryId).then(
+      response => {
+        dispatch(loaded);
+        console.log("getbyCategory", response)
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+      },
+      error => {
+        dispatch(loadedFailure);
         dispatch(failure(error.toString()));
       }
     );

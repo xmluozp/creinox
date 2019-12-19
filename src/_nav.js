@@ -67,7 +67,7 @@ const navs = {
           authTag:'product',
         },
         {
-          name: '产品目录',
+          name: '产品列表',
           url: '/product/products',
           authTag:'product',
         }

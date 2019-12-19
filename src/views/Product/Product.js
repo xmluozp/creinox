@@ -29,7 +29,7 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 
   const handleOnSubmit = values => {
     if (isFromEdit) {
-      onPutUpdate(values);
+      onPutUpdate({id: id,...values});
     } else {
       onPostCreate(values);
     }

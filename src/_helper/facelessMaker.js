@@ -1,4 +1,23 @@
-export const reducerMaker = (constOutside, tableName="FACELESS") => {
+export const constMaker = (constPrefix="FACELESS") => {
+
+    const CONST= {
+      GETDROPDOWN_SUCCESS:constPrefix+"_GETDROPDOWN_SUCCESS",
+      GETBYSEARCH_SUCCESS:constPrefix+"_GETBYSEARCH_SUCCESS",
+      GET_SUCCESS:    constPrefix+"_GET_SUCCESS",
+      UPDATE_SUCCESS: constPrefix+"_UPDATE_SUCCESS",
+      UPDATE_FAILURE: constPrefix+"_UPDATE_FAILURE",
+      CREATE_SUCCESS: constPrefix+"_CREATE_SUCCESS",
+      CREATE_FAILURE: constPrefix+"_CREATE_FAILURE",
+      DELETE_SUCCESS: constPrefix+"_DELETE_SUCCESS",
+      DELETE_FAILURE: constPrefix+"_DELETE_FAILURE",
+  }
+
+  return CONST;
+}
+
+
+
+export const reducerMaker = (constOutside, constPrefix="FACELESS") => {
 
     let CONST;
 
@@ -6,15 +25,15 @@ export const reducerMaker = (constOutside, tableName="FACELESS") => {
         CONST = constOutside;
     } else {
         CONST={
-            GETDROPDOWN_SUCCESS:tableName+"_"+'GETDROPDOWN_SUCCESS',
-            GETBYSEARCH_SUCCESS:tableName+"_"+'GETBYSEARCH_SUCCESS',
-            GET_SUCCESS:    tableName+"_"+'GET_SUCCESS',
-            UPDATE_SUCCESS: tableName+"_"+'UPDATE_SUCCESS',
-            UPDATE_FAILURE: tableName+"_"+'UPDATE_FAILURE',
-            CREATE_SUCCESS: tableName+"_"+'CREATE_SUCCESS',
-            CREATE_FAILURE: tableName+"_"+'CREATE_FAILURE',
-            DELETE_SUCCESS: tableName+"_"+'DELETE_SUCCESS',
-            DELETE_FAILURE: tableName+"_"+'DELETE_FAILURE'
+            GETDROPDOWN_SUCCESS:constPrefix+"_GETDROPDOWN_SUCCESS",
+            GETBYSEARCH_SUCCESS:constPrefix+"_GETBYSEARCH_SUCCESS",
+            GET_SUCCESS:    constPrefix+"_GET_SUCCESS",
+            UPDATE_SUCCESS: constPrefix+"_UPDATE_SUCCESS",
+            UPDATE_FAILURE: constPrefix+"_UPDATE_FAILURE",
+            CREATE_SUCCESS: constPrefix+"_CREATE_SUCCESS",
+            CREATE_FAILURE: constPrefix+"_CREATE_FAILURE",
+            DELETE_SUCCESS: constPrefix+"_DELETE_SUCCESS",
+            DELETE_FAILURE: constPrefix+"_DELETE_FAILURE",
         }
     }
 

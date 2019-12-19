@@ -11,6 +11,9 @@ import company from './companyReducer'
 import product from './productReducer'
 import category from './categoryReducer'
 
+// usage: xxxData: reducerMaker(null, tableName="XXXTABLE")
+import {reducerMaker} from "../_helper/facelessMaker";
+
 
 // 多表格的时候这里是所有的reducer
 export default combineReducers({
@@ -25,4 +28,7 @@ export default combineReducers({
     
     productData: product,
     categoryData: category,
+
+    rostercontactData: reducerMaker(null, "ROSTERCONTACT"),
+    bankaccountData: reducerMaker(null, "BANKACCOUNT"),
 });

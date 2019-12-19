@@ -1,0 +1,53 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "fullName": "张三",
+            "eFullName": "Jack",
+            "phone1": "2043334444",
+            "phone2": "138080808",
+            "skype": "xxx@hotmail.com",
+            "email": "email@gmail.com",
+            "wechat": "31811111",
+            "whatsapp": "132153321535",
+            "facebook": "ssss@gmail.com",
+            "memo": "这是张总的联系方式"
+        },
+        {
+            "id": 2,
+            "fullName": "王三",
+            "eFullName": "Jack",
+            "phone1": "2043334444",
+            "phone2": "138080808",
+            "skype": "xxx@hotmail.com",
+            "email": "email@gmail.com",
+            "wechat": "31811111",
+            "whatsapp": "132153321535",
+            "facebook": "ssss@gmail.com",
+            "memo": "这是王总的联系方式"
+        },
+        {
+            "id": 3,
+            "fullName": "李三",
+            "eFullName": "Jack",
+            "phone1": "2043334444",
+            "phone2": "138080808",
+            "skype": "xxx@hotmail.com",
+            "email": "email@gmail.com",
+            "wechat": "31811111",
+            "whatsapp": "132153321535",
+            "facebook": "ssss@gmail.com",
+            "memo": "这是李总的联系方式"
+        }         
+    ]
+}

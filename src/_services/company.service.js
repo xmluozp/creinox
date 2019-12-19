@@ -45,7 +45,16 @@ function get_byId(id) {
 }
 
 function post_create(item) {
-    return new Promise(resolve => resolve("on create service"))
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    const url = './dataset/companydata_byId.json'
+    console.log("getId create,", item)
+
+    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${url}`, requestOptions).then(handleResponse);
 }
 
 // 测试错误信息

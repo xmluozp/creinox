@@ -7,7 +7,8 @@ export const categoryService = {
     get_byId,
     post_create,
     put_update,
-    _delete: _delete
+    _delete: _delete,
+    get_byCategory
 };
 
 const TABLENAME = "category";
@@ -58,3 +59,22 @@ function _delete(pagination, id) {
     return new Promise(resolve => resolve("on delete service"))
 }
 
+
+// ============================================ customized
+function get_byCategory(categoryId) {
+
+    // 后台需要取：根据Id匹配path+","+id。否则全部返回 SELECT * FROM category WHERE id = xx, path like CONCAT(category.path,"," ,category.id)
+    // like只取右like（防止10,2这种混淆）
+    // 如果没有id的话concat会出问题。就全取
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    // const queryString = h_queryString(pagination, searchTerms, TABLENAME)
+
+    const url = './dataset/categorydata.json'
+    console.log("get by category service:", categoryId);
+
+    return fetch(`${url}?categoryId=${categoryId}`, requestOptions).then(handleResponse);
+}

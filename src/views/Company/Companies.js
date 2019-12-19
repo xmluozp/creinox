@@ -1,13 +1,13 @@
 import React from "react";
 
-import _ from "lodash";
+// import _ from "lodash";
 // import { format } from 'date-fns'
-import TextField from "@material-ui/core/TextField";
+// import TextField from "@material-ui/core/TextField";
 
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS, _DATATYPES } from "../../_constants";
+import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
 
@@ -34,11 +34,6 @@ export const withCompanyList = (pagetype = 0, EDITURL = "/company/company", CREA
       h_confirm("是否删除？").then(resolve => {
         if (resolve) onDelete(pagination, id);
       });
-    };
-
-    // ============================================= render cell
-    const renderOnShowType = (content, row) => {
-      return content;
     };
 
     const headCells = [

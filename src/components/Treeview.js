@@ -13,28 +13,31 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import Collapse from "@material-ui/core/Collapse";
 import { useSpring, animated } from "react-spring/web.cjs"; // web.cjs is required for IE 11 support
 
-export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
+export const CreinoxTreeview = ({ data, onGetBySearch, parentNode=0,  onSelect, initialNode={id: 0} }) => {
   const classes = useStyles();
 
-  const [selectedNode, setselectedNode] = useState();
-  const [filterNodeList, setFilterNodeList] = useState([]);
-  const [expandedNodes, setExpandedNodes] = useState([])
+  const [selectedNode, setselectedNode] = useState(initialNode);
+  const [filterNodeList, setFilterNodeList] = useState([initialNode]);
+  const [expandedNodes, setExpandedNodes] = useState([initialNode.id.toString()]);
   const [treeObject, setTreeObject] = useState();
 
   //========================================handle
   const handleOnClick = (node, e) => {
     e.stopPropagation();
     setselectedNode(node);
+    if (typeof onSelect === "function") {
+      onSelect(node);
+    }
   };
 
   const handleOnSearch = (value, e) => {
-    if (!value) {
-        setFilterNodeList(["0"])
-        // setExpandedNodes(["0"])
-        return;
-    }
 
-    if (data && data.rows) {
+    let selectedNodeAfterSearch = initialNode;
+    if (!value) {
+      setFilterNodeList(["0"]);
+      setselectedNode(selectedNodeAfterSearch);
+      // setExpandedNodes(["0"])
+    }else if (data && data.rows) {
       const filterString = value.toLowerCase();
       const foundNodes = _.filter(data.rows, item => {
         let returnValue = false;
@@ -63,41 +66,39 @@ export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
         const returnValue = item.path && item.path.split(",");
         filterExpanded = filterExpanded.concat(
           returnValue.filter(v => !filterExpanded.includes(v))
-        ); 
+        );
         return null;
       });
       setExpandedNodes(filterExpanded);
 
       // 选中搜到的第一个节点
-      setselectedNode(foundNodes[0]);
+      selectedNodeAfterSearch = foundNodes[0]
     }
+    setselectedNode(selectedNodeAfterSearch);
+    if (typeof onSelect === "function") {
+        onSelect(selectedNodeAfterSearch);
+      }
   };
 
   const handleOnToggle = (x, value) => {
-     setExpandedNodes(value);
-  }
+    setExpandedNodes(value);
+  };
 
   //========================================generate tree
   useEffect(() => {
     if (!(data && data.rows)) {
       // first fetch
-      onGetBySearch();
+      onGetBySearch(parentNode);
     } else {
       // turn data to tree structure
       dataToTree(data.rows);
     }
-  }, [data, onGetBySearch]);
-
-  useEffect(() => {
-    if (typeof onSelect === "function") {
-      onSelect(selectedNode);
-    }
-  }, [selectedNode]);
+  }, [data, onGetBySearch, parentNode]);
 
   const dataToTree = dataRows => {
     const dataRowsShorted = _.orderBy(dataRows, ["path"], ["asc"]);
     const treeObjectTemp = {};
-    dataRowsShorted.map((item) => {
+    dataRowsShorted.map(item => {
       const pathArray = item.path.split(",");
 
       let pathWithChildren = "";
@@ -110,6 +111,8 @@ export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
 
       pathWithChildren += item.id.toString();
       _.setWith(treeObjectTemp, pathWithChildren, item, Object);
+
+      return null;
     });
     setTreeObject(treeObjectTemp);
   };
@@ -117,21 +120,27 @@ export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
   const getBranches = node => {
     if (node && node.children) {
       return Object.keys(node.children).map(key => {
-
         const childNode = node.children[key];
         const nodeId = childNode.id || 0;
         const style = {};
-        const isSearched = !_.isEmpty(_.find(filterNodeList, item=>{return item.id === nodeId}))
-        const isSelected = selectedNode && selectedNode.id === nodeId
+        const isSearched = !_.isEmpty(
+          _.find(filterNodeList, item => {
+            return item.id === nodeId;
+          })
+        );
+        const isSelected = selectedNode && selectedNode.id === nodeId;
         style.color = isSelected ? "#F00000" : "#333333";
-        style.backgroundColor = isSearched? "rgba(200,230,255, 0.7)": "rgba(200,230,255, 0)";
-
-        console.log("is searched?", isSearched)
-
+        style.backgroundColor = isSearched
+          ? "rgba(200,230,255, 0.7)"
+          : "rgba(200,230,255, 0)";
+        
+        // 显示节点
         const label = (
-          <div             
-            style={style}>
-            {childNode.name || "main"} 
+          <div style={style}>
+            {/* 下级节点数量 */}
+            ({(childNode.children && Object.keys(childNode.children).length) || 0}) 
+            {/* 节点名称 */}
+            {childNode.name || "main"}
             <span className="ml-2">[{childNode.ename || null}]</span>
             <IconButton
               size="small"
@@ -143,16 +152,9 @@ export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
           </div>
         );
 
-
-        
         //foundNodes
         return (
-          <StyledTreeItem
-            nodeId={nodeId.toString()}
-            key={nodeId}
-            label={label}
-
-          >
+          <StyledTreeItem nodeId={nodeId.toString()} key={nodeId} label={label}>
             {getBranches(childNode)}
           </StyledTreeItem>
         );
@@ -163,7 +165,7 @@ export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
   //======================================== render
   return (
     <>
-      <InputSearch onSearch={handleOnSearch}/>
+      <InputSearch onSearch={handleOnSearch} />
       <TreeView
         className={classes.root}
         onNodeToggle={handleOnToggle}
@@ -172,7 +174,9 @@ export const CreinoxTreeview = ({ data, onGetBySearch, onSelect }) => {
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
       >
+
         {treeObject && treeObject[0] && getBranches(treeObject[0])}
+
       </TreeView>
     </>
   );

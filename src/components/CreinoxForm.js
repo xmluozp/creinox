@@ -7,8 +7,8 @@ import _ from "lodash";
  * @param {*} props
  */
 export class CreinoxForm extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       isComponentLoaded: false
@@ -39,30 +39,52 @@ export class CreinoxForm extends React.Component {
   componentDidMount() {
     // set initial Values (empty)
     const initialValues = {};
-    // 如果传进来的defaultValue有一个id，也藏入提交的states里
-    const { children, defaultValues } = this.props;
 
-    if (defaultValues && defaultValues.hasOwnProperty("id")) {
-      initialValues.id = defaultValues.id;
-    }
+    // 根据所有的input生成一个空表单
+    const { children } = this.props;
 
     recursiveMap(children, item => {
       if (item.props && item.props.inputid) {
         initialValues[item.props.inputid] = "";
       }
     });
+    
     this.setState({
       isComponentLoaded: !this.props.isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
       ...initialValues
     });
   }
 
+  getSnapshotBeforeUpdate(prevProps) {
+
+    // 如果是编辑模式
+    if(prevProps.renewToggle !== this.props.renewToggle && this.props.defaultValues && this.props.isFromEdit) {
+      const newState = this.props.defaultValues;
+      return newState
+    }
+
+    // 如果是新建模式
+    if(prevProps.renewToggle !== this.props.renewToggle && this.props.defaultValues && !this.props.isFromEdit  ) {
+      const newState = this.props.defaultValues;
+      return newState
+    }
+
+    return null;
+  }
+
   // step 2/3: generate empty items ********************************************
-  componentDidUpdate() {
-    
+  componentDidUpdate(prevProps, prevState, snapshot) {
+ 
     if (!this.state.isComponentLoaded && !_.isEmpty(this.props.defaultValues)) {
       // 默认表单不为空。表示加载完毕
       this.readValues();
+    }
+
+    if (snapshot) {
+      this.setState({
+        isComponentLoaded: true,
+        ...snapshot
+      });
     }
   }
 
@@ -79,6 +101,10 @@ export class CreinoxForm extends React.Component {
         }
         return null;
       });
+
+      if (defaultValues && defaultValues.hasOwnProperty("id")) {
+        newState.id = defaultValues.id;
+      }
 
       this.setState({
         isComponentLoaded: true,
