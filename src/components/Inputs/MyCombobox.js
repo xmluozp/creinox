@@ -8,7 +8,7 @@ import Select from '@material-ui/core/Select';
 
 import { makeStyles } from "@material-ui/core/styles";
 
-
+import { enums } from "../../_constants";
 import { h_fkFetchOnce } from "../../_helper";
 
 const useStyles = makeStyles(theme => ({
@@ -44,7 +44,7 @@ export const MySelect = ({
         id: id,
       }}
     >
-      { hasDefault && <option value="" />}
+    { hasDefault ? null: <option value="" />}
       {
         options.map((optionvalue,index) => {
           return <option value={index} key={optionvalue}>{optionvalue}</option>
@@ -106,15 +106,22 @@ export const MyCombobox = ({
 
 // ================================================================================== Combobox FK
 export const MyComboboxFK = props => {
-  const { tableName = "" } = props;
+
+  // 表名称； reducer里面的名称，默认dropdown
+  const { tableName = "", stateName="dropdown", params=[] } = props;
 
   const [options, setoptions] = useState([]);
 
   useEffect(() => {
-    h_fkFetchOnce(tableName).then(response => {
-      setoptions(response);
+    let isSubscribed = true;
+    h_fkFetchOnce(tableName, stateName, params).then(response => {
+      if(isSubscribed) {setoptions(response);}      
+    }).catch(error=> {
+      console.log("下拉列表为空",error)
     });
-  }, [tableName]);
+
+    return ()=> {isSubscribed = false;}
+  }, [tableName, stateName]);
 
   return options && options.length > 0 ? (
     <MyCombobox {...props} options={options} />
@@ -122,3 +129,32 @@ export const MyComboboxFK = props => {
     <>...</>
   );
 };
+
+export const MyComboboxPack = props => {
+  const commonTypeName = 'pack'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}
+export const MyComboboxPolishing = props => {
+  const commonTypeName = 'polishing'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}
+export const MyComboboxTexture = props => {
+  const commonTypeName = 'texture'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}
+export const MyComboboxUnitType = props => {
+  const commonTypeName = 'unitType'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}
+export const MyComboboxShippingType = props => {
+  const commonTypeName = 'shippingType'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}
+export const MyComboboxPricingTerm = props => {
+  const commonTypeName = 'pricingTerm'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}
+export const MyComboboxCurrency = props => {
+  const commonTypeName = 'currency'
+  return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
+}

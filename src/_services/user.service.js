@@ -118,7 +118,7 @@ function post_create(item) {
 }
 
 function put_update(item) {
-    return new Promise(resolve => resolve("on update service"))
+    return new Promise(resolve => resolve("on update service(实现后应该返回新数据)"))
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

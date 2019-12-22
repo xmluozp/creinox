@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
-import { history } from "../_helper";
+// import { history } from "../_helper";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -21,8 +21,8 @@ import TablePaginationWrapper from "./TablePaginationWrapper";
 
 // 所有pagination信息都从data来而不是本地
 export const CreinoxTable = ({
+  toggle = false,
   headCells,
-  editUrl,
   onRowDbClick,
   searchBar,
   tableTitle,
@@ -39,7 +39,7 @@ export const CreinoxTable = ({
   // 默认数据（如果是页面，则从params里取）
   const defaultPagination = {
     page: 0,
-    perPage: 20,
+    perPage: 15,
     totalCount: 0,
     totalPage: 0,
     order: "desc",
@@ -142,14 +142,20 @@ export const CreinoxTable = ({
 
   // 根据store的翻页信息更新data (刷新触发)
   const p_fetchData = React.useCallback(
-    () => onGetBySearch({ page: 0 }, preConditions), // submit empty. refresh by store
+    () => {
+      return onGetBySearch({ page: 0 }, preConditions)}, // submit empty. refresh by store
     [onGetBySearch, preConditions]
   );
 
   // fetch data first time
   React.useEffect(() => {
     if (!data) p_fetchData();
-  }, [p_fetchData, data]);
+  }, [data]);
+
+  React.useEffect(() => {
+    p_fetchData();
+  }, [toggle]);
+  
 
   // fetch data after change page
   // React.useEffect(() => {
@@ -253,6 +259,7 @@ export const CreinoxTable = ({
         dataModel={dataModel}
         toolbarButtons={toolbarButtons}
         getPaginationFromState={getPaginationFromState}
+        isBorder = {isBorder}
       />
 
       <div className={classes.tableWrapper}>
@@ -284,10 +291,9 @@ export const CreinoxTable = ({
               const labelId = `enhanced-table-checkbox-${rowIndex}`;
               const rowId = row.id;
 
-              const handleRowDbClick = () => {
-                      if (editUrl) history.push(`${editUrl}/${rowId}`)
-                      else if(typeof(onRowDbClick)==='function') onRowDbClick(getPaginationFromState(),rowId); 
-                    };
+              const handleRowDbClick = ((typeof(onRowDbClick) === 'function') 
+                                        && onRowDbClick.bind(null, getPaginationFromState(),rowId)) ||
+                                        null;
 
 
               return (
@@ -459,7 +465,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   table: {
-    minWidth: 750
+    minWidth: 650
   },
   tableWrapper: {
     overflowX: "auto"

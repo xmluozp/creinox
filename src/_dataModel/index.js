@@ -4,6 +4,11 @@ export * from './company'
 export * from './category'
 export * from './rostercontact'
 export * from './bankaccount'
+export * from './commonitem'
+
+
+
+
 
 /*
 

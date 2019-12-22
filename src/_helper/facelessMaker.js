@@ -39,7 +39,6 @@ export const reducerMaker = (constOutside, constPrefix="FACELESS") => {
 
 
     return (state = {}, action) => {
-
         switch (action.type) {
           case CONST.GETDROPDOWN_SUCCESS: // waiting while logging
           return {...state,  dropdown: action.payload };

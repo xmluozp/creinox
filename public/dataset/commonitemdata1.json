@@ -1,0 +1,59 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 10,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "name": "白盒",
+            "ename": "WHITE BOX",
+            "memo": "",
+            "isActive": true,
+            "sorting": 100,
+            "commonType": 0
+        },
+        {
+            "id": 2,
+            "name": "黑盒",
+            "ename": "BLACK BOX",
+            "memo": "",
+            "isActive": true,
+            "sorting": 100,
+            "commonType": 0
+        },
+        {
+            "id":3,
+            "name": "棕色盒",
+            "ename": "BROWN BOX",
+            "memo": "",
+            "isActive": true,
+            "sorting": 100,
+            "commonType": 0
+        },
+        {
+            "id": 4,
+            "name": "彩盒",
+            "ename": "GIFT BOX",
+            "memo": "",
+            "isActive": true,
+            "sorting": 100,
+            "commonType": 0
+        },
+        {
+            "id": 5,
+            "name": "PVC 盒",
+            "ename": "PVC BOXX",
+            "memo": "",
+            "isActive": true,
+            "sorting": 100,
+            "commonType": 0
+        }
+    ]
+}

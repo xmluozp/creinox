@@ -7,24 +7,60 @@ import _ from "lodash";
 //------redux
 import { connect } from "react-redux";
 import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore} from "../../components";
+import { h_confirm, history } from "../../_helper";
+import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
 
 // ******************************************************************* page setting
 import { userActions as dataActions, alertActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
 
-
-const EDITURL = "/users/user";
+const EDITURL = "/users/users";
 const CREATEURL = "/users/user";
+const DATASTORE = "userData";
 
 // inject data
 const MyTable = withDatatableStore(
-  CreinoxTable,               // tablecomponent
-  { data: "userData" },       // data source
-  dataActions.get_bySearch    // fetch action
+  CreinoxTable, // tablecomponent
+  { data: DATASTORE }, // data source
+  dataActions.get_bySearch // fetch action
 );
+
+// ============================================= render cell
+const renderOnShowRole = (content, row) => {
+  return `[${row.role_id}] ${content}`;
+};
+const renderOnShowMemo = content => {
+  return <span title={content}>{_.truncate(content, { length: 10 })}</span>;
+};
+
+const headCells = [
+  { name: "id", disablePadding: true, className: "ml-2" },
+  { name: "role_id", onShow: renderOnShowRole },
+  { name: "userName" },
+  { name: "fullName" },
+  { name: "ip" },
+  { name: "lastLogin" },
+  { name: "memo", onShow: renderOnShowMemo },
+  {
+    name: "isActive",
+    align: "center",
+    label: "状态",
+    className: { true: "text-success", false: "text-danger" },
+    lookup: { true: ICONS.TRUE("mr-4"), false: ICONS.FALSE("mr-4") }
+  }
+];
+
+// ============================================= Search Panel
+// 搜索框
+const searchBar = (
+  <>
+    <Inputs.MyInput inputid="userName" />
+    <Inputs.MyInput inputid="fullName" />
+  </>
+);
+
 // ******************************************************************* page setting
+
 
 
 /**
@@ -32,7 +68,6 @@ const MyTable = withDatatableStore(
  * @param {} param0
  */
 const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
-
   // ============================================= handles
   const handleOnDelete = (pagination, id) => {
     h_confirm("是否删除？").then(resolve => {
@@ -43,36 +78,15 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
     onAlertNotify(`选中了 ${list.join(",")}`);
   };
 
+  const handleOnEdit = (pagination, id) => {
+    history.push(`${EDITURL}/${id}`);
+  };
+
   const selectBox = {
     icon: ICONS.ACTIVE(),
     title: "批量启用",
     onAction: handleSelectAction
   };
-
-  // ============================================= render cell
-  const renderOnShowRole = (content, row) => {
-    return `[${row.role_id}] ${content}`;
-  };
-  const renderOnShowMemo = content => {
-    return <span title={content}>{_.truncate(content, { length: 10 })}</span>;
-  };
-
-  const headCells = [
-    { name: "id", disablePadding: true, className: "ml-2" },
-    { name: "role_id", onShow: renderOnShowRole },
-    { name: "userName" },
-    { name: "fullName" },
-    { name: "ip" },
-    { name: "lastLogin" },
-    { name: "memo", onShow: renderOnShowMemo },
-    {
-      name: "isActive",
-      align: "center",
-      label: "状态",
-      className: { true: "text-success", false: "text-danger" },
-      lookup: { true: ICONS.TRUE("mr-4"), false: ICONS.FALSE("mr-4") }
-    }
-  ];
 
   // ============================================= Table Settings
   const rowButtons = [
@@ -93,7 +107,7 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
   return (
     <>
       <MyTable
-        editUrl={EDITURL}
+        onRowDbClick={handleOnEdit}
         tableTitle={pageName}
         headCells={headCells}
         dataModel={dataModel}
@@ -105,15 +119,6 @@ const CurrentPage = ({ onDelete, onAlertNotify, pageName }) => {
     </>
   );
 };
-
-// ============================================= Search Panel
-// 搜索框
-const searchBar = (
-  <>
-    <Inputs.MyInput inputid= "userName" />
-    <Inputs.MyInput inputid= "fullName"/>
-  </>
-);
 
 // ============================================= propTypes
 

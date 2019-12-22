@@ -6,6 +6,11 @@ const Dashboard = React.lazy(() => import("./views/Dashboard"));
 //================ user
 const Users = React.lazy(() => import("./views/Users/Users"));
 const User = React.lazy(() => import("./views/Users/User"));
+const Commonitems = React.lazy(() => import("./views/Setting/Commonitems"));
+const Commonitem = React.lazy(() => import("./views/Setting/Commonitem"));
+
+
+
 
 //================ company types
 const CompaniesInternal = React.lazy(() =>
@@ -19,7 +24,10 @@ const CompaniesInternal = React.lazy(() =>
 );
 const CompanyInternal = React.lazy(() =>
   import("./views/Company/Company").then(mymodule => ({
-    default: mymodule.withCompany(enums.companyType.internal)
+    default: mymodule.withCompany(
+      enums.companyType.internal,
+      "/companyinternal/companies"
+    )
   }))
 );
 
@@ -34,7 +42,10 @@ const CompaniesFactory = React.lazy(() =>
 );
 const CompanyFactory = React.lazy(() =>
   import("./views/Company/Company").then(mymodule => ({
-    default: mymodule.withCompany(enums.companyType.factory)
+    default: mymodule.withCompany(
+      enums.companyType.factory,
+      "/companyfactory/companies"
+    )
   }))
 );
 
@@ -49,7 +60,10 @@ const CompaniesOverseas = React.lazy(() =>
 );
 const CompanyOverseas = React.lazy(() =>
   import("./views/Company/Company").then(mymodule => ({
-    default: mymodule.withCompany(enums.companyType.overseasCustomer)
+    default: mymodule.withCompany(
+      enums.companyType.overseasCustomer,
+      "/companyoverseas/companies"
+    )
   }))
 );
 
@@ -64,7 +78,10 @@ const CompaniesDomestic = React.lazy(() =>
 );
 const CompanyDomestic = React.lazy(() =>
   import("./views/Company/Company").then(mymodule => ({
-    default: mymodule.withCompany(enums.companyType.domesticCustomer)
+    default: mymodule.withCompany(
+      enums.companyType.domesticCustomer,
+      "/companydomestic/companies"
+    )
   }))
 );
 
@@ -79,7 +96,10 @@ const CompaniesShipping = React.lazy(() =>
 );
 const CompanyShipping = React.lazy(() =>
   import("./views/Company/Company").then(mymodule => ({
-    default: mymodule.withCompany(enums.companyType.shippingCompany)
+    default: mymodule.withCompany(
+      enums.companyType.shippingCompany,
+      "/companyshipping/companies"
+    )
   }))
 );
 
@@ -95,6 +115,9 @@ const ProductProduct = React.lazy(() => import("./views//Product/Product"));
 // const Page500 = React.lazy(() => import('./views/Pages/Page500'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
+
+
+
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
@@ -115,11 +138,40 @@ const routes = [
     authTag: "user"
   },
   {
-    path: "/users/user/:id",
+    path: "/users/users/:id",
     exact: true,
     name: "用户",
     component: User,
     authTag: "user"
+  },
+  //--------------------------------------------- 通用选项表
+  {
+    path: "/commonitems/commonitemsList/:commonType",
+    exact: true,
+    name: "通用选项集",
+    component: Commonitems,
+    authTag: "commonitem"
+  },
+  {
+    path: "/commonitems/commonitemsList",
+    exact: true,
+    name: "通用选项集",
+    component: Commonitems,
+    authTag: "commonitem"
+  },
+  {
+    path: "/commonitems/commonitem/:commonType", // 必须在commonType下新增
+    exact: true,
+    name: "通用选项",
+    component: Commonitem,
+    authTag: "commonitem"
+  },
+  {
+    path: "/commonitems/commonitems/:id",
+    exact: true,
+    name: "通用选项",
+    component: Commonitem,
+    authTag: "commonitem"
   },
   //--------------------------------------------- 公司
   {
@@ -255,7 +307,7 @@ const routes = [
     authTag: "product"
   },
   {
-    path: "/product/product/:id",
+    path: "/product/products/:id",
     exact: true,
     name: "产品",
     component: ProductProduct,

@@ -1,0 +1,15 @@
+{
+   
+    "row":{
+            "id": 1,
+            "accountName": "张三丰",
+            "accountNo": "436700193511111",
+            "bankName": "工商银行红山支行",
+            "address": "某某街道某某号",
+            "swiftCode": "00100007",
+            "bankType": "0",
+            "currency_id":6,
+            "currency_id.name": "人民币",
+            "memo": "31811111"
+        }
+}

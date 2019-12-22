@@ -8,7 +8,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
+import { h_confirm, history } from "../../_helper";
 import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
 
 // ******************************************************************* page setting
@@ -35,6 +35,11 @@ export const withCompanyList = (pagetype = 0, EDITURL = "/company/company", CREA
         if (resolve) onDelete(pagination, id);
       });
     };
+
+    const handleOnEdit = (pagination, id) => {
+      history.push(`${EDITURL}/${id}`)
+    }
+  
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
@@ -71,7 +76,7 @@ export const withCompanyList = (pagetype = 0, EDITURL = "/company/company", CREA
     // ============================================= Render
     return (
         <MyTable
-          editUrl={EDITURL}
+          onRowDbClick ={handleOnEdit}
           tableTitle={pageName}
           headCells={headCells}
           dataModel={dataModel}

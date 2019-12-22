@@ -12,6 +12,7 @@ export const bankaccountModel = {
         swiftCode:      {label: "swiftcode",   type: _DATATYPES.VARCHAR}, 
         memo:           {label: "备注",       type: _DATATYPES.TEXT},
         bankType:       {label: "银行类型",     type: _DATATYPES.ENUM},
+        currency_id:    {label: "币种",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         company_id:     {label: "所属公司",     type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
     }
 }

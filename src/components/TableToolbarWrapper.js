@@ -16,7 +16,13 @@ import Search from './Search';
 const useToolbarStyles = makeStyles(theme => ({
   root: {
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
+    paddingRight: theme.spacing(1)
+  },
+  rootNoBorder: {
+    paddingLeft: theme.spacing(0),
+    paddingRight: theme.spacing(0),
+    paddingTop: theme.spacing(0),
+    minHeight: 0,
   },
   highlight:
     theme.palette.type === 'light'
@@ -44,13 +50,17 @@ const TableToolbarWrapper = ({
   searchBar,
   onSearch,
   toolbarButtons,
-  getPaginationFromState }) => {
+  getPaginationFromState,
+  isBorder = true, }) => {
 
   const classes = useToolbarStyles();
 
+  // 是否加高
+  const classesWithBorder = isBorder?classes.root:classes.rootNoBorder;
+
   return (
     <Toolbar
-      className={clsx(classes.root, {
+      className={clsx(classesWithBorder, {
         [classes.highlight]: numSelected > 0,
       })}>
       {numSelected > 0 ? (
@@ -65,9 +75,9 @@ const TableToolbarWrapper = ({
           </Typography>
       ) : (
           <Typography className={classes.title} variant="h6" id="tableTitle">
-            {tableTitle}
+            <span className="mr-2">{tableTitle}</span>
             <Tooltip title="Reload">
-            <IconButton aria-label="refresh" className="ml-2 text-secondary" size="small" onClick={onRefresh}>
+            <IconButton aria-label="refresh" className="text-secondary" size="small" onClick={onRefresh}>
               <i className="icon-reload" />
             </IconButton>
             </Tooltip>
@@ -92,7 +102,7 @@ TableToolbarWrapper.propTypes = {
 };
 
 
-// ============================================================
+// ============================================================ 除了搜索框以外的按钮（主要是新增按钮）
 const ToolbarButton = ({ label, onClick, color, url, icon, getPaginationFromState,  }) => {
 
   let returnValue = label;

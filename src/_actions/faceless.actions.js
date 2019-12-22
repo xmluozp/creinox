@@ -57,10 +57,12 @@ export const withFacelessActions = (
         response => {
           dispatch(loaded);
           dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+          return null;
         },
         error => {
           dispatch(loadedFailure);
           dispatch(failure(error.toString()));
+          return null;
         }
       );
     };
@@ -82,7 +84,7 @@ export const withFacelessActions = (
     };
   }
 
-  function post_create(item, page) {
+  function post_create(item, page, isWithId = false) {
     console.log("action create:", item);
     return dispatch => {
       dispatch(loading);
@@ -103,7 +105,7 @@ export const withFacelessActions = (
     };
   }
 
-  function put_update(item, page) {
+  function put_update(item, page, isWithId = false) {
     console.log("action update:", item);
     return dispatch => {
       dispatch(loading);

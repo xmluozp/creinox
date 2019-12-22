@@ -77,6 +77,7 @@ function get_dropdown(pagination) { // 用来给下拉列表提供值
       response => {
         dispatch(loaded);
         dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
+        // return response;
       },
       error => {
         dispatch(loadedFailure);
@@ -134,7 +135,10 @@ function post_create(item, page) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
-        if (page) history.push(page);
+
+        const id = "1"
+
+        if (page) history.push(page + "/" + id);
       },
       error => {
         dispatch(loadedFailure);

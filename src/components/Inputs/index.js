@@ -25,7 +25,17 @@ import Button from "@material-ui/core/Button";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
-import {MyCombobox, MyComboboxFK, MySelect} from './MyCombobox';
+import {
+  MyCombobox,
+  MyComboboxFK,
+  MySelect,
+  MyComboboxPolishing,
+  MyComboboxTexture,
+  MyComboboxUnitType,
+  MyComboboxShippingType,
+  MyComboboxPricingTerm,
+  MyComboboxCurrency
+} from "./MyCombobox";
 
 // ==================================================================================Date picker
 const MyDatePicker = ({
@@ -36,13 +46,11 @@ const MyDatePicker = ({
   fullWidth = true,
   disabled = false
 }) => {
-
-  const handleOnChange = (timeString,timeObject) => {
-
-    if (typeof(onChange)==='function'){
-      onChange(null, id, timeObject)
+  const handleOnChange = (timeString, timeObject) => {
+    if (typeof onChange === "function") {
+      onChange(null, id, timeObject);
     }
-  }
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} style={{ marginTop: "0px" }}>
@@ -84,14 +92,13 @@ const MyDateRangePicker = ({
   const [startDate, setStartDate] = useState(getDateArray(value)[0]);
   const [endDate, setEndDate] = useState(getDateArray(value)[1]);
 
-
   // otherwise only submit
-  const handleChangeStart = (timeString,timeObject)  => {
+  const handleChangeStart = (timeString, timeObject) => {
     const newCombineDate = `${timeObject},${endDate}`;
     if (typeof onChange === "function") onChange(null, id, newCombineDate);
     setStartDate(timeObject);
   };
-  const handleChangeEnd = (timeString,timeObject)  => {
+  const handleChangeEnd = (timeString, timeObject) => {
     const newCombineDate = `${startDate},${timeObject}`;
     if (typeof onChange === "function") onChange(null, id, newCombineDate);
     setEndDate(timeObject);
@@ -149,7 +156,6 @@ const MyInput = ({
   rows,
   rowsMax = 5
 }) => {
-
   return (
     <TextField
       fullWidth={fullWidth}
@@ -238,7 +244,7 @@ const MySwitch = ({
   const isChecked = value === true || value === "true";
   const handleOnChange = (e, value) => {
     onChange(e, id, value);
-  }
+  };
 
   return (
     <FormControlLabel
@@ -258,10 +264,7 @@ const MySwitch = ({
 };
 
 // ================================================================================== switch
-const MyEditButton = ({
-  disabled = false,
-  setdisabled = () => {},
-}) => {
+const MyEditButton = ({ disabled = false, setdisabled = () => {} }) => {
   return (
     <>
       <Button
@@ -277,12 +280,16 @@ const MyEditButton = ({
   );
 };
 
-
-
-
 export const Inputs = {
   MyCombobox,
   MyComboboxFK,
+  MyComboboxCurrency,
+  MyComboboxPolishing,
+  MyComboboxTexture,
+  MyComboboxUnitType,
+  MyComboboxShippingType,
+  MyComboboxPricingTerm,
+  MyComboboxCurrency,
   MySelect,
   MyDatePicker,
   MyDateRangePicker,

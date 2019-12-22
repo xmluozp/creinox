@@ -17,7 +17,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 
 const TablePaginationWrapper = (props) => {
        return <TablePagination
-          rowsPerPageOptions={[20, 100, { label: 'All', value: -1 }]}
+          rowsPerPageOptions={[15, 50, 100, { label: 'All', value: -1 }]}
           component="div"
           {...props}
           labelRowsPerPage = "每页"

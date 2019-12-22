@@ -1,12 +1,12 @@
-import { COMPANY as CONST, LOADING } from "../_constants";
-import { companyService as service } from "../_services";
+import { COMMONITEM as CONST, LOADING, enums } from "../_constants";
+import { commonitemService as service } from "../_services";
 import { alertActions } from "./";
 import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'
 
-export const companyActions = {
+export const commonitemActions = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -26,17 +26,47 @@ const loaded = { type: LOADING.SUCCESS };
 const loadedFailure = { type: LOADING.FAILURE };
 
 // FETCH  ---------------------------------------------
-function get_dropdown(pagination, searchTerms = {}) {
+function get_dropdown({commonType = 0}) {
+
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown(pagination, searchTerms).then(
+    return service.get_dropdown(commonType).then(
       response => {
+        const payload = {};
         dispatch(loaded);
-        dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
+        switch (commonType) {
+          case enums.commonType.currency:
+            payload.dropdown_currency = response;
+            break;
+          case enums.commonType.pack:
+            payload.dropdown_pack = response;
+            break;
+          case enums.commonType.polishing:
+            payload.dropdown_polishing = response;
+            break;
+          case enums.commonType.pricingTerm:
+            payload.dropdown_pricingTerm = response;
+            break;
+          case enums.commonType.shippingType:
+            payload.dropdown_shippingType = response;
+            break;
+          case enums.commonType.texture:
+            payload.dropdown_texture = response;
+            break;
+          case enums.commonType.unitType:
+            payload.dropdown_unitType = response;
+            break;
+          default:
+            break;
+        }
+
+        dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
+        return response;
       },
       error => {
         dispatch(loadedFailure);
         dispatch(failure(error.toString()));
+        return {}
       }
     );
   };
@@ -84,9 +114,7 @@ function post_create(item, page, isWithId = false) {
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
 
-        const id = "1"
-
-        if (page) history.push(page + "/" + id);
+        if (page) history.push(page);
       },
       error => {
         dispatch(loadedFailure);
@@ -106,6 +134,8 @@ function put_update(item, page, isWithId = false) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
+
+        // 通用选项跳转不带id
         if (page) history.push(page);
       },
       error => {

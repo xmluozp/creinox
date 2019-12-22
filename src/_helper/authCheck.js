@@ -1,6 +1,6 @@
 
 
-const allAuthList = ['system','user',
+const allAuthList = ['system','user','commonitem',
 'companyinternal','companyfactory','companyoverseas','companydomestic','companyshipping',
 'product']
 // const testAuthList = 'system,company,product'

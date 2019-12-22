@@ -5,3 +5,5 @@ export * from './withDatatableStore';
 export * from './Treeview'
 export * from './Modal'
 export * from './TabPanel'
+export * from './TabVertical'
+export * from './Loading'

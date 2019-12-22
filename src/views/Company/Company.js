@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 
-import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
+import { Row, Col, Card, CardHeader } from "reactstrap";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
@@ -13,12 +13,14 @@ import { companyActions as dataActions } from "../../_actions";
 import { companyModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "../../components";
 import { enumsLabel } from "../../_constants";
-import { history } from "../../_helper";
+// import { history } from "../../_helper";
 
 import Contacts from "./Contacts"
 import BankaccountsCompany from "../Bank/BankaccountsCompany"
 
-export const withCompany = (companyType = 0) => {
+
+
+export const withCompany = (companyType = 0, EDITURL="") => {
   const CurrentPage = ({
     dataById,
     errorById,
@@ -27,10 +29,10 @@ export const withCompany = (companyType = 0) => {
     onGetById,
     ...props
   }) => {
-    const id = parseInt(_.get(props, "match.params.id"));
-    const isFromEdit = id ? true : false;
-    const [disabled, setdisabled] = useState(id && true);
 
+    const id = parseInt(_.get(props, "match.params.id")) || "";
+    const isFromEdit = Number.isInteger(id) ? true : false;
+    const [disabled, setdisabled] = useState(isFromEdit);
     const [tabSelect, setTabSelect] = React.useState(0);
 
     const handleTabChange = (event, newValue) => {
@@ -39,10 +41,10 @@ export const withCompany = (companyType = 0) => {
 
     useEffect(() => {
       // if there is ID, fetch data
-      if (!dataById && id) {
+      if (id) {
         onGetById(id);
       }
-    }, [onGetById, dataById, id]);
+    }, [onGetById, id]);
 
     // ********************************
 
@@ -50,7 +52,8 @@ export const withCompany = (companyType = 0) => {
       if (isFromEdit) {
         onPutUpdate({ companyType: companyType, ...values });
       } else {
-        onPostCreate(values, history.location.pathname);
+        // onPostCreate(values, history.location.pathname);
+        onPostCreate(values, EDITURL, true);
       }
     };
 
@@ -124,10 +127,10 @@ export const withCompany = (companyType = 0) => {
                     </CreinoxForm>
                   </TabPanel>
                   <TabPanel value={tabSelect} index={1}>
-                    <Contacts companyId = {id}/>
+                    <Contacts preConditions ={{company_id: id}}/>
                   </TabPanel>
                   <TabPanel value={tabSelect} index={2}>
-                    <BankaccountsCompany companyId = {id}/>
+                    <BankaccountsCompany preConditions ={{company_id: id}}/>
                   </TabPanel>
                 
               </Card>
@@ -258,23 +261,13 @@ export const withCompany = (companyType = 0) => {
                       <Grid item lg={4} md={4} xs={12}>
                         <Grid container spacing={2}>
                           <Grid item xs={12}>
-                            todo: modal
-                          </Grid>
-
-                          <Grid item xs={12}>
-                            todo: 联系人
-                          </Grid>
-                          <Grid item xs={12}>
-                            todo: 银行账户
-                          </Grid>
-                          <Grid item xs={12}>
-                            todo: 图片列表
-                          </Grid>
-                          <Grid item xs={12}>
                             todo: imageLicense
                           </Grid>
                           <Grid item xs={12}>
                             todo: imageBizCard
+                          </Grid>
+                           <Grid item xs={12}>
+                            todo: 图片列表
                           </Grid>
                         </Grid>
                       </Grid>

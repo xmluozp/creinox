@@ -2,6 +2,7 @@ import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { loadingActions } from "./_actions";
+import Loading from './components/Loading'
 import {h_initializeDropDownTables} from "./_helper";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
@@ -41,6 +42,7 @@ const App = ({ user, loadingBar }) => {
   return (
     <HashRouter>
       <React.Suspense fallback={loading()}>
+        <Loading/>
         <Switch>
           <UnauthenticatedRoute
             exact

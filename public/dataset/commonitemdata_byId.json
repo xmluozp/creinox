@@ -1,0 +1,12 @@
+{
+
+    "row":
+        {
+            "id": 1,
+            "name": "美金",
+            "ename": "US",
+            "memo": "",
+            "isActive": true,
+            "commonType": 6
+        }
+}

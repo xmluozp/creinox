@@ -77,7 +77,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, page) {
+function post_create(item, page, isWithId = false) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -98,7 +98,7 @@ function post_create(item, page) {
   };
 }
 
-function put_update(item, page) {
+function put_update(item, page, isWithId = false) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);

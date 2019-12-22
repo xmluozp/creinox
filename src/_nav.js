@@ -22,6 +22,11 @@ const navs = {
           url: '/users/users',
           authTag:'user',
         },
+        {
+          name: '通用选项集',
+          url: '/commonitems/commonitemsList/0',
+          authTag:'commonitem',
+        },
       ]
     },
     {

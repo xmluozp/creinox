@@ -37,6 +37,10 @@ export class CreinoxForm extends React.Component {
 
   // step 1/3: generate empty items ********************************************
   componentDidMount() {
+
+    // preConditions 是新增用的，是前提条件
+    const {isFromEdit, preConditions} = this.props;
+
     // set initial Values (empty)
     const initialValues = {};
 
@@ -49,9 +53,11 @@ export class CreinoxForm extends React.Component {
       }
     });
     
+
     this.setState({
-      isComponentLoaded: !this.props.isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
-      ...initialValues
+      isComponentLoaded: !isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
+      ...initialValues,
+      ...preConditions
     });
   }
 
@@ -74,8 +80,9 @@ export class CreinoxForm extends React.Component {
 
   // step 2/3: generate empty items ********************************************
   componentDidUpdate(prevProps, prevState, snapshot) {
- 
+
     if (!this.state.isComponentLoaded && !_.isEmpty(this.props.defaultValues)) {
+      
       // 默认表单不为空。表示加载完毕
       this.readValues();
     }
@@ -119,26 +126,35 @@ export class CreinoxForm extends React.Component {
     const values = this.state;
     const handleChange = this.handleChange.bind();
 
+    
+
     if (!this.state.isComponentLoaded) {
       return "loading";
     } else {
       return (
         <form onSubmit={this.submitForm}>
-          {recursiveMap(children, item => {
+          {recursiveMap(children, item => { // 遍历所有的components
             const isInput =
               item.props && this.state.hasOwnProperty(item.props.inputid); // 是否输入控件
-            return isInput
-              ? injectedInputs(
-                  // 如果是控件就注入，否则原样返回
+
+            if (isInput) { // 如果是控件就注入，否则原样返回
+              const columnId = item.props.inputid;
+              const isError = errors && errors.hasOwnProperty(columnId)
+              const errorMessage = errors && errors[columnId]     
+
+              return injectedInputs(      
                   {
                     item: item,
-                    errorMessages: errors, // 从props取到的返回错误信息
+                    isError : isError,
+                    errorMessage: errorMessage, // 从props取到的返回错误信息
                     handleChange: handleChange,
                     dataModel: dataModel,
-                    values: values
+                    value: values[columnId]
                   }
                 )
-              : item;
+            } else {
+              return item;
+            }
           })}
         </form>
       );
@@ -146,7 +162,7 @@ export class CreinoxForm extends React.Component {
   }
 }
 
-const injectedInputs = ({ item, handleChange, dataModel, values, errorMessages }) => {
+const injectedInputs = ({ item, handleChange, dataModel, value, isError, errorMessage = "" }) => {
   let returnValue = item;
   const columnId = item.props.inputid;
 
@@ -156,12 +172,12 @@ const injectedInputs = ({ item, handleChange, dataModel, values, errorMessages }
   if (dataModel.columns[columnId]) {
     // TODO: 判断component类型。不同类型注入不同的东西
     returnValue = React.cloneElement(item, {
-      id: item.props.inputid,
-      key: item.props.inputid,
+      id: columnId,
+      key: columnId,
       label: dataModel.columns[columnId].label,
-      error: errorMessages && errorMessages.hasOwnProperty(columnId),
-      helperText: errorMessages && errorMessages[columnId],
-      value: values[columnId],
+      error: isError,
+      helperText: errorMessage,
+      value: value,
       onChange: handleChange,
       fullWidth: true
     });

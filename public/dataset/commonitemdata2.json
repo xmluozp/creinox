@@ -1,0 +1,54 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 10,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 6,
+            "name": "美金",
+            "ename": "US",
+            "memo": "",
+            "isActive": true,
+            "commonType": 6
+        },
+        {
+            "id": 7,
+            "name": "人民币",
+            "ename": "RMB",
+            "memo": "",
+            "isActive": true,
+            "commonType": 6
+        },
+        {
+            "id":8,
+            "name": "港币",
+            "ename": "HKD",
+            "memo": "",
+            "isActive": true,
+            "commonType": 6
+        },
+        {
+            "id": 9,
+            "name": "欧罗",
+            "ename": "EUR",
+            "memo": "",
+            "isActive": true,
+            "commonType": 6
+        },
+        {
+            "id": 10,
+            "name": "澳元",
+            "ename": "AUS",
+            "memo": "",
+            "isActive": true,
+            "commonType": 6
+        }
+    ]
+}
