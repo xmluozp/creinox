@@ -13,6 +13,7 @@ export const categoryActions = {
   post_create,
   put_update,
   _delete,
+
   // customized
   get_byCategory
 };
@@ -77,7 +78,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, page, isWithId = false) {
+function post_create(item, callBack=()=>{}) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -87,7 +88,8 @@ function post_create(item, page, isWithId = false) {
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
 
-        if (page) history.push(page);
+        const id = (response.row && response.row.id) || null
+        callBack(id);
       },
       error => {
         dispatch(loadedFailure);
@@ -98,7 +100,7 @@ function post_create(item, page, isWithId = false) {
   };
 }
 
-function put_update(item, page, isWithId = false) {
+function put_update(item, callBack=()=>{}) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);
@@ -107,7 +109,8 @@ function put_update(item, page, isWithId = false) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
-        if (page) history.push(page);
+
+        callBack(response);
       },
       error => {
         dispatch(loadedFailure);
@@ -137,7 +140,7 @@ function _delete(pagination, id) {
 
 //======================== customized
 
-function get_byCategory(categoryId = 0) {
+function get_byCategory(categoryId = 0) { // 通过某个分类，取所有的子级孙级分类 （在产品里也需要）
   return dispatch => {
     dispatch(loading);
     return service.get_byCategory(categoryId).then(

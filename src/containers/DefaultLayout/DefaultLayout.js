@@ -25,6 +25,14 @@ import routes from "../../routes";
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 
+// 菜单的filter代码在navigation里面
+const routesAuth = () => {
+  return routes.filter((route, idx) => {
+    if (authCheck(route.authTag)) return true
+    else return false;
+  })
+}
+
 class DefaultLayout extends Component {
   loading = () => (
     <div className="animated fadeIn pt-1 text-center">
@@ -51,12 +59,12 @@ class DefaultLayout extends Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           <main className="main">
-            <AppBreadcrumb appRoutes={routes} />
+            <AppBreadcrumb appRoutes={routesAuth()} />
             <Container fluid>
               <Suspense fallback={this.loading()}>
                 <Toastr />
                 <Switch>
-                  {routes.map((route, idx) => {
+                  {routesAuth().map((route, idx) => {
                     let returnValue;
                     returnValue = route.component ? (
                       <Route
@@ -69,7 +77,6 @@ class DefaultLayout extends Component {
                         )}
                       />
                     ) : null;
-                    if (!authCheck(route.authTag)) returnValue = "";
                     return returnValue;
                   })}
                   <Redirect from="/" to="/dashboard" />

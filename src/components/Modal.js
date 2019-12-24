@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { CreinoxForm } from "./index";
+import { withCreinoxForm } from "./index";
 
 export const MyModalForm = ({
   isOpen,
@@ -10,25 +10,29 @@ export const MyModalForm = ({
   rowButtons = [],
   className,
   component,
-  FormWrapper = () => <></>
+  FormWrapper = () => null
 }) => {
   const pageId = 0;
 
   return (
     <Modal isOpen={isOpen} toggle={onClose} className={"modal-lg " + className}>
       <ModalHeader toggle={onClose}>{title}</ModalHeader>
-      <FormWrapper>
-        <ModalBody>{component}</ModalBody>
-        <ModalFooter>
-          {rowButtons.map((buttonObj, index) => (
-            <ActionButton
-              key={`button_${pageId}_${index}`}
-              {...buttonObj}
-              id={pageId}
-            />
-          ))}
-        </ModalFooter>
-      </FormWrapper>
+      {!component ? (
+        <FormWrapper />
+      ) : (
+        <>
+          <ModalBody>{component}</ModalBody>
+          <ModalFooter>
+            {rowButtons.map((buttonObj, index) => (
+              <ActionButton
+                key={`button_${pageId}_${index}`}
+                {...buttonObj}
+                id={pageId}
+              />
+            ))}
+          </ModalFooter>
+        </>
+      )}
     </Modal>
   );
 };
@@ -91,29 +95,33 @@ export const MyModalFormWithData = ({
   }, [onGetById, isOpen, isFromEdit]);
 
   const FormWrapper = () => {
+
+    const childrenInputs = (<><ModalBody>{componentInputs()}</ModalBody>
+    <ModalFooter>
+      <Button
+        type="button"
+        onClick={onClose}
+        variant="contained"
+        color="secondary"
+      >
+        取消
+      </Button>
+      <Button type="submit" variant="contained" color="primary">
+        保存
+      </Button>
+    </ModalFooter></>)
+
+    const CreinoxForm = withCreinoxForm({
+      dataModel:dataModel,
+      childrenInputs:childrenInputs
+    })
+
     return (
       <CreinoxForm
-        dataModel={dataModel}
         defaultValues={rowId && dataById && { ...dataById.row }}
         errors={errorById}
         isFromEdit={isFromEdit}
-        actionSubmit={onSubmit}
-      >
-        <ModalBody>{componentInputs()}</ModalBody>
-        <ModalFooter>
-          <Button
-            type="button"
-            onClick={onClose}
-            variant="contained"
-            color="secondary"
-          >
-            取消
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            保存
-          </Button>
-        </ModalFooter>
-      </CreinoxForm>
+        actionSubmit={onSubmit}/>
     );
   };
 

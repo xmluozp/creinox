@@ -20,7 +20,10 @@
             "retriveTime": "2018-07-17",
             "retriever_id": 1,
             "retriever_id.userName": "小张",
-            "imageLicense": "/no"
+            "imageLicense_id": "1",
+			"imageLicense_id.image": {
+				"id":1
+				}
         }
     ]
 }

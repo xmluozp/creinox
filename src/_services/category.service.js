@@ -49,6 +49,7 @@ function post_create(item) {
     return new Promise(resolve => resolve("on create service"))
 }
 
+// 后台除了修改这个节点本身以外，还要更新所有下级节点的path。通过like左匹配找到左右下级节点，path把当前节点的path左替换掉
 function put_update(item) {
     return new Promise(resolve => resolve("on update service"))
 }

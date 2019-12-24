@@ -74,7 +74,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, page, isWithId = false) {
+function post_create(item, callBack=()=>{}) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -83,10 +83,10 @@ function post_create(item, page, isWithId = false) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
-
+        // const id = (response.row && response.row.id) || null
         const id = "1"
-
-        if (page) history.push(page + "/" + id);
+        callBack(id);
+        // if (page) history.push(page + "/" + id);
       },
       error => {
         dispatch(loadedFailure);
@@ -97,7 +97,7 @@ function post_create(item, page, isWithId = false) {
   };
 }
 
-function put_update(item, page, isWithId = false) {
+function put_update(item, callBack=()=>{}) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);
@@ -106,7 +106,8 @@ function put_update(item, page, isWithId = false) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
-        if (page) history.push(page);
+
+        callBack(response);
       },
       error => {
         dispatch(loadedFailure);

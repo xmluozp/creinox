@@ -143,7 +143,7 @@ const MyDateRangePicker = ({
 };
 
 // ================================================================================== regular text
-const MyInput = ({
+const MyInput = React.memo(({
   id,
   label = "输入",
   value = "",
@@ -172,7 +172,7 @@ const MyInput = ({
       rowsMax={rowsMax}
     />
   );
-};
+});
 
 // ================================================================================== password text
 const useStyles = makeStyles(theme => ({
@@ -283,7 +283,6 @@ const MyEditButton = ({ disabled = false, setdisabled = () => {} }) => {
 export const Inputs = {
   MyCombobox,
   MyComboboxFK,
-  MyComboboxCurrency,
   MyComboboxPolishing,
   MyComboboxTexture,
   MyComboboxUnitType,

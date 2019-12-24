@@ -87,7 +87,7 @@ export const embedListProvider = (
     // ============================================= Table Settings
     const rowButtons = [
       {
-        label: "修改",
+        label: "详情",
         color: "primary",
         onClick: handleOnEditOpen,
         icon: ICONS.EDIT("mr-1")

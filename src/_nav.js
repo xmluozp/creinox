@@ -12,25 +12,24 @@ const navs = {
       },
     },
     {
-      name: '系统管理',
+      name: '商品',
       url: '#',
       icon: 'icon-puzzle',
-      authTag:'system',
       children: [
         {
-          name: '系统用户管理',
-          url: '/users/users',
-          authTag:'user',
+          name: '产品类别',
+          url: '/product/categories',
+          authTag:'product',
         },
         {
-          name: '通用选项集',
-          url: '/commonitems/commonitemsList/0',
-          authTag:'commonitem',
-        },
+          name: '产品列表',
+          url: '/product/products',
+          authTag:'product',
+        }
       ]
     },
     {
-      name: '业务基础数据',
+      name: '基础设置',
       url: '#',
       icon: 'icon-puzzle',
       children: [
@@ -62,20 +61,21 @@ const navs = {
       ]
     },
     {
-      name: '产品系统',
+      name: '系统',
       url: '#',
       icon: 'icon-puzzle',
+      authTag:'system',
       children: [
         {
-          name: '产品类别',
-          url: '/product/categories',
-          authTag:'product',
+          name: '用户',
+          url: '/users/users',
+          authTag:'user',
         },
         {
-          name: '产品列表',
-          url: '/product/products',
-          authTag:'product',
-        }
+          name: '通用选项集',
+          url: '/commonitems/commonitemsList/0',
+          authTag:'commonitem',
+        },
       ]
     },
 
@@ -85,7 +85,7 @@ const navs = {
 
 const authFilter = (navsList) => {
 
-  const returnNav = navsList.items.map((item) => {
+  const returnNav = navsList.items.filter((item) => {
     const returnItem =item
     // 确认item内部子元素权限
     const returnItemChildren = returnItem.children && returnItem.children.filter((childItem)=>{
@@ -95,7 +95,7 @@ const authFilter = (navsList) => {
 
 
     // 确认item本身权限，返回item
-    return authCheck(returnItem.authTag) ? returnItem : null;
+    return authCheck(returnItem.authTag);
   })
   navsList.items = returnNav;
 

@@ -3,9 +3,7 @@ import { commonitemService as service } from "../_services";
 import { alertActions } from "./";
 import { history } from "../_helper";
 
-// const url = '/api/auth';
-// import axios from 'axios'
-
+// a table to store all common selections
 export const commonitemActions = {
   get_dropdown,
   get_bySearch,
@@ -104,7 +102,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, page, isWithId = false) {
+function post_create(item, callBack=()=>{}) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -114,7 +112,8 @@ function post_create(item, page, isWithId = false) {
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
 
-        if (page) history.push(page);
+        const id = (response.row && response.row.id) || null
+        callBack(id);
       },
       error => {
         dispatch(loadedFailure);
@@ -125,7 +124,7 @@ function post_create(item, page, isWithId = false) {
   };
 }
 
-function put_update(item, page, isWithId = false) {
+function put_update(item, callBack=()=>{}) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);
@@ -135,8 +134,7 @@ function put_update(item, page, isWithId = false) {
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
 
-        // 通用选项跳转不带id
-        if (page) history.push(page);
+        callBack(response);
       },
       error => {
         dispatch(loadedFailure);

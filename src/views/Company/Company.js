@@ -11,9 +11,9 @@ import Tab from "@material-ui/core/Tab";
 import { connect } from "react-redux";
 import { companyActions as dataActions } from "../../_actions";
 import { companyModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel } from "../../components";
+import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
 import { enumsLabel } from "../../_constants";
-// import { history } from "../../_helper";
+import { history } from "../../_helper";
 
 import Contacts from "./Contacts"
 import BankaccountsCompany from "../Bank/BankaccountsCompany"
@@ -53,7 +53,10 @@ export const withCompany = (companyType = 0, EDITURL="") => {
         onPutUpdate({ companyType: companyType, ...values });
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate(values, EDITURL, true);
+        onPostCreate(values, (id)=>{
+          // not using async. because I want loading bar's codes put with callback codes
+          history.push(EDITURL + "/" + id) 
+        });
       }
     };
 
@@ -78,8 +81,10 @@ export const withCompany = (companyType = 0, EDITURL="") => {
                   aria-label="tabs"
                 >
                   <Tab label="基本信息" />
+                  <Tab label="图册" disabled={!isFromEdit} />
                   <Tab label="联系人名册" disabled={!isFromEdit} />
                   <Tab label="银行账户" disabled={!isFromEdit} />
+
 
                 </Tabs>
 
@@ -127,11 +132,15 @@ export const withCompany = (companyType = 0, EDITURL="") => {
                     </CreinoxForm>
                   </TabPanel>
                   <TabPanel value={tabSelect} index={1}>
-                    <Contacts preConditions ={{company_id: id}}/>
+                    <Gallery/>
                   </TabPanel>
                   <TabPanel value={tabSelect} index={2}>
+                    <Contacts preConditions ={{company_id: id}}/>
+                  </TabPanel>
+                  <TabPanel value={tabSelect} index={3}>
                     <BankaccountsCompany preConditions ={{company_id: id}}/>
                   </TabPanel>
+
                 
               </Card>
             </Col>

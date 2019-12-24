@@ -57,12 +57,10 @@ export const withFacelessActions = (
         response => {
           dispatch(loaded);
           dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
-          return null;
         },
         error => {
           dispatch(loadedFailure);
           dispatch(failure(error.toString()));
-          return null;
         }
       );
     };
@@ -84,7 +82,7 @@ export const withFacelessActions = (
     };
   }
 
-  function post_create(item, page, isWithId = false) {
+  function post_create(item, callBack=()=>{}) {
     console.log("action create:", item);
     return dispatch => {
       dispatch(loading);
@@ -93,8 +91,9 @@ export const withFacelessActions = (
           dispatch(loaded);
           dispatch(alertActions.success("保存成功"));
           dispatch(done(response, CONST.CREATE_SUCCESS));
-
-          if (page) history.push(page);
+  
+          const id = (response.row && response.row.id) || null
+          callBack(id);
         },
         error => {
           dispatch(loadedFailure);
@@ -105,7 +104,7 @@ export const withFacelessActions = (
     };
   }
 
-  function put_update(item, page, isWithId = false) {
+  function put_update(item, callBack=()=>{}) {
     console.log("action update:", item);
     return dispatch => {
       dispatch(loading);
@@ -114,7 +113,7 @@ export const withFacelessActions = (
           dispatch(loaded);
           dispatch(alertActions.success("保存成功"));
           dispatch(done(response, CONST.UPDATE_SUCCESS));
-          if (page) history.push(page);
+          callBack(response);
         },
         error => {
           dispatch(loadedFailure);

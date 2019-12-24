@@ -126,7 +126,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, page) {
+function post_create(item, callBack=()=>{}) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -137,8 +137,8 @@ function post_create(item, page) {
         dispatch(done(response, CONST.CREATE_SUCCESS));
 
         const id = "1"
-
-        if (page) history.push(page + "/" + id);
+        // const id = (response.row && response.row.id) || null
+        callBack(id);
       },
       error => {
         dispatch(loadedFailure);
@@ -149,7 +149,7 @@ function post_create(item, page) {
   };
 }
 
-function put_update(item, page) {
+function put_update(item, callBack=()=>{}) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);
@@ -158,7 +158,7 @@ function put_update(item, page) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
-        if (page) history.push(page);
+        callBack(response);
       },
       error => {
         dispatch(loadedFailure);

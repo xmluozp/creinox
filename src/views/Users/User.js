@@ -4,12 +4,14 @@ import _ from "lodash";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import { history } from "../../_helper";
 
 //------redux
 import { connect } from "react-redux";
 import { userActions as dataActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs } from "../../components";
+
 
 // import { h_confirm } from '../../_helper'
 const EDITURL = "/users/users";
@@ -36,7 +38,9 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
     if (isFromEdit) {
       onPutUpdate({...values});
     } else {
-      onPostCreate(values, EDITURL);
+      onPostCreate(values, (id)=>{
+        history.push(EDITURL + "/" + id) 
+      });
     }
   };
 

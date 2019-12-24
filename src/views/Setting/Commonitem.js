@@ -4,6 +4,7 @@ import _ from "lodash";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import { history } from "../../_helper";
 
 //------redux
 import { connect } from "react-redux";
@@ -34,11 +35,12 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
     if (isFromEdit) {
       onPutUpdate({...values});
     } else {
-      onPostCreate(values, `${EDITURL}/${commonType}`);
+
+      onPostCreate(values, ()=>{
+        history.push(EDITURL + "/" + commonType) 
+      });
     }
   };
-
-
 
   const defaultValues = isFromEdit && dataById && { ...dataById.row }
   const preConditions = {commonType:commonType}
@@ -64,7 +66,6 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
                 {/* form */}
 
                 <Grid container spacing={2}>
-
                   <Grid item lg={6} xs={12}>
                     <Inputs.MySelect inputid="commonType" options={enumsLabel.commonType} hasDefault={true} disabled={true} />
                   </Grid>

@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
 import { Inputs } from "../../components";
-import { enumsLabel, enums } from "../../_constants";
+import { enumsLabel } from "../../_constants";
 
 // ******************************************************************* page setting
 import { bankaccountActions as dataActions } from "../../_actions";
