@@ -77,6 +77,8 @@ class DefaultLayout extends Component {
                         )}
                       />
                     ) : null;
+
+                    console.log(route)
                     return returnValue;
                   })}
                   <Redirect from="/" to="/dashboard" />

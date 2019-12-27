@@ -3,16 +3,27 @@ import React from "react";
 import { enumsLabel, enums } from "./_constants";
 
 const Dashboard = React.lazy(() => import("./views/Dashboard"));
+const Test = React.lazy(()=>import("./views/Test/TestPage"));
+
 //================ user
 const Users = React.lazy(() => import("./views/Users/Users"));
 const User = React.lazy(() => import("./views/Users/User"));
 const Commonitems = React.lazy(() => import("./views/Setting/Commonitems"));
 const Commonitem = React.lazy(() => import("./views/Setting/Commonitem"));
+const Images = React.lazy(() => import("./views/Image/Images"));
 
+//================ product
+const ProductCategories = React.lazy(() =>
+  import("./views/Product/Categories")
+);
 
-
+const ProductProducts = React.lazy(() => import("./views/Product/Products"));
+const ProductProduct = React.lazy(() => import("./views//Product/Product"));
+//================ region
+const Regions = React.lazy(() => import("./views/Setting/Regions"));
 
 //================ company types
+
 const CompaniesInternal = React.lazy(() =>
   import("./views/Company/Companies").then(mymodule => ({
     default: mymodule.withCompanyList(
@@ -103,25 +114,21 @@ const CompanyShipping = React.lazy(() =>
   }))
 );
 
-//================ product
-const ProductCategories = React.lazy(() =>
-  import("./views/Product/Categories")
-);
-
-const ProductProducts = React.lazy(() => import("./views/Product/Products"));
-const ProductProduct = React.lazy(() => import("./views//Product/Product"));
-
 // const Page404 = React.lazy(() => import('./views/Pages/Page404'));
 // const Page500 = React.lazy(() => import('./views/Pages/Page500'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 
-
-
-
 const routes = [
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", exact: true, name: "Dashboard", component: Dashboard },
+  {
+    path: "/test",
+    exact: true,
+    name: "测试",
+    component: Test,
+    authTag: "test"
+  },
   //--------------------------------------------- 用户
   {
     path: "/users/users",
@@ -172,6 +179,23 @@ const routes = [
     name: "通用选项",
     component: Commonitem,
     authTag: "commonitem"
+  },
+
+  //--------------------------------------------- 图片
+  {
+    path: "/image/images",
+    exact: true,
+    name: "已上传图片",
+    component: Images,
+    authTag: "image"
+  },
+  //--------------------------------------------- 国家地区
+  {
+    path: "/setting/regions",
+    exact: true,
+    name: "国家地区集",
+    component: Regions,
+    authTag: "regions"
   },
   //--------------------------------------------- 公司
   {
@@ -288,28 +312,28 @@ const routes = [
   {
     path: "/product/categories",
     exact: true,
-    name: "产品类别表",
+    name: "商品类别集",
     component: ProductCategories,
-    authTag: "product"
+    authTag: "categories"
   },
   {
     path: "/product/products",
     exact: true,
-    name: "产品列表",
+    name: "商品列表",
     component: ProductProducts,
     authTag: "product"
   },
   {
     path: "/product/product",
     exact: true,
-    name: "产品",
+    name: "商品",
     component: ProductProduct,
     authTag: "product"
   },
   {
     path: "/product/products/:id",
     exact: true,
-    name: "产品",
+    name: "商品",
     component: ProductProduct,
     authTag: "product"
   }

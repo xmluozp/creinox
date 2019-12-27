@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const Checkmark = ({ selected }) => (
   <div
     style={
@@ -91,7 +92,7 @@ const ImageSelectable = ({
             zIndex: 2
           }}
         >
-          title title title title title title title title title title title title title title title title title title 
+        {photo.title}
         </div>
         <Checkmark selected={isDisplaySelect ? true : false} />
         <img

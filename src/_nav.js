@@ -10,6 +10,11 @@ const navs = {
         variant: 'info',
         text: 'NEW',
       },
+    },    
+    {
+      name: '测试',
+      url: '/test',
+      icon: 'icon-speedometer',
     },
     {
       name: '商品',
@@ -17,12 +22,12 @@ const navs = {
       icon: 'icon-puzzle',
       children: [
         {
-          name: '产品类别',
+          name: '商品类别集',
           url: '/product/categories',
-          authTag:'product',
+          authTag:'categories',
         },
         {
-          name: '产品列表',
+          name: '商品列表',
           url: '/product/products',
           authTag:'product',
         }
@@ -64,7 +69,7 @@ const navs = {
       name: '系统',
       url: '#',
       icon: 'icon-puzzle',
-      authTag:'system',
+      authTag:'setting',
       children: [
         {
           name: '用户',
@@ -75,6 +80,16 @@ const navs = {
           name: '通用选项集',
           url: '/commonitems/commonitemsList/0',
           authTag:'commonitem',
+        },
+        {
+          name: '国家地区集',
+          url: '/setting/regions',
+          authTag:'regions',
+        },
+        {
+          name: '已上传图片',
+          url: '/image/images',
+          authTag:'image',
         },
       ]
     },

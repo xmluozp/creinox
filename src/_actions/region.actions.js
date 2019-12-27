@@ -1,12 +1,12 @@
-import { CATEGORY as CONST, LOADING } from "../_constants";
-import { categoryService as service } from "../_services";
+import { REGION as CONST, LOADING } from "../_constants";
+import { regionService as service } from "../_services";
 import { alertActions } from "./";
 // import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'
 
-export const categoryActions = {
+export const regionActions = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -15,7 +15,7 @@ export const categoryActions = {
   _delete,
 
   // customized
-  get_byCategory
+  get_byRegion
 };
 
 const done = (payload, type) => {
@@ -51,7 +51,6 @@ function get_bySearch(pagination, searchTerms = {}) {
     return service.get_bySearch(pagination, searchTerms).then(
       response => {
         dispatch(loaded);
-        console.log("getbysearch", response)
         dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
       },
       error => {
@@ -139,13 +138,13 @@ function _delete(pagination, id) {
 
 //======================== customized
 
-function get_byCategory(categoryId = 0) { // 通过某个分类，取所有的子级孙级分类 （在产品里也需要）
+function get_byRegion(regionId = 0) { // 通过某个分类，取所有的子级孙级分类 （在产品里也需要）
   return dispatch => {
     dispatch(loading);
-    return service.get_byCategory(categoryId).then(
+    return service.get_byRegion(regionId).then(
       response => {
         dispatch(loaded);
-        console.log("getbyCategory", response)
+        console.log("getbyRegion", response)
         dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
       },
       error => {

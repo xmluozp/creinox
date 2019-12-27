@@ -6,7 +6,9 @@ import { ICONS } from "../_constants";
 
 export const CreinoxUploadButton = ({
   filesLimit = 10,
-  onSave = () => {} // 在外部处理。规范：如果是批量保存，直接保存。如果是单图，显示预览
+  onSave = () => {}, // 在外部处理。规范：如果是批量保存，直接保存。如果是单图，显示预览
+  className,
+  ...props
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,8 +24,9 @@ export const CreinoxUploadButton = ({
   return (
     <>
       <Button
-        className="mr-2 btn btn-md btn-success"
+        className={`${className} btn btn-md btn-success`}
         onClick={handleModalOpen.bind(null, true)}
+        {...props}
       >
         {ICONS.ADD("mr-1")}上传图片
       </Button>

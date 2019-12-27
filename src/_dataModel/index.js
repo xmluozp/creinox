@@ -2,9 +2,12 @@ export * from './role'
 export * from './user'
 export * from './company'
 export * from './category'
+export * from './region'
+
 export * from './rostercontact'
 export * from './bankaccount'
 export * from './commonitem'
+export * from './image'
 
 
 

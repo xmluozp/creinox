@@ -15,12 +15,10 @@ import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
 import { enumsLabel } from "../../_constants";
 import { history } from "../../_helper";
 
-import Contacts from "./Contacts"
-import BankaccountsCompany from "../Bank/BankaccountsCompany"
+import Contacts from "./Contacts";
+import BankaccountsCompany from "../Bank/BankaccountsCompany";
 
-
-
-export const withCompany = (companyType = 0, EDITURL="") => {
+export const withCompany = (companyType = 0, EDITURL = "") => {
   const CurrentPage = ({
     dataById,
     errorById,
@@ -29,7 +27,6 @@ export const withCompany = (companyType = 0, EDITURL="") => {
     onGetById,
     ...props
   }) => {
-
     const id = parseInt(_.get(props, "match.params.id")) || "";
     const isFromEdit = Number.isInteger(id) ? true : false;
     const [disabled, setdisabled] = useState(isFromEdit);
@@ -53,9 +50,9 @@ export const withCompany = (companyType = 0, EDITURL="") => {
         onPutUpdate({ companyType: companyType, ...values });
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate(values, (id)=>{
+        onPostCreate(values, id => {
           // not using async. because I want loading bar's codes put with callback codes
-          history.push(EDITURL + "/" + id) 
+          history.push(EDITURL + "/" + id);
         });
       }
     };
@@ -84,64 +81,77 @@ export const withCompany = (companyType = 0, EDITURL="") => {
                   <Tab label="图册" disabled={!isFromEdit} />
                   <Tab label="联系人名册" disabled={!isFromEdit} />
                   <Tab label="银行账户" disabled={!isFromEdit} />
-
-
                 </Tabs>
 
-                
-                  {/* main form */}
-                  <TabPanel value={tabSelect} index={0}>
-
-                    <CreinoxForm
-                      dataModel={dataModel}
-                      defaultValues={
-                        isFromEdit && dataById && { ...dataById.row }
-                      }
-                      errors={errorById}
-                      isFromEdit={isFromEdit}
-                      actionSubmit={handleOnSubmit}
-                    >
-                      <Grid container spacing={2}>
-                        <Grid item lg={8} md={8} xs={12}>
-                          <Grid container spacing={2}>
-                            {formInputs(disabled)}
-                          </Grid>
+                {/* main form */}
+                <TabPanel value={tabSelect} index={0}>
+                  <CreinoxForm
+                    defaultValues={
+                      isFromEdit && dataById && { ...dataById.row }
+                    }
+                    errors={errorById}
+                    isFromEdit={isFromEdit}
+                    actionSubmit={handleOnSubmit}
+                    dataModel={dataModel}
+                  >
+                    <Grid container spacing={2}>
+                      <Grid item lg={8} md={8} xs={12}>
+                        <Grid container spacing={2}>
+                          {formInputs(disabled)}
                         </Grid>
                       </Grid>
-                      <Grid container spacing={2}>
-                        {isFromEdit && ( // only show edit button when update
-                          <Grid item>
-                            <Inputs.MyEditButton
-                              disabled={disabled}
-                              setdisabled={setdisabled}
-                            />
-                          </Grid>
-                        )}
-                        {disabled || ( // when browsering, hide save button
-                          <Grid item>
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              color="primary"
-                            >
-                              保存
-                            </Button>
-                          </Grid>
-                        )}
+                      <Grid item lg={4} md={4} xs={12}>
+                        <Grid container spacing={2}>
+                          <Inputs.MyImage
+                            inputid="imageLicense_id.row"
+                            disabled={disabled}
+                          />
+                          <Inputs.MyImage
+                            inputid="imageBizCard_id.row"
+                            disabled={disabled}
+                          />
+                        </Grid>
                       </Grid>
-                    </CreinoxForm>
-                  </TabPanel>
-                  <TabPanel value={tabSelect} index={1}>
-                    <Gallery/>
-                  </TabPanel>
-                  <TabPanel value={tabSelect} index={2}>
-                    <Contacts preConditions ={{company_id: id}}/>
-                  </TabPanel>
-                  <TabPanel value={tabSelect} index={3}>
-                    <BankaccountsCompany preConditions ={{company_id: id}}/>
-                  </TabPanel>
-
-                
+                    </Grid>
+                    <Grid container spacing={2}>
+                      {isFromEdit && ( // only show edit button when update
+                        <Grid item>
+                          <Inputs.MyEditButton
+                            disabled={disabled}
+                            setdisabled={setdisabled}
+                          />
+                        </Grid>
+                      )}
+                      {disabled || ( // when browsering, hide save button
+                        <Grid item>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                          >
+                            保存
+                          </Button>
+                        </Grid>
+                      )}
+                    </Grid>
+                  </CreinoxForm>
+                </TabPanel>
+                <TabPanel value={tabSelect} index={1}>
+                  <Gallery
+                    preConditions={{
+                      gallary_folder_id:
+                        dataById &&
+                        dataById.row &&
+                        dataById.row.gallary_folder_id
+                    }}
+                  />
+                </TabPanel>
+                <TabPanel value={tabSelect} index={2}>
+                  <Contacts preConditions={{ company_id: id }} />
+                </TabPanel>
+                <TabPanel value={tabSelect} index={3}>
+                  <BankaccountsCompany preConditions={{ company_id: id }} />
+                </TabPanel>
               </Card>
             </Col>
           </Row>
@@ -153,29 +163,24 @@ export const withCompany = (companyType = 0, EDITURL="") => {
   const formInputs = disabled => {
     return (
       <>
-        {/* 基本信息 */}
-        <Grid item lg={12} md={12} xs={12}>
+        {/* 基本信息 */}{" "}
+        <Grid item lg={8} md={8} xs={12}>
+          <Inputs.MyInput inputid="code" disabled={disabled} />
+        </Grid>
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
+        </Grid>
+        <Grid item lg={8} md={8} xs={12}>
           <Inputs.MyInput inputid="name" disabled={disabled} />
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyInput inputid="shortname" disabled={disabled} />
         </Grid>
         <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
-        </Grid>
-        <Grid item lg={8} md={8} xs={12}>
           <Inputs.MyInput inputid="ename" disabled={disabled} />
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyInput inputid="eshortname" disabled={disabled} />
-        </Grid>
-        <Grid item xs={12}>
-          <Inputs.MyInput
-            inputid="region"
-            multiline
-            rows={1}
-            disabled={disabled}
-          />
         </Grid>
         <Grid item lg={8} md={8} xs={12}>
           <Inputs.MyInput
@@ -188,7 +193,6 @@ export const withCompany = (companyType = 0, EDITURL="") => {
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyInput inputid="postcode" disabled={disabled} />
         </Grid>
-
         {/* 联系信息 */}
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyInput inputid="phone1" disabled={disabled} />
@@ -214,7 +218,6 @@ export const withCompany = (companyType = 0, EDITURL="") => {
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyInput inputid="email2" disabled={disabled} />
         </Grid>
-
         {/* 税务信息 */}
         <Grid item xs={12}>
           <Inputs.MyInput inputid="memo" multiline disabled={disabled} />
@@ -231,7 +234,6 @@ export const withCompany = (companyType = 0, EDITURL="") => {
         <Grid item lg={8} md={8} xs={6}>
           <Inputs.MyInput inputid="taxcode" disabled={disabled} />
         </Grid>
-
         {/* 资料责任人信息 */}
         <Grid item lg={6} xs={12}>
           <Inputs.MyComboboxFK
@@ -244,7 +246,6 @@ export const withCompany = (companyType = 0, EDITURL="") => {
         <Grid item lg={6} xs={12}>
           <Inputs.MyDatePicker inputid="retriveTime" disabled={disabled} />
         </Grid>
-
         <Grid item lg={4} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
@@ -265,24 +266,6 @@ export const withCompany = (companyType = 0, EDITURL="") => {
       </>
     );
   };
-
-  /*
-                      <Grid item lg={4} md={4} xs={12}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            todo: imageLicense
-                          </Grid>
-                          <Grid item xs={12}>
-                            todo: imageBizCard
-                          </Grid>
-                           <Grid item xs={12}>
-                            todo: 图片列表
-                          </Grid>
-                        </Grid>
-                      </Grid>
-
-
-*/
 
   // ============================================= Redux
 

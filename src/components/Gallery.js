@@ -1,76 +1,30 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button } from "reactstrap";
 import RPGallary from "react-photo-gallery";
+import { connect } from "react-redux";
 
 import { ICONS } from "../_constants";
 import ImageSelectable from "./ImageSelectable";
 import {CreinoxUploadButton} from "./CreinoxUploadButton";
 
-// import tileData from './tileData';
+import { imageActions as dataActions } from "../_actions";
 
-const UPLOADFOLDER = "./uploads";
 
-const tileData = [
-  {
-    id: 1,
-    path: "001.jpg",
-    thumbnailPath: "001_thumb.jpg",
-    title: "Image",
-    height: 333,
-    width: 250,
-    author: "author"
-  },
-  {
-    id: 2,
-    path: "002.jpg",
-    thumbnailPath: "002_thumb.jpg",
-    title: "Image",
-    height: 333,
-    width: 250,
-    author: "author"
-  },
-  {
-    id: 3,
-    path: "003.jpg",
-    thumbnailPath: "003_thumb.jpg",
-    title: "Image",
-    height: 333,
-    width: 250,
-    author: "author"
-  },
-  {
-    id: 4,
-    path: "005.jpg",
-    thumbnailPath: "005_thumb.jpg",
-    title: "Image",
-    height: 333,
-    width: 250,
-    author: "author"
-  },
-  {
-    id: 5,
-    path: "004.jpg",
-    thumbnailPath: "004_thumb.jpg",
-    title: "Image",
-    height: 333,
-    width: 250,
-    author: "author"
-  },
-  {
-    id: 6,
-    path: "006.jpg",
-    thumbnailPath: "006_thumb.jpg",
-    title: "Image",
-    height: 333,
-    width: 250,
-    author: "author"
-  }
-];
+const GalleryNoData = ({data, onGetBySearch, onDeleteMultiple, onPostCreateMultiple, preConditions}) => {
 
-export const Gallery = () => {
+  useEffect(() => {
+    onGetBySearch({}, preConditions);
+    return () => {
+    };
+  }, [])
+
+
   // 图片选择和删除
   const [selectedImages, setSelectedImages] = useState(new Set([]));
   const [editMode, setEditMode] = useState(false);
+
+
+  const tileData = data && data.rows ? data.rows : [];
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
@@ -100,13 +54,12 @@ export const Gallery = () => {
   };
 
   const handleImageSave = (files) => {
-      console.log("todo, save:", files)
-    // todo: 保存图片
+    onPostCreateMultiple(files)
   }
 
   // 删除
   const deleteSelected = () => {
-    alert(Array.from(selectedImages));
+    onDeleteMultiple({}, Array.from(selectedImages));
   };
 
   // 子图片: 可选择
@@ -123,7 +76,6 @@ export const Gallery = () => {
         photo={photo}
         left={left}
         top={top}
-        editMode={editMode}
       />
     ),
     [editMode, selectedImages]
@@ -159,7 +111,7 @@ export const Gallery = () => {
           </Button>
         ) : null}
         {!editMode ? (
-            <CreinoxUploadButton onSave={handleImageSave}/>
+            <CreinoxUploadButton onSave={handleImageSave} className="mr-2"/>
         ) : null}
 
         
@@ -168,11 +120,11 @@ export const Gallery = () => {
         photos={tileData.map(image => {
           return {
             id: image.id,
-            path: UPLOADFOLDER + "/" + image.path,
-            src: UPLOADFOLDER + "/" + image.thumbnailPath,
+            path: image.path,
+            src: image.thumbnailPath,
             height: image.height,
             width: image.width,
-            title: image.title
+            title: image.name
           };
         })}
         renderImage={imageRenderer}
@@ -182,3 +134,19 @@ export const Gallery = () => {
 };
 
 
+  // ============================================= Redux
+
+  function mapState(state) {
+    return {
+      data: state.imageData.data
+    };
+  }
+
+  const actionCreators = {
+    onPostCreate: dataActions.post_create,
+    onPostCreateMultiple: dataActions.post_createMultiple,
+    onDeleteMultiple: dataActions._deleteMultiple,
+    onGetBySearch: dataActions.get_bySearch
+  };
+
+  export const Gallery = connect(mapState, actionCreators)(GalleryNoData);

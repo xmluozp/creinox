@@ -1,43 +1,52 @@
 import React, { useEffect, useState } from "react";
 
 import _ from "lodash";
-import { ICONS } from "../_constants";
+// import { ICONS } from "../_constants";
 import { InputSearch } from "./InputSearch";
 
 import PropTypes from "prop-types";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
+// import IconButton from "@material-ui/core/IconButton";
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Collapse from "@material-ui/core/Collapse";
 import { useSpring, animated } from "react-spring/web.cjs"; // web.cjs is required for IE 11 support
 
-export const CreinoxTreeview = ({ data, onGetBySearch, parentNode=0,  onSelect, initialNode={id: 0} }) => {
+export const CreinoxTreeview = ({
+  data,
+  onGetBySearch,
+  parentNode = 0,
+  onSelect,
+  initialNode = { id: 0 , path: "0"},
+  selectedNode = initialNode
+}) => {
   const classes = useStyles();
 
-  const [selectedNode, setselectedNode] = useState(initialNode);
+  // const [selectedNode, setselectedNode] = useState(initialNode);
   const [filterNodeList, setFilterNodeList] = useState([initialNode]);
-  const [expandedNodes, setExpandedNodes] = useState([initialNode.id.toString()]);
+  const [expandedNodes, setExpandedNodes] = useState(
+    initialNode.path && initialNode.path.split(",") || ["0"]
+  );
   const [treeObject, setTreeObject] = useState();
 
   //========================================handle
   const handleOnClick = (node, e) => {
     e.stopPropagation();
-    setselectedNode(node);
+    // setselectedNode(node);
     if (typeof onSelect === "function") {
       onSelect(node);
     }
   };
 
   const handleOnSearch = (value, e) => {
-
     let selectedNodeAfterSearch = initialNode;
     if (!value) {
       setFilterNodeList(["0"]);
-      setselectedNode(selectedNodeAfterSearch);
+      // setselectedNode(selectedNodeAfterSearch);
+      onSelect(selectedNodeAfterSearch)
       // setExpandedNodes(["0"])
-    }else if (data && data.rows) {
+    } else if (data && data.rows) {
       const filterString = value.toLowerCase();
       const foundNodes = _.filter(data.rows, item => {
         let returnValue = false;
@@ -46,13 +55,21 @@ export const CreinoxTreeview = ({ data, onGetBySearch, parentNode=0,  onSelect, 
         const compareStringEName = item.ename && item.ename.toLowerCase();
         const compareStringStartCode =
           item.startCode && item.startCode.toLowerCase();
+          const compareStringCode =
+          item.code && item.code.toLowerCase();
 
         returnValue =
           returnValue || compareStringName.indexOf(filterString) >= 0;
         returnValue =
           returnValue || compareStringEName.indexOf(filterString) >= 0;
         returnValue =
-          returnValue || compareStringStartCode.indexOf(filterString) >= 0;
+          returnValue ||
+          (compareStringStartCode &&
+            compareStringStartCode.indexOf(filterString) >= 0);
+        returnValue =
+          returnValue ||
+          (compareStringCode &&
+            compareStringCode.indexOf(filterString) >= 0);
 
         return returnValue;
       });
@@ -72,12 +89,12 @@ export const CreinoxTreeview = ({ data, onGetBySearch, parentNode=0,  onSelect, 
       setExpandedNodes(filterExpanded);
 
       // 选中搜到的第一个节点
-      selectedNodeAfterSearch = foundNodes[0]
+      selectedNodeAfterSearch = foundNodes && foundNodes.length === 1 && foundNodes[0];
     }
-    setselectedNode(selectedNodeAfterSearch);
+    // setselectedNode(selectedNodeAfterSearch);
     if (typeof onSelect === "function") {
-        onSelect(selectedNodeAfterSearch);
-      }
+      onSelect(selectedNodeAfterSearch);
+    }
   };
 
   const handleOnToggle = (x, value) => {
@@ -133,22 +150,21 @@ export const CreinoxTreeview = ({ data, onGetBySearch, parentNode=0,  onSelect, 
         style.backgroundColor = isSearched
           ? "rgba(200,230,255, 0.7)"
           : "rgba(200,230,255, 0)";
-        
+
         // 显示节点
         const label = (
-          <div style={style}>
-            {/* 下级节点数量 */}
-            ({(childNode.children && Object.keys(childNode.children).length) || 0}) 
-            {/* 节点名称 */}
+          <div style={style} onClick={handleOnClick.bind(null, childNode)}>
+            {/* 下级节点数量 */}(
+            {(childNode.children && Object.keys(childNode.children).length) ||
+              0}
+            ){/* 节点名称 */}
             {childNode.name || "main"}
             <span className="ml-2">[{childNode.ename || null}]</span>
-            <IconButton
+            {/* <IconButton
               size="small"
-              onClick={handleOnClick.bind(null, childNode)}
-              className="ml-3"
-            >
+              className="ml-3">
               {ICONS.EDIT()}
-            </IconButton>
+            </IconButton> */}
           </div>
         );
 
@@ -174,9 +190,7 @@ export const CreinoxTreeview = ({ data, onGetBySearch, parentNode=0,  onSelect, 
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
       >
-
         {treeObject && treeObject[0] && getBranches(treeObject[0])}
-
       </TreeView>
     </>
   );

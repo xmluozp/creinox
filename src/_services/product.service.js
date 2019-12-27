@@ -23,7 +23,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/companydata.json'
+    const url = './dataset/productdata.json'
     console.log("search service:", queryString);
 
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
@@ -37,7 +37,7 @@ function get_byId(id) {
         headers: authHeader()
     };
 
-    const url = './dataset/companydata_byId.json'
+    const url = './dataset/productdata_byId.json'
     console.log("getId service,", id)
 
     // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);

@@ -10,6 +10,36 @@
         "memo": "普通S + P罐",
         "ememo": "Sadt&Pepper",
         "updateAt": "2018-07-17 23:51:22",
+        "region_id": 3,
+        "imageLicense_id": 1,
+        "imageLicense_id.row": {
+            "id": 1,
+            "name": "某图片",
+            "sort": 0,
+            "height": 333,
+            "width": 250,
+            "path": "uploads/001.jpg",
+            "thumbnailPath": "uploads/001_thumb.jpg",
+            "ext": "jpg",
+            "createAt": "2019-12-23",
+            "gallary_folder_id": 1,
+            "gallary_folder_id.memo": "公司/某某有限公司"
+        },
+        "imageBizCard_id": 2,
+        "imageBizCard_id.row": {
+            "id": 2,
+            "name": "某名片",
+            "sort": 0,
+            "height": 333,
+            "width": 250,
+            "path": "uploads/002.jpg",
+            "thumbnailPath": "uploads/002_thumb.jpg",
+            "ext": "jpg",
+            "createAt": "2019-12-23",
+            "gallary_folder_id": 1,
+            "gallary_folder_id.memo": "公司/某某有限公司"
+        },
+        "gallary_folder_id":1,
         "parent_id": 0
     }
 }

@@ -1,7 +1,7 @@
 import { COMPANY as CONST, LOADING } from "../_constants";
 import { productService as service } from "../_services";
 import { alertActions } from "./";
-import { history } from "../_helper";
+// import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'
@@ -131,3 +131,6 @@ function _delete(pagination, id) {
     );
   };
 }
+
+//======================== customized
+// todo: 复制粘贴用。取一个产品

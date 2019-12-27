@@ -5,11 +5,13 @@ import { withFacelessActions } from "./faceless.actions";
 export * from "./alert.actions";
 export * from "./loading.actions";
 export * from "./commonitem.actions";
+export * from "./image.actions";
 
 export * from "./role.actions";
 export * from "./user.actions";
 
 export * from "./company.actions";
+export * from "./region.actions";
 
 export * from "./product.actions";
 export * from "./category.actions";

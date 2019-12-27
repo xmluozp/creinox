@@ -2,16 +2,16 @@ import { authHeader, handleResponse, h_queryString } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
-export const categoryService = {
+export const regionService = {
     get_bySearch,
     get_byId,
     post_create,
     put_update,
     _delete: _delete,
-    get_byCategory
+    get_byRegion
 };
 
-const TABLENAME = "category";
+const TABLENAME = "region";
 
 // const url = 'http://localhost:3000/api/';
 
@@ -24,7 +24,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/categorydata.json'
+    const url = './dataset/regiondata.json'
     console.log("search service:", queryString);
 
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
@@ -38,7 +38,7 @@ function get_byId(id) {
         headers: authHeader()
     };
 
-    const url = './dataset/categorydata_byId.json'
+    const url = './dataset/regiondata_byId.json'
     console.log("getId service,", id)
 
     // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
@@ -57,7 +57,7 @@ function put_update(item) {
         headers: authHeader()
     };
 
-    const url = './dataset/categorydata_byId.json'
+    const url = './dataset/regiondata_byId.json'
     console.log("getId service,", item)
 
     // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
@@ -74,9 +74,9 @@ function _delete(pagination, id) {
 
 
 // ============================================ customized
-function get_byCategory(categoryId) {
+function get_byRegion(regionId) {
 
-    // 后台需要取：根据Id匹配path+","+id。否则全部返回 SELECT * FROM category WHERE id = xx, path like CONCAT(category.path,"," ,category.id)
+    // 后台需要取：根据Id匹配path+","+id。否则全部返回 SELECT * FROM region WHERE id = xx, path like CONCAT(region.path,"," ,region.id)
     // like只取右like（防止10,2这种混淆）
     // 如果没有id的话concat会出问题。就全取
     const requestOptions = {
@@ -86,8 +86,8 @@ function get_byCategory(categoryId) {
 
     // const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/categorydata.json'
-    console.log("get by category service:", categoryId);
+    const url = './dataset/regiondata.json'
+    console.log("get by region service:", regionId);
 
-    return fetch(`${url}?categoryId=${categoryId}`, requestOptions).then(handleResponse);
+    return fetch(`${url}?regionId=${regionId}`, requestOptions).then(handleResponse);
 }

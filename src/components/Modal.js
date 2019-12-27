@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { withCreinoxForm } from "./index";
+import { CreinoxForm } from "./index";
 
 export const MyModalForm = ({
   isOpen,
@@ -13,7 +13,6 @@ export const MyModalForm = ({
   FormWrapper = () => null
 }) => {
   const pageId = 0;
-
   return (
     <Modal isOpen={isOpen} toggle={onClose} className={"modal-lg " + className}>
       <ModalHeader toggle={onClose}>{title}</ModalHeader>
@@ -96,7 +95,16 @@ export const MyModalFormWithData = ({
 
   const FormWrapper = () => {
 
-    const childrenInputs = (<><ModalBody>{componentInputs()}</ModalBody>
+    return (
+      <CreinoxForm
+        defaultValues={rowId && dataById && { ...dataById.row }}
+        errors={errorById}
+        isFromEdit={isFromEdit}
+        actionSubmit={onSubmit}
+        dataModel = {dataModel}
+        >
+
+        <ModalBody>{componentInputs()}</ModalBody>
     <ModalFooter>
       <Button
         type="button"
@@ -109,19 +117,10 @@ export const MyModalFormWithData = ({
       <Button type="submit" variant="contained" color="primary">
         保存
       </Button>
-    </ModalFooter></>)
-
-    const CreinoxForm = withCreinoxForm({
-      dataModel:dataModel,
-      childrenInputs:childrenInputs
-    })
-
-    return (
-      <CreinoxForm
-        defaultValues={rowId && dataById && { ...dataById.row }}
-        errors={errorById}
-        isFromEdit={isFromEdit}
-        actionSubmit={onSubmit}/>
+    </ModalFooter>
+        
+        
+        </CreinoxForm>
     );
   };
 

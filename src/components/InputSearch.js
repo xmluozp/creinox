@@ -35,7 +35,9 @@ export const InputSearch = ({ style, onSearch = () => {} }) => {
   };
 
   const handleKeyDown = e => {
+    
     if(e.key==='Enter') {
+      e.preventDefault()
         onSearch(value)
     }
   }

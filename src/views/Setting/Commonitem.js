@@ -11,11 +11,16 @@ import { connect } from "react-redux";
 import { commonitemActions as dataActions } from "../../_actions";
 import { commonitemModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs } from "../../components";
-import {enumsLabel} from "../../_constants"
+import { enumsLabel } from "../../_constants";
 
 // import { h_confirm } from '../../_helper'
-const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
-
+const CurrentPage = ({
+  dataById,
+  onPostCreate,
+  onPutUpdate,
+  onGetById,
+  ...props
+}) => {
   const EDITURL = "/commonitems/commonitemsList"; // 编辑完毕跳转用
   const id = parseInt(_.get(props, "match.params.id")) || "";
   const commonType = parseInt(_.get(props, "match.params.commonType")) || 0;
@@ -24,7 +29,7 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 
   useEffect(() => {
     // if there is ID, fetch data
-    if (id) {      
+    if (id) {
       onGetById(id);
     }
   }, [onGetById, id]);
@@ -33,17 +38,16 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 
   const handleOnSubmit = values => {
     if (isFromEdit) {
-      onPutUpdate({...values});
+      onPutUpdate({ ...values });
     } else {
-
-      onPostCreate(values, ()=>{
-        history.push(EDITURL + "/" + commonType) 
+      onPostCreate(values, () => {
+        history.push(EDITURL + "/" + commonType);
       });
     }
   };
 
-  const defaultValues = isFromEdit && dataById && { ...dataById.row }
-  const preConditions = {commonType:commonType}
+  const defaultValues = isFromEdit && dataById && { ...dataById.row };
+  const preConditions = { commonType: commonType };
 
   return (
     <div className="animated fadeIn">
@@ -56,18 +60,23 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
               </strong>
             </CardHeader>
             <CreinoxForm
-              dataModel={dataModel}
               defaultValues={defaultValues}
-              preConditions = {preConditions}
-              isFromEdit = {isFromEdit}
+              preConditions={preConditions}
+              isFromEdit={isFromEdit}
               actionSubmit={handleOnSubmit}
+              dataModel={dataModel}
             >
               <CardBody>
                 {/* form */}
 
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
-                    <Inputs.MySelect inputid="commonType" options={enumsLabel.commonType} hasDefault={true} disabled={true} />
+                    <Inputs.MySelect
+                      inputid="commonType"
+                      options={enumsLabel.commonType}
+                      hasDefault={true}
+                      disabled={true}
+                    />
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <Inputs.MyInput inputid="sorting" disabled={disabled} />
@@ -117,7 +126,6 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 };
 
 // ============================================= Redux
-
 
 function mapState(state) {
   return {

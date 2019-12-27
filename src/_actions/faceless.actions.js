@@ -1,7 +1,7 @@
 import { LOADING } from "../_constants";
 import { withFacelessService } from "../_services";
 import { alertActions } from "./";
-import { history, constMaker } from "../_helper";
+import { constMaker } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'

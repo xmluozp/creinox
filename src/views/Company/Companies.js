@@ -50,6 +50,9 @@ export const withCompanyList = (
   // =============================== Search Panel
   const searchBar = (
     <>
+    <Inputs.MyInput  inputid="code"/>
+    <Inputs.MyInput  inputid="name"/>
+    <Inputs.MyInput  inputid="ename"/>
       <Inputs.MyComboboxFK
         inputid="retriever_id"
         optionLabel="userName"

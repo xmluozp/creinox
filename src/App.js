@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import { loadingActions } from "./_actions";
 import Loading from './components/Loading'
 import {h_initializeDropDownTables} from "./_helper";
-import nprogress from "nprogress";
-import "nprogress/nprogress.css";
 import "./App.scss";
 
 const loading = () => (
@@ -23,18 +21,18 @@ const LoginPage = React.lazy(() => import("./views/Pages/Login"));
 // will initialize dropdown tables, but only those tables with few data.
 h_initializeDropDownTables();
 
-const App = ({ user, loadingBar }) => {
-  React.useEffect(() => {
-    switch (loadingBar) {
-      case "loading":
-        nprogress.start();
-        break;
+const App = ({ user }) => {
+  // React.useEffect(() => {
+  //   switch (loadingBar) {
+  //     case "loading":
+  //       nprogress.start();
+  //       break;
 
-      default:
-        nprogress.done();
-        break;
-    }
-  }, [loadingBar]);
+  //     default:
+  //       nprogress.done();
+  //       break;
+  //   }
+  // }, [loadingBar]);
 
   // 用户为空则跳到登录页
   // const renderpage = user? props => <DefaultLayout {...props}/> : props => <LoginPage {...props}/>
@@ -99,7 +97,7 @@ const AuthenticatedRoute = ({ component: Component, user, ...rest }) => (
 
 // 从reducer来的
 function mapState(state) {
-  return { user: state.authData.user, loadingBar: state.loadingData.status };
+  return { user: state.authData.user};
 }
 
 const mapDispatchToProps = {

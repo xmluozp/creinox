@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 // ================================================================================== Select
-export const MySelect = ({
+export const MySelect = React.memo(({
   id,
   label = "请选择",
   options = [],
@@ -53,12 +53,12 @@ export const MySelect = ({
     </Select>
   </FormControl>)
 
-}
+})
 
 
 
 // ================================================================================== Combobox
-export const MyCombobox = ({
+export const MyCombobox = React.memo(({
   id,
   label = "请选择",
   optionLabel = "name",
@@ -102,10 +102,10 @@ export const MyCombobox = ({
       )}
     />
   );
-};
+});
 
 // ================================================================================== Combobox FK
-export const MyComboboxFK = props => {
+export const MyComboboxFK = React.memo(props => {
 
   // 表名称； reducer里面的名称，默认dropdown
   const { tableName = "", stateName="dropdown", params=[] } = props;
@@ -128,33 +128,33 @@ export const MyComboboxFK = props => {
   ) : (
     <>...</>
   );
-};
+});
 
-export const MyComboboxPack = props => {
+export const MyComboboxPack = React.memo(props => {
   const commonTypeName = 'pack'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
-export const MyComboboxPolishing = props => {
+})
+export const MyComboboxPolishing = React.memo(props => {
   const commonTypeName = 'polishing'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
-export const MyComboboxTexture = props => {
+})
+export const MyComboboxTexture = React.memo(props => {
   const commonTypeName = 'texture'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
-export const MyComboboxUnitType = props => {
+})
+export const MyComboboxUnitType = React.memo(props => {
   const commonTypeName = 'unitType'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
-export const MyComboboxShippingType = props => {
+})
+export const MyComboboxShippingType = React.memo(props => {
   const commonTypeName = 'shippingType'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
-export const MyComboboxPricingTerm = props => {
+})
+export const MyComboboxPricingTerm = React.memo(props => {
   const commonTypeName = 'pricingTerm'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
-export const MyComboboxCurrency = props => {
+})
+export const MyComboboxCurrency = React.memo(props => {
   const commonTypeName = 'currency'
   return <MyComboboxFK tableName="commonitem" stateName={`dropdown_${commonTypeName}`} params={{commonType: enums.commonType[commonTypeName]}}  {...props} />
-}
+})

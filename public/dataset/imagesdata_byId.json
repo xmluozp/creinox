@@ -1,0 +1,17 @@
+{
+    "row": 
+    {
+        "id": 14,
+        "name": "某图片",
+        "sort": 0,
+        "height": 333,
+        "width": 250,
+
+        "path": "uploads/014.jpg",
+        "thumbnailPath": "uploads/014_thumb.jpg",
+        "ext": "jpg",
+        "createAt": "2019-12-23",
+        "gallary_folder_id": 1,
+        "gallary_folder_id.memo": "公司/某某有限公司"
+    }
+}

@@ -1,7 +1,7 @@
 import { COMPANY as CONST, LOADING } from "../_constants";
 import { companyService as service } from "../_services";
 import { alertActions } from "./";
-import { history } from "../_helper";
+// import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'

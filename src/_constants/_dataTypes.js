@@ -8,5 +8,6 @@ export const _DATATYPES = {
     BOOLEAN: "BOOLEAN",
     SELECT: "SELECT",
     GALLERY: "GALLERY",
+    ROW: "ROW",
     ENUM: enumsLabel
 }

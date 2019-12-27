@@ -18,10 +18,10 @@ import {
   CreinoxForm,
   withDatatableStore
 } from "../../components";
-import { categoryModel as dataModel } from "../../_dataModel";
+import { regionModel as dataModel } from "../../_dataModel";
 
 // ******************************************************************* page setting
-import { categoryActions as dataActions } from "../../_actions";
+import { regionActions as dataActions } from "../../_actions";
 
 const editModes = {
   none: 0,
@@ -33,8 +33,8 @@ const editModes = {
 // ******************************************************************* page setting
 const MyTreeview = withDatatableStore(
   CreinoxTreeview, // tablecomponent
-  { data: "categoryData" }, // data source
-  dataActions.get_byCategory // fetch action
+  { data: "regionData" }, // data source
+  dataActions.get_byRegion // fetch action
 );
 
 // **************************************************************************************************
@@ -74,9 +74,11 @@ const CurrentPage = ({
   };
 
   const handleOnSelect = node => {
-    onGetById(node.id);
-    setformEditMode(editModes.edit); // 设置成编辑模式
-    setSelectedNode(node);
+    if (node) {
+      onGetById(node.id);
+      setformEditMode(editModes.edit); // 设置成编辑模式
+      setSelectedNode(node);
+    }
   };
 
   const handleSwitchToCreate = (id, path, label) => {
@@ -124,7 +126,6 @@ const CurrentPage = ({
       </Button>
     </>
   );
-
   const childrenInputsCreate = (
     <>
       {FormInputs()}
@@ -227,7 +228,7 @@ const CurrentPage = ({
                     <CreinoxForm
                       defaultValues={defaultValues}
                       errors={errorById}
-                      isFromEdit={true}
+                      isFromEdit={formEditMode === editModes.edit}
                       actionSubmit={handleOnSubmit}
                       renewToggle={renewToggle}
                       dataModel={dataModel}
@@ -256,25 +257,25 @@ const CurrentPage = ({
     </div>
   );
 };
-// ============================================= propTypes
 
 const FormInputs = () => {
   return (
     <>
       <Inputs.MyInput inputid="name" />
       <Inputs.MyInput inputid="ename" />
-      <Inputs.MyInput inputid="startCode" />
+      <Inputs.MyInput inputid="telPrefix" />
+      <Inputs.MyInput inputid="code" />
       <Inputs.MyInput multiline inputid="memo" />
-      <Inputs.MyInput multiline inputid="ememo" />
     </>
   );
 };
+// ============================================= propTypes
 
 // ============================================= Redux
 function mapState(state) {
   return {
-    dataById: state.categoryData.dataById,
-    errorById: state.categoryData.errorById
+    dataById: state.regionData.dataById,
+    errorById: state.regionData.errorById
   };
 }
 

@@ -37,8 +37,15 @@ import {
   MyComboboxCurrency
 } from "./MyCombobox";
 
+import {
+  MyImage
+} from "./MyImage";
+
+import {
+  MyRegionPicker
+} from "./MyRegionPicker";
 // ==================================================================================Date picker
-const MyDatePicker = ({
+const MyDatePicker = React.memo(({
   id,
   label = "选择日期",
   value,
@@ -69,10 +76,10 @@ const MyDatePicker = ({
       />
     </MuiPickersUtilsProvider>
   );
-};
+});
 
 // ==================================================================================Date picker for range
-const MyDateRangePicker = ({
+const MyDateRangePicker = React.memo(({
   id,
   label,
   value, // in case of endless loop, only used for default
@@ -140,7 +147,7 @@ const MyDateRangePicker = ({
       </Grid>
     </MuiPickersUtilsProvider>
   );
-};
+});
 
 // ================================================================================== regular text
 const MyInput = React.memo(({
@@ -182,7 +189,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const MyInputPassword = ({
+const MyInputPassword = React.memo(({
   id,
   label = "密码",
   value = "",
@@ -201,6 +208,7 @@ const MyInputPassword = ({
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
+  
   return (
     <FormControl
       className={clsx(classes.margin, classes.textField)}
@@ -231,10 +239,10 @@ const MyInputPassword = ({
       <FormHelperText>{!disabled && helperText}</FormHelperText>
     </FormControl>
   );
-};
+});
 
 // ================================================================================== switch
-const MySwitch = ({
+const MySwitch = React.memo(({
   id,
   label = "",
   value = false,
@@ -261,10 +269,10 @@ const MySwitch = ({
       label={`${label} : ${isChecked ? "是" : "否"}`}
     />
   );
-};
+});
 
 // ================================================================================== switch
-const MyEditButton = ({ disabled = false, setdisabled = () => {} }) => {
+const MyEditButton = React.memo(({ disabled = false, setdisabled = () => {} }) => {
   return (
     <>
       <Button
@@ -278,7 +286,7 @@ const MyEditButton = ({ disabled = false, setdisabled = () => {} }) => {
       </Button>
     </>
   );
-};
+});
 
 export const Inputs = {
   MyCombobox,
@@ -295,5 +303,7 @@ export const Inputs = {
   MyEditButton,
   MyInput,
   MyInputPassword,
-  MySwitch
+  MySwitch,
+  MyImage,
+  MyRegionPicker
 };

@@ -222,6 +222,7 @@ export const CreinoxTable = ({
 
   const handleSelectOnAction = e => {
     selectBox && selectBox.onAction(selected);
+    setSelected([]);
   };
 
   const handleClick = (e, name) => {
@@ -292,7 +293,7 @@ export const CreinoxTable = ({
               const rowId = row.id;
 
               const handleRowDbClick = ((typeof(onRowDbClick) === 'function') 
-                                        && onRowDbClick.bind(null, getPaginationFromState(),rowId)) ||
+                                        && onRowDbClick.bind(null, getPaginationFromState(),rowId, row)) ||
                                         null;
 
 
@@ -368,6 +369,7 @@ export const CreinoxTable = ({
                           key={`button_${rowId}_${index}`}
                           {...buttonObj}
                           id={rowId}
+                          row = {row}
                           getPaginationFromState={getPaginationFromState}
                         />
                       ))}
@@ -411,6 +413,7 @@ export const CreinoxTable = ({
 // ============================================================右边按钮. 给button传入pagination因为删除后, 页面刷新
 const ActionButton = ({
   id,
+  row,
   label,
   onClick,
   color,
@@ -435,7 +438,7 @@ const ActionButton = ({
   } else {
     const propsOnClick =
       typeof onClick === "function"
-        ? onClick.bind(null, getPaginationFromState(), id)
+        ? onClick.bind(null, getPaginationFromState(), id, row)
         : null;
 
     returnValue = (

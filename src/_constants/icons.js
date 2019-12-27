@@ -9,7 +9,7 @@ export const ICONS = {
     REFRESH: (className) => <i className={`fa fa-refresh icons ${className}`}></i>,
     TRUE: (className) => <i className={`fa fa-check icons ${className}`}></i>,
     FALSE: (className) => <i className={`fa fa-times-circle icons ${className}`}></i>,
+    PICK: (className) => <i className={`icon-options-vertical icons ${className}`}></i>,
   
     ACTIVE: (className) => <i className={`cui-settings icons ${className}`}></i>,
   }
-  

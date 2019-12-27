@@ -12,11 +12,16 @@ import { userActions as dataActions } from "../../_actions";
 import { userModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs } from "../../components";
 
-
 // import { h_confirm } from '../../_helper'
 const EDITURL = "/users/users";
 
-const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {
+const CurrentPage = ({
+  dataById,
+  onPostCreate,
+  onPutUpdate,
+  onGetById,
+  ...props
+}) => {
   // const id = _.get(props, "match.params.id");
   // const isFromEdit = id ? true : false;
   // const [disabled, setdisabled] = useState(isFromEdit && true);
@@ -27,7 +32,7 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 
   useEffect(() => {
     // if there is ID, fetch data
-    if (id) {      
+    if (id) {
       onGetById(id);
     }
   }, [onGetById, id]);
@@ -36,10 +41,10 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 
   const handleOnSubmit = values => {
     if (isFromEdit) {
-      onPutUpdate({...values});
+      onPutUpdate({ ...values });
     } else {
-      onPostCreate(values, (id)=>{
-        history.push(EDITURL + "/" + id) 
+      onPostCreate(values, id => {
+        history.push(EDITURL + "/" + id);
       });
     }
   };
@@ -57,7 +62,7 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
             <CreinoxForm
               dataModel={dataModel}
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
-              isFromEdit = {isFromEdit}
+              isFromEdit={isFromEdit}
               actionSubmit={handleOnSubmit}
             >
               <CardBody>
@@ -80,7 +85,12 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
                     <Inputs.MyInput inputid="ip" disabled={isFromEdit} />
                   </Grid>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyComboboxFK inputid="role_id" optionLabel="name" tableName="role" disabled={disabled} />
+                    <Inputs.MyComboboxFK
+                      inputid="role_id"
+                      optionLabel="name"
+                      tableName="role"
+                      disabled={disabled}
+                    />
                   </Grid>
 
                   <Grid item xs={12}>
@@ -94,16 +104,10 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyDatePicker
-                      inputid="lastLogin"
-                      disabled={true}
-                    />
+                    <Inputs.MyDatePicker inputid="lastLogin" disabled={true} />
                   </Grid>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyDatePicker
-                      inputid="createAt"
-                      disabled={true}
-                    />
+                    <Inputs.MyDatePicker inputid="createAt" disabled={true} />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
@@ -138,7 +142,6 @@ const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props 
 };
 
 // ============================================= Redux
-
 
 function mapState(state) {
   return {

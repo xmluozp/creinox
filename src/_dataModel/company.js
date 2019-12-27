@@ -32,15 +32,19 @@ export const companyModel = {
         fjdz:       {label: "分局地址",   type: _DATATYPES.VARCHAR},
         fjyb:       {label: "分局邮编",   type: _DATATYPES.VARCHAR},
         taxcode:    {label: "统一税号",     type: _DATATYPES.VARCHAR},
-
-        region:         {label: "地区",     type: _DATATYPES.VARCHAR},
-
         isDelete:       {label: "是否删除",     type: _DATATYPES.VARCHAR},
 
         retriever_id:   {label: "找回人",     type: _DATATYPES.SELECT, ref:"user", refLabel: ["userName"]},
         updateUser_id:  {label: "上次操作人",     type: _DATATYPES.SELECT, ref:"user", refLabel: ["userName"]},
+        region_id:      {label: "地区",     type: _DATATYPES.SELECT, ref:"region", refLabel: ["name"]},
+
         imageLicense_id:   {label: "工厂证照",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
+        "imageLicense_id.row":   {label: "工厂证照",   type: _DATATYPES.ROW},
+
         imageBizCard_id:   {label: "名片",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
+        "imageBizCard_id.row": {label: "名片",   type: _DATATYPES.ROW},
+
+
         gallary_folder_id:  {label: "图库",     type: _DATATYPES.GALLERY},
     }
 }
