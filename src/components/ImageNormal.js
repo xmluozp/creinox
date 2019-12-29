@@ -10,7 +10,7 @@ const cont = {
   position: "relative"
 };
 
-const ImageNormal = ({
+export const ImageNormal = ({
   id,
   index,
   photo,
@@ -20,9 +20,6 @@ const ImageNormal = ({
   left,
 }) => {
   //calculate x,y scale
-  const sx = (100 - (30 / photo.width) * 100) / 100;
-  const sy = (100 - (30 / photo.height) * 100) / 100;
-  selectedImgStyle.transform = `translateZ(0px) scale3d(${sx}, ${sy}, 1)`;
 
   if (direction === "column") {
     cont.position = "absolute";
@@ -59,11 +56,7 @@ const ImageNormal = ({
 
         <img
           alt={photo.title}
-          style={
-            isDisplaySelect
-              ? { ...imgStyle, ...selectedImgStyle }
-              : { ...imgStyle }
-          }
+          style={ { ...imgStyle }}
           {...photo}
           onClick={handleOnClick}
         />

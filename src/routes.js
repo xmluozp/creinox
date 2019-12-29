@@ -11,7 +11,6 @@ const User = React.lazy(() => import("./views/Users/User"));
 const Commonitems = React.lazy(() => import("./views/Setting/Commonitems"));
 const Commonitem = React.lazy(() => import("./views/Setting/Commonitem"));
 const Images = React.lazy(() => import("./views/Image/Images"));
-
 //================ product
 const ProductCategories = React.lazy(() =>
   import("./views/Product/Categories")
@@ -19,6 +18,9 @@ const ProductCategories = React.lazy(() =>
 
 const ProductProducts = React.lazy(() => import("./views/Product/Products"));
 const ProductProduct = React.lazy(() => import("./views//Product/Product"));
+
+const ProductPurchases = React.lazy(() => import("./views/Product/ProductPurchases"));
+
 //================ region
 const Regions = React.lazy(() => import("./views/Setting/Regions"));
 
@@ -140,14 +142,14 @@ const routes = [
   {
     path: "/users/user",
     exact: true,
-    name: "用户",
+    name: "用户新增",
     component: User,
     authTag: "user"
   },
   {
     path: "/users/users/:id",
     exact: true,
-    name: "用户",
+    name: "用户详情",
     component: User,
     authTag: "user"
   },
@@ -312,30 +314,54 @@ const routes = [
   {
     path: "/product/categories",
     exact: true,
-    name: "商品类别集",
+    name: "产品类别集",
     component: ProductCategories,
     authTag: "categories"
   },
   {
     path: "/product/products",
     exact: true,
-    name: "商品列表",
+    name: "产品列表",
+    component: ProductProducts,
+    authTag: "product"
+  },
+  {
+    path: "/product/productsComponent/:parentProductId",
+    exact: true,
+    name: "产品构成列表",
+    component: ProductProducts,
+    authTag: "product"
+  },
+  {
+    path: "/product/productsParent/:componentProductId",
+    exact: true,
+    name: "产品成品列表",
     component: ProductProducts,
     authTag: "product"
   },
   {
     path: "/product/product",
     exact: true,
-    name: "商品",
+    name: "产品",
     component: ProductProduct,
     authTag: "product"
   },
   {
     path: "/product/products/:id",
     exact: true,
-    name: "商品",
+    name: "产品详情",
     component: ProductProduct,
     authTag: "product"
+  },
+  {
+    path: [
+      "/product/productpurchases",
+      "/product/productpurchases/:product_id/:company_id/:pack_id"
+    ],
+    exact: true,
+    name: "工厂报价",
+    component: ProductPurchases,
+    authTag: "productpurchase"
   }
 ];
 

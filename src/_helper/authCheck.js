@@ -11,7 +11,8 @@ const allAuthList = [
   "companydomestic",
   "companyshipping",
   "product",
-  "categories"
+  "categories",
+  "productpurchase",
 ];
 // const testAuthList = 'system,company,product'
 

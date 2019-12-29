@@ -7,7 +7,9 @@ export const _DATATYPES = {
     TEXT: "TEXT",
     BOOLEAN: "BOOLEAN",
     SELECT: "SELECT",
+    TREE: "TREE",
     GALLERY: "GALLERY",
+    DECIMAL:"DECIMAL",
     ROW: "ROW",
     ENUM: enumsLabel
 }

@@ -4,6 +4,7 @@ export * from './Inputs';
 export * from './CreinoxUploadButton';
 export * from './withDatatableStore';
 export * from './Gallery';
+export * from './ImageList';
 export * from './Treeview';
 export * from './Modal';
 export * from './TabPanel';

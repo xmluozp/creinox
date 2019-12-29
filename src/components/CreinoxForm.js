@@ -47,7 +47,7 @@ export class CreinoxForm extends React.Component {
   // step 1/3: generate empty items ********************************************
   componentDidMount() {
     // preConditions 是新增用的，是前提条件
-    const { isFromEdit, preConditions } = this.props;
+    const { isFromEdit, preConditions, onGetInjector } = this.props;
 
     // set initial Values (empty)
     const initialValues = {};
@@ -66,6 +66,20 @@ export class CreinoxForm extends React.Component {
       ...initialValues,
       ...preConditions
     });
+
+    if (typeof onGetInjector === "function") {
+      onGetInjector(() => newValues => {
+        const newState = {};
+        Object.keys(newValues).map(value => {
+          if (this.state.hasOwnProperty(value)) {
+            newState[value] = newValues[value];
+          }
+          return null;
+        });
+
+        this.setState(newState);
+      });
+    }
   }
 
   getSnapshotBeforeUpdate(prevProps) {
@@ -146,6 +160,8 @@ export class CreinoxForm extends React.Component {
             // 遍历所有的components
             const isInput =
               item.props && this.state.hasOwnProperty(item.props.inputid); // 是否输入控件
+            const isFiltered = 
+              item.props && typeof(item.props.onShow) === "function";
 
             if (isInput) {
               // 如果是控件就注入，否则原样返回
@@ -161,7 +177,13 @@ export class CreinoxForm extends React.Component {
                 dataModel: dataModel,
                 value: values[columnId]
               });
-            } else {
+            } else if(isFiltered) {
+              return injectedInputs({
+                item: item,
+                value: item.props.onShow(values)
+              })
+            }            
+            else {
               return item;
             }
           })}
@@ -180,12 +202,12 @@ const injectedInputs = ({
   errorMessage = ""
 }) => {
   let returnValue = item;
-  const columnId = item.props.inputid;
+  const columnId = item.props &&  item.props.inputid;
 
   // 判断类型，进行注入
 
   // 如果id 和model对得上号;
-  if (dataModel.columns[columnId]) {
+  if (dataModel && dataModel.columns[columnId]) {
     // TODO: 判断component类型。不同类型注入不同的东西
     returnValue = React.cloneElement(item, {
       id: columnId,
@@ -197,6 +219,11 @@ const injectedInputs = ({
       onChange: handleChange,
       fullWidth: true
     });
+  } else { // 不是model的；非控制的控件
+    returnValue = React.cloneElement(item, {
+      value: value,
+      fullWidth: true
+    })
   }
 
   return returnValue;

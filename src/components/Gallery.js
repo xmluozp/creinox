@@ -1,28 +1,30 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
-import RPGallary from "react-photo-gallery";
-import { connect } from "react-redux";
 
+import { connect } from "react-redux";
 import { ICONS } from "../_constants";
-import ImageSelectable from "./ImageSelectable";
-import {CreinoxUploadButton} from "./CreinoxUploadButton";
+
+import {ImageList} from './ImageList'
+import { CreinoxUploadButton } from "./CreinoxUploadButton";
 
 import { imageActions as dataActions } from "../_actions";
 
-
-const GalleryNoData = ({data, onGetBySearch, onDeleteMultiple, onPostCreateMultiple, preConditions}) => {
-
+// 图库管理。 ImageList显示在另一个控件。这里是控制和数据
+const GalleryBeforeConnect = ({
+  data,
+  onGetBySearch,
+  onDeleteMultiple,
+  onPostCreateMultiple,
+  preConditions
+}) => {
   useEffect(() => {
     onGetBySearch({}, preConditions);
-    return () => {
-    };
-  }, [])
-
+    return () => {};
+  }, []);
 
   // 图片选择和删除
   const [selectedImages, setSelectedImages] = useState(new Set([]));
   const [editMode, setEditMode] = useState(false);
-
 
   const tileData = data && data.rows ? data.rows : [];
 
@@ -53,33 +55,14 @@ const GalleryNoData = ({data, onGetBySearch, onDeleteMultiple, onPostCreateMulti
     }
   };
 
-  const handleImageSave = (files) => {
-    onPostCreateMultiple(files)
-  }
+  const handleImageSave = files => {
+    onPostCreateMultiple(files);
+  };
 
   // 删除
   const deleteSelected = () => {
     onDeleteMultiple({}, Array.from(selectedImages));
   };
-
-  // 子图片: 可选择
-  const imageRenderer = useCallback(
-    ({ index, left, top, key, photo }) => (
-      <ImageSelectable
-        id={photo.id}
-        isSelected={selectedImages.has(photo.id) ? true : false}
-        onSelect={handleOnToggleSelect}
-        editMode={editMode}
-        key={key}
-        margin={"2px"}
-        index={index}
-        photo={photo}
-        left={left}
-        top={top}
-      />
-    ),
-    [editMode, selectedImages]
-  );
 
   // Edit mode; Browse mode; select all; delete; upload
   return (
@@ -111,42 +94,29 @@ const GalleryNoData = ({data, onGetBySearch, onDeleteMultiple, onPostCreateMulti
           </Button>
         ) : null}
         {!editMode ? (
-            <CreinoxUploadButton onSave={handleImageSave} className="mr-2"/>
+          <CreinoxUploadButton onSave={handleImageSave} className="mr-2" />
         ) : null}
-
-        
       </p>
-      <RPGallary
-        photos={tileData.map(image => {
-          return {
-            id: image.id,
-            path: image.path,
-            src: image.thumbnailPath,
-            height: image.height,
-            width: image.width,
-            title: image.name
-          };
-        })}
-        renderImage={imageRenderer}
-      />
+      <ImageList tileData={tileData} editMode={editMode} selectedImages={selectedImages} onSelect={handleOnToggleSelect}  />
     </div>
   );
 };
+// ============================================= image list
 
 
-  // ============================================= Redux
+// ============================================= Redux
 
-  function mapState(state) {
-    return {
-      data: state.imageData.data
-    };
-  }
-
-  const actionCreators = {
-    onPostCreate: dataActions.post_create,
-    onPostCreateMultiple: dataActions.post_createMultiple,
-    onDeleteMultiple: dataActions._deleteMultiple,
-    onGetBySearch: dataActions.get_bySearch
+function mapState(state) {
+  return {
+    data: state.imageData.data
   };
+}
 
-  export const Gallery = connect(mapState, actionCreators)(GalleryNoData);
+const actionCreators = {
+  onPostCreate: dataActions.post_create,
+  onPostCreateMultiple: dataActions.post_createMultiple,
+  onDeleteMultiple: dataActions._deleteMultiple,
+  onGetBySearch: dataActions.get_bySearch
+};
+
+export const Gallery = connect(mapState, actionCreators)(GalleryBeforeConnect);

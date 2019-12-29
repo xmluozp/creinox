@@ -27,8 +27,10 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import {
   MyCombobox,
+  MyComboboxAsyncFK,
   MyComboboxFK,
   MySelect,
+  MyComboboxPack,
   MyComboboxPolishing,
   MyComboboxTexture,
   MyComboboxUnitType,
@@ -42,8 +44,9 @@ import {
 } from "./MyImage";
 
 import {
-  MyRegionPicker
-} from "./MyRegionPicker";
+  MyRegionPicker,
+  MyCategoryPicker
+} from "./MyPicker";
 // ==================================================================================Date picker
 const MyDatePicker = React.memo(({
   id,
@@ -291,6 +294,8 @@ const MyEditButton = React.memo(({ disabled = false, setdisabled = () => {} }) =
 export const Inputs = {
   MyCombobox,
   MyComboboxFK,
+  MyComboboxAsyncFK,
+  MyComboboxPack,
   MyComboboxPolishing,
   MyComboboxTexture,
   MyComboboxUnitType,
@@ -305,5 +310,6 @@ export const Inputs = {
   MyInputPassword,
   MySwitch,
   MyImage,
-  MyRegionPicker
+  MyRegionPicker,
+  MyCategoryPicker
 };

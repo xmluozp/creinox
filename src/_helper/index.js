@@ -131,3 +131,17 @@ export function h_confirm(textMessage="确认操作") {
 
     return promise;
 }
+
+export function h_filterImage(values, columnName) {
+
+    const returnValues = values
+
+    if(returnValues[columnName]){
+        const isUploaded = Object.prototype.toString.call(returnValues[columnName]) === "[object File]";
+        if(!isUploaded) {
+          delete returnValues[columnName];
+        }          
+    }  
+    
+    return returnValues;
+}

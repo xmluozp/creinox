@@ -10,6 +10,10 @@ export const ICONS = {
     TRUE: (className) => <i className={`fa fa-check icons ${className}`}></i>,
     FALSE: (className) => <i className={`fa fa-times-circle icons ${className}`}></i>,
     PICK: (className) => <i className={`icon-options-vertical icons ${className}`}></i>,
+    IMAGE: (className) => <i className={`icon-picture icons ${className}`}></i>,
+    LIST: (className) => <i className={`icon-list icons ${className}`}></i>,
+
+    
   
     ACTIVE: (className) => <i className={`cui-settings icons ${className}`}></i>,
   }

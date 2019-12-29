@@ -48,8 +48,6 @@ export default function Search({
     };
   }, [open]);
 
-  const childrenInputs = <></>;
-
   return (
     <>
       <Tooltip title="Advanced Search" ref={tipRef}>

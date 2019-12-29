@@ -9,7 +9,7 @@ import { MyModalForm } from "../Modal";
 // import { withDatatableStore } from "../withDatatableStore";
 
 import { CreinoxTreeview } from "../Treeview";
-import { regionActions as dataActions } from "../../_actions";
+import { regionActions, categoryActions } from "../../_actions";
 
 // const MyTreeview = withDatatableStore(
 //   CreinoxTreeview, // tablecomponent
@@ -23,13 +23,14 @@ const CurrentPicker = React.memo(
     id,
     value,
     label = "输入",
-    onChange = () => {},
+    onChange = () => {}, //
+    onSelect = () => {}, 
     error = false,
     helperText = "",
     fullWidth = true,
     disabled = false,
     data,
-    onGetBySearch
+    onGetBySearch // 第一次打开获取数据
   }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedNode, setSelectedNode] = useState({ id: value });
@@ -53,7 +54,8 @@ const CurrentPicker = React.memo(
     };
     const handleOnSelect = node => {
       if (node && !disabled ) {
-        onChange(node.id);
+        onChange(null,id, node.id);
+        if(typeof(onSelect)==='function') onSelect(node);
         setSelectedNode(node);
         setIsModalOpen(false);
       }
@@ -100,14 +102,23 @@ const CurrentPicker = React.memo(
   }
 );
 
-function mapState(state) {
+function mapStateRegion(state) {
   return {
     data: state.regionData.data
   };
 }
+function mapStateCategory(state) {
+  return {
+    data: state.categoryData.data
+  };
+}
 
-const actionCreators = {
-  onGetBySearch: dataActions.get_byRegion
+const actionCreatorsCategory = {
+  onGetBySearch: categoryActions.get_byCategory
+};
+const actionCreatorsRegion = {
+  onGetBySearch: regionActions.get_byRegion
 };
 
-export const MyRegionPicker = connect(mapState, actionCreators)(CurrentPicker);
+export const MyRegionPicker = connect(mapStateRegion, actionCreatorsRegion)(CurrentPicker);
+export const MyCategoryPicker = connect(mapStateCategory, actionCreatorsCategory)(CurrentPicker);

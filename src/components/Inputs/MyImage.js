@@ -23,7 +23,7 @@ export const MyImage = ({ id, value, onChange, disabled }) => {
       // $('#blah').attr('src', e.target.result);
     };
     reader.readAsDataURL(value);
-  } else {
+  } else if(value){
     photo = {
       id: value.id,
       path: value.path,
@@ -41,7 +41,9 @@ export const MyImage = ({ id, value, onChange, disabled }) => {
   };
 
   const handleOnSave = files => {
-    onChange(null, id, files[0]);
+    if(typeof(onChange)==='function') {
+      onChange(null, id, files[0]);
+    }    
   };
 
   return (

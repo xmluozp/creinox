@@ -26,7 +26,7 @@ export const CreinoxTreeview = ({
   // const [selectedNode, setselectedNode] = useState(initialNode);
   const [filterNodeList, setFilterNodeList] = useState([initialNode]);
   const [expandedNodes, setExpandedNodes] = useState(
-    initialNode.path && initialNode.path.split(",") || ["0"]
+    (initialNode.path && initialNode.path.split(",")) || ["0"]
   );
   const [treeObject, setTreeObject] = useState();
 

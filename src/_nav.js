@@ -17,19 +17,24 @@ const navs = {
       icon: 'icon-speedometer',
     },
     {
-      name: '商品',
+      name: '产品',
       url: '#',
       icon: 'icon-puzzle',
       children: [
         {
-          name: '商品类别集',
+          name: '产品类别集',
           url: '/product/categories',
           authTag:'categories',
         },
         {
-          name: '商品列表',
+          name: '产品列表',
           url: '/product/products',
           authTag:'product',
+        },
+        {
+          name: '工厂报价',
+          url: '/product/productpurchases',
+          authTag:'productpurchase',
         }
       ]
     },

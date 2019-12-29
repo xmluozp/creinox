@@ -34,6 +34,7 @@ export default combineReducers({
 
   productData: product,
   categoryData: category,
+  productpurchaseData: reducerMaker(null, "PRODUCTPURCHASE"),
 
   rostercontactData: reducerMaker(null, "ROSTERCONTACT"),
   bankaccountData: reducerMaker(null, "BANKACCOUNT")

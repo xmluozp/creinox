@@ -1,4 +1,4 @@
-import { COMPANY as CONST, LOADING } from "../_constants";
+import { COMPANY as CONST, LOADING, enums } from "../_constants";
 import { companyService as service } from "../_services";
 import { alertActions } from "./";
 // import { history } from "../_helper";
@@ -26,13 +26,35 @@ const loaded = { type: LOADING.SUCCESS };
 const loadedFailure = { type: LOADING.FAILURE };
 
 // FETCH  ---------------------------------------------
-function get_dropdown(pagination, searchTerms = {}) {
+function get_dropdown({ companyType = 0 }) {
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown(pagination, searchTerms).then(
+    return service.get_dropdown(companyType).then(
       response => {
+        const payload = {};
         dispatch(loaded);
-        dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
+        switch (companyType) {
+          case enums.companyType.internal:
+            payload.dropdown_internal = response;
+            break;
+          case enums.companyType.factory:
+            payload.dropdown_factory = response;
+            break;
+          case enums.companyType.domesticCustomer:
+            payload.dropdown_domesticCustomer = response;
+            break;
+          case enums.companyType.overseasCustomer:
+            payload.dropdown_overseasCustomer = response;
+            break;
+          case enums.companyType.shippingCompany:
+            payload.dropdown_shippingCompany = response;
+            break;
+          default:
+            break;
+        }
+
+        dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
+        return response;
       },
       error => {
         dispatch(loadedFailure);
@@ -74,7 +96,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, callBack=()=>{}) {
+function post_create(item, callBack = () => {}) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -84,7 +106,7 @@ function post_create(item, callBack=()=>{}) {
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
         // const id = (response.row && response.row.id) || null
-        const id = "1"
+        const id = "1";
         callBack(id);
         // if (page) history.push(page + "/" + id);
       },
@@ -97,7 +119,7 @@ function post_create(item, callBack=()=>{}) {
   };
 }
 
-function put_update(item, callBack=()=>{}) {
+function put_update(item, callBack = () => {}) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);

@@ -17,6 +17,12 @@ export * from "./product.actions";
 export * from "./category.actions";
 
 // faceless pages
+export const productpurchaseActions = withFacelessActions(
+  "PRODUCTPURCHASE",
+  "productpurchase",
+  { get_bySearch_url: "./dataset/productpurchasedata.json", get_byId_url: "./dataset/productpurchasedata_byId.json" }
+);
+
 export const rostercontactActions = withFacelessActions(
   "ROSTERCONTACT",
   "rostercontact",

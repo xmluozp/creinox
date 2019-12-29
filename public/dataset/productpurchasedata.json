@@ -1,0 +1,62 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "code": "CR8328",
+            "activeAt": "2019-12-27 13:00",
+            "expireAt": "2019-12-27 13:00",
+
+            "company_id": 1,
+            "company_id.name": "某某工厂1",          
+            "price": 11.5,
+            "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
+
+            "polishing_id": 1,
+            "polishing_id.name": "测试抛光",  
+            "texture_id": 2,
+            "texture_id.name": "测试材质",
+            "pack_id": 6,
+            "pack_id.name": "测试材质",
+            "product_id": 1,
+            "product_id.name": "测试产品",
+            "currency_id": 1,
+            "currency_id.name": "人民币",
+            "thickness": 0.6,
+            "packAmount": 50
+        },
+        {
+            "id": 2,
+            "code": "CR8328",
+            "activeAt": "2019-12-27 13:00",
+            "expireAt": "2019-12-27 13:00",
+            
+            "company_id": 1,
+            "company_id.name": "某某工厂2",          
+            "price": 11.5,
+            "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
+
+            "polishing_id": 1,
+            "polishing_id.name": "测试抛光",  
+            "texture_id": 2,
+            "texture_id.name": "测试材质",
+            "pack_id": 6,
+            "pack_id.name": "测试材质",
+            "product_id": 1,
+            "product_id.name": "测试产品",
+            "currency_id": 1,
+            "currency_id.name": "美元",
+            "thickness": 0.6,
+            "packAmount": 50
+        }
+    ]
+}

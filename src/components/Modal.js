@@ -79,6 +79,8 @@ export const MyModalFormWithData = ({
   title,
   rowId = null,
   componentInputs,
+  modalFormProps = {},
+  modalInputProps = {},
 
   // redux
   dataModel,
@@ -94,7 +96,6 @@ export const MyModalFormWithData = ({
   }, [onGetById, isOpen, isFromEdit]);
 
   const FormWrapper = () => {
-
     return (
       <CreinoxForm
         defaultValues={rowId && dataById && { ...dataById.row }}
@@ -102,9 +103,10 @@ export const MyModalFormWithData = ({
         isFromEdit={isFromEdit}
         actionSubmit={onSubmit}
         dataModel = {dataModel}
+        {...modalFormProps}
         >
 
-        <ModalBody>{componentInputs()}</ModalBody>
+        <ModalBody>{componentInputs(modalInputProps)}</ModalBody>
     <ModalFooter>
       <Button
         type="button"

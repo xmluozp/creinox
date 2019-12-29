@@ -2,25 +2,26 @@
 import store from './store';
 import _ from 'lodash'
 
-export async function h_fkFetch(table, params={}) {
+export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
 
     try {
-        
         // 根据表名称动态加载
         let myActions = await import(`../_actions/${table}.actions`);
-
+        
         // 远程读取action里的方法
-        const actionPromise = _.get(myActions, [`${table}Actions`, 'get_dropdown'])
+        const actionPromise = _.get(myActions, [`${table}Actions`, actionName])
         // const data = await myActions.roleActions.readAll()(store.dispatch)
-        const data = await actionPromise({...params})(store.dispatch) // 调用了这里导致的
-            .then((response, reject) => {
+
+        const data = await actionPromise(...params)(store.dispatch) // 调用了这里导致的
+            .then((response, reject) => {          
                 return response; 
             }).catch(error=>{ console.log("调用action失败", error) })
         // 注意，这里是异步的
+        
         return data;    
     } catch (error) {
         console.log("调用action失败，表不存在", error)
-        return {};
+        return Promise.reject()
     }
 }
 
@@ -30,8 +31,7 @@ export async function h_fkPicker(table, id) {
     return _.find(rows, ['id', id]);
 }
 
-// 从
-export async function h_fkFetchOnce(table = "", stateName = "dropdown", params={}) {
+export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[]) {
 
     let rows;
     const state = store.getState();
@@ -44,7 +44,6 @@ export async function h_fkFetchOnce(table = "", stateName = "dropdown", params={
         rows = _.get(dataSource, "rows");
 
         if(!rows){return Promise.reject()}
-
     }
     return rows; 
 }

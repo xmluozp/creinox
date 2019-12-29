@@ -26,9 +26,7 @@ const Checkmark = ({ selected }) => (
   </div>
 );
 
-const imgStyle = {
-  transition: "transform .135s cubic-bezier(0.0,0.0,0.2,1),opacity linear .15s"
-};
+
 const selectedImgStyle = {
   transform: "translateZ(0px) scale3d(0.9, 0.9, 1)",
   transition: "transform .135s cubic-bezier(0.0,0.0,0.2,1),opacity linear .15s"
@@ -49,10 +47,12 @@ const ImageSelectable = ({
   direction,
   top,
   left,
+  onClick,
   isSelected,
   editMode
 }) => {
   //calculate x,y scale
+
   const sx = (100 - (30 / photo.width) * 100) / 100;
   const sy = (100 - (30 / photo.height) * 100) / 100;
   selectedImgStyle.transform = `translateZ(0px) scale3d(${sx}, ${sy}, 1)`;
@@ -67,16 +67,27 @@ const ImageSelectable = ({
     if (editMode) {
       onSelect(id, isSelected);
     } else {
-      window.open(photo.path, "_blank");
+
+      if(typeof(onClick)==='function') {
+        onClick.bind(null, id, photo)();
+      } else {
+        window.open(photo.path, "_blank");
+      }
     }
   };
 
   const isDisplaySelect = isSelected && editMode;
 
+  const imgStyle = {
+    transition: "transform .135s cubic-bezier(0.0,0.0,0.2,1),opacity linear .15s",
+    maxHeight: photo.maxheight * 2, 
+    maxWidth: photo.maxwidth * 2
+  };
+
   return (
     <div>
       <div
-        style={{ margin, height: photo.height, width: photo.width, ...cont }}
+        style={{ margin, height: photo.height, width: photo.width,  maxHeight: photo.maxheight * 2, maxWidth: photo.maxwidth * 2, ...cont }}
         className={!isDisplaySelect ? "not-selected" : ""}
       >
         <div

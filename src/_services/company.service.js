@@ -3,6 +3,7 @@ import { authHeader, handleResponse, handleResponseTestError, h_queryString } fr
 // import axios from 'axios'
 
 export const companyService = {
+    get_dropdown,
     get_bySearch,
     get_byId,
     post_create,
@@ -13,6 +14,20 @@ export const companyService = {
 const TABLENAME = "company";
 
 // const url = 'http://localhost:3000/api/';
+function get_dropdown(companyType) {
+
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+    let url;
+
+    url = companyType === 1? './dataset/companydata.json' : './dataset/companydata2.json'
+
+    return fetch(`${url}?${companyType}`, requestOptions).then(handleResponse);
+
+}
+
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 

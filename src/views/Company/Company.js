@@ -13,10 +13,10 @@ import { companyActions as dataActions } from "../../_actions";
 import { companyModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
 import { enumsLabel } from "../../_constants";
-import { history } from "../../_helper";
+import { history, h_filterImage } from "../../_helper";
 
 import Contacts from "./Contacts";
-import BankaccountsCompany from "../Bank/BankaccountsCompany";
+import BankaccountsCompany from "../Bank/EmbedBankaccountsCompany";
 
 export const withCompany = (companyType = 0, EDITURL = "") => {
   const CurrentPage = ({
@@ -47,6 +47,11 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
 
     const handleOnSubmit = values => {
       if (isFromEdit) {
+
+        // 如果没有新的图片，就不上传图片
+        values = h_filterImage(values, "imageLicense_id.row");
+        values = h_filterImage(values, "imageBizCard_id.row");
+
         onPutUpdate({ companyType: companyType, ...values });
       } else {
         // onPostCreate(values, history.location.pathname);

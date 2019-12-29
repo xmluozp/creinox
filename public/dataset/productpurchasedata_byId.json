@@ -1,0 +1,56 @@
+{
+    "row": 
+        {
+            "id": 1,
+            "activeAt": "2019-12-27 13:00",
+
+            "isTax": true,
+            "isComponent": true,
+
+            "code": "CR8328",
+            "company_id": 1,
+            "company_id.name": "某某工厂",          
+            "price": 11.5,
+            "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
+            "spec2": "",
+            "spec3": "",
+            "thickness": 0.6,
+            "unitWeight": 8,
+            "netWeight": 10,
+            "grossWeight": 15,
+            "moq": 10,
+            "packAmount": 5,
+
+            "outerPackL":50,
+            "outerPackW":60,
+            "outerPackH":70,
+
+            "innerPackL":55,
+            "innerPackW":65,
+            "innerPackH":75,
+
+            "polishing_id": 1,
+            "polishing_id.name": "测试抛光",  
+
+            "texture_id": 6,
+            "texture_id.name": "测试材质",
+
+            "pack_id": 6,
+            "pack_id.name": "测试包装",
+
+            "product_id": 2,
+            "product_id.name": "测试产品",
+
+            "currency_id": 6,
+            "currency_id.name": "测试币种",
+
+            "unitType_id": 6,
+            "unitType_id.name": "测试单位",
+
+
+
+            "updateUser_id": 1,
+            "updateUser_id.userName": "jack@gmail.com",            
+            "updateAt": "2019-12-27 13:00"
+        }
+}

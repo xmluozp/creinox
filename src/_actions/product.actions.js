@@ -1,4 +1,4 @@
-import { COMPANY as CONST, LOADING } from "../_constants";
+import { PRODUCT as CONST, LOADING } from "../_constants";
 import { productService as service } from "../_services";
 import { alertActions } from "./";
 // import { history } from "../_helper";
@@ -12,7 +12,11 @@ export const productActions = {
   get_byId,
   post_create,
   put_update,
-  _delete
+  _delete,
+
+  // customized
+  get_disposable_dropdown,
+  get_disposable_byId
 };
 
 const done = (payload, type) => {
@@ -33,6 +37,8 @@ function get_dropdown(pagination, searchTerms = {}) {
       response => {
         dispatch(loaded);
         dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
+
+        return response;
       },
       error => {
         dispatch(loadedFailure);
@@ -74,7 +80,7 @@ function get_byId(id) {
   };
 }
 
-function post_create(item, callBack=()=>{}) {
+function post_create(item, callBack = () => {}) {
   console.log("action create:", item);
   return dispatch => {
     dispatch(loading);
@@ -84,7 +90,7 @@ function post_create(item, callBack=()=>{}) {
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
 
-        const id = (response.row && response.row.id) || null
+        const id = (response.row && response.row.id) || 0;
         callBack(id);
       },
       error => {
@@ -96,7 +102,7 @@ function post_create(item, callBack=()=>{}) {
   };
 }
 
-function put_update(item, callBack=()=>{}) {
+function put_update(item, callBack = () => {}) {
   console.log("action update:", item);
   return dispatch => {
     dispatch(loading);
@@ -134,3 +140,48 @@ function _delete(pagination, id) {
 
 //======================== customized
 // todo: 复制粘贴用。取一个产品
+
+function get_disposable_dropdown(preConditions, code) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_dropdown({},{...preConditions,code: code})
+      .then(
+        response => {
+          dispatch(loaded);
+          let returnValue= []
+          if(response && response.rows) {
+            returnValue = response.rows.map(item=> {
+              item.name = `[${item.code}] ${item.name}`
+              return item;
+            })
+          }
+          return returnValue;
+        },
+        error => {
+          dispatch(loadedFailure);
+          dispatch(failure(error.toString()));
+        }
+      );
+  };
+}
+
+
+function get_disposable_byId(id) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_byId(id).then(
+      response => {
+        dispatch(loaded);
+        let returnValue = {}
+        if(response && response.row) {
+          returnValue = response.row
+        }
+        return returnValue;
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}

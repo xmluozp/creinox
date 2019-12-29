@@ -18,12 +18,14 @@ import { _DATATYPES } from "../_constants/_dataTypes";
 import TableHeadWrapper from "./TableHeadWrapper";
 import TableToolbarWrapper from "./TableToolbarWrapper";
 import TablePaginationWrapper from "./TablePaginationWrapper";
+import {ImageList} from './ImageList'
 
 // 所有pagination信息都从data来而不是本地
 export const CreinoxTable = ({
   toggle = false,
   headCells,
   onRowDbClick,
+  onRowImageClick = onRowDbClick,
   searchBar,
   tableTitle,
   data,
@@ -31,6 +33,8 @@ export const CreinoxTable = ({
   dataModel,
   rowButtons = [],
   selectBox,
+  isImageListMode = false,
+  onImageListMapping = ()=>{},
   toolbarButtons = [],
   preConditions = {},
   isBorder = true,
@@ -137,13 +141,14 @@ export const CreinoxTable = ({
   );
 
   const p_updateData = (newPagination = {}, newSearchTerms = {}) => {
-    onGetBySearch(newPagination, { ...newSearchTerms, ...preConditions });
+    onGetBySearch(newPagination, { ...preConditions, ...newSearchTerms });
   };
 
   // 根据store的翻页信息更新data (刷新触发)
   const p_fetchData = React.useCallback(
     () => {
-      return onGetBySearch({ page: 0 }, preConditions)}, // submit empty. refresh by store
+      return onGetBySearch({ page: 0 }, preConditions);
+    }, // submit empty. refresh by store
     [onGetBySearch, preConditions]
   );
 
@@ -155,7 +160,6 @@ export const CreinoxTable = ({
   React.useEffect(() => {
     p_fetchData();
   }, [toggle]);
-  
 
   // fetch data after change page
   // React.useEffect(() => {
@@ -245,6 +249,134 @@ export const CreinoxTable = ({
     setSelected(newSelected);
   };
 
+  const tableBody = (
+    <Table
+      className={classes.table}
+      aria-labelledby={tableTitle}
+      stickyHeader={false}
+      size="small"
+      aria-label={tableTitle}
+      style={{ minWidth: "1200px" }}
+    >
+      {/* -------------------head (on select; headCells)----------------- */}
+      <TableHeadWrapper
+        classes={classes}
+        numSelected={selected.length}
+        selectBox={selectBox}
+        order={dataPagination.order}
+        orderBy={dataPagination.orderBy}
+        onSelectAllClick={handleSelectAllClick}
+        onRequestSort={handleRequestSort}
+        dataModel={dataModel}
+        rowCount={rowLength}
+        headCells={headCells}
+        isButtons={rowButtons.length > 0}
+      />
+      <TableBody>
+        {dataRows.map((row, rowIndex) => {
+          const isItemSelected = isSelected(row.id);
+          const labelId = `enhanced-table-checkbox-${rowIndex}`;
+          const rowId = row.id;
+
+          const handleRowDbClick =
+            (typeof onRowDbClick === "function" &&
+              onRowDbClick.bind(null, getPaginationFromState(), rowId, row)) ||
+            null;
+
+          return (
+            <TableRow
+              hover
+              role="checkbox"
+              aria-checked={isItemSelected}
+              tabIndex={-1}
+              key={row.id}
+              onDoubleClick={handleRowDbClick}
+              selected={isItemSelected}
+            >
+              {/* 放选择框 */}
+              {selectBox && (
+                <TableCell
+                  padding="checkbox"
+                  onClick={event => handleClick(event, row.id)}
+                >
+                  <Checkbox
+                    checked={isItemSelected}
+                    inputProps={{ "aria-labelledby": labelId }}
+                  />
+                </TableCell>
+              )}
+
+              {// 普通格子
+              headCells.map((column, index) => {
+                let columnContent;
+                let originalContent = row[column.name];
+                let className = column.className;
+
+                if (column.lookup)
+                  className =
+                    _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
+                columnContent =
+                  listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值
+
+                const handleCellClick = column.onClick
+                  ? column.onClick.bind(null, rowId)
+                  : null;
+
+                const SolveRef = React.forwardRef((props, ref) => (
+                  <div {...props} ref={ref}>
+                    {columnContent}
+                  </div>
+                )); // 显示tip强制需要这段
+
+                return (
+                  index >= 0 &&
+                  index < headCells.length && (
+                    <TableCell
+                      key={`${rowId}_${index}`}
+                      align={column.align}
+                      onClick={handleCellClick}
+                      className={className}
+                    >
+                      <Tooltip title={`${originalContent}`}>
+                        <SolveRef />
+                      </Tooltip>
+                    </TableCell>
+                  )
+                );
+              })}
+              {// 放操作按钮的格子
+              rowButtons ? (
+                <TableCell
+                  align="right"
+                  style={{ minWidth: 80 * rowButtons.length }}
+                >
+                  {rowButtons.map((buttonObj, index) => (
+                    <ActionButton
+                      key={`button_${rowId}_${index}`}
+                      {...buttonObj}
+                      id={rowId}
+                      row={row}
+                      getPaginationFromState={getPaginationFromState}
+                    />
+                  ))}
+                </TableCell>
+              ) : null}
+            </TableRow>
+          );
+        })}
+        {emptyRows > 0 && (
+          <TableRow style={{ height: 33 * emptyRows }}>
+            <TableCell colSpan={headCells.length + 1 + (selectBox && 1) || 0} />
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+
+  const imageListData = onImageListMapping(dataRows) || []
+  const imageListClick =(typeof(onRowImageClick)==='function') ? onRowImageClick.bind(null, getPaginationFromState()): null
+  const imageListBody = <div style={{padding:10}}><ImageList tileData={imageListData} onClick={imageListClick}/></div>
+
   const insideTable = (
     <>
       {/* -------------------toolbar (search; select submit)----------------- */}
@@ -260,134 +392,11 @@ export const CreinoxTable = ({
         dataModel={dataModel}
         toolbarButtons={toolbarButtons}
         getPaginationFromState={getPaginationFromState}
-        isBorder = {isBorder}
+        isBorder={isBorder}
       />
+      
 
-      <div className={classes.tableWrapper}>
-        <Table
-          className={classes.table}
-          aria-labelledby={tableTitle}
-          stickyHeader={false}
-          size="small"
-          aria-label={tableTitle}
-          style={{ minWidth: "1200px" }}
-        >
-          {/* -------------------head (on select; headCells)----------------- */}
-          <TableHeadWrapper
-            classes={classes}
-            numSelected={selected.length}
-            selectBox={selectBox}
-            order={dataPagination.order}
-            orderBy={dataPagination.orderBy}
-            onSelectAllClick={handleSelectAllClick}
-            onRequestSort={handleRequestSort}
-            dataModel={dataModel}
-            rowCount={rowLength}
-            headCells={headCells}
-            isButtons={rowButtons.length > 0}
-          />
-          <TableBody>
-            {dataRows.map((row, rowIndex) => {
-              const isItemSelected = isSelected(row.id);
-              const labelId = `enhanced-table-checkbox-${rowIndex}`;
-              const rowId = row.id;
-
-              const handleRowDbClick = ((typeof(onRowDbClick) === 'function') 
-                                        && onRowDbClick.bind(null, getPaginationFromState(),rowId, row)) ||
-                                        null;
-
-
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.id}
-                  onDoubleClick={handleRowDbClick}
-                  selected={isItemSelected}
-                >
-                  {/* 放选择框 */}
-                  {selectBox && (
-                    <TableCell
-                      padding="checkbox"
-                      onClick={event => handleClick(event, row.id)}
-                    >
-                      <Checkbox
-                        checked={isItemSelected}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </TableCell>
-                  )}
-
-                  {// 普通格子
-                  headCells.map((column, index) => {
-                    let columnContent;
-                    let originalContent = row[column.name];
-                    let className = column.className;
-
-                    if (column.lookup)
-                      className =
-                        _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
-                    columnContent =
-                      listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值
-
-                    const handleCellClick = column.onClick
-                      ? column.onClick.bind(null, rowId)
-                      : null;
-
-                    const SolveRef = React.forwardRef((props, ref) => (
-                      <div {...props} ref={ref}>
-                        {columnContent}
-                      </div>
-                    )); // 显示tip强制需要这段
-
-                    return (
-                      index >= 0 &&
-                      index < headCells.length && (
-                        <TableCell
-                          key={`${rowId}_${index}`}
-                          align={column.align}
-                          onClick={handleCellClick}
-                          className={className}
-                        >
-                          <Tooltip title={`${originalContent}`}>
-                            <SolveRef />
-                          </Tooltip>
-                        </TableCell>
-                      )
-                    );
-                  })}
-                  {// 放操作按钮的格子
-                  rowButtons ? (
-                    <TableCell
-                      align="right"
-                      style={{ minWidth: 80 * rowButtons.length }}
-                    >
-                      {rowButtons.map((buttonObj, index) => (
-                        <ActionButton
-                          key={`button_${rowId}_${index}`}
-                          {...buttonObj}
-                          id={rowId}
-                          row = {row}
-                          getPaginationFromState={getPaginationFromState}
-                        />
-                      ))}
-                    </TableCell>
-                  ) : null}
-                </TableRow>
-              );
-            })}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 33 * emptyRows }}>
-                <TableCell
-                  colSpan={headCells.length + 1 + (selectBox && 1) || 0}
-                />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <div className={classes.tableWrapper}>{isImageListMode? imageListBody : tableBody}</div>
 
       {/* ------------------- pagination ----------------- */}
       <TablePaginationWrapper
@@ -397,6 +406,11 @@ export const CreinoxTable = ({
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+
+
+
+
+
     </>
   );
 
@@ -404,8 +418,10 @@ export const CreinoxTable = ({
   return (
     <div className={classes.root}>
       {isBorder ? (
-        <Paper className={classes.paper}>{insideTable}</Paper>): insideTable
-      }
+        <Paper className={classes.paper}>{insideTable}</Paper>
+      ) : (
+        insideTable
+      )}
     </div>
   );
 };

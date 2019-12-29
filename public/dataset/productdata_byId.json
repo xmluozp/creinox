@@ -1,0 +1,54 @@
+{
+    "row": 
+        {
+            "id": 1,
+            "code": "CR8328",
+            "name": "滚坑冰桶",
+            "ename": "Wine Cooler With Pit Line",
+            "shortname": "滚坑冰桶",
+            "eshortname": "Wine Cooler With Pit Line",
+            "buyPrice": 11.5,
+            "sellPrice": 18.5,
+            "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
+            "spec2": "",
+            "spec3": "",
+            "barcode": "testNoCode",
+            "thickness": 0.6,
+            "unitWeight": 0,
+            "retriveTime": "2019-12-27 13:00",
+            "updateAt": "2019-12-27 13:00",
+            "memo": "这里是测试的备注信息",
+            "isOEM": true,
+            "isSemiProduct": true,
+            "isEndProduct": true,
+
+
+            "polishing_id": 1,
+            "polishing_id.name": "测试抛光",  
+            "texture_id": 6,
+            "texture_id.name": "测试材质",
+            
+            "retriever_id": 1,
+            "retriever_id.userName": "jack@gmail.com",
+            "updateUser_id": 1,
+            "updateUser_id.userName": "jack@gmail.com",
+
+            "category_id": 2,
+            "category_id.name": "浴室工具",
+
+            "image_id": "1",
+			"image_id.row": {
+                "id": 1,
+                "name": "某图片",
+                "sort": 0,
+                "height": 150,
+                "width": 100,
+                "path": "uploads/001.jpg",
+                "thumbnailPath": "uploads/001_thumb.jpg",
+                "ext": "jpg",
+                "createAt": "2019-12-23",
+                "gallary_folder_id": 1,
+                "gallary_folder_id.memo": "产品/滚坑冰桶"
+				}
+        }
+}

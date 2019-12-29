@@ -39,7 +39,13 @@ export const embedListProvider = (
     onPutUpdate,
     onGetById,
     errorById,
-    dataById
+    dataById,
+    modalFormCreateProps = {},
+    modalFormEditProps = {},
+    modalInputCreateProps = {},
+    modalInputEditProps = {},
+
+    isBorder = false
   }) => {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
@@ -121,7 +127,7 @@ export const embedListProvider = (
           toolbarButtons={toolbarButtons}
           onRowDbClick={handleOnEditOpen}
           searchBar={searchBar}
-          isBorder={false}
+          isBorder={isBorder}
         />
 
         <MyModalFormWithData
@@ -135,6 +141,8 @@ export const embedListProvider = (
           errorById={errorById}
           dataById={dataById}
           title={TITLE_EDIT}
+          modalFormProps={modalFormEditProps}
+          modalInputProps={modalInputEditProps}
           componentInputs={FormInputs}
         />
 
@@ -148,6 +156,8 @@ export const embedListProvider = (
           onGetById={onGetById}
           errorById={errorById}
           title={TITLE_CREATE}
+          modalFormProps={modalFormCreateProps}
+          modalInputProps={modalInputCreateProps}
           componentInputs={FormInputs}
         />
       </>

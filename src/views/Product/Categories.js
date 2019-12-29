@@ -263,7 +263,8 @@ const FormInputs = () => {
     <>
       <Inputs.MyInput inputid="name" />
       <Inputs.MyInput inputid="ename" />
-      <Inputs.MyInput inputid="startCode" />
+      <Inputs.MyInput inputid="prefix" />
+      <Inputs.MyInput inputid="currentCode" />
       <Inputs.MyInput multiline inputid="memo" />
       <Inputs.MyInput multiline inputid="ememo" />
     </>
