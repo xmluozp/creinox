@@ -12,8 +12,7 @@ export const ICONS = {
     PICK: (className) => <i className={`icon-options-vertical icons ${className}`}></i>,
     IMAGE: (className) => <i className={`icon-picture icons ${className}`}></i>,
     LIST: (className) => <i className={`icon-list icons ${className}`}></i>,
-
+    HISTORY: (className) => <i className={`icon-book-open icons ${className}`}></i>,
     
-  
     ACTIVE: (className) => <i className={`cui-settings icons ${className}`}></i>,
   }

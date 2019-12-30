@@ -9,19 +9,16 @@ import Tab from "@material-ui/core/Tab";
 
 //------redux
 import { connect } from "react-redux";
-import { productActions as dataActions } from "../../_actions";
-import { productModel as dataModel } from "../../_dataModel";
+import { commodityActions as dataActions } from "../../_actions";
+import { commodityModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "../../components";
 // import { enumsLabel } from "../../_constants";
 import { history, h_fkFetch, h_filterImage } from "../../_helper";
-import { EmbedProductPurchaseGroup } from "./EmbedProductPurchase";
-import { EmbedProductComponent } from "./EmbedProductComponent";
 
 import { ICONS } from "../../_constants";
 
-const EDITURL = "/product/products";
+const EDITURL = "/commodity/commodities";
 // const LISTURL = EDITURL
-const PURCHASEURL = "/product/productpurchases";
 
 export const withProduct = () => {
   const CurrentPage = ({
@@ -56,20 +53,21 @@ export const withProduct = () => {
       setProductInjector(internalInjector);
     };
 
-    // 填入复制的产品
+    // 从产品搜索字段填入
     const handleGetSourceProductOnChange = (e, element, id) => {
       // fetch disposable data
       h_fkFetch("product", [id], "get_disposable_byId")
         .then(response => {
           if (response && response.id) {
-            delete response["id"];
-            delete response["image_id"];
-            delete response["image_id.row"];
-            delete response["updateAt"];
-            delete response["createAt"];
-            delete response["updateUser_id"];
-
-            productInjector(response);
+            productInjector({
+              product_id: response.id,
+              code: response.code,
+              name: response.name,
+              ename: response.ename,
+              shortname: response.ename,
+              eshortname: response.eshortname,
+              price: response.sellPrice
+            });
           }
         })
         .catch(error => {
@@ -77,28 +75,11 @@ export const withProduct = () => {
         });
     };
 
-    // 选择产品类型
-    const handleCategorySelect = node => {
-      if (node && node.prefix && node.currentCode) {
-        let currentCodeInt = parseInt(node.currentCode, 10);
-        currentCodeInt = Number.isInteger(currentCodeInt) ? currentCodeInt : 0;
-        // prefix & ( padzero(currentCode + 1)) 前缀，当前最大数值加一补零
-        productInjector({
-          code: `${node.prefix}${_.padStart(
-            currentCodeInt + 1,
-            node.currentCode.length,
-            "0"
-          )}`
-        });
-      }
-    };
-
-    // 保存产品
+    // 保存
     const handleOnSubmit = values => {
       if (isFromEdit) {
         // 如果没有新的图片，就不上传图片
-        values = h_filterImage(values, "image_id.row");
-
+        // values = h_filterImage(values, "image_id.row");
         onPutUpdate(values);
       } else {
         // onPostCreate(values, history.location.pathname);
@@ -112,30 +93,14 @@ export const withProduct = () => {
     // =============== 编辑页加载的值 ====================================={
     const defaultValues = isFromEdit && dataById && dataById.row;
 
-    // values when add new productPurchase
-    const preConditionsOfProductPurchase = defaultValues && {
-      product_id: id,
-      spec1: defaultValues.spec1,
-      spec2: defaultValues.spec2,
-      spec2: defaultValues.spec2,
-
-      polishing_id: defaultValues.polishing_id,
-      texture_id: defaultValues.texture_id,
-      thickness: defaultValues.thickness,
-      unitWeight: defaultValues.unitWeight,
-      isComponent: true,
-      price: defaultValues.buyPrice
+    // 搜索下属产品时候的条件
+    const preConditionsOfProducts = defaultValues && {
+      commodity_id: id
     };
-    const embedRowButtons = [
-      {
-        label: "历史记录",
-        color: "success",
-        url: PURCHASEURL,
-        icon: ICONS.HISTORY("mr-1")
-      }
-    ];
+
     // =============== 编辑页加载的值 =====================================}
 
+    // 排版参考原系统“商品合并”
     const basicProperties = (
       <CreinoxForm
         defaultValues={defaultValues}
@@ -151,20 +116,17 @@ export const withProduct = () => {
               <Grid item lg={8} md={8} xs={12}>
                 <Inputs.MyComboboxAsyncFK
                   tableName="product"
-                  label="参考产品"
+                  label="从现有产品复制属性"
                   actionName="get_disposable_dropdown"
                   disabled={disabled}
                   onChange={handleGetSourceProductOnChange}
                 />
               </Grid>
-              <Grid item lg={4} md={4} xs={12}>
-                <Inputs.MySwitch inputid="isOEM" disabled={disabled} />
-              </Grid>
+
               <Grid item lg={8} md={8} xs={12}>
                 <Inputs.MyCategoryPicker
                   inputid="category_id"
                   disabled={disabled}
-                  onSelect={handleCategorySelect}
                 />
               </Grid>
               <Grid item lg={4} md={8} xs={12}>
@@ -184,61 +146,11 @@ export const withProduct = () => {
                 <Inputs.MyInput inputid="eshortname" disabled={disabled} />
               </Grid>
 
-              <Grid item lg={6} md={4} xs={12}>
-                <Inputs.MyInput inputid="spec1" disabled={disabled} />
-              </Grid>
-              <Grid item lg={6} md={4} xs={12}>
-                <Inputs.MyInput inputid="spec2" disabled={disabled} />
-              </Grid>
-              <Grid item lg={6} md={4} xs={12}>
-                <Inputs.MyInput inputid="spec3" disabled={disabled} />
-              </Grid>
-              <Grid item lg={6} md={4} xs={12}>
-                <Inputs.MyInput inputid="barcode" disabled={disabled} />
-              </Grid>
-
-              <Grid item lg={6} xs={12}>
-                <Inputs.MyComboboxPolishing
-                  inputid="polishing_id"
-                  disabled={disabled}
-                />
-              </Grid>
-              <Grid item lg={6} xs={12}>
-                <Inputs.MyComboboxTexture
-                  inputid="texture_id"
-                  disabled={disabled}
-                />
-              </Grid>
-
-              <Grid item lg={6} md={4} xs={12}>
-                <Inputs.MyInput inputid="thickness" disabled={disabled} />
-              </Grid>
-              <Grid item lg={6} md={4} xs={12}>
-                <Inputs.MyInput inputid="unitWeight" disabled={disabled} />
-              </Grid>
-
               <Grid item lg={12} md={12} xs={12}>
                 <Inputs.MyInput
                   inputid="memo"
                   multiline
                   rows={1}
-                  disabled={disabled}
-                />
-              </Grid>
-
-              {/* 资料责任人信息 */}
-              <Grid item lg={6} xs={12}>
-                <Inputs.MyComboboxFK
-                  inputid="retriever_id"
-                  optionLabel="userName"
-                  tableName="user"
-                  disabled={disabled}
-                />
-              </Grid>
-
-              <Grid item lg={6} xs={12}>
-                <Inputs.MyDatePicker
-                  inputid="retriveTime"
                   disabled={disabled}
                 />
               </Grid>
@@ -262,21 +174,11 @@ export const withProduct = () => {
                   </Grid>
                 </>
               ) : null}
-
-              {/* 是否生成商品 */}
-              {!isFromEdit ? (
-                <Grid item lg={12} md={12} xs={12}>
-                  <Inputs.MySwitch
-                    inputid="isCreateCommodity"
-                    disabled={disabled}
-                  />
-                </Grid>
-              ) : null}
             </Grid>
           </Grid>
           <Grid item lg={4} md={4} xs={12}>
             <Grid container spacing={2}>
-              <Inputs.MyImage inputid="image_id.row" disabled={disabled} />
+              <Inputs.MyImage inputid="image_id.row" disabled={true} />
             </Grid>
           </Grid>
         </Grid>
@@ -320,10 +222,7 @@ export const withProduct = () => {
                   aria-label="tabs"
                 >
                   <Tab label="基本属性" />
-                  <Tab label="工厂报价" disabled={!isFromEdit} />
-                  <Tab label="由什么部件构成" disabled={!isFromEdit} />
-                  <Tab label="是什么产品的部件" disabled={!isFromEdit} />
-                  <Tab label="商品信息" disabled={!isFromEdit} />
+                  <Tab label="对应产品（生产侧信息）" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}
@@ -331,23 +230,7 @@ export const withProduct = () => {
                   {basicProperties}
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
-                  <EmbedProductPurchaseGroup
-                    rowButtons={embedRowButtons}
-                    preConditions={{ product_id: id }}
-                    isBorder={false}
-                    modalFormCreateProps={{
-                      preConditions: preConditionsOfProductPurchase
-                    }}
-                  />
-                </TabPanel>
-                <TabPanel value={tabSelect} index={2}>
-                  <EmbedProductComponent product_id={id} isParent={true} />
-                </TabPanel>
-                <TabPanel value={tabSelect} index={3}>
-                  <EmbedProductComponent product_id={id} isParent={false} />
-                </TabPanel>
-                <TabPanel value={tabSelect} index={4}>
-                  商品关联与组合
+                  一个选择框可以搜索添加多个关联产品。下面是产品列表，关联的每一个产品都显示在列表中。每个列表项都可链接到相应的产品详情页。一个按钮用于解除关联
                 </TabPanel>
               </Card>
             </Col>
@@ -361,8 +244,8 @@ export const withProduct = () => {
 
   function mapState(state) {
     return {
-      dataById: state.productData.dataById,
-      errorById: state.productData.errorById
+      dataById: state.commodityData.dataById,
+      errorById: state.commodityData.errorById
     };
   }
 

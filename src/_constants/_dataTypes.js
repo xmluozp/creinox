@@ -11,5 +11,6 @@ export const _DATATYPES = {
     GALLERY: "GALLERY",
     DECIMAL:"DECIMAL",
     ROW: "ROW",
+    LIST:"LIST",
     ENUM: enumsLabel
 }

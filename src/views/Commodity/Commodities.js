@@ -11,8 +11,8 @@ import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
 import { history } from "../../_helper";
 
 // ******************************************************************* page setting
-import { productActions as dataActions } from "../../_actions";
-import { productModel as dataModel } from "../../_dataModel";
+import { commodityActions as dataActions } from "../../_actions";
+import { commodityModel as dataModel } from "../../_dataModel";
 
 // ******************************************************************* page setting
 
@@ -22,15 +22,15 @@ import { productModel as dataModel } from "../../_dataModel";
  * @param {*} EDITURL 
  * @param {*} CREATEURL 
  */
-export const withProductList = (
+export const withCommodityList = (
   pageCategoryId = 0,
-  EDITURL = "/product/products",
-  CREATEURL = "/product/product",
+  EDITURL = "/commodity/commodities",
+  CREATEURL = "/commodity/commodity",
 ) => {
   // inject data
   const MyTable = withDatatableStore(
     CreinoxTable, // tablecomponent
-    { data: "productData" }, // data source
+    { data: "commodityData" }, // data source
     dataActions.get_bySearch // fetch action
   );
 
@@ -70,7 +70,7 @@ export const withProductList = (
       { name: "name" },
       { name: "shortname" },
       { name: "ename" },
-      { name: "spec1" }
+      { name: "price" }
     ];
 
     // ============================================= Table Settings
@@ -117,24 +117,23 @@ export const withProductList = (
     <>
       <Inputs.MyCategoryPicker inputid="category_id" />
       <Inputs.MyInput inputid="code" />
-
-       {/* 这里看的是客户的产品。看客户商品另外 */}
-      <Inputs.MyInput inputid="comodity.code" />
       <Inputs.MyComboboxFK
-        inputid="companyFactory.id"
-        label="工厂"
+        inputid="companyDomesticCustomer.id"
+        label="内销客户"
         optionLabel="name"
         tableName="company"
-        stateName="dropdown_factory"
-        preConditions={{ companyType: enums.companyType.factory }}
+        stateName="dropdown_domesticCustomer"
+        preConditions={{ companyType: enums.companyType.domesticCustomer }}
       />
 
       <Inputs.MyComboboxFK
-        inputid="retriever_id"
-        optionLabel="userName"
-        tableName="user"
+        inputid="companyOverseasCustomer.id"
+        label="外贸客户"
+        optionLabel="name"
+        tableName="company"
+        stateName="dropdown_overseasCustomer"
+        preConditions={{ companyType: enums.companyType.overseasCustomer }}
       />
-      <Inputs.MyDateRangePicker inputid="retriveTime" />
     </>
   );
 
@@ -148,4 +147,4 @@ export const withProductList = (
   return connect(null, actionCreators)(CurrentPage);
 };
 
-export default withProductList();
+export default withCommodityList();

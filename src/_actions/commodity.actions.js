@@ -1,12 +1,12 @@
-import { COMPANY as CONST, LOADING, enums } from "../_constants";
-import { companyService as service } from "../_services";
+import { COMMODITY as CONST, LOADING } from "../_constants";
+import { commodityService as service } from "../_services";
 import { alertActions } from "./";
 // import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'
 
-export const companyActions = {
+export const commodityActions = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -14,7 +14,12 @@ export const companyActions = {
   put_update,
   _delete,
 
-  get_disposable_dropdown
+  // customized
+  get_disposable_dropdown,
+  get_bySearch_getProduct,
+  get_bySearch_getCommodity,
+  post_create_assemble,
+  _delete_disassemble
 };
 
 const done = (payload, type) => {
@@ -28,34 +33,14 @@ const loaded = { type: LOADING.SUCCESS };
 const loadedFailure = { type: LOADING.FAILURE };
 
 // FETCH  ---------------------------------------------
-function get_dropdown({ companyType = 0 }) {
+function get_dropdown(pagination, searchTerms = {}) {
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown(companyType).then(
+    return service.get_dropdown(pagination, searchTerms).then(
       response => {
-        const payload = {};
         dispatch(loaded);
-        switch (companyType) {
-          case enums.companyType.internal:
-            payload.dropdown_internal = response;
-            break;
-          case enums.companyType.factory:
-            payload.dropdown_factory = response;
-            break;
-          case enums.companyType.domesticCustomer:
-            payload.dropdown_domesticCustomer = response;
-            break;
-          case enums.companyType.overseasCustomer:
-            payload.dropdown_overseasCustomer = response;
-            break;
-          case enums.companyType.shippingCompany:
-            payload.dropdown_shippingCompany = response;
-            break;
-          default:
-            break;
-        }
+        dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
 
-        dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
         return response;
       },
       error => {
@@ -107,10 +92,9 @@ function post_create(item, callBack = () => {}) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
-        // const id = (response.row && response.row.id) || null
-        const id = "1";
+
+        const id = (response.row && response.row.id) || 0;
         callBack(id);
-        // if (page) history.push(page + "/" + id);
       },
       error => {
         dispatch(loadedFailure);
@@ -130,7 +114,6 @@ function put_update(item, callBack = () => {}) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
-
         callBack(response);
       },
       error => {
@@ -158,23 +141,93 @@ function _delete(pagination, id) {
   };
 }
 
-
 //======================== customized
 
 function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
+    return service.get_dropdown({}, { ...preConditions, code: keyword }).then(
+      response => {
+        dispatch(loaded);
+        let returnValue = [];
+        if (response && response.rows) {
+          returnValue = response.rows.map(item => {
+            item.name = `[${item.code}] ${item.name}`;
+            return item;
+          });
+        }
+        return { rows: returnValue };
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
 
-    console.log("preConditions", preConditions)
-    return service.get_disposable_dropdown({...preConditions, name:keyword })
+function get_bySearch_getProduct(pagination, searchTerms = {}) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_bySearch_getProduct(pagination, searchTerms).then(
+      response => {
+        dispatch(loaded);
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
+
+function get_bySearch_getCommodity(pagination, searchTerms = {}) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_bySearch_getCommodity(pagination, searchTerms).then(
+      response => {
+        dispatch(loaded);
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
+
+function post_create_assemble(item, callBack = () => {}) {
+  console.log("action assemble:", item);
+  return dispatch => {
+    dispatch(loading);
+    return service.post_create_assemble(item).then(
+      response => {
+        dispatch(loaded);
+        dispatch(alertActions.success("添加成功"));
+
+        callBack();
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure("添加失败" + error.toString()));
+      }
+    );
+  };
+}
+
+function _delete_disassemble(pagination, commodity_id, product_id) {
+  console.log("disassemble:", commodity_id, product_id);
+  return dispatch => {
+    return service
+      ._delete_disassemble(pagination, commodity_id, product_id)
       .then(
         response => {
-          dispatch(loaded);
-          return response
+          dispatch(alertActions.success("解除成功"));
         },
         error => {
-          dispatch(loadedFailure);
-          dispatch(failure(error.toString()));
+          dispatch(alertActions.error("解除失败"));
         }
       );
   };

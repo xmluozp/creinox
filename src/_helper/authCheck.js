@@ -13,6 +13,7 @@ const allAuthList = [
   "product",
   "categories",
   "productpurchase",
+  "commodity",
 ];
 // const testAuthList = 'system,company,product'
 

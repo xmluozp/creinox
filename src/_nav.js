@@ -17,7 +17,7 @@ const navs = {
       icon: 'icon-speedometer',
     },
     {
-      name: '产品',
+      name: '产品生产',
       url: '#',
       icon: 'icon-puzzle',
       children: [
@@ -35,6 +35,18 @@ const navs = {
           name: '工厂报价',
           url: '/product/productpurchases',
           authTag:'productpurchase',
+        }
+      ]
+    },
+    {
+      name: '商品',
+      url: '#',
+      icon: 'icon-puzzle',
+      children: [
+        {
+          name: '商品列表',
+          url: '/commodity/commodities',
+          authTag:'commodity',
         }
       ]
     },

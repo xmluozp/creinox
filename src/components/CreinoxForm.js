@@ -30,7 +30,10 @@ export class CreinoxForm extends React.Component {
   submitForm(e) {
     e.preventDefault();
     if (typeof this.props.actionSubmit === "function") {
-      this.props.actionSubmit({ ...this.state, ...this.props.preStates });
+      // preStates放后面不然会被一大堆 key:"" 的覆盖
+      const submitValues = { ...this.state, ...this.props.preStates }
+      delete submitValues.isComponentLoaded
+      this.props.actionSubmit(submitValues);
     }
   }
 
@@ -68,7 +71,10 @@ export class CreinoxForm extends React.Component {
     });
 
     if (typeof onGetInjector === "function") {
+
+      
       onGetInjector(() => newValues => {
+        
         const newState = {};
         Object.keys(newValues).map(value => {
           if (this.state.hasOwnProperty(value)) {

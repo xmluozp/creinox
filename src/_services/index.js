@@ -9,7 +9,9 @@ export * from './region.service';
 
 export * from './product.service';
 export * from './category.service';
+export * from './productpurchase.service'
 
+export * from './commodity.service'
 /*
 convintion:
     read开头的是get

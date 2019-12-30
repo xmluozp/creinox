@@ -16,7 +16,10 @@ export const productActions = {
 
   // customized
   get_disposable_dropdown,
-  get_disposable_byId
+  get_disposable_byId,
+  get_bySearch_component,
+  post_create_assemble,
+  _delete_disassemble,
 };
 
 const done = (payload, type) => {
@@ -139,12 +142,11 @@ function _delete(pagination, id) {
 }
 
 //======================== customized
-// todo: 复制粘贴用。取一个产品
 
-function get_disposable_dropdown(preConditions, code) {
+function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown({},{...preConditions,code: code})
+    return service.get_dropdown({},{...preConditions, code: keyword})
       .then(
         response => {
           dispatch(loaded);
@@ -155,7 +157,7 @@ function get_disposable_dropdown(preConditions, code) {
               return item;
             })
           }
-          return returnValue;
+          return {rows:returnValue};
         },
         error => {
           dispatch(loadedFailure);
@@ -181,6 +183,55 @@ function get_disposable_byId(id) {
       error => {
         dispatch(loadedFailure);
         dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
+
+function get_bySearch_component(pagination, searchTerms = {}) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_bySearch_component(pagination, searchTerms).then(
+      response => {
+        dispatch(loaded);
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
+
+function post_create_assemble(item, callBack = () => {}) {
+  console.log("action assemble:", item);
+  return dispatch => {
+    dispatch(loading);
+    return service.post_create_assemble(item).then(
+      response => {
+        dispatch(loaded);
+        dispatch(alertActions.success("添加成功"));
+
+        callBack();
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure("添加失败" + error.toString()));
+      }
+    );
+  };
+}
+
+function _delete_disassemble(pagination, parent_id, child_id) {
+  console.log("disassemble:", parent_id, child_id);
+  return dispatch => {
+    return service._delete_disassemble(pagination, parent_id, child_id).then(
+      response => {
+        dispatch(alertActions.success("解除成功"));
+      },
+      error => {
+        dispatch(alertActions.error("解除失败"));
       }
     );
   };

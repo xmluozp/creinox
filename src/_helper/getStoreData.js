@@ -12,6 +12,7 @@ export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
         const actionPromise = _.get(myActions, [`${table}Actions`, actionName])
         // const data = await myActions.roleActions.readAll()(store.dispatch)
 
+ 
         const data = await actionPromise(...params)(store.dispatch) // 调用了这里导致的
             .then((response, reject) => {          
                 return response; 
@@ -30,6 +31,18 @@ export async function h_fkPicker(table, id) {
     const rows = await h_fkFetchOnce(table);
     return _.find(rows, ['id', id]);
 }
+
+export async function h_fkFetchOnceAsync(table, params=[], actionName="get_dropdown") {
+    
+    let rows;
+    const dataSource = await h_fkFetch(table, params, actionName);
+    rows = _.get(dataSource, "rows");
+
+    if(!rows){return Promise.reject()}
+
+    return rows; 
+}
+
 
 export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[]) {
 

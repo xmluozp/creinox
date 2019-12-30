@@ -13,6 +13,9 @@ import region from "./regionReducer";
 
 import product from "./productReducer";
 import category from "./categoryReducer";
+import productpurchase from "./productpurchaseReducer";
+
+import commodity from "./commodityReducer";
 
 
 // usage: xxxData: reducerMaker(null, tableName="XXXTABLE")
@@ -20,22 +23,32 @@ import { reducerMaker } from "../_helper/facelessMaker";
 
 // 多表格的时候这里是所有的reducer
 export default combineReducers({
+
+  // 全局
   authData: auth, // login status
   loadingData: loading,
   alertData: alert,
 
+  // 角色
   roleData: role,
   userData: user,
+
+  // 通用
   commonitemData: commonitem,
   imageData: image,
 
+  // 公司、组织
   companyData: company,
   regionData: region,
 
-  productData: product,
+  // 产品、商品
   categoryData: category,
-  productpurchaseData: reducerMaker(null, "PRODUCTPURCHASE"),
+  productData: product,
+  productpurchaseData: productpurchase,
 
+  commodityData: commodity,
+
+  // faceless 的单纯信息表
   rostercontactData: reducerMaker(null, "ROSTERCONTACT"),
   bankaccountData: reducerMaker(null, "BANKACCOUNT")
 });

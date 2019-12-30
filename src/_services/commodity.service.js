@@ -2,7 +2,7 @@ import { authHeader, handleResponse, h_queryString } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
-export const productService = {
+export const commodityService = {
     get_dropdown,
     get_bySearch,
     get_byId,
@@ -10,12 +10,13 @@ export const productService = {
     put_update,
     _delete: _delete,
 
-    get_bySearch_component,
+    get_bySearch_getProduct,
+    get_bySearch_getCommodity,
     post_create_assemble,
     _delete_disassemble,
 };
 
-const TABLENAME = "product";
+const TABLENAME = "commodity";
 
 // const url = 'http://localhost:3000/api/';
 function get_dropdown(pagination, searchTerms) {
@@ -27,7 +28,7 @@ function get_dropdown(pagination, searchTerms) {
     console.log("service get dropdown:", searchTerms);
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/productdata.json'
+    const url = './dataset/commoditydata.json'
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
 
 }
@@ -41,7 +42,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/productdata.json'
+    const url = './dataset/commoditydata.json'
     console.log("search service:", queryString);
     console.log("search terms:", searchTerms);
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
@@ -55,7 +56,7 @@ function get_byId(id) {
         headers: authHeader()
     };
 
-    const url = './dataset/productdata_byId.json'
+    const url = './dataset/commoditydata_byId.json'
     console.log("getId service,", id)
 
     // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
@@ -84,8 +85,8 @@ function _delete(pagination, id) {
 
 // ==============================================================================
 
-// TODO: url 取的是 product_component 这张表而不是product. 返回的是product
-function get_bySearch_component(pagination, searchTerms) {
+// TODO: url 取的是 commodity_product 这张表. 根据commodity搜索，返回product
+function get_bySearch_getProduct(pagination, searchTerms) {
 
     const requestOptions = {
         method: 'GET',
@@ -94,21 +95,39 @@ function get_bySearch_component(pagination, searchTerms) {
 
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = searchTerms && searchTerms.parent_id? './dataset/productcomponentdata.json' :  './dataset/productcomponentdata2.json'
+    const url = './dataset/commoditydata.json'
 
 
     console.log("search service:", queryString);
     console.log("search terms:", searchTerms);
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
-
 }
+
+// TODO: url 取的是 commodity_product 这张表. 根据 product 搜索，返回 commodity
+function get_bySearch_getCommodity(pagination, searchTerms) {
+
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
+
+    const url = './dataset/commoditydata.json' 
+
+
+    console.log("search service:", queryString);
+    console.log("search terms:", searchTerms);
+    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+}
+
 
 function post_create_assemble(item) {
     // TODO: 创建的是product_component表的记录，不是product的
     return new Promise(resolve => resolve("on assemble service"))
 }
 
-function _delete_disassemble(pagination, parent_id, child_id) {
-    console.log("on disassemble service, parent:", parent_id, "child", child_id);
+function _delete_disassemble(pagination, commodity_id, product_id) {
+    console.log("on disassemble service, commodity:", commodity_id, "product", product_id);
     return new Promise(resolve => resolve("on disassemble service"))
 }

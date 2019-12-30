@@ -32,8 +32,7 @@ const headCells = [
 // ============================================= Search Panel
 const searchBar = (
   <>
-    <Inputs.MyInput inputid="accountName" />
-    <Inputs.MyInput inputid="memo" />
+    <Inputs.MyInput inputid="code" />
   </>
 );
 // ============================================= Modal inputs
@@ -55,18 +54,18 @@ const FormInputs = ({onLoad}) => {
       <Grid container spacing={2}>
       <Grid item lg={8} md={8} xs={12}>
           <Inputs.MyComboboxAsyncFK
-            tableName="product"
             inputid="product_id"
+            tableName="product"
             actionName="get_disposable_dropdown"
             onLoad = {onLoad}
           />
         </Grid>      
         <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyComboboxFK
+          <Inputs.MyComboboxAsyncFK
             inputid="company_id"
             tableName="company"
-            stateName="dropdown_factory"
-            params={[{ companyType: enums.companyType.factory }]}
+            actionName="get_disposable_dropdown"
+            preConditions = {{companyType: enums.companyType.factory}}
           />
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
@@ -179,8 +178,24 @@ const FormInputs = ({onLoad}) => {
 
 // ******************************************************************* page setting
 
-export default embedListProvider(
-  dataActions,
+const dataActionsHistory = {...dataActions, get_bySearch: dataActions.get_bySearch_history}
+const dataActionsGroupBy = {...dataActions, get_bySearch: dataActions.get_bySearch_groupByCompany}
+
+
+
+export const EmbedProductPurchaseHistory = embedListProvider(
+  dataActionsHistory,
+  dataModel,
+  DATA_STORE,
+  TITLE_EDIT,
+  TITLE_CREATE,
+  FormInputs,
+  headCells,
+  searchBar
+);
+
+export const EmbedProductPurchaseGroup = embedListProvider(
+  dataActionsGroupBy,
   dataModel,
   DATA_STORE,
   TITLE_EDIT,

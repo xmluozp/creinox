@@ -6,6 +6,7 @@ export * from './region'
 export * from './category'
 export * from './product'
 export * from './productpurchase'
+export * from './commodity'
 
 
 export * from './rostercontact'

@@ -40,6 +40,7 @@ export const embedListProvider = (
     onGetById,
     errorById,
     dataById,
+    rowButtons = [],
     modalFormCreateProps = {},
     modalFormEditProps = {},
     modalInputCreateProps = {},
@@ -91,7 +92,7 @@ export const embedListProvider = (
     };
 
     // ============================================= Table Settings
-    const rowButtons = [
+    const embedRowButtons = [
       {
         label: "详情",
         color: "primary",
@@ -123,7 +124,7 @@ export const embedListProvider = (
           headCells={headCells}
           dataModel={dataModel}
           preConditions={preConditions}
-          rowButtons={rowButtons}
+          rowButtons={[...rowButtons, ...embedRowButtons]}
           toolbarButtons={toolbarButtons}
           onRowDbClick={handleOnEditOpen}
           searchBar={searchBar}

@@ -67,7 +67,7 @@ const TableToolbarWrapper = ({
         <Typography className={classes.title} color="inherit" variant="subtitle1">
           {numSelected > 0 && selectBox && 
           <Tooltip title={selectBox.title}>
-            <IconButton aria-label="delete" onClick = {selectOnAction} className="mr-2">
+            <IconButton aria-label="操作" onClick = {selectOnAction} className="mr-2">
               {selectBox.icon}
             </IconButton>
           </Tooltip>}
@@ -90,7 +90,7 @@ const TableToolbarWrapper = ({
             {
               toolbarButtons && toolbarButtons.map((item, index) => <ToolbarButton {...item} key={index} getPaginationFromState= {getPaginationFromState }/>)
             }
-            <Search dataModel={dataModel} searchTerms={searchTerms} searchBar={searchBar} onSearch={onSearch} />
+            {searchBar?<Search dataModel={dataModel} searchTerms={searchTerms} searchBar={searchBar} onSearch={onSearch} />:null}
           </>
         
     </Toolbar>

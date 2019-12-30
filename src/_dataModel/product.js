@@ -44,7 +44,8 @@ export const productModel = {
         //============== 搜索用关联到外表的字段
         "comodity.code": {label: "客户货号",  type: _DATATYPES.VARCHAR},
         "companyFactory.id": {label: "工厂",  type: _DATATYPES.SELECT},
-        "companyDomesticCustomer.id": {label: "内销客户",  type: _DATATYPES.SELECT},
-        "companyOverseasCustomer.id": {label: "外贸客户",  type: _DATATYPES.SELECT},
+
+        //============== 新建时候是否生成对应商品。非数据库字段
+        "isCreateCommodity" : {label: "直接上架为商品 (注：商品才能被销售；产品仅关联生产信息)",  type: _DATATYPES.BOOLEAN},
     }
 }

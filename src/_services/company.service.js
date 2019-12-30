@@ -8,7 +8,9 @@ export const companyService = {
     get_byId,
     post_create,
     put_update,
-    _delete: _delete
+    _delete: _delete,
+
+    get_disposable_dropdown
 };
 
 const TABLENAME = "company";
@@ -21,13 +23,30 @@ function get_dropdown(companyType) {
         headers: authHeader()
     };
     let url;
-
+    console.log("getdropdown service:", companyType);
     url = companyType === 1? './dataset/companydata.json' : './dataset/companydata2.json'
 
     return fetch(`${url}?${companyType}`, requestOptions).then(handleResponse);
 
 }
 
+function get_disposable_dropdown(searchTerms) {
+
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    const queryString = h_queryString({}, searchTerms, TABLENAME)
+    
+    let url;
+    console.log("getdropdown with search:", searchTerms);
+    console.log("searchTerms", searchTerms)
+    url = searchTerms.companyType === 1 ? './dataset/companydata.json' : './dataset/companydata2.json'
+
+    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+
+}
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 

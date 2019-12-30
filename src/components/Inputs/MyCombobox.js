@@ -9,7 +9,7 @@ import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { enums } from "../../_constants";
-import { h_fkFetchOnce, h_fkFetch } from "../../_helper";
+import { h_fkFetchOnce, h_fkFetch, h_fkFetchOnceAsync } from "../../_helper";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -88,7 +88,6 @@ export const MyCombobox = React.memo(
     };
 
     return (
-      <>
         <Autocomplete
           autoSelect={true}
           className={classes.root}
@@ -96,8 +95,7 @@ export const MyCombobox = React.memo(
           options={optionsFix}
           getOptionLabel={getOptionLabel}
           onChange={(e, item) => {
-            //setSelectedValue(item);
-            console.log("onChanged!!")
+
             const returnValue = (item && item.id) || value;
             onChange(e, id, returnValue);
           }}
@@ -117,7 +115,6 @@ export const MyCombobox = React.memo(
           )}
           onInputChange={props.onInputChange}
         />
-      </>
     );
   }
 );
@@ -127,10 +124,10 @@ export const MyComboboxAsyncFK = React.memo(props => {
   // 表名称； reducer里面的名称，默认dropdown
   const {
     tableName = "",
-    params = [],
+    preConditions = {},
     actionName = "get_dropdown",
-    onChange,
-    onLoad
+    onChange = () => {},
+    onLoad = () => {},
   } = props;
 
   const [options, setoptions] = useState([]);
@@ -145,7 +142,7 @@ export const MyComboboxAsyncFK = React.memo(props => {
     if (props.value) {
       let isSubscribed = true;
 
-      h_fkFetch(tableName, [{ id: props.value }], actionName)
+      h_fkFetchOnceAsync(tableName, [inputValue, {id: props.value, ...preConditions }], actionName)
         .then(response => {
           if (isSubscribed) {
             onLoad(response);
@@ -165,8 +162,9 @@ export const MyComboboxAsyncFK = React.memo(props => {
   const handleFetchData = e => {
     if (e.key === "Enter") {
       e.preventDefault();
-      h_fkFetch(tableName, [...params, inputValue], actionName)
+      h_fkFetchOnceAsync(tableName, [inputValue, preConditions], actionName)
         .then(response => {
+          onLoad(response);
           setoptions(response);
         })
         .catch(error => {
@@ -190,14 +188,15 @@ export const MyComboboxAsyncFK = React.memo(props => {
 // ================================================================================== Combobox FK
 export const MyComboboxFK = React.memo(props => {
   // 表名称； reducer里面的名称，默认dropdown
-  const { tableName = "", stateName = "dropdown", params = [] } = props;
+  const { tableName = "", stateName = "dropdown", preConditions = {} } = props;
 
   const [options, setoptions] = useState([]);
 
   useEffect(() => {
     let isSubscribed = true;
-    h_fkFetchOnce(tableName, stateName, params)
+    h_fkFetchOnce(tableName, stateName, [preConditions])
       .then(response => {
+
         if (isSubscribed) {
           setoptions(response);
         }
@@ -211,12 +210,6 @@ export const MyComboboxFK = React.memo(props => {
     };
   }, [tableName, stateName]);
 
-  // return options && options.length > 0 ? (
-  //   <MyCombobox {...props} options={options} />
-  // ) : (
-  //   <>...</>
-  // );
-
   return <MyCombobox {...props} options={options} />;
 });
 
@@ -226,7 +219,7 @@ export const MyComboboxPack = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );
@@ -237,7 +230,7 @@ export const MyComboboxPolishing = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );
@@ -248,7 +241,7 @@ export const MyComboboxTexture = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );
@@ -259,7 +252,7 @@ export const MyComboboxUnitType = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );
@@ -270,7 +263,7 @@ export const MyComboboxShippingType = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );
@@ -281,7 +274,7 @@ export const MyComboboxPricingTerm = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );
@@ -292,7 +285,7 @@ export const MyComboboxCurrency = React.memo(props => {
     <MyComboboxFK
       tableName="commonitem"
       stateName={`dropdown_${commonTypeName}`}
-      params={[{ commonType: enums.commonType[commonTypeName] }]}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
       {...props}
     />
   );

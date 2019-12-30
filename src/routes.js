@@ -11,15 +11,21 @@ const User = React.lazy(() => import("./views/Users/User"));
 const Commonitems = React.lazy(() => import("./views/Setting/Commonitems"));
 const Commonitem = React.lazy(() => import("./views/Setting/Commonitem"));
 const Images = React.lazy(() => import("./views/Image/Images"));
+
 //================ product
 const ProductCategories = React.lazy(() =>
   import("./views/Product/Categories")
 );
 
 const ProductProducts = React.lazy(() => import("./views/Product/Products"));
-const ProductProduct = React.lazy(() => import("./views//Product/Product"));
+const ProductProduct = React.lazy(() => import("./views/Product/Product"));
 
 const ProductPurchases = React.lazy(() => import("./views/Product/ProductPurchases"));
+
+//================ commodity
+const Commodity = React.lazy(() => import("./views/Commodity/Commodity"));
+const Commodities = React.lazy(() => import("./views/Commodity/Commodities"));
+
 
 //================ region
 const Regions = React.lazy(() => import("./views/Setting/Regions"));
@@ -328,7 +334,7 @@ const routes = [
   {
     path: "/product/productsComponent/:parentProductId",
     exact: true,
-    name: "产品构成列表",
+    name: "产品部件列表",
     component: ProductProducts,
     authTag: "product"
   },
@@ -356,13 +362,37 @@ const routes = [
   {
     path: [
       "/product/productpurchases",
-      "/product/productpurchases/:product_id/:company_id/:pack_id"
+      "/product/productpurchases/:productpurchase_id"
     ],
     exact: true,
     name: "工厂报价",
     component: ProductPurchases,
     authTag: "productpurchase"
-  }
+  },
+
+  //--------------------------------------------- 商品
+  {
+    path: "/commodity/commodities",
+    exact: true,
+    name: "商品列表",
+    component: Commodities,
+    authTag: "commodity"
+  },
+  {
+    path: "/commodity/commodity",
+    exact: true,
+    name: "商品新增",
+    component: Commodity,
+    authTag: "commodity"
+  },
+  {
+    path: "/commodity/commodities/:id",
+    exact: true,
+    name: "商品详情",
+    component: Commodity,
+    authTag: "commodity"
+  },
+  
 ];
 
 export default routes;

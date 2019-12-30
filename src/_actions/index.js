@@ -15,13 +15,16 @@ export * from "./region.actions";
 
 export * from "./product.actions";
 export * from "./category.actions";
+export * from "./productpurchase.actions"
+
+export * from "./commodity.actions";
 
 // faceless pages
-export const productpurchaseActions = withFacelessActions(
-  "PRODUCTPURCHASE",
-  "productpurchase",
-  { get_bySearch_url: "./dataset/productpurchasedata.json", get_byId_url: "./dataset/productpurchasedata_byId.json" }
-);
+// export const productpurchaseActions = withFacelessActions(
+//   "PRODUCTPURCHASE",
+//   "productpurchase",
+//   { get_bySearch_url: "./dataset/productpurchasedata.json", get_byId_url: "./dataset/productpurchasedata_byId.json" }
+// );
 
 export const rostercontactActions = withFacelessActions(
   "ROSTERCONTACT",

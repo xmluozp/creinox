@@ -1,12 +1,12 @@
-import { COMPANY as CONST, LOADING, enums } from "../_constants";
-import { companyService as service } from "../_services";
-import { alertActions } from "./";
+import { PRODUCTPURCHASE as CONST, LOADING } from "../_constants";
+import { productpurchaseService as service } from "../_services";
+import { alertActions } from ".";
 // import { history } from "../_helper";
 
 // const url = '/api/auth';
 // import axios from 'axios'
 
-export const companyActions = {
+export const productpurchaseActions = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -14,7 +14,9 @@ export const companyActions = {
   put_update,
   _delete,
 
-  get_disposable_dropdown
+  // customized
+  get_bySearch_groupByCompany,
+  get_bySearch_history
 };
 
 const done = (payload, type) => {
@@ -28,34 +30,14 @@ const loaded = { type: LOADING.SUCCESS };
 const loadedFailure = { type: LOADING.FAILURE };
 
 // FETCH  ---------------------------------------------
-function get_dropdown({ companyType = 0 }) {
+function get_dropdown(pagination, searchTerms = {}) {
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown(companyType).then(
+    return service.get_dropdown(pagination, searchTerms).then(
       response => {
-        const payload = {};
         dispatch(loaded);
-        switch (companyType) {
-          case enums.companyType.internal:
-            payload.dropdown_internal = response;
-            break;
-          case enums.companyType.factory:
-            payload.dropdown_factory = response;
-            break;
-          case enums.companyType.domesticCustomer:
-            payload.dropdown_domesticCustomer = response;
-            break;
-          case enums.companyType.overseasCustomer:
-            payload.dropdown_overseasCustomer = response;
-            break;
-          case enums.companyType.shippingCompany:
-            payload.dropdown_shippingCompany = response;
-            break;
-          default:
-            break;
-        }
+        dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
 
-        dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
         return response;
       },
       error => {
@@ -107,10 +89,9 @@ function post_create(item, callBack = () => {}) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.CREATE_SUCCESS));
-        // const id = (response.row && response.row.id) || null
-        const id = "1";
+
+        const id = (response.row && response.row.id) || 0;
         callBack(id);
-        // if (page) history.push(page + "/" + id);
       },
       error => {
         dispatch(loadedFailure);
@@ -130,7 +111,6 @@ function put_update(item, callBack = () => {}) {
         dispatch(loaded);
         dispatch(alertActions.success("保存成功"));
         dispatch(done(response, CONST.UPDATE_SUCCESS));
-
         callBack(response);
       },
       error => {
@@ -158,24 +138,35 @@ function _delete(pagination, id) {
   };
 }
 
-
 //======================== customized
-
-function get_disposable_dropdown(keyword, preConditions) {
+function get_bySearch_groupByCompany(pagination, searchTerms = {}) {
   return dispatch => {
     dispatch(loading);
+    return service.get_bySearch_groupByCompany(pagination, searchTerms).then(
+      response => {
+        dispatch(loaded);
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+}
 
-    console.log("preConditions", preConditions)
-    return service.get_disposable_dropdown({...preConditions, name:keyword })
-      .then(
-        response => {
-          dispatch(loaded);
-          return response
-        },
-        error => {
-          dispatch(loadedFailure);
-          dispatch(failure(error.toString()));
-        }
-      );
+function get_bySearch_history(pagination, searchTerms = {}) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_bySearch_history(pagination, searchTerms).then(
+      response => {
+        dispatch(loaded);
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+      },
+      error => {
+        dispatch(loadedFailure);
+        dispatch(failure(error.toString()));
+      }
+    );
   };
 }
