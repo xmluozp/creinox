@@ -13,7 +13,7 @@ const loading = () => (
 );
 
 // Containers
-const DefaultLayout = React.lazy(() => import("./containers/DefaultLayout"));
+// const DefaultLayout = React.lazy(() => import("./containers/DefaultLayout"));
 const Page404 = React.lazy(() => import("./views/Pages/Page500"));
 const Page500 = React.lazy(() => import("./views/Pages/Page500"));
 const LoginPage = React.lazy(() => import("./views/Pages/Login"));
@@ -51,12 +51,12 @@ const App = ({ user }) => {
           />
           <Route exact path="/404" name="Page 404" component={Page404} />
           <Route exact path="/500" name="Page 500" component={Page500} />
-          <AuthenticatedRoute
+          {/* <AuthenticatedRoute
             path="/"
             name="Home"
             component={DefaultLayout}
             user={user}
-          />
+          /> */}
           <Route exact path="*" name="Page 404" component={Page404} />
         </Switch>
       </React.Suspense>
