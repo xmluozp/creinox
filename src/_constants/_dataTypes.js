@@ -10,6 +10,7 @@ export const _DATATYPES = {
     TREE: "TREE",
     GALLERY: "GALLERY",
     DECIMAL:"DECIMAL",
+    MONEY:"MONEY",
     ROW: "ROW",
     LIST:"LIST",
     ENUM: enumsLabel

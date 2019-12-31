@@ -122,14 +122,16 @@ export const withProduct = () => {
                   onChange={handleGetSourceProductOnChange}
                 />
               </Grid>
-
+              <Grid item lg={4} md={4} xs={12}>
+                <Inputs.MyInput inputid="price" disabled={disabled} />
+              </Grid>
               <Grid item lg={8} md={8} xs={12}>
                 <Inputs.MyCategoryPicker
                   inputid="category_id"
                   disabled={disabled}
                 />
               </Grid>
-              <Grid item lg={4} md={8} xs={12}>
+              <Grid item lg={4} md={4} xs={12}>
                 <Inputs.MyInput inputid="code" disabled={disabled} />
               </Grid>
 

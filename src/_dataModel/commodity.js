@@ -11,7 +11,7 @@ export const commodityModel = {
         shortname:  {label: "简称",     type: _DATATYPES.VARCHAR},    
         eshortname: {label: "英文简称",     type: _DATATYPES.VARCHAR},   
 
-        price:   {label: "售价",     type: _DATATYPES.DECIMAL},  
+        price:   {label: "售价",     type: _DATATYPES.MONEY},  
 
         updateAt:   {label: "上次操作日期", type: _DATATYPES.DATETIME},
         createAt:   {label: "录入日期", type: _DATATYPES.DATETIME},

@@ -219,6 +219,7 @@ const injectedInputs = ({
       id: columnId,
       key: columnId,
       label: dataModel.columns[columnId].label,
+      dataType: dataModel.columns[columnId].type,
       error: isError,
       helperText: errorMessage,
       value: value,

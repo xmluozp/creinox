@@ -120,11 +120,17 @@ const FormInputs = ({onLoad}) => {
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyComboboxPack inputid="pack_id" />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={2} md={4} xs={12}>
+          <Inputs.MyInput inputid="moq" />
+        </Grid>
+        <Grid item lg={2} md={4} xs={12}>
           <Inputs.MyInput inputid="unitWeight" />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="moq" />
+        <Grid item lg={2} md={6} xs={12}>
+          <Inputs.MyInput inputid="netWeight" />
+        </Grid>
+        <Grid item lg={2} md={6} xs={12}>
+          <Inputs.MyInput inputid="grossWeight" />
         </Grid>
 
         <Grid item lg={3} md={6} xs={12}>
@@ -153,12 +159,7 @@ const FormInputs = ({onLoad}) => {
           <Inputs.MyInput label="体积(cm³)" onShow={handleShowInnerVolume}/>
         </Grid>
 
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInput inputid="netWeight" />
-        </Grid>
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInput inputid="grossWeight" />
-        </Grid>
+
 
         <Grid item lg={6} xs={12}>
           <Inputs.MyComboboxFK

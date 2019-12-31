@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-// import _ from "lodash";
+import _ from "lodash";
+import formatCurrency from 'format-currency';
 
 import DateFnsUtils from "@date-io/date-fns";
 import TextField from "@material-ui/core/TextField";
@@ -25,6 +26,8 @@ import Button from "@material-ui/core/Button";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
+import {_DATATYPES} from "../../_constants"
+
 import {
   MyCombobox,
   MyComboboxAsyncFK,
@@ -47,6 +50,7 @@ import {
   MyRegionPicker,
   MyCategoryPicker
 } from "./MyPicker";
+
 // ==================================================================================Date picker
 const MyDatePicker = React.memo(({
   id,
@@ -159,6 +163,7 @@ const MyInput = React.memo(({
   value = "",
   onChange = () => {},
   error = false,
+  dataType = _DATATYPES.VARCHAR,
   helperText = "",
   fullWidth = true,
   disabled = false,
@@ -166,6 +171,21 @@ const MyInput = React.memo(({
   rows,
   rowsMax = 5
 }) => {
+
+  // ============= 修饰显示格式
+  let inputStyle = {}
+  let displayValue = value;
+
+  if(dataType === _DATATYPES.INT || dataType === _DATATYPES.DECIMAL || dataType === _DATATYPES.MONEY)
+  {
+    inputStyle = {textAlign: "right"}
+  }
+  if(dataType === _DATATYPES.MONEY && !isNaN(value))
+  {
+    displayValue = formatCurrency(displayValue)
+  }
+
+  console.log(inputStyle)
   return (
     <TextField
       fullWidth={fullWidth}
@@ -175,11 +195,14 @@ const MyInput = React.memo(({
       label={label}
       onChange={onChange}
       margin="dense"
-      value={value}
+      value={displayValue}
       helperText={!disabled && helperText}
       multiline={multiline}
       rows={rows}
       rowsMax={rowsMax}
+      inputProps={{
+        style: {...inputStyle }
+      }}
     />
   );
 });

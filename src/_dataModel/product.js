@@ -11,8 +11,8 @@ export const productModel = {
         shortname:  {label: "简称",     type: _DATATYPES.VARCHAR},    
         eshortname: {label: "英文简称",     type: _DATATYPES.VARCHAR},   
 
-        buyPrice:   {label: "参考购价",     type: _DATATYPES.DECIMAL},    
-        sellPrice:  {label: "参考售价",     type: _DATATYPES.DECIMAL},    
+        buyPrice:   {label: "参考购价",     type: _DATATYPES.MONEY},    
+        sellPrice:  {label: "参考售价",     type: _DATATYPES.MONEY},    
 
         spec1:      {label: "规格1",     type: _DATATYPES.VARCHAR},   
         spec2:      {label: "规格2",     type: _DATATYPES.VARCHAR},   
