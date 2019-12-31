@@ -13,18 +13,18 @@ const Commonitem = React.lazy(() => import("./views/Setting/Commonitem"));
 const Images = React.lazy(() => import("./views/Image/Images"));
 
 //================ product
-// const ProductCategories = React.lazy(() =>
-//   import("./views/Product/Categories")
-// );
+const ProductCategories = React.lazy(() =>
+  import("./views/Product/Categories")
+);
 
-// const ProductProducts = React.lazy(() => import("./views/Product/Products"));
-// const ProductProduct = React.lazy(() => import("./views/Product/Product"));
+const ProductProducts = React.lazy(() => import("./views/Product/Products"));
+const ProductProduct = React.lazy(() => import("./views/Product/Product"));
 
-// const ProductPurchases = React.lazy(() => import("./views/Product/ProductPurchases"));
+const ProductPurchases = React.lazy(() => import("./views/Product/ProductPurchases"));
 
 //================ commodity
-// const Commodity = React.lazy(() => import("./views/Commodity/Commodity"));
-// const Commodities = React.lazy(() => import("./views/Commodity/Commodities"));
+const Commodity = React.lazy(() => import("./views/Commodity/Commodity"));
+const Commodities = React.lazy(() => import("./views/Commodity/Commodities"));
 
 
 //================ region
@@ -317,81 +317,81 @@ const routes = [
   },
 
   //--------------------------------------------- 产品
-  // {
-  //   path: "/product/categories",
-  //   exact: true,
-  //   name: "产品类别集",
-  //   component: ProductCategories,
-  //   authTag: "categories"
-  // },
-  // {
-  //   path: "/product/products",
-  //   exact: true,
-  //   name: "产品列表",
-  //   component: ProductProducts,
-  //   authTag: "product"
-  // },
-  // {
-  //   path: "/product/productsComponent/:parentProductId",
-  //   exact: true,
-  //   name: "产品部件列表",
-  //   component: ProductProducts,
-  //   authTag: "product"
-  // },
-  // {
-  //   path: "/product/productsParent/:componentProductId",
-  //   exact: true,
-  //   name: "产品成品列表",
-  //   component: ProductProducts,
-  //   authTag: "product"
-  // },
-  // {
-  //   path: "/product/product",
-  //   exact: true,
-  //   name: "产品",
-  //   component: ProductProduct,
-  //   authTag: "product"
-  // },
-  // {
-  //   path: "/product/products/:id",
-  //   exact: true,
-  //   name: "产品详情",
-  //   component: ProductProduct,
-  //   authTag: "product"
-  // },
-  // {
-  //   path: [
-  //     "/product/productpurchases",
-  //     "/product/productpurchases/:productpurchase_id"
-  //   ],
-  //   exact: true,
-  //   name: "工厂报价",
-  //   component: ProductPurchases,
-  //   authTag: "productpurchase"
-  // },
+  {
+    path: "/product/categories",
+    exact: true,
+    name: "产品类别集",
+    component: ProductCategories,
+    authTag: "categories"
+  },
+  {
+    path: "/product/products",
+    exact: true,
+    name: "产品列表",
+    component: ProductProducts,
+    authTag: "product"
+  },
+  {
+    path: "/product/productsComponent/:parentProductId",
+    exact: true,
+    name: "产品部件列表",
+    component: ProductProducts,
+    authTag: "product"
+  },
+  {
+    path: "/product/productsParent/:componentProductId",
+    exact: true,
+    name: "产品成品列表",
+    component: ProductProducts,
+    authTag: "product"
+  },
+  {
+    path: "/product/product",
+    exact: true,
+    name: "产品",
+    component: ProductProduct,
+    authTag: "product"
+  },
+  {
+    path: "/product/products/:id",
+    exact: true,
+    name: "产品详情",
+    component: ProductProduct,
+    authTag: "product"
+  },
+  {
+    path: [
+      "/product/productpurchases",
+      "/product/productpurchases/:productpurchase_id"
+    ],
+    exact: true,
+    name: "工厂报价",
+    component: ProductPurchases,
+    authTag: "productpurchase"
+  },
 
   //--------------------------------------------- 商品
-  // {
-  //   path: "/commodity/commodities",
-  //   exact: true,
-  //   name: "商品列表",
-  //   component: Commodities,
-  //   authTag: "commodity"
-  // },
-  // {
-  //   path: "/commodity/commodity",
-  //   exact: true,
-  //   name: "商品新增",
-  //   component: Commodity,
-  //   authTag: "commodity"
-  // },
-  // {
-  //   path: "/commodity/commodities/:id",
-  //   exact: true,
-  //   name: "商品详情",
-  //   component: Commodity,
-  //   authTag: "commodity"
-  // },
+  {
+    path: "/commodity/commodities",
+    exact: true,
+    name: "商品列表",
+    component: Commodities,
+    authTag: "commodity"
+  },
+  {
+    path: "/commodity/commodity",
+    exact: true,
+    name: "商品新增",
+    component: Commodity,
+    authTag: "commodity"
+  },
+  {
+    path: "/commodity/commodities/:id",
+    exact: true,
+    name: "商品详情",
+    component: Commodity,
+    authTag: "commodity"
+  },
   
 ];
 
