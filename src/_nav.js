@@ -17,41 +17,24 @@ const navs = {
       icon: 'icon-speedometer',
     },
     {
-      name: '产品生产',
+      name: '产品/商品',
       url: '#',
       icon: 'icon-puzzle',
       children: [
         {
-          name: '产品类别集',
-          url: '/product/categories',
-          authTag:'categories',
-        },
-        {
-          name: '产品列表',
+          name: '产品/工厂报价',
           url: '/product/products',
           authTag:'product',
-        },
+        },        
         {
-          name: '工厂报价',
-          url: '/product/productpurchases',
-          authTag:'productpurchase',
-        }
-      ]
-    },
-    {
-      name: '商品',
-      url: '#',
-      icon: 'icon-puzzle',
-      children: [
-        {
-          name: '商品列表',
+          name: '商品/成套商品',
           url: '/commodity/commodities',
           authTag:'commodity',
         }
       ]
     },
     {
-      name: '基础设置',
+      name: '业务(公司)',
       url: '#',
       icon: 'icon-puzzle',
       children: [
@@ -97,6 +80,11 @@ const navs = {
           name: '通用选项集',
           url: '/commonitems/commonitemsList/0',
           authTag:'commonitem',
+        },
+        {
+          name: '商品类别树',
+          url: '/product/categories',
+          authTag:'categories',
         },
         {
           name: '国家地区集',

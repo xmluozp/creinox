@@ -8,7 +8,7 @@ export const productpurchaseModel = {
         activeAt:   {label: "报价日期", type: _DATATYPES.DATETIME},
         expireAt:   {label: "报价有效期", type: _DATATYPES.DATETIME},
 
-        price:      {label: "单价",     type: _DATATYPES.MONEY},    
+        buyPrice:      {label: "采购单价",     type: _DATATYPES.MONEY},    
         isTax:      {label: "含税",     type: _DATATYPES.BOOLEAN},   
         isComponent:{label: "可作为配件生产",     type: _DATATYPES.BOOLEAN},   
 

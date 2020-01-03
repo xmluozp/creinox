@@ -12,8 +12,8 @@ import { CreinoxTable, withDatatableStore, Inputs } from "../../components";
 import { history } from "../../_helper";
 
 // ******************************************************************* page setting
-import { productActions as dataActions } from "../../_actions";
-import { productModel as dataModel } from "../../_dataModel";
+import { commodityActions as dataActions } from "../../_actions";
+import { productModel as dataModel, } from "../../_dataModel";
 import { Button } from "reactstrap";
 
 // ******************************************************************* page setting
@@ -24,38 +24,32 @@ import { Button } from "reactstrap";
  * @param {*} EDITURL
  * @param {*} CREATEURL
  */
-const withProductList = (
-  EDITURL = "/product/products",
-) => {
+const withProductCommodityList = (EDITURL = "/product/products") => {
   // inject data
   const MyTable = withDatatableStore(
     CreinoxTable, // tablecomponent
-    { data: "productData" }, // data source
-    dataActions.get_bySearch_component // fetch action
+    { data: "commodityData.data_getproduct" }, // data source
+    dataActions.get_bySearch_getProduct // fetch action
   );
 
   const CurrentPage = ({
     onDisassemble,
     onAssemble,
-    onBySearch,
+    onGetBySearch,
     pageName,
+    commodity_id = 0,
     product_id = 0,
     isParent = true
   }) => {
     const [isImageListMode, setIsImageListMode] = useState(false);
     const [selectedId, setSelectedId] = useState();
 
-    const preConditions = isParent
-      ? { parent_id: product_id }
-      : { child_id: product_id };
+    const preConditions = { commodity_id: commodity_id };
 
     // ============================================= handles
     const handleOnDisassemble = (pagination, rowId) => {
-      h_confirm("是否解除部件？").then(resolve => {
-        const parent_id = isParent ? product_id : rowId;
-        const child_id = isParent ? rowId : product_id;
-
-        if (resolve) onDisassemble(pagination, {parent_id, child_id});
+      h_confirm("是否解除绑定？").then(resolve => {
+        if (resolve) onDisassemble(pagination, {commodity_id, product_id: rowId});
       });
     };
 
@@ -66,6 +60,7 @@ const withProductList = (
     const handleOnEdit = (pagination, id) => {
       history.push(`${EDITURL}/${id}`);
     };
+
     const handleImageListMapping = rows => {
       const newDataRows =
         rows &&
@@ -80,24 +75,30 @@ const withProductList = (
     };
 
     const handleAssemble = () => {
-      const parent_id = isParent ? product_id : selectedId;
-      const child_id = isParent ? selectedId : product_id;
-
-      onAssemble({ parent_id, child_id }, () => {
-
-        onBySearch({}, {parent_id: parent_id})
+      onAssemble({ commodity_id, selectedId }, () => {
+        onGetBySearch({}, preConditions); 
       });
     };
 
+    const renderOnShowIsMeta = (content, row) => {
+
+        return row.id === product_id && ICONS.TRUE("mr-4 text-success")
+    }
+    // product_id
     // ============================================= render cell
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
+      {
+        name: "isMeta",
+        align: "center",
+        label: "主产品",
+        onShow: renderOnShowIsMeta,
+        disablePadding: true, 
+      },
       { name: "code" },
       { name: "name" },
-      { name: "shortname" },
       { name: "ename" },
-      { name: "spec1" }
     ];
 
     // ============================================= Table Settings
@@ -112,7 +113,10 @@ const withProductList = (
         label: "解绑",
         color: "danger",
         onClick: handleOnDisassemble,
-        icon: ICONS.DELETE()
+        icon: ICONS.DELETE(),
+        onShow: (row)=> {
+            return {disabled:row.id === product_id} // 主产品不可解绑
+        }
       }
     ];
 
@@ -128,21 +132,22 @@ const withProductList = (
     // ============================================= Render
     return (
       <>
-        {isParent &&
-            <Grid container spacing={2}>
+        {isParent && (
+          <Grid container spacing={2}>
             <Grid item lg={12} md={12} xs={12}>
-                <Inputs.MyComboboxAsyncFK
+              <Inputs.MyComboboxAsyncFK
                 tableName="product"
-                label="用产品货号搜索部件"
-                actionName="get_disposable_dropdown"
+                label="用产品货号搜索产品"
+                 // 取的下拉列表包括其它商品的元产品。本应排除自己的元产品，但可以从后台限制。就不用多此一举了
+                actionName="get_disposable_dropdown" 
                 onChange={handleGetTargetProductId}
-                />
+              />
             </Grid>
             <Grid item lg={4} md={4} xs={12}>
-                <Button onClick={handleAssemble}  className="btn-success"> 添加部件 </Button>
+              <Button onClick={handleAssemble} className="btn-success"> 添加产品 </Button>
             </Grid>
-            </Grid>
-        }
+          </Grid>
+        )}
         <MyTable
           onRowDbClick={handleOnEdit}
           tableTitle={pageName}
@@ -151,7 +156,7 @@ const withProductList = (
           isBorder={false}
           isImageListMode={isImageListMode}
           onImageListMapping={handleImageListMapping}
-          preConditions={preConditions} // 假如需要选择分类的话，需要改造
+          preConditions={preConditions}
           rowButtons={rowButtons}
           toolbarButtons={toolbarButtons}
         />
@@ -168,10 +173,10 @@ const withProductList = (
   const actionCreators = {
     onDisassemble: dataActions._delete_disassemble,
     onAssemble: dataActions.post_create_assemble,
-    onBySearch: dataActions.get_bySearch_component,
+    onGetBySearch: dataActions.get_bySearch_getProduct
   };
 
   return connect(null, actionCreators)(CurrentPage);
 };
 
-export const EmbedProductComponent = withProductList();
+export const EmbedProductFromCommodity = withProductCommodityList();

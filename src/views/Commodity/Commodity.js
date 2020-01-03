@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Divider from "@material-ui/core/Divider";
 
 //------redux
 import { connect } from "react-redux";
@@ -14,6 +15,8 @@ import { commodityModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "../../components";
 // import { enumsLabel } from "../../_constants";
 import { history, h_fkFetch, h_filterImage } from "../../_helper";
+
+import { EmbedProductFromCommodity } from "../Product/EmbedProductFromCommodity";
 
 import { ICONS } from "../../_constants";
 
@@ -34,7 +37,7 @@ export const withProduct = () => {
     const [disabled, setdisabled] = useState(isFromEdit);
     const [tabSelect, setTabSelect] = React.useState(0);
     const [productInjector, setProductInjector] = useState(null);
-
+ 
     useEffect(() => {
       // if there is ID, fetch data
       if (id) {
@@ -61,12 +64,10 @@ export const withProduct = () => {
           if (response && response.id) {
             productInjector({
               product_id: response.id,
+              category_id: response.category_id,
               code: response.code,
               name: response.name,
-              ename: response.ename,
-              shortname: response.ename,
-              eshortname: response.eshortname,
-              price: response.sellPrice
+              sellPrice: response.sellPrice
             });
           }
         })
@@ -93,10 +94,6 @@ export const withProduct = () => {
     // =============== 编辑页加载的值 ====================================={
     const defaultValues = isFromEdit && dataById && dataById.row;
 
-    // 搜索下属产品时候的条件
-    const preConditionsOfProducts = defaultValues && {
-      commodity_id: id
-    };
 
     // =============== 编辑页加载的值 =====================================}
 
@@ -111,41 +108,34 @@ export const withProduct = () => {
         onGetInjector={handleGetProductInjector}
       >
         <Grid container spacing={2}>
-          <Grid item lg={8} md={8} xs={12}>
+          <Grid item lg={12} md={12} xs={12}>
             <Grid container spacing={2}>
-              <Grid item lg={8} md={8} xs={12}>
+              <Grid item lg={3} md={4} xs={12}>
                 <Inputs.MyComboboxAsyncFK
                   tableName="product"
-                  label="从现有产品复制属性"
-                  actionName="get_disposable_dropdown"
-                  disabled={disabled}
+                  inputid="product_id"
+                  label="产品"
+                  actionName="get_disposable_dropdown_excludeMeta"
+
+                  // note: 如果没有meta产品(操作者从产品那里让它下架了)，允许重新选择一个
+                  disabled={isFromEdit && defaultValues && defaultValues.product_id}
                   onChange={handleGetSourceProductOnChange}
                 />
               </Grid>
-              <Grid item lg={4} md={4} xs={12}>
-                <Inputs.MyInput inputid="price" disabled={disabled} />
-              </Grid>
-              <Grid item lg={8} md={8} xs={12}>
+              <Grid item lg={3} md={4} xs={12}>
                 <Inputs.MyCategoryPicker
                   inputid="category_id"
-                  disabled={disabled}
+                  disabled={true}
                 />
               </Grid>
-              <Grid item lg={4} md={4} xs={12}>
-                <Inputs.MyInput inputid="code" disabled={disabled} />
+              <Grid item lg={3} md={4} xs={12}>
+                <Inputs.MyInput inputid="code" disabled={true} />
               </Grid>
-
-              <Grid item lg={8} md={8} xs={12}>
+              <Grid item lg={3} md={4} xs={12}>
+                <Inputs.MyInput inputid="sellPrice" disabled={true} />
+              </Grid>
+              <Grid item lg={12} md={12} xs={12}>
                 <Inputs.MyInput inputid="name" disabled={disabled} />
-              </Grid>
-              <Grid item lg={4} md={4} xs={12}>
-                <Inputs.MyInput inputid="shortname" disabled={disabled} />
-              </Grid>
-              <Grid item lg={8} md={8} xs={12}>
-                <Inputs.MyInput inputid="ename" disabled={disabled} />
-              </Grid>
-              <Grid item lg={4} md={4} xs={12}>
-                <Inputs.MyInput inputid="eshortname" disabled={disabled} />
               </Grid>
 
               <Grid item lg={12} md={12} xs={12}>
@@ -176,11 +166,6 @@ export const withProduct = () => {
                   </Grid>
                 </>
               ) : null}
-            </Grid>
-          </Grid>
-          <Grid item lg={4} md={4} xs={12}>
-            <Grid container spacing={2}>
-              <Inputs.MyImage inputid="image_id.row" disabled={true} />
             </Grid>
           </Grid>
         </Grid>
@@ -224,7 +209,7 @@ export const withProduct = () => {
                   aria-label="tabs"
                 >
                   <Tab label="基本属性" />
-                  <Tab label="对应产品（生产侧信息）" disabled={!isFromEdit} />
+                  <Tab label="更多下属子产品" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}
@@ -232,7 +217,7 @@ export const withProduct = () => {
                   {basicProperties}
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
-                  一个选择框可以搜索添加多个关联产品。下面是产品列表，关联的每一个产品都显示在列表中。每个列表项都可链接到相应的产品详情页。一个按钮用于解除关联
+                  <EmbedProductFromCommodity commodity_id={id} product_id={defaultValues && defaultValues.product_id}/>
                 </TabPanel>
               </Card>
             </Col>

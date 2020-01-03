@@ -185,7 +185,6 @@ const MyInput = React.memo(({
     displayValue = formatCurrency(displayValue)
   }
 
-  console.log(inputStyle)
   return (
     <TextField
       fullWidth={fullWidth}

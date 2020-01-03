@@ -18,7 +18,7 @@ import { _DATATYPES } from "../_constants/_dataTypes";
 import TableHeadWrapper from "./TableHeadWrapper";
 import TableToolbarWrapper from "./TableToolbarWrapper";
 import TablePaginationWrapper from "./TablePaginationWrapper";
-import {ImageList} from './ImageList'
+import { ImageList } from "./ImageList";
 
 // 所有pagination信息都从data来而不是本地
 export const CreinoxTable = ({
@@ -34,7 +34,7 @@ export const CreinoxTable = ({
   rowButtons = [],
   selectBox,
   isImageListMode = false,
-  onImageListMapping = ()=>{},
+  onImageListMapping = () => {},
   toolbarButtons = [],
   preConditions = {},
   isBorder = true,
@@ -115,12 +115,16 @@ export const CreinoxTable = ({
         }
 
         // 如果是callBak，预先生成结果
-        if (typeof column.onShow === "function")
-          columnContent = column.onShow(originalContent, row);
+        if (typeof column.onShow === "function") {
+          originalContent = column.onShow(originalContent, row);
+        }
+
         // 如果是lookup预先翻译内容。但样式要在下面取
-        else if (column.lookup) {
+        if (column.lookup) {
           columnContent = column.lookup[originalContent];
-        } else columnContent = originalContent || "";
+        } else {
+          columnContent = originalContent || "";
+        }
 
         rowObj[column.name] = columnContent;
         return null;
@@ -312,12 +316,14 @@ export const CreinoxTable = ({
                 let originalContent = row[column.name];
                 let className = column.className;
 
-                if (column.lookup)
-                  className =
-                    _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
                 columnContent =
                   listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值
 
+                if (column.lookup) {
+                  className =
+                    _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
+                  console.log("className", columnContent);
+                }
                 const handleCellClick = column.onClick
                   ? column.onClick.bind(null, rowId)
                   : null;
@@ -350,15 +356,16 @@ export const CreinoxTable = ({
                   align="right"
                   style={{ minWidth: 80 * rowButtons.length }}
                 >
-                  {rowButtons.map((buttonObj, index) => (
-                    <ActionButton
-                      key={`button_${rowId}_${index}`}
-                      {...buttonObj}
-                      id={rowId}
-                      row={row}
-                      getPaginationFromState={getPaginationFromState}
-                    />
-                  ))}
+                  {rowButtons.map((buttonObj, index) =>( 
+                      <ActionButton
+                        key={`button_${rowId}_${index}`}
+                        {...buttonObj}
+                        disabled="true"
+                        id={rowId}
+                        row={row}
+                        getPaginationFromState={getPaginationFromState}
+                      />
+                    ))}
                 </TableCell>
               ) : null}
             </TableRow>
@@ -373,9 +380,16 @@ export const CreinoxTable = ({
     </Table>
   );
 
-  const imageListData = onImageListMapping(dataRows) || []
-  const imageListClick =(typeof(onRowImageClick)==='function') ? onRowImageClick.bind(null, getPaginationFromState()): null
-  const imageListBody = <div style={{padding:10}}><ImageList tileData={imageListData} onClick={imageListClick}/></div>
+  const imageListData = onImageListMapping(dataRows) || [];
+  const imageListClick =
+    typeof onRowImageClick === "function"
+      ? onRowImageClick.bind(null, getPaginationFromState())
+      : null;
+  const imageListBody = (
+    <div style={{ padding: 10 }}>
+      <ImageList tileData={imageListData} onClick={imageListClick} />
+    </div>
+  );
 
   const insideTable = (
     <>
@@ -394,9 +408,10 @@ export const CreinoxTable = ({
         getPaginationFromState={getPaginationFromState}
         isBorder={isBorder}
       />
-      
 
-      <div className={classes.tableWrapper}>{isImageListMode? imageListBody : tableBody}</div>
+      <div className={classes.tableWrapper}>
+        {isImageListMode ? imageListBody : tableBody}
+      </div>
 
       {/* ------------------- pagination ----------------- */}
       <TablePaginationWrapper
@@ -406,11 +421,6 @@ export const CreinoxTable = ({
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-
-
-
-
-
     </>
   );
 
@@ -432,11 +442,22 @@ const ActionButton = ({
   row,
   label,
   onClick,
+  onShow,
   color,
   url,
   icon,
   getPaginationFromState
 }) => {
+
+
+
+  let injectOptions;
+  if(typeof(onShow)==='function') {
+    injectOptions = onShow(row)
+  }
+
+
+
   let returnValue = label;
   if (url) {
     returnValue = (
@@ -446,6 +467,7 @@ const ActionButton = ({
         role="button"
         style={{ margin: "0px 0px 0px 3px" }}
         aria-pressed="true"
+        {...injectOptions}
       >
         {icon}
         {label}
@@ -462,6 +484,7 @@ const ActionButton = ({
         style={{ margin: "0px 0px 0px 3px" }}
         className={`btn btn-sm btn-${color}`}
         onClick={propsOnClick}
+        {...injectOptions}
       >
         {" "}
         {icon}

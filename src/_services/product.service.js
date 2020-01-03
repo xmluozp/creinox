@@ -18,13 +18,17 @@ export const productService = {
 const TABLENAME = "product";
 
 // const url = 'http://localhost:3000/api/';
-function get_dropdown(pagination, searchTerms) {
+function get_dropdown(pagination, searchTerms, isIncludeMeta) {
+
+    // TODO: inIncludeMeta 会返回全部产品。否则返回没成为commodity的
 
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
-    console.log("service get dropdown:", searchTerms);
+    console.log("service get dropdown:", searchTerms, "包括一对一绑定commodity的产品", isIncludeMeta);
+
+    
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
     const url = './dataset/productdata.json'
@@ -108,7 +112,7 @@ function post_create_assemble(item) {
     return new Promise(resolve => resolve("on assemble service"))
 }
 
-function _delete_disassemble(pagination, parent_id, child_id) {
-    console.log("on disassemble service, parent:", parent_id, "child", child_id);
+function _delete_disassemble(pagination, item) {
+    console.log("on disassemble service:", item);
     return new Promise(resolve => resolve("on disassemble service"))
 }

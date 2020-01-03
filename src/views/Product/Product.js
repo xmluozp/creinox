@@ -16,6 +16,8 @@ import { CreinoxForm, Inputs, TabPanel } from "../../components";
 import { history, h_fkFetch, h_filterImage } from "../../_helper";
 import { EmbedProductPurchaseGroup } from "./EmbedProductPurchase";
 import { EmbedProductComponent } from "./EmbedProductComponent";
+import { EmbedCommodityFromProduct } from "./EmbedCommodityFromProduct";
+
 
 import { ICONS } from "../../_constants";
 
@@ -347,7 +349,7 @@ export const withProduct = () => {
                   <EmbedProductComponent product_id={id} isParent={false} />
                 </TabPanel>
                 <TabPanel value={tabSelect} index={4}>
-                  商品关联与组合
+                  <EmbedCommodityFromProduct product_id={id}/>
                 </TabPanel>
               </Card>
             </Col>

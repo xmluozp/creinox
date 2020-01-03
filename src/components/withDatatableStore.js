@@ -19,14 +19,18 @@ export const withDatatableStore = (
 
   const mapState = state => {
     const dataStateNew = {}
-    Object.keys(dataState).map((value) => {
-      const dataSource =  state[dataState[value]];
+    Object.keys(dataState).map((key) => {
+
+      const paramValues = dataState[key].split(".")
+      const dataSource =  state[paramValues[0]];
+      const dataSourceKey = paramValues[1] || key;
+
+      
       if (dataSource) {
-        dataStateNew[value] = dataSource.data;
-      }     
+        dataStateNew[key] = dataSource[dataSourceKey];
+      }
       return null; 
     })    
-
     return dataStateNew;
   };
 

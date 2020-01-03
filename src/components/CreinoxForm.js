@@ -210,10 +210,15 @@ const injectedInputs = ({
   let returnValue = item;
   const columnId = item.props &&  item.props.inputid;
 
+
   // 判断类型，进行注入
 
   // 如果id 和model对得上号;
   if (dataModel && dataModel.columns[columnId]) {
+
+    // 外部的onChange比默认的优先级更高
+    const onChange = item.props.onChange ? item.props.onChange : handleChange
+    
     // TODO: 判断component类型。不同类型注入不同的东西
     returnValue = React.cloneElement(item, {
       id: columnId,
@@ -223,7 +228,7 @@ const injectedInputs = ({
       error: isError,
       helperText: errorMessage,
       value: value,
-      onChange: handleChange,
+      onChange: onChange,
       fullWidth: true
     });
   } else { // 不是model的；非控制的控件

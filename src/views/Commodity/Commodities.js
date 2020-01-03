@@ -66,11 +66,10 @@ export const withCommodityList = (
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
-      { name: "code" },
       { name: "name" },
-      { name: "shortname" },
-      { name: "ename" },
-      { name: "price" }
+      { name: "code" },
+      { name: "sellPrice" },
+      { name: "memo" }
     ];
 
     // ============================================= Table Settings

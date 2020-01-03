@@ -16,10 +16,11 @@ export const productActions = {
 
   // customized
   get_disposable_dropdown,
+  get_disposable_dropdown_excludeMeta,
   get_disposable_byId,
   get_bySearch_component,
   post_create_assemble,
-  _delete_disassemble,
+  _delete_disassemble
 };
 
 const done = (payload, type) => {
@@ -143,21 +144,22 @@ function _delete(pagination, id) {
 
 //======================== customized
 
-function get_disposable_dropdown(keyword, preConditions) {
+function get_disposable_dropdown(keyword, preConditions, isIncludeMeta = true) {
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown({},{...preConditions, code: keyword})
+    return service
+      .get_dropdown({}, { ...preConditions, code: keyword }, isIncludeMeta)
       .then(
         response => {
           dispatch(loaded);
-          let returnValue= []
-          if(response && response.rows) {
-            returnValue = response.rows.map(item=> {
-              item.name = `[${item.code}] ${item.name}`
+          let returnValue = [];
+          if (response && response.rows) {
+            returnValue = response.rows.map(item => {
+              item.name = `[${item.code}] ${item.name}`;
               return item;
-            })
+            });
           }
-          return {rows:returnValue};
+          return { rows: returnValue };
         },
         error => {
           dispatch(loadedFailure);
@@ -166,7 +168,9 @@ function get_disposable_dropdown(keyword, preConditions) {
       );
   };
 }
-
+function get_disposable_dropdown_excludeMeta(keyword, preConditions) {
+  return get_disposable_dropdown(keyword, preConditions, false);
+}
 
 function get_disposable_byId(id) {
   return dispatch => {
@@ -174,9 +178,9 @@ function get_disposable_byId(id) {
     return service.get_byId(id).then(
       response => {
         dispatch(loaded);
-        let returnValue = {}
-        if(response && response.row) {
-          returnValue = response.row
+        let returnValue = {};
+        if (response && response.row) {
+          returnValue = response.row;
         }
         return returnValue;
       },
@@ -223,10 +227,10 @@ function post_create_assemble(item, callBack = () => {}) {
   };
 }
 
-function _delete_disassemble(pagination, parent_id, child_id) {
-  console.log("disassemble:", parent_id, child_id);
+function _delete_disassemble(pagination, item = {parent_id : 0, child_id : 0}) {
+  console.log("disassemble:", item);
   return dispatch => {
-    return service._delete_disassemble(pagination, parent_id, child_id).then(
+    return service._delete_disassemble(pagination, item).then(
       response => {
         dispatch(alertActions.success("解除成功"));
       },

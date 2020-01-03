@@ -67,10 +67,10 @@ function get_bySearch(pagination, searchTerms = {}) {
   };
 }
 
-function get_byId(id) {
+function get_byId(commodity_id = 0, product_id = 0, isMeta = false ) {
   return dispatch => {
     dispatch(loading);
-    return service.get_byId(id).then(
+    return service.get_byId(commodity_id, product_id, isMeta).then(
       response => {
         dispatch(loaded);
         dispatch(done(response, CONST.GET_SUCCESS));
@@ -166,13 +166,14 @@ function get_disposable_dropdown(keyword, preConditions) {
   };
 }
 
+
 function get_bySearch_getProduct(pagination, searchTerms = {}) {
   return dispatch => {
     dispatch(loading);
     return service.get_bySearch_getProduct(pagination, searchTerms).then(
       response => {
         dispatch(loaded);
-        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+        dispatch(done(response, CONST.GETBYSEARCH_GETPRODUCT_SUCCESS));
       },
       error => {
         dispatch(loadedFailure);
@@ -188,7 +189,7 @@ function get_bySearch_getCommodity(pagination, searchTerms = {}) {
     return service.get_bySearch_getCommodity(pagination, searchTerms).then(
       response => {
         dispatch(loaded);
-        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+        dispatch(done(response, CONST.GETBYSEARCH_GETCOMMODITY_SUCCESS));
       },
       error => {
         dispatch(loadedFailure);
@@ -217,11 +218,11 @@ function post_create_assemble(item, callBack = () => {}) {
   };
 }
 
-function _delete_disassemble(pagination, commodity_id, product_id) {
-  console.log("disassemble:", commodity_id, product_id);
+function _delete_disassemble(pagination, item) {
+  console.log("disassemble:", item);
   return dispatch => {
     return service
-      ._delete_disassemble(pagination, commodity_id, product_id)
+      ._delete_disassemble(pagination, item)
       .then(
         response => {
           dispatch(alertActions.success("解除成功"));
