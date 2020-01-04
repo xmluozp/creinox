@@ -9,7 +9,7 @@ import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { enums } from "../../_constants";
-import { h_fkFetchOnce, h_fkFetch, h_fkFetchOnceAsync } from "../../_helper";
+import { h_fkFetchOnce, h_fkFetchOnceAsync } from "../../_helper";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -72,37 +72,76 @@ export const MyCombobox = React.memo(
     disabled = false,
     hasDefault = true,
     fullWidth = true,
+    multiple = false,
     ...props
   }) => {
     const classes = useStyles();
 
     // 这个是专门为async准备的。MUI有BUG，一定要有默认值才能control。但async状态下又不能有默认值
-    const optionsFix = hasDefault
+    let optionsFix;
+
+    let currentValue, getOptionLabel, handleOnChange, handleGetOptionSelected, handleRenderOption;
+
+    // --------------------- 多选
+    if(multiple) {
+      optionsFix = options.map(item=> {
+        return item.id
+      })
+      currentValue = value ? value.split(",") : [];
+
+      getOptionLabel = option => {
+        return options[option].name || null;
+      };
+
+      handleOnChange = (e, items) => {
+        const returnValue = items.join(",");
+        onChange(e, id, returnValue);
+      }
+
+      handleGetOptionSelected = (item)=> {
+        return currentValue.includes(item.toString())
+      } 
+
+      handleRenderOption = (option, {selected}) => {
+        return `[${option}] ${options[option].name}`
+      }
+
+    // --------------------- 单选
+    } else { 
+      optionsFix = hasDefault && !multiple
       ? [{ id: 0, [optionLabel]: "无" }, ...options]
       : options;
-    const currentValue =
+
+      currentValue =
       _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
-    const getOptionLabel = option => {
-      return option[optionLabel] || option || "--";
-    };
+      getOptionLabel = option => {
+        return option[optionLabel] || option || "--";
+      };
+  
+      handleOnChange = (e, item) => {
+        const returnValue = (item && item.id) || value;
+        onChange(e, id, returnValue);
+      }
+      handleGetOptionSelected = (item,index )=> {
+        return item.id === (currentValue && currentValue.id);
+      }  
+    }
 
     return (
         <Autocomplete
           autoSelect={true}
+          multiple = {multiple}
           className={classes.root}
           disabled={disabled}
+          filterSelectedOptions = {multiple} // autocomplete有bug，从选项选择会自动乱选。所以必须把已选项屏蔽
+          disableCloseOnSelect={multiple}
           options={optionsFix}
+          renderOption={handleRenderOption}
           getOptionLabel={getOptionLabel}
-          onChange={(e, item) => {
-
-            const returnValue = (item && item.id) || value;
-            onChange(e, id, returnValue);
-          }}
+          onChange={disabled ? null: handleOnChange}
           id={id}
-          getOptionSelected={item => {
-            return item.id === (currentValue && currentValue.id);
-          }}
+          getOptionSelected={handleGetOptionSelected}
           value={currentValue}
           renderInput={params => (
             <TextField

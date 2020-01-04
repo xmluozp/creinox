@@ -119,14 +119,13 @@ export const withProduct = () => {
       product_id: id,
       spec1: defaultValues.spec1,
       spec2: defaultValues.spec2,
-      spec2: defaultValues.spec2,
+      spec3: defaultValues.spec3,
 
       polishing_id: defaultValues.polishing_id,
       texture_id: defaultValues.texture_id,
       thickness: defaultValues.thickness,
       unitWeight: defaultValues.unitWeight,
-      isComponent: true,
-      price: defaultValues.buyPrice
+      isComponent: true
     };
     const embedRowButtons = [
       {

@@ -1,30 +1,19 @@
-const allAuthList = [
-  "setting",
-  "user",
-  "test",
-  "regions",
-  "commonitem",
-  "image",
-  "companyinternal",
-  "companyfactory",
-  "companyoverseas",
-  "companydomestic",
-  "companyshipping",
-  "product",
-  "categories",
-  "productpurchase",
-  "commodity",
-];
+
+import {allAuthList} from '../_constants'
 // const testAuthList = 'system,company,product'
 
-export const authCheck = authTag => {
+export const authCheck = (authString = "", authTag) => {
+
   // 如果没有权限标签，直接放行
   if (!authTag) return true;
 
-  // console.log(authTag)
-  // if(authTag==='user') return false
+  // auth list取的是authlist里的
+  // const authList = authString.split(",");
+  // const autharray = authList.length > 0 ? authList.map((authIndex)=>{
+  //   return allAuthList[authIndex]
+  // }): [];
 
-  const autharray = allAuthList; //allAuthList.split(',')
+  const autharray = allAuthList;
   const isPass = autharray.includes(authTag);
 
   return isPass;

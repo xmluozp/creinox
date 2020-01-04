@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 
-import { ICONS, enums } from "../../_constants";
+import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import {
   CreinoxTable,
@@ -106,22 +106,22 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
         onPutUpdate(values);
     };
 
-    const renderOnShowIsMeta = (content, row) => {
-      return row.product_id === product_id && ICONS.TRUE("mr-4 text-success");
-    };
+    // const renderOnShowIsMeta = (content, row) => {
+    //   return row.product_id === product_id && ICONS.TRUE("mr-4 text-success");
+    // };
 
     // product_id
     // ============================================= render cell
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
-      {
-        name: "isMeta",
-        align: "center",
-        label: "主产品",
-        onShow: renderOnShowIsMeta,
-        disablePadding: true
-      },
+      // {
+      //   name: "isMeta",
+      //   align: "center",
+      //   label: "主产品",
+      //   onShow: renderOnShowIsMeta,
+      //   disablePadding: true
+      // },
       { name: "code" },
       { name: "name" },
       { name: "ename" }

@@ -11,8 +11,6 @@ export const productModel = {
         shortname:  {label: "简称",     type: _DATATYPES.VARCHAR},    
         eshortname: {label: "英文简称",     type: _DATATYPES.VARCHAR},   
 
-        buyPrice:   {label: "参考购价",     type: _DATATYPES.MONEY},    
-        sellPrice:  {label: "参考售价",     type: _DATATYPES.MONEY},    
 
         spec1:      {label: "规格1",     type: _DATATYPES.VARCHAR},   
         spec2:      {label: "规格2",     type: _DATATYPES.VARCHAR},   
@@ -40,6 +38,11 @@ export const productModel = {
 
         image_id:   {label: "图",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
         "image_id.row": {label: "图",   type: _DATATYPES.ROW},
+
+
+        //============== 纯粹显示用，数据来源：最新一条productpurchase
+        buyPrice:   {label: "最新采购价",     type: _DATATYPES.MONEY},    
+        currency_id:  {label: "币种",     type: _DATATYPES.TREE, ref:"common_item", refLabel: ["name"]},
 
         //============== 搜索用关联到外表的字段
         "comodity.code": {label: "客户货号",  type: _DATATYPES.VARCHAR},

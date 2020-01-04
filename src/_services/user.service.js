@@ -36,7 +36,8 @@ function login(userName, password) {
             lastLogin: '',
             memo: '测试用户',
             token: 'tokenjwt123',
-            role_id: 1
+            role_id: 1,
+            "role_id.auth": "0,1,2,3,4,8",
         }, // test    
     }
 
@@ -61,7 +62,7 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function get_dropdown(pagination) {
+function get_dropdown(pagination, searchTerms = {}) {
 
     const requestOptions = {
         method: 'GET',

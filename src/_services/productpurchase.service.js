@@ -81,7 +81,7 @@ function _delete(pagination, id) {
 
 
 // ================== customized
-// TODO，数据库读取的时候，根据company_id来groupBy。只显示排序最近的第一条
+// TODO，数据库读取的时候，根据company_id, currency_id 来groupBy。只显示排序最近的第一条
 function get_bySearch_groupByCompany(pagination, searchTerms) { 
     const requestOptions = {
         method: 'GET',
@@ -96,7 +96,8 @@ function get_bySearch_groupByCompany(pagination, searchTerms) {
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
 }
 
-// TODO，数据库读取的时候，根据searchTerms里面的productpurchase_id来决定 product_id, company_id, pack_id
+// TODO，数据库读取的时候，先找searchTerms里面的productpurchase_id，然后从搜到的productpurchase记录里去查找 product_id, company_id, pack_id...
+// 这里显示的内容是：product_id, company_id下的所有信息。 currency虽然在product里显示过了，但这里依然要区分开
 function get_bySearch_history(pagination, searchTerms) { 
     const requestOptions = {
         method: 'GET',

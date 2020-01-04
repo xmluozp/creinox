@@ -8,7 +8,7 @@ export const categoryService = {
     post_create,
     put_update,
     _delete: _delete,
-    get_byCategory
+    get_treeNotesById
 };
 
 const TABLENAME = "category";
@@ -74,7 +74,7 @@ function _delete(pagination, id) {
 
 
 // ============================================ customized
-function get_byCategory(categoryId) {
+function get_treeNotesById(categoryId) {
 
     // 后台需要取：根据Id匹配path+","+id。否则全部返回 SELECT * FROM category WHERE id = xx, path like CONCAT(category.path,"," ,category.id)
     // like只取右like（防止10,2这种混淆）

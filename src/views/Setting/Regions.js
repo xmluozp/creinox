@@ -34,7 +34,7 @@ const editModes = {
 const MyTreeview = withDatatableStore(
   CreinoxTreeview, // tablecomponent
   { data: "regionData" }, // data source
-  dataActions.get_byRegion // fetch action
+  dataActions.get_treeNotesById // fetch action
 );
 
 // **************************************************************************************************

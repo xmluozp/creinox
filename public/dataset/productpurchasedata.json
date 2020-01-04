@@ -18,7 +18,7 @@
 
             "company_id": 1,
             "company_id.name": "某某工厂1",          
-            "price": 11.5,
+            "buyPrice": 11.5,
             "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
 
             "polishing_id": 1,
@@ -42,7 +42,7 @@
             
             "company_id": 1,
             "company_id.name": "某某工厂2",          
-            "price": 11.5,
+            "buyPrice": 11.5,
             "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
 
             "polishing_id": 1,

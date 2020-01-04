@@ -8,6 +8,8 @@ const Test = React.lazy(()=>import("./views/Test/TestPage"));
 //================ user
 const Users = React.lazy(() => import("./views/Users/Users"));
 const User = React.lazy(() => import("./views/Users/User"));
+const Roles = React.lazy(() => import("./views/Users/Roles"));
+const Role = React.lazy(() => import("./views/Users/Role"));
 const Commonitems = React.lazy(() => import("./views/Setting/Commonitems"));
 const Commonitem = React.lazy(() => import("./views/Setting/Commonitem"));
 const Images = React.lazy(() => import("./views/Image/Images"));
@@ -159,6 +161,30 @@ const routes = [
     component: User,
     authTag: "user"
   },
+  {
+    path: "/users/roles",
+    exact: true,
+    name: "角色列表",
+    component: Roles,
+    authTag: "user"
+  },
+  {
+    path: "/users/role",
+    exact: true,
+    name: "角色新增",
+    component: Role,
+    authTag: "user"
+  },
+  {
+    path: "/users/roles/:id",
+    exact: true,
+    name: "角色详情",
+    component: Role,
+    authTag: "user"
+  },
+
+
+
   //--------------------------------------------- 通用选项表
   {
     path: "/commonitems/commonitemsList/:commonType",

@@ -85,7 +85,7 @@ function _delete(pagination, id) {
 
 // ==============================================================================
 
-// TODO: url 取的是 commodity_product 这张表. 根据commodity搜索，返回product.
+// TODO: url 取的是 commodity_product 这张表. 根据commodity搜索，返回product. 排除Meta
 function get_bySearch_getProduct(pagination, searchTerms) {
 
     const requestOptions = {
@@ -103,7 +103,7 @@ function get_bySearch_getProduct(pagination, searchTerms) {
     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
 }
 
-// TODO: url 取的是 commodity_product 这张表. 根据 product 搜索，返回 commodity. 绝大多数情况只有一条数据
+// TODO: url 取的是 commodity_product 这张表. 根据 product 搜索，返回 commodity. 排除Meta
 function get_bySearch_getCommodity(pagination, searchTerms) {
 
     const requestOptions = {

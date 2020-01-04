@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 
-import { ICONS, enums } from "../../_constants";
+import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import { CreinoxTable, withDatatableStore, Inputs } from "../../components";
 import { history } from "../../_helper";

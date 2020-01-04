@@ -1,5 +1,3 @@
-import {authCheck} from './_helper';
-
 const navs = {
   items: [
     {
@@ -72,11 +70,6 @@ const navs = {
       authTag:'setting',
       children: [
         {
-          name: '用户',
-          url: '/users/users',
-          authTag:'user',
-        },
-        {
           name: '通用选项集',
           url: '/commonitems/commonitemsList/0',
           authTag:'commonitem',
@@ -96,6 +89,16 @@ const navs = {
           url: '/image/images',
           authTag:'image',
         },
+        {
+          name: '用户',
+          url: '/users/users',
+          authTag:'user',
+        },
+        {
+          name: '角色权限',
+          url: '/users/roles',
+          authTag:'user',
+        }
       ]
     },
 
@@ -103,24 +106,5 @@ const navs = {
 };
 
 
-const authFilter = (navsList) => {
 
-  const returnNav = navsList.items.filter((item) => {
-    const returnItem =item
-    // 确认item内部子元素权限
-    const returnItemChildren = returnItem.children && returnItem.children.filter((childItem)=>{
-      return authCheck(childItem.authTag)
-    })
-    returnItem.children = returnItemChildren;
-
-
-    // 确认item本身权限，返回item
-    return authCheck(returnItem.authTag);
-  })
-  navsList.items = returnNav;
-
-  return navsList;
-}
-
-
-export default authFilter(navs)
+export default navs

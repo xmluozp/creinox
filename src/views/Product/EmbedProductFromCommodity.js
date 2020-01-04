@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 
-import { ICONS, enums } from "../../_constants";
+import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import { CreinoxTable, withDatatableStore, Inputs } from "../../components";
 import { history } from "../../_helper";
@@ -80,22 +80,22 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
       });
     };
 
-    const renderOnShowIsMeta = (content, row) => {
+    // const renderOnShowIsMeta = (content, row) => {
 
-        return row.id === product_id && ICONS.TRUE("mr-4 text-success")
-    }
+    //     return row.id === product_id && ICONS.TRUE("mr-4 text-success")
+    // }
     // product_id
     // ============================================= render cell
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
-      {
-        name: "isMeta",
-        align: "center",
-        label: "主产品",
-        onShow: renderOnShowIsMeta,
-        disablePadding: true, 
-      },
+      // {
+      //   name: "isMeta",
+      //   align: "center",
+      //   label: "主产品",
+      //   onShow: renderOnShowIsMeta,
+      //   disablePadding: true, 
+      // },
       { name: "code" },
       { name: "name" },
       { name: "ename" },

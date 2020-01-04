@@ -6,7 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Divider from "@material-ui/core/Divider";
 
 //------redux
 import { connect } from "react-redux";
@@ -14,11 +13,11 @@ import { commodityActions as dataActions } from "../../_actions";
 import { commodityModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "../../components";
 // import { enumsLabel } from "../../_constants";
-import { history, h_fkFetch, h_filterImage } from "../../_helper";
+import { history, h_fkFetch } from "../../_helper";
 
 import { EmbedProductFromCommodity } from "../Product/EmbedProductFromCommodity";
 
-import { ICONS } from "../../_constants";
+// import { ICONS } from "../../_constants";
 
 const EDITURL = "/commodity/commodities";
 // const LISTURL = EDITURL
@@ -67,7 +66,6 @@ export const withProduct = () => {
               category_id: response.category_id,
               code: response.code,
               name: response.name,
-              sellPrice: response.sellPrice
             });
           }
         })
@@ -79,11 +77,10 @@ export const withProduct = () => {
     // 保存
     const handleOnSubmit = values => {
       if (isFromEdit) {
-        // 如果没有新的图片，就不上传图片
-        // values = h_filterImage(values, "image_id.row");
+
         onPutUpdate(values);
       } else {
-        // onPostCreate(values, history.location.pathname);
+
         onPostCreate(values, id => {
           // not using async. because I want loadingbar's codes put with callback codes
           history.push(EDITURL + "/" + id);
@@ -118,7 +115,7 @@ export const withProduct = () => {
                   actionName="get_disposable_dropdown_excludeMeta"
 
                   // note: 如果没有meta产品(操作者从产品那里让它下架了)，允许重新选择一个
-                  disabled={isFromEdit && defaultValues && defaultValues.product_id}
+                  disabled={isFromEdit && defaultValues && Number.isInteger(defaultValues.product_id)}
                   onChange={handleGetSourceProductOnChange}
                 />
               </Grid>
@@ -134,6 +131,10 @@ export const withProduct = () => {
               <Grid item lg={3} md={4} xs={12}>
                 <Inputs.MyInput inputid="sellPrice" disabled={true} />
               </Grid>
+              <Grid item lg={3} md={4} xs={12}>
+                <Inputs.MyComboboxCurrency inputid="currency_id" disabled={true} />
+              </Grid>
+
               <Grid item lg={12} md={12} xs={12}>
                 <Inputs.MyInput inputid="name" disabled={disabled} />
               </Grid>

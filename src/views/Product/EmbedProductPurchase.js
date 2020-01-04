@@ -18,7 +18,7 @@ const headCells = [
   { name: "id", disablePadding: true, className: "ml-2" },
   { name: "activeAt" },
   { name: "company_id" },
-  { name: "price" },
+  { name: "buyPrice" },
   { name: "currency_id" },
   { name: "expireAt" },
   { name: "spec1" },
@@ -78,7 +78,7 @@ const FormInputs = ({onLoad}) => {
           <Inputs.MyComboboxUnitType inputid="unitType_id" />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MyInput inputid="price" />
+          <Inputs.MyInput inputid="buyPrice" />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxCurrency inputid="currency_id" />

@@ -34,7 +34,7 @@ const editModes = {
 const MyTreeview = withDatatableStore(
   CreinoxTreeview, // tablecomponent
   { data: "categoryData" }, // data source
-  dataActions.get_byCategory // fetch action
+  dataActions.get_treeNotesById // fetch action
 );
 
 // **************************************************************************************************
@@ -74,6 +74,8 @@ const CurrentPage = ({
   };
 
   const handleOnSelect = node => {
+
+    console.log(onGetById)
     onGetById(node.id);
     setformEditMode(editModes.edit); // 设置成编辑模式
     setSelectedNode(node);

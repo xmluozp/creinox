@@ -1,6 +1,6 @@
-import { authHeader, handleResponse, handleResponseTestError, h_queryString } from '../_helper';
+import { authHeader, handleResponse, h_queryString } from '../_helper';
 // import _ from 'lodash';
-import axios from 'axios'
+// import axios from 'axios'
 
 export const imageService = {
     get_bySearch,

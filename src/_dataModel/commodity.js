@@ -16,7 +16,6 @@ export const commodityModel = {
 
         // 从产品获取，而不是数据库
         code:       {label: "产品货号",     type: _DATATYPES.VARCHAR}, 
-        sellPrice:   {label: "参考售价",     type: _DATATYPES.MONEY},  
         category_id:      {label: "产品分类",     type: _DATATYPES.TREE, ref:"category", refLabel: ["name"]},
         
         // 从commodity_product表取isMeta的。如果没有就为空
@@ -24,10 +23,14 @@ export const commodityModel = {
         "product.rows":      {label: "产品列表",     type: _DATATYPES.LIST, ref:"product", refLabel: ["name"]},
         
 
-        // 不属于数据库的表，从产品表取
+        // 不属于数据库的表，从外部获取。图片来自于产品
         image_id:   {label: "图",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
         "image_id.row": {label: "图",   type: _DATATYPES.ROW},
 
+        // 来自于销售价格表. commoditySell
+        sellPrice:   {label: "参考售价",     type: _DATATYPES.MONEY},  
+        currency_id:  {label: "币种",     type: _DATATYPES.TREE, ref:"common_item", refLabel: ["name"]},
+ 
         //============== 搜索用关联到外表的字段: 
         "companyDomesticCustomer.id": {label: "内销客户",  type: _DATATYPES.SELECT},
         "companyOverseasCustomer.id": {label: "外贸客户",  type: _DATATYPES.SELECT},

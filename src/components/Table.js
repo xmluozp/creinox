@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 // import { history } from "../_helper";
 
+import formatCurrency from "format-currency";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -113,6 +114,10 @@ export const CreinoxTable = ({
         if (dataModelColumn && dataModelColumn.type === _DATATYPES.ENUM) {
           originalContent = _DATATYPES.ENUM[columnName][originalContent];
         }
+        // 如果是Money，变成currency
+        if (dataModelColumn && dataModelColumn.type === _DATATYPES.MONEY) {
+          originalContent = formatCurrency(originalContent);
+        }
 
         // 如果是callBak，预先生成结果
         if (typeof column.onShow === "function") {
@@ -123,7 +128,7 @@ export const CreinoxTable = ({
         if (column.lookup) {
           columnContent = column.lookup[originalContent];
         } else {
-          columnContent = originalContent || "";
+          columnContent = originalContent;
         }
 
         rowObj[column.name] = columnContent;
@@ -316,13 +321,22 @@ export const CreinoxTable = ({
                 let originalContent = row[column.name];
                 let className = column.className;
 
+                // 如果是数字，右对齐
+                const dataModelColumn = _.get(dataModel, [
+                  "columns",
+                  column.name
+                ]);
+                const isNumber = dataModelColumn &&
+                  (dataModelColumn.type === _DATATYPES.INT ||
+                  dataModelColumn.type === _DATATYPES.DECIMAL ||
+                  dataModelColumn.type === _DATATYPES.MONEY) && column.name !=="id";
+
                 columnContent =
                   listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值
 
                 if (column.lookup) {
                   className =
                     _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
-                  console.log("className", columnContent);
                 }
                 const handleCellClick = column.onClick
                   ? column.onClick.bind(null, rowId)
@@ -335,19 +349,17 @@ export const CreinoxTable = ({
                 )); // 显示tip强制需要这段
 
                 return (
-                  index >= 0 &&
-                  index < headCells.length && (
                     <TableCell
                       key={`${rowId}_${index}`}
-                      align={column.align}
+                      align={column.align? column.align : isNumber? "right" : "left"}
                       onClick={handleCellClick}
                       className={className}
+                      style={{borderRight: "1px dashed rgba(224, 224, 224, 1)"}}
                     >
                       <Tooltip title={`${originalContent}`}>
                         <SolveRef />
                       </Tooltip>
                     </TableCell>
-                  )
                 );
               })}
               {// 放操作按钮的格子
@@ -356,16 +368,16 @@ export const CreinoxTable = ({
                   align="right"
                   style={{ minWidth: 80 * rowButtons.length }}
                 >
-                  {rowButtons.map((buttonObj, index) =>( 
-                      <ActionButton
-                        key={`button_${rowId}_${index}`}
-                        {...buttonObj}
-                        disabled="true"
-                        id={rowId}
-                        row={row}
-                        getPaginationFromState={getPaginationFromState}
-                      />
-                    ))}
+                  {rowButtons.map((buttonObj, index) => (
+                    <ActionButton
+                      key={`button_${rowId}_${index}`}
+                      {...buttonObj}
+                      disabled="true"
+                      id={rowId}
+                      row={row}
+                      getPaginationFromState={getPaginationFromState}
+                    />
+                  ))}
                 </TableCell>
               ) : null}
             </TableRow>
@@ -448,15 +460,10 @@ const ActionButton = ({
   icon,
   getPaginationFromState
 }) => {
-
-
-
   let injectOptions;
-  if(typeof(onShow)==='function') {
-    injectOptions = onShow(row)
+  if (typeof onShow === "function") {
+    injectOptions = onShow(row);
   }
-
-
 
   let returnValue = label;
   if (url) {

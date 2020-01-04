@@ -64,11 +64,11 @@ const Login = ({ onLogin }) => {
 }
 
 // 从reducer来的
-function mapState() {
-}
+// function mapState() {
+// }
 
 const actionCreators = {
   onLogin: userActions.login,
 };
 
-export default connect(mapState, actionCreators)(Login);
+export default connect(null, actionCreators)(Login);

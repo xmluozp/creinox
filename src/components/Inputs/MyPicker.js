@@ -114,10 +114,10 @@ function mapStateCategory(state) {
 }
 
 const actionCreatorsCategory = {
-  onGetBySearch: categoryActions.get_byCategory
+  onGetBySearch: categoryActions.get_treeNotesById
 };
 const actionCreatorsRegion = {
-  onGetBySearch: regionActions.get_byRegion
+  onGetBySearch: regionActions.get_treeNotesById
 };
 
 export const MyRegionPicker = connect(mapStateRegion, actionCreatorsRegion)(CurrentPicker);

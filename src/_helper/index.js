@@ -132,6 +132,7 @@ export function h_confirm(textMessage="确认操作") {
     return promise;
 }
 
+// 提交图片的时候，如果不是file object（是默认getById时候的image object）就不要提交
 export function h_filterImage(values, columnName) {
 
     const returnValues = values

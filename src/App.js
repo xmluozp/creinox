@@ -74,7 +74,7 @@ const UnauthenticatedRoute = ({ component: Component, user, ...rest }) => (
     {...rest}
     render={props => {
       return !isAuthenticated(user) ? (
-        <Component {...props} />
+        <Component {...props}/>
       ) : (
         <Redirect to="/" />
       );
@@ -87,7 +87,7 @@ const AuthenticatedRoute = ({ component: Component, user, ...rest }) => (
     {...rest}
     render={props => {
       return isAuthenticated(user) ? (
-        <Component {...props} />
+        <Component {...props}  user={user}/>
       ) : (
         <Redirect to="/login" />
       );

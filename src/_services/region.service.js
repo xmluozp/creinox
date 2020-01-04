@@ -8,7 +8,7 @@ export const regionService = {
     post_create,
     put_update,
     _delete: _delete,
-    get_byRegion
+    get_treeNotesById
 };
 
 const TABLENAME = "region";
@@ -74,7 +74,7 @@ function _delete(pagination, id) {
 
 
 // ============================================ customized
-function get_byRegion(regionId) {
+function get_treeNotesById(regionId) {
 
     // 后台需要取：根据Id匹配path+","+id。否则全部返回 SELECT * FROM region WHERE id = xx, path like CONCAT(region.path,"," ,region.id)
     // like只取右like（防止10,2这种混淆）
