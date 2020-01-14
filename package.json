@@ -90,7 +90,9 @@
     "mutationobserver-shim": "^0.3.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm run build && node server.js",
+    "deploy": "npm run build && git push heroku master",
+    "demo": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
