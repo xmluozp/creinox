@@ -51,13 +51,14 @@ export const withTablePage = () => {
    */
   const CurrentPage = ({ onDelete, pageName }) => {
     // ============================================= handles
-    const handleOnDelete = (pagination, id) => {
+    const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(pagination, id);
+        if (resolve) onDelete(id, pagination, searchTerms);
       });
     };
 
-    const handleOnEdit = (pagination, id) => {
+    const handleOnEdit = (id) => {
+      console.log(id)
       history.push(`${EDITURL}/${id}`);
     };
 

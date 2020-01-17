@@ -80,7 +80,7 @@ function put_update(item) {
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(pagination, id) {
+function _delete(id, pagination, searchTerms) {
     console.log("on delete service:", id);
     return new Promise(resolve => resolve("on delete service"))
 }
@@ -112,7 +112,7 @@ function post_create_assemble(item) {
     return new Promise(resolve => resolve("on assemble service"))
 }
 
-function _delete_disassemble(pagination, item) {
+function _delete_disassemble(item,pagination) {
     console.log("on disassemble service:", item);
     return new Promise(resolve => resolve("on disassemble service"))
 }

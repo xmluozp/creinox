@@ -54,7 +54,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = {
     }
     
     // prefixed function name with underscore because delete is a reserved word in javascript
-    function _delete(pagination, id) {
+    function _delete(id, pagination, searchTerms) {
         console.log("on delete service faceless:", id);
         return new Promise(resolve => resolve("on delete service"))
     }

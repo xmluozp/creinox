@@ -18,7 +18,6 @@ import { Provider } from 'react-redux';  // passes store down
 import store from './_helper/store';
 
 //=========================================================REDUX
-
 ReactDOM.render(
     <Provider store={store}>
         <App />

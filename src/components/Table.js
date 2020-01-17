@@ -44,7 +44,7 @@ export const CreinoxTable = ({
   // 默认数据（如果是页面，则从params里取）
   const defaultPagination = {
     page: 0,
-    perPage: 15,
+    perPage: 10,
     totalCount: 0,
     totalPage: 0,
     order: "desc",
@@ -83,10 +83,7 @@ export const CreinoxTable = ({
   const dataSearchTerms = data && data.searchTerms ? data.searchTerms : {};
   const emptyRows =
     dataPagination.perPage -
-    Math.min(
-      dataPagination.perPage,
-      dataPagination.totalCount - page * dataPagination.perPage
-    );
+    dataRows.length;
 
   // render数据预处理
   React.useEffect(() => {
@@ -156,7 +153,7 @@ export const CreinoxTable = ({
   // 根据store的翻页信息更新data (刷新触发)
   const p_fetchData = React.useCallback(
     () => {
-      return onGetBySearch({ page: 0 }, preConditions);
+      return onGetBySearch(defaultPagination, preConditions);
     }, // submit empty. refresh by store
     [onGetBySearch, preConditions]
   );
@@ -198,7 +195,7 @@ export const CreinoxTable = ({
     // fetchData
     p_updateData(
       { ...getPaginationFromState(), order: newOrder, orderBy: newOrderBy },
-      {}
+      dataSearchTerms // {}
     );
   };
 
@@ -208,7 +205,9 @@ export const CreinoxTable = ({
     setPage(newPage);
 
     // fetchData
-    p_updateData({ ...getPaginationFromState(), page: newPage }, {});
+    p_updateData({ ...getPaginationFromState(), page: newPage }, 
+    dataSearchTerms// {}
+    );
   };
 
   const handleChangeRowsPerPage = e => {
@@ -289,7 +288,7 @@ export const CreinoxTable = ({
 
           const handleRowDbClick =
             (typeof onRowDbClick === "function" &&
-              onRowDbClick.bind(null, getPaginationFromState(), rowId, row)) ||
+              onRowDbClick.bind(null,  rowId, row, getPaginationFromState())) ||
             null;
 
           return (
@@ -376,6 +375,7 @@ export const CreinoxTable = ({
                       id={rowId}
                       row={row}
                       getPaginationFromState={getPaginationFromState}
+                      searchTerms = {dataSearchTerms}
                     />
                   ))}
                 </TableCell>
@@ -383,7 +383,7 @@ export const CreinoxTable = ({
             </TableRow>
           );
         })}
-        {emptyRows > 0 && (
+        {emptyRows > 0 && ( // 补行
           <TableRow style={{ height: 33 * emptyRows }}>
             <TableCell colSpan={headCells.length + 1 + (selectBox && 1) || 0} />
           </TableRow>
@@ -458,7 +458,8 @@ const ActionButton = ({
   color,
   url,
   icon,
-  getPaginationFromState
+  getPaginationFromState,
+  searchTerms
 }) => {
   let injectOptions;
   if (typeof onShow === "function") {
@@ -483,7 +484,7 @@ const ActionButton = ({
   } else {
     const propsOnClick =
       typeof onClick === "function"
-        ? onClick.bind(null, getPaginationFromState(), id, row)
+        ? onClick.bind(null,  id, row, getPaginationFromState(),searchTerms)
         : null;
 
     returnValue = (

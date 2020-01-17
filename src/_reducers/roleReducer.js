@@ -17,7 +17,7 @@ export default (state = {}, action) => {
       return { ...state, dataById: action.payload }; // jump to a new page (edit or create page)
     case CONST.CREATE_FAILURE:
       return { ...state, errorById: action.payload }; // error message included
-    case CONST.DELETE_SUCCESS:
+    case CONST.DELETE_SUCCESS: 
       return { ...state, data: action.payload };
     case CONST.DELETE_FAILURE:
       return state;

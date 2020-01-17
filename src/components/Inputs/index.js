@@ -175,14 +175,28 @@ const MyInput = React.memo(({
   // ============= 修饰显示格式
   let inputStyle = {}
   let displayValue = value;
+  let isNumber = false
 
   if(dataType === _DATATYPES.INT || dataType === _DATATYPES.DECIMAL || dataType === _DATATYPES.MONEY)
   {
     inputStyle = {textAlign: "right"}
-  }
+    isNumber = true
+  } 
+  
   if(dataType === _DATATYPES.MONEY && !isNaN(value))
   {
     displayValue = formatCurrency(displayValue)
+    isNumber = true
+  }
+
+  const handleOnChange = (e) => {
+
+    value = e.target.value;
+    if(isNumber && !isNaN(value)) {
+      value = Number(value)
+    }
+
+    onChange(null, id, value)
   }
 
   return (
@@ -191,8 +205,9 @@ const MyInput = React.memo(({
       error={!disabled && error}
       disabled={disabled}
       id={id}
+      type={isNumber?"number":"text"}
       label={label}
-      onChange={onChange}
+      onChange={handleOnChange}
       margin="dense"
       value={displayValue}
       helperText={!disabled && helperText}

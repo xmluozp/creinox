@@ -113,10 +113,10 @@ function post_create_assemble(item, callBack = () => {}) {
   };
 }
 
-function _delete_disassemble(pagination, item) {
+function _delete_disassemble(item, pagination) {
   console.log("disassemble:", item);
   return dispatch => {
-    return service._delete_disassemble(pagination, item).then(
+    return service._delete_disassemble(item, pagination).then(
       response => {
         dispatch(success("解除成功"));
       },

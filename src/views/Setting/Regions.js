@@ -61,7 +61,7 @@ const CurrentPage = ({
   // ============================================= handles
   const handleOnDelete = id => {
     h_confirm("是否删除？").then(resolve => {
-      if (resolve) onDelete({}, id);
+      if (resolve) onDelete(id);
     });
   };
 

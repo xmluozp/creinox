@@ -19,6 +19,7 @@ const CurrentPage = ({
   onPostCreate,
   onPutUpdate,
   onGetById,
+  errorById,
   ...props
 }) => {
   const EDITURL = "/commonitems/commonitemsList"; // 编辑完毕跳转用
@@ -65,6 +66,7 @@ const CurrentPage = ({
               isFromEdit={isFromEdit}
               actionSubmit={handleOnSubmit}
               dataModel={dataModel}
+              errors={errorById}
             >
               <CardBody>
                 {/* form */}
@@ -129,7 +131,8 @@ const CurrentPage = ({
 
 function mapState(state) {
   return {
-    dataById: state.commonitemData.dataById
+    dataById: state.commonitemData.dataById,
+    errorById: state.commonitemData.errorById
   };
 }
 

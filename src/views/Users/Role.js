@@ -23,6 +23,7 @@ const CurrentPage = ({
   onPostCreate,
   onPutUpdate,
   onGetById,
+  errorById,
   ...props
 }) => {
 
@@ -65,6 +66,7 @@ const CurrentPage = ({
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
               isFromEdit={isFromEdit}
               actionSubmit={handleOnSubmit}
+              errors={errorById}
             >
               <CardBody>
                 {/* form */}
@@ -118,7 +120,8 @@ const CurrentPage = ({
 
 function mapState(state) {
   return {
-    dataById: state.roleData.dataById
+    dataById: state.roleData.dataById,
+    errorById: state.roleData.errorById
   };
 }
 

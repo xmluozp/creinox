@@ -78,7 +78,7 @@ function put_update(item) {
 }
 
 // TODO: 删除商品并且删除所有相关的many to many表
-function _delete(pagination, id) {
+function _delete(id, pagination, searchTerms) {
     console.log("on delete service:", id);
     return new Promise(resolve => resolve("on delete service"))
 }

@@ -69,7 +69,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
       h_confirm(
         "是否取消商品化？(如果该商品是组合商品，所有下属子产品都会解除绑定; 不会影响到部件的绑定状态)"
       ).then(resolve => {
-        if (resolve) onDelete({}, commodity_id);
+        if (resolve) onDelete(commodity_id);
       });
     };
 
@@ -89,7 +89,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
       setIsImageListMode(!isImageListMode);
     };
 
-    const handleOnEdit = (pagination, id) => {
+    const handleOnEdit = (id) => {
       history.push(`${EDITURL}/${id}`);
     };
 

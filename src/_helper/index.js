@@ -49,9 +49,11 @@ export function handleResponse(response) {
 }
 
 // test
-export function handleResponseTestError(response) {
+export function handleJsonResponse(response) {
 
     return response.text().then(text => {
+
+        console.log("error data", text);
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
@@ -60,6 +62,7 @@ export function handleResponseTestError(response) {
                 window.location.reload(true);
             }
 
+            
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }

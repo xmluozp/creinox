@@ -54,9 +54,9 @@ export const embedListProvider = (
     const [selectedRowId, setSelectedRowId] = useState();
 
     // ============================================= handles
-    const handleOnDelete = (pagination, id) => {
+    const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(pagination, id);
+        if (resolve) onDelete(id, pagination, searchTerms);
       });
     };
 
@@ -70,7 +70,7 @@ export const embedListProvider = (
     };
 
     // 打开关闭编辑框
-    const handleOnEditOpen = (pagination, id) => {
+    const handleOnEditOpen = (id) => {
       setIsModalEditOpen(true);
       setSelectedRowId(id);
     };

@@ -40,9 +40,9 @@ export const withProductList = (
 
 
     // ============================================= handles
-    const handleOnDelete = (pagination, id) => {
+    const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(pagination, id);
+        if (resolve) onDelete(id, pagination, searchTerms);
       });
     };
 
@@ -50,7 +50,7 @@ export const withProductList = (
       setIsImageListMode(!isImageListMode)
     }
 
-    const handleOnEdit = (pagination, id) => {
+    const handleOnEdit = (id) => {
       history.push(`${EDITURL}/${id}`);
     };
     const handleImageListMapping = (rows) => {

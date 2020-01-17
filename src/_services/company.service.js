@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, handleResponseTestError, h_queryString } from '../_helper';
+import { authHeader, handleResponse, handleJsonResponse, h_queryString } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -100,14 +100,14 @@ function put_update(item) {
     };
 
     const url = './dataset/companyerror_byId.json'
-    const updateReturn = fetch(`${url}`, requestOptions).then(handleResponseTestError);
+    const updateReturn = fetch(`${url}`, requestOptions).then(handleJsonResponse);
     return updateReturn
 
     // return new Promise(resolve => resolve("on update service"))
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(pagination, id) {
+function _delete(id, pagination, searchTerms) {
     console.log("on delete service:", id);
     return new Promise(resolve => resolve("on delete service"))
 }

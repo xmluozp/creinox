@@ -59,18 +59,18 @@ export const withTablePage = () => {
    */
   const CurrentPage = ({ onDelete, onDeleteMultiple, pageName }) => {
     // ============================================= handles
-    const handleOnDelete = (pagination, id) => {
+    const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(pagination, id);
+        if (resolve) onDelete(id, pagination, searchTerms);
       });
     };
     const handleSelectAction = list => {
       h_confirm("是否批量删除？").then(resolve => {
-        if (resolve) onDeleteMultiple({}, list);
+        if (resolve) onDeleteMultiple(list);
       });      
     };
 
-    const handleOnEdit = (pagination, id, row) => {
+    const handleOnEdit = (id, row) => {
       window.open(row.path , "_blank");
     };
 

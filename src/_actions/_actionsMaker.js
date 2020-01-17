@@ -15,6 +15,7 @@ export const loaded = { type: LOADING.SUCCESS };
 export const loadedFailure = { type: LOADING.FAILURE };
 
 export const _am = (CONST, service) => {
+
   function get_dropdown(pagination, searchTerms = {}) {
     return dispatch => {
       dispatch(loading);
@@ -98,6 +99,7 @@ export const _am = (CONST, service) => {
           callBack(id);
         },
         error => {
+          console.log(error)
           dispatch(loadedFailure);
           dispatch(failure("保存失败"));
           dispatch(done(error, CONST.CREATE_FAILURE));
@@ -148,11 +150,12 @@ export const _am = (CONST, service) => {
     };
   }
 
-  function _delete(pagination, id) {
+  function _delete(id, pagination, searchTerms) {
     // pagination: 删除后刷新列表用
     return dispatch => {
-      return service._delete(pagination, id).then(
+      return service._delete(id, pagination, searchTerms).then(
         response => {
+          console.log(response)
           dispatch(success("删除成功"));
           dispatch(done(response, CONST.DELETE_SUCCESS));
         },
@@ -163,12 +166,13 @@ export const _am = (CONST, service) => {
     };
   }
 
-  function _deleteMultiple(pagination, list) {
+  function _deleteMultiple(list, pagination, searchTerms) {
     // pagination: 删除后刷新列表用
     return dispatch => {
-      return service._deleteMultiple(pagination, list).then(
+      return service._deleteMultiple(list, pagination, searchTerms).then(
         response => {
           dispatch(success("批量删除成功"));
+          
           dispatch(done(response, CONST.DELETE_SUCCESS));
         },
         error => {

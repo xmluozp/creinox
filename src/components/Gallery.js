@@ -61,7 +61,7 @@ const GalleryBeforeConnect = ({
 
   // 删除
   const deleteSelected = () => {
-    onDeleteMultiple({}, Array.from(selectedImages));
+    onDeleteMultiple(Array.from(selectedImages));
   };
 
   // Edit mode; Browse mode; select all; delete; upload

@@ -1,75 +1,87 @@
-import { authHeader, handleResponse, h_queryString} from '../_helper';
+import { authHeader, handleResponse, handleJsonResponse, h_queryString } from "../_helper";
 // import axios from 'axios'
 
 export const roleService = {
-    get_dropdown,
-    get_bySearch,
-    get_byId,
-    post_create,
-    put_update,
-    _delete: _delete
+  get_dropdown,
+  get_bySearch,
+  get_byId,
+  post_create,
+  put_update,
+  _delete: _delete
 };
 
-const TABLENAME = "role"
-// const URL = 'http://localhost:3000/api/role';
+const TABLENAME = "role";
+
+const URL = `/api/role`;
 
 function get_dropdown(pagination, searchTerms = {}) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
 
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader(),
-    };
+  console.log("get_all service:", pagination);
 
-    console.log("get_all service:", pagination);
+  const queryString = h_queryString(pagination, {}, TABLENAME);
 
-    const queryString = h_queryString(pagination, {}, TABLENAME);
-    const url = './dataset/roledata.json'
-    // pagination也可以在这里拆开了放进uri
+  // pagination也可以在这里拆开了放进uri
 
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
-    // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
+  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
 }
 
 function get_bySearch(pagination, searchTerms = {}) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
 
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader(),
-    };
-
-    
-    const queryString = h_queryString(pagination,searchTerms, TABLENAME)
-    const url = './dataset/roledata.json'
-    console.log("search service:", queryString);
-
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+  const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+  console.log("search service:", queryString);
+  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }
 
-
 function get_byId(id) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
 
-    const url = './dataset/roledata_byId.json'
-    console.log("getId service,", id)
-
-    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}?id=${id}`, requestOptions).then(handleResponse);
+  console.log("getId service,", id);
+  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
-    return new Promise(resolve => resolve("on create service"))
+  const requestOptions = {
+    method: "POST",
+    headers: { ...authHeader(), "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  };
+
+  return fetch(`${URL}`, requestOptions).then(handleJsonResponse);
 }
 
 function put_update(item) {
-    return new Promise(resolve => resolve("on update service(实现后应该返回新数据)"))
+  const requestOptions = {
+    method: "PUT",
+    headers: { ...authHeader(), "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  };
+
+  return fetch(`${URL}`, requestOptions).then(handleJsonResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(pagination, id) {
-    console.log("on delete service:", id);
-    return new Promise(resolve=>resolve("on delete service"))
-}
+function _delete(id, pagination, searchTerms = {}) {
+  console.log("on delete service:", id);
+  const requestOptions = {
+    method: "DELETE",
+    headers: authHeader()
+  };
 
+  const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+
+  return fetch(`${URL}/${id}?${queryString}`, requestOptions)
+    .then(handleResponse)
+    .then(() => get_bySearch(pagination, searchTerms));
+}

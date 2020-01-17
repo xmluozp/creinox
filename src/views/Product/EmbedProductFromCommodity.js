@@ -57,7 +57,7 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
       setIsImageListMode(!isImageListMode);
     };
 
-    const handleOnEdit = (pagination, id) => {
+    const handleOnEdit = (id) => {
       history.push(`${EDITURL}/${id}`);
     };
 

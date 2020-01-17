@@ -63,7 +63,7 @@ const withProductList = (
       setIsImageListMode(!isImageListMode);
     };
 
-    const handleOnEdit = (pagination, id) => {
+    const handleOnEdit = (id) => {
       history.push(`${EDITURL}/${id}`);
     };
     const handleImageListMapping = rows => {

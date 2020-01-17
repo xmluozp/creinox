@@ -36,7 +36,6 @@ const App = ({ user }) => {
 
   // 用户为空则跳到登录页
   // const renderpage = user? props => <DefaultLayout {...props}/> : props => <LoginPage {...props}/>
-
   return (
     <HashRouter>
       <React.Suspense fallback={loading()}>
