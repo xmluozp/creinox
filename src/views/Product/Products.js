@@ -25,7 +25,7 @@ import { productModel as dataModel } from "../../_dataModel";
 export const withProductList = (
   pageCategoryId = 0,
   EDITURL = "/product/products",
-  CREATEURL = "/product/product",
+  CREATEURL = "/product/products/add",
 ) => {
   // inject data
   const MyTable = withDatatableStore(
@@ -134,7 +134,7 @@ export const withProductList = (
         optionLabel="userName"
         tableName="user"
       />
-      <Inputs.MyDateRangePicker inputid="retriveTime" />
+      <Inputs.MyDateRangePicker inputid="retrieveTime" />
     </>
   );
 

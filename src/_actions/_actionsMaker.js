@@ -28,7 +28,9 @@ export const _am = (CONST, service) => {
         },
         error => {
           dispatch(loadedFailure);
-          dispatch(failure(error.toString()));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
         }
       );
     };
@@ -45,7 +47,9 @@ export const _am = (CONST, service) => {
         },
         error => {
           dispatch(loadedFailure);
-          dispatch(failure(error.toString()));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
         }
       );
     };
@@ -62,7 +66,9 @@ export const _am = (CONST, service) => {
         },
         error => {
           dispatch({ type: LOADING.FAILURE });
-          dispatch(alertActions.error(error.toString()));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
         }
       );
     };
@@ -79,7 +85,9 @@ export const _am = (CONST, service) => {
         },
         error => {
           dispatch(loadedFailure);
-          dispatch(failure(error.toString()));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
         }
       );
     };
@@ -92,7 +100,8 @@ export const _am = (CONST, service) => {
       return service.post_create(item).then(
         response => {
           dispatch(loaded);
-          dispatch(success("保存成功"));
+          const info = response && response.info ? response.info : ""
+          dispatch(success("保存成功" + info.toString()));
           dispatch(done(response, CONST.CREATE_SUCCESS));
 
           const id = (response.row && response.row.id) || null;
@@ -101,7 +110,9 @@ export const _am = (CONST, service) => {
         error => {
           console.log(error)
           dispatch(loadedFailure);
-          dispatch(failure("保存失败"));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure("保存失败." + errorInfo.toString()));
           dispatch(done(error, CONST.CREATE_FAILURE));
         }
       );
@@ -115,7 +126,8 @@ export const _am = (CONST, service) => {
       return service.post_createMultiple(itemList).then(
         response => {
           dispatch(loaded);
-          dispatch(success("保存成功"));
+          const info = response && response.info ? response.info : ""
+          dispatch(success("保存成功" + info.toString()));
           dispatch(done(response, CONST.CREATE_SUCCESS));
           // const id = (response.row && response.row.id) || null
           // 这里callback是一个id list. 但假如需要刷新，用不到这个list
@@ -123,7 +135,9 @@ export const _am = (CONST, service) => {
         },
         error => {
           dispatch(loadedFailure);
-          dispatch(failure("保存失败"));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure("保存失败." + errorInfo.toString()));
           dispatch(done(error, CONST.CREATE_FAILURE));
         }
       );
@@ -137,13 +151,16 @@ export const _am = (CONST, service) => {
       return service.put_update(item).then(
         response => {
           dispatch(loaded);
-          dispatch(success("保存成功"));
+          const info = response && response.info ? response.info : ""
+          dispatch(success("保存成功" + info.toString()));
           dispatch(done(response, CONST.UPDATE_SUCCESS));
           callBack(response);
         },
         error => {
           dispatch(loadedFailure);
-          dispatch(failure("保存失败"));
+
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure("保存失败." + errorInfo.toString()));
           dispatch(done(error, CONST.UPDATE_FAILURE));
         }
       );
@@ -156,11 +173,13 @@ export const _am = (CONST, service) => {
       return service._delete(id, pagination, searchTerms).then(
         response => {
           console.log(response)
-          dispatch(success("删除成功"));
+          const info = response && response.info ? response.info : ""
+          dispatch(success("删除成功" + info.toString()));
           dispatch(done(response, CONST.DELETE_SUCCESS));
         },
         error => {
-          dispatch(failure("删除失败, " + error.toString()));
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure("删除失败. " + errorInfo.toString()));
         }
       );
     };
@@ -171,12 +190,13 @@ export const _am = (CONST, service) => {
     return dispatch => {
       return service._deleteMultiple(list, pagination, searchTerms).then(
         response => {
-          dispatch(success("批量删除成功"));
-          
+          const info = response && response.info ? response.info : ""
+          dispatch(success("批量删除成功" + info.toString()));
           dispatch(done(response, CONST.DELETE_SUCCESS));
         },
         error => {
-          dispatch(failure("批量删除失败, " + error.toString()));
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure("批量删除失败. " + errorInfo.toString()));
         }
       );
     };

@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import {
   MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
 
@@ -62,7 +63,7 @@ const MyDatePicker = React.memo(({
 }) => {
   const handleOnChange = (timeString, timeObject) => {
     if (typeof onChange === "function") {
-      onChange(null, id, timeObject);
+      onChange(null, id, new Date(timeObject).toISOString());
     }
   };
 
@@ -84,6 +85,43 @@ const MyDatePicker = React.memo(({
     </MuiPickersUtilsProvider>
   );
 });
+
+const MyDateTimePicker = React.memo(({
+  id,
+  label = "选择日期",
+  value,
+  onChange = () => {},
+  fullWidth = true,
+  disabled = false
+}) => {
+  const handleOnChange = (timeString, timeObject) => {
+    if (typeof onChange === "function") {
+      onChange(null, id, new Date(timeObject).toISOString());
+    }
+  };
+
+  // new Date(value).toISOString()
+
+  return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils} style={{ marginTop: "0px" }}>
+      <KeyboardDateTimePicker
+        fullWidth={fullWidth}
+        disabled={disabled}
+        margin="dense"
+        id={id}
+        label={label}
+        format="yyyy/MM/dd HH:mm:ss"
+        value={value || new Date()}
+        onChange={handleOnChange}
+        KeyboardButtonProps={{
+          "aria-label": "select date"
+        }}
+      />
+    </MuiPickersUtilsProvider>
+  );
+});
+
+
 
 // ==================================================================================Date picker for range
 const MyDateRangePicker = React.memo(({
@@ -209,7 +247,7 @@ const MyInput = React.memo(({
       label={label}
       onChange={handleOnChange}
       margin="dense"
-      value={displayValue}
+      value={displayValue || ""}
       helperText={!disabled && helperText}
       multiline={multiline}
       rows={rows}
@@ -301,7 +339,7 @@ const MySwitch = React.memo(({
           id={id}
           checked={isChecked}
           onChange={handleOnChange}
-          value={value}
+          value={value ? true:false}
           disabled={disabled}
           color="primary"
         />
@@ -341,6 +379,7 @@ export const Inputs = {
   MyComboboxCurrency,
   MySelect,
   MyDatePicker,
+  MyDateTimePicker,
   MyDateRangePicker,
   MyEditButton,
   MyInput,

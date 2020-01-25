@@ -16,7 +16,7 @@ import { userModel as dataModel } from "../../_dataModel";
 
 
 const EDITURL = "/users/users";
-const CREATEURL = "/users/user";
+const CREATEURL = "/users/users/add";
 const DATASTORE = "userData";
 
 export const withTablePage = () => {

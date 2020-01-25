@@ -55,7 +55,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
         onPutUpdate({ companyType: companyType, ...values });
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate(values, id => {
+        onPostCreate({ companyType: companyType, ...values }, id => {
           // not using async. because I want loading bar's codes put with callback codes
           history.push(EDITURL + "/" + id);
         });
@@ -249,7 +249,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
           />
         </Grid>
         <Grid item lg={6} xs={12}>
-          <Inputs.MyDatePicker inputid="retriveTime" disabled={disabled} />
+          <Inputs.MyDatePicker inputid="retrieveTime" disabled={disabled} />
         </Grid>
         <Grid item lg={4} xs={12}>
           <Inputs.MyComboboxFK

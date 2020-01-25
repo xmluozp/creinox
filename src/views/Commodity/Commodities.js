@@ -25,7 +25,7 @@ import { commodityModel as dataModel } from "../../_dataModel";
 export const withCommodityList = (
   pageCategoryId = 0,
   EDITURL = "/commodity/commodities",
-  CREATEURL = "/commodity/commodity",
+  CREATEURL = "/commodity/commodities/add",
 ) => {
   // inject data
   const MyTable = withDatatableStore(

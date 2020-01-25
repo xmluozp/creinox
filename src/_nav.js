@@ -77,12 +77,12 @@ const navs = {
         {
           name: '商品类别树',
           url: '/product/categories',
-          authTag:'categories',
+          authTag:'category',
         },
         {
           name: '国家地区集',
           url: '/setting/regions',
-          authTag:'regions',
+          authTag:'region',
         },
         {
           name: '已上传图片',

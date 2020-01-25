@@ -20,7 +20,7 @@ export function authHeader() {
         let user = JSON.parse(localStorage.getItem('user'));
 
         if (user && user.token) {
-            return { 'Authorization': 'Bearer ' + user.token };
+            return { 'Authorization': user.token };
         } else {
             return {};
         }  
@@ -33,15 +33,20 @@ export function handleResponse(response) {
 
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+
         if (!response.ok) {
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
                 userService.logout();
-                window.location.reload(true);
+                // window.location.reload(true);
             }
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+            if ( !(data && data.info)) {
+                data.info = response.statusText;
+            }
+            
+            // const error = (data && data.message) || response.statusText;
+            return Promise.reject(data);
         }
 
         return data;
@@ -92,6 +97,16 @@ export function h_keyNames(object) {
 
     return returnValue;
 }
+
+// 避免服务端出错，所有空值都去掉
+export function h_nilFilter(object) {
+
+    for (let [key, value] of Object.entries(object)) {
+        if(!value){ delete object[key]}
+    }
+    return object;
+}
+
 
 export function h_headCellsMaker(model, column) {
 

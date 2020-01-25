@@ -19,8 +19,8 @@ import { commonitemActions as dataActions } from "../../_actions";
 import { commonitemModel as dataModel } from "../../_dataModel";
 
 const LISTURL = "/commonitems/commonitemsList";
-const EDITURL = "/commonitems/commonitems";
-const CREATEURL = "/commonitems/commonitem";
+const EDITURL = "/commonitems/commonitemsList";
+const CREATEURL = "/commonitems/commonitemsList";
 const DATASTORE = "commonitemData";
 
 export const withTablePage = () => {
@@ -87,7 +87,7 @@ export const withTablePage = () => {
     };
 
     const handleOnEdit = (id) => {
-      history.push(`${EDITURL}/${id}`);
+      history.push(`${EDITURL}/${currentCommonType}/${id}`);
     };
 
     // 3rd navigation: handle page switch
@@ -102,7 +102,7 @@ export const withTablePage = () => {
       {
         label: "详情",
         color: "primary",
-        url: EDITURL,
+        url: `${EDITURL}/${currentCommonType}`,
         icon: ICONS.EDIT("mr-1")
       },
       {
@@ -116,7 +116,7 @@ export const withTablePage = () => {
     const toolbarButtons = [
       {
         label: "Create",
-        url: `${CREATEURL}/${currentCommonType}`,
+        url: `${CREATEURL}/${currentCommonType}/add`,
         color: "success",
         icon: ICONS.ADD()
       }

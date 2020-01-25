@@ -81,7 +81,6 @@ const CurrentPage = ({
                  
                   <Grid item lg={12} xs={12}>
                     <Inputs.MyCombobox
-                      inputid="role_id"
                       multiple={true}
                       inputid="auth"
                       options={authOptions}

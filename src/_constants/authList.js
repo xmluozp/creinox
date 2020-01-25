@@ -1,8 +1,9 @@
 export const allAuthList = [
+    "all",
     "setting",
     "user",
     "test",
-    "regions",
+    "region",
     "commonitem",
     "image",
     "companyinternal",
@@ -11,12 +12,13 @@ export const allAuthList = [
     "companydomestic",
     "companyshipping",
     "product",
-    "categories",
+    "category",
     "productpurchase",
     "commodity",
   ];
     
   export const allAuthListLabel = [
+    "所有权限(超级管理员用)",
     "系统",
     "用户",
     "测试",
@@ -37,7 +39,6 @@ export const allAuthList = [
   // 根据这个列表生成object用于下拉选项
   const getAuthList = () => {
     const returnValue = allAuthList.map((value, index) => {
-
         return {id: index, name:allAuthListLabel[index], value: value }
     });
 

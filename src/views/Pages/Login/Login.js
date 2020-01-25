@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-
+import Toastr from "../../../components/toastr";
 import { handleOnChange } from '../../../_helper'
 import { userActions } from '../../../_actions';
 
@@ -19,6 +19,7 @@ const Login = ({ onLogin }) => {
 
   return (
     <div className="app flex-row align-items-center">
+    <Toastr />
       <Container>
         <Row className="justify-content-center">
           <Col md="8">
@@ -64,8 +65,9 @@ const Login = ({ onLogin }) => {
 }
 
 // 从reducer来的
-// function mapState() {
-// }
+function mapState() {
+
+}
 
 const actionCreators = {
   onLogin: userActions.login,

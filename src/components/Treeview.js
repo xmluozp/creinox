@@ -116,7 +116,7 @@ export const CreinoxTreeview = ({
     const dataRowsShorted = _.orderBy(dataRows, ["path"], ["asc"]);
     const treeObjectTemp = {};
     dataRowsShorted.map(item => {
-      const pathArray = item.path.split(",");
+      const pathArray = (item.path && item.path.split(",")) || [0];
 
       let pathWithChildren = "";
 

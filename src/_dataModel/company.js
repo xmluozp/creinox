@@ -24,7 +24,7 @@ export const companyModel = {
         memo:       {label: "经营范围",     type: _DATATYPES.TEXT},
         isActive:   {label: "可用",     type: _DATATYPES.BOOLEAN},
 
-        retriveTime:{label: "找回日期", type: _DATATYPES.DATETIME},
+        retrieveTime:{label: "找回日期", type: _DATATYPES.DATE},
         updateAt:   {label: "上次操作日期", type: _DATATYPES.DATETIME},
         createAt:   {label: "录入日期", type: _DATATYPES.DATETIME},
 

@@ -174,8 +174,8 @@ export class CreinoxForm extends React.Component {
             if (isInput) {
               // 如果是控件就注入，否则原样返回
               const columnId = item.props.inputid;
-              const isError = errors && errors.hasOwnProperty(columnId);
-              const errorMessage = errors && errors[columnId];
+              const isError = errors && errors.message && errors.message.hasOwnProperty(columnId);
+              const errorMessage = errors && errors.message && errors.message[columnId];
 
               return injectedInputs({
                 item: item,

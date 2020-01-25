@@ -1,6 +1,6 @@
 import React from "react";
 
-import _ from "lodash";
+// import _ from "lodash";
 // import { format } from 'date-fns'
 // import TextField from "@material-ui/core/TextField";
 
@@ -8,7 +8,7 @@ import _ from "lodash";
 import { connect } from "react-redux";
 import { ICONS } from "../../_constants";
 import { h_confirm, history } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
+import { CreinoxTable, withDatatableStore } from "../../components";
 
 // ******************************************************************* page setting
 import { roleActions as dataActions } from "../../_actions";
@@ -16,7 +16,7 @@ import { roleModel as dataModel } from "../../_dataModel";
 
 
 const EDITURL = "/users/roles";
-const CREATEURL = "/users/role";
+const CREATEURL = "/users/roles/add";
 const DATASTORE = "roleData";
 
 export const withTablePage = () => {
@@ -58,7 +58,6 @@ export const withTablePage = () => {
     };
 
     const handleOnEdit = (id) => {
-      console.log(id)
       history.push(`${EDITURL}/${id}`);
     };
 

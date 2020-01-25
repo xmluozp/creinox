@@ -78,7 +78,16 @@ export function h_queryString(pagination = {}, searchTerm = {}, table) {
     const oldSearchTerms = h_dataSearchTerms(table);
 
     const newPagination = {...oldPagination, ...pagination}
-    const newSearchTerms = {...oldSearchTerms, ...searchTerm} 
+    let newSearchTerms = {...oldSearchTerms, ...searchTerm} 
+
+    for (let [key, value] of Object.entries(newSearchTerms)) {
+        if(!isNaN(value)) {
+            newSearchTerms[key] = value.toString()
+        }
+        
+    }
+    console.log(newSearchTerms)
+
 
     let searchString; 
     searchString = encodeURIComponent(JSON.stringify(newSearchTerms));

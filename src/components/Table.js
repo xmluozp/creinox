@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
+import { format } from 'date-fns'
 // import { history } from "../_helper";
 
 import formatCurrency from "format-currency";
@@ -115,6 +116,19 @@ export const CreinoxTable = ({
         if (dataModelColumn && dataModelColumn.type === _DATATYPES.MONEY) {
           originalContent = formatCurrency(originalContent);
         }
+
+        // 如果是时间，改变格式
+        if (dataModelColumn && dataModelColumn.type === _DATATYPES.DATETIME) {
+
+          const newDateTime = new Date(originalContent)
+          originalContent = format(newDateTime, "yyyy/MM/dd HH:mm:ss");
+        } 
+
+        if (dataModelColumn && dataModelColumn.type === _DATATYPES.DATE) {
+
+          const newDateTime = new Date(originalContent)
+          originalContent = format(newDateTime, "yyyy/MM/dd");
+        }    
 
         // 如果是callBak，预先生成结果
         if (typeof column.onShow === "function") {

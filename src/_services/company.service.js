@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, handleJsonResponse, h_queryString } from '../_helper';
+import { authHeader, handleResponse, h_nilFilter, h_queryString } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -15,19 +15,19 @@ export const companyService = {
 
 const TABLENAME = "company";
 
-// const url = 'http://localhost:3000/api/';
+const URL = `/api/company`;
+
 function get_dropdown(companyType) {
 
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
-    let url;
+
+    const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
     console.log("getdropdown service:", companyType);
-    url = companyType === 1? './dataset/companydata.json' : './dataset/companydata2.json'
 
-    return fetch(`${url}?${companyType}`, requestOptions).then(handleResponse);
-
+    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_disposable_dropdown(searchTerms) {
@@ -38,77 +38,70 @@ function get_disposable_dropdown(searchTerms) {
     };
 
     const queryString = h_queryString({}, searchTerms, TABLENAME)
-    
-    let url;
-    console.log("getdropdown with search:", searchTerms);
-    console.log("searchTerms", searchTerms)
-    url = searchTerms.companyType === 1 ? './dataset/companydata.json' : './dataset/companydata2.json'
 
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+    console.log("getdropdown with search:", searchTerms);
+    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const requestOptions = {
-        method: 'GET',
+        method: "GET",
         headers: authHeader()
-    };
+      };
 
-    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/companydata.json'
-    console.log("search service:", queryString);
-
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+      console.log("search service:", searchTerms);
+      const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+      console.log("search service:", queryString);
+      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
 function get_byId(id) {
 
     const requestOptions = {
-        method: 'GET',
+        method: "GET",
         headers: authHeader()
-    };
-
-    const url = './dataset/companydata_byId.json'
-    console.log("getId service,", id)
-
-    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}?id=${id}`, requestOptions).then(handleResponse);
+      };
+    
+      console.log("getId service,", id);
+      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
     const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+        method: "POST",
+        headers: { ...authHeader(), "Content-Type": "application/json" },
+        body: JSON.stringify(h_nilFilter(item))
+      };
+    
+      return fetch(`${URL}`, requestOptions).then(handleResponse);
 
-    const url = './dataset/companydata_byId.json'
-    console.log("getId create,", item)
-
-    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}`, requestOptions).then(handleResponse);
 }
 
-// 测试错误信息
 function put_update(item) {
 
     const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    const url = './dataset/companyerror_byId.json'
-    const updateReturn = fetch(`${url}`, requestOptions).then(handleJsonResponse);
-    return updateReturn
-
-    // return new Promise(resolve => resolve("on update service"))
+        method: "PUT",
+        headers: { ...authHeader(), "Content-Type": "application/json" },
+        body: JSON.stringify(h_nilFilter(item))
+      };
+    
+      return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
-// prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id, pagination, searchTerms) {
-    console.log("on delete service:", id);
-    return new Promise(resolve => resolve("on delete service"))
+    const requestOptions = {
+        method: "DELETE",
+        headers: authHeader()
+      };
+    
+      const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+    
+      return fetch(`${URL}/${id}?${queryString}`, requestOptions)
+        .then(handleResponse)
+        .then(() => get_bySearch(pagination, searchTerms));
 }
 

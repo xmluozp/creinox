@@ -19,7 +19,7 @@ export const productModel = {
         thickness:  {label: "厚度(mm)",     type: _DATATYPES.DECIMAL},   
         unitWeight: {label: "单位重量(g)",     type: _DATATYPES.DECIMAL},   
 
-        retriveTime:{label: "找回日期", type: _DATATYPES.DATETIME},
+        retrieveTime:{label: "找回日期", type: _DATATYPES.DATE},
         updateAt:   {label: "上次操作日期", type: _DATATYPES.DATETIME},
         createAt:   {label: "录入日期", type: _DATATYPES.DATETIME},
         memo:       {label: "备注",     type: _DATATYPES.TEXT},   

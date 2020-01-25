@@ -24,8 +24,8 @@ import { companyModel as dataModel } from "../../_dataModel";
 
 export const withCompanyList = (
   pagetype = 0,
-  EDITURL = "/company/company",
-  CREATEURL = EDITURL
+  EDITURL = "/company/companies",
+  CREATEURL = "/company/companies/add"
 ) => {
   
   // inject data
@@ -43,7 +43,7 @@ export const withCompanyList = (
     { name: "name" },
     { name: "shortname" },
     { name: "address" },
-    { name: "retriveTime" },
+    { name: "retrieveTime" },
     { name: "retriever_id" } // 从取回的数据 retriever_id.userName 显示
   ];
 
@@ -58,7 +58,7 @@ export const withCompanyList = (
         optionLabel="userName"
         tableName="user"
       />
-      <Inputs.MyDateRangePicker inputid="retriveTime" />
+      <Inputs.MyDateRangePicker inputid="retrieveTime" />
     </>
   );
 

@@ -7,8 +7,8 @@ export const regionModel = {
         id :        {label: "ID",         type: _DATATYPES.INT },
         name:       {label: "名称",       type: _DATATYPES.VARCHAR},    
         ename:      {label: "英文名",     type: _DATATYPES.VARCHAR},    
-        telPrefix:  {label: "区号",   type: _DATATYPES.VARCHAR},   
-        code:  {label: "区号",   type: _DATATYPES.VARCHAR},    
+        telPrefix:  {label: "电话区号",   type: _DATATYPES.VARCHAR},   
+        code:  {label: "地区代码",   type: _DATATYPES.VARCHAR},    
 
         treeLock:   {label: "是否锁定",   type: _DATATYPES.BOOLEAN},    
         memo:       {label: "简介",       type: _DATATYPES.TEXT},

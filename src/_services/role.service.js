@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, handleJsonResponse, h_queryString } from "../_helper";
+import { authHeader, handleResponse,  h_queryString, h_nilFilter } from "../_helper";
 // import axios from 'axios'
 
 export const roleService = {
@@ -55,20 +55,22 @@ function post_create(item) {
   const requestOptions = {
     method: "POST",
     headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(item)
+    body: JSON.stringify(h_nilFilter(item))
   };
 
-  return fetch(`${URL}`, requestOptions).then(handleJsonResponse);
+  console.log("处理过的json",h_nilFilter(item))
+
+  return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
 function put_update(item) {
   const requestOptions = {
     method: "PUT",
     headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(item)
+    body: JSON.stringify(h_nilFilter(item))
   };
 
-  return fetch(`${URL}`, requestOptions).then(handleJsonResponse);
+  return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

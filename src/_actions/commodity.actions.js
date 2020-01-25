@@ -31,7 +31,8 @@ function get_byId(commodity_id = 0, product_id = 0, isMeta = false) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -56,7 +57,8 @@ function get_disposable_dropdown(keyword, preConditions) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -72,7 +74,8 @@ function get_bySearch_getProduct(pagination, searchTerms = {}) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -88,7 +91,8 @@ function get_bySearch_getCommodity(pagination, searchTerms = {}) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -101,13 +105,16 @@ function post_create_assemble(item, callBack = () => {}) {
     return service.post_create_assemble(item).then(
       response => {
         dispatch(loaded);
-        dispatch(success("添加成功"));
+
+        const info = response && response.info ? response.info : ""
+        dispatch(success("添加成功" + info.toString()));
 
         callBack();
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure("添加失败" + error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure("添加失败." + errorInfo.toString()));
       }
     );
   };
@@ -121,7 +128,8 @@ function _delete_disassemble(item, pagination) {
         dispatch(success("解除成功"));
       },
       error => {
-        dispatch(failure("解除失败"));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure("解除失败." + errorInfo.toString()));
       }
     );
   };

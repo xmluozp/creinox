@@ -84,7 +84,7 @@ const CurrentPage = ({
                     <Inputs.MyInput inputid="fullName" disabled={disabled} />
                   </Grid>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyInput inputid="ip" disabled={isFromEdit} />
+                    <Inputs.MyInput inputid="ip" disabled={true} />
                   </Grid>
                   <Grid item lg={4} xs={12}>
                     <Inputs.MyComboboxFK
@@ -106,10 +106,10 @@ const CurrentPage = ({
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyDatePicker inputid="lastLogin" disabled={true} />
+                    <Inputs.MyDateTimePicker inputid="lastLogin" disabled={true} />
                   </Grid>
                   <Grid item lg={4} xs={12}>
-                    <Inputs.MyDatePicker inputid="createAt" disabled={true} />
+                    <Inputs.MyDateTimePicker inputid="createAt" disabled={true} />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>

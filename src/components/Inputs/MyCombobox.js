@@ -90,7 +90,7 @@ export const MyCombobox = React.memo(
       currentValue = value ? value.split(",") : [];
 
       getOptionLabel = option => {
-        return options[option].name || null;
+        return (options[option] && options[option].name) || null;
       };
 
       handleOnChange = (e, items) => {

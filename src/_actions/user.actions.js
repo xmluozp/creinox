@@ -24,8 +24,10 @@ function login(userName, password) {
         history.push("/");
       },
       error => {
-        dispatch(dispatch({ type: AUTH.LOGIN_FAILURE, message: error }));
-        dispatch(failure("登录失败"));
+
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(dispatch({ type: AUTH.LOGIN_FAILURE, message: errorInfo }));
+        dispatch(failure("登录失败. " + errorInfo));
       }
     );
 

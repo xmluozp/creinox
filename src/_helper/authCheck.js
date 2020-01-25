@@ -14,7 +14,7 @@ export const authCheck = (authString = "", authTag) => {
   // }): [];
 
   const autharray = allAuthList;
-  const isPass = autharray.includes(authTag);
+  const isPass = autharray.includes(authTag) || autharray.includes("all");
 
   return isPass;
 

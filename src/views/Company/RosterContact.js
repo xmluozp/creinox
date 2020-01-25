@@ -39,7 +39,7 @@ export const withCompanyContactList = (pagetype = 0, EDITURL = "/companycontact/
       { name: "name" },
       { name: "shortname" },
       { name: "address" },
-      { name: "retriveTime" },
+      { name: "retrieveTime" },
       { name: "retriever_id" }, // 从取回的数据 retriever_id.userName 显示
       { name: "imageLicense" }
     ];

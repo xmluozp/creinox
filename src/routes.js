@@ -39,7 +39,7 @@ const CompaniesInternal = React.lazy(() =>
     default: mymodule.withCompanyList(
       enums.companyType.internal,
       "/companyinternal/companies",
-      "/companyinternal/company"
+      "/companyinternal/companies/add"
     )
   }))
 );
@@ -57,7 +57,7 @@ const CompaniesFactory = React.lazy(() =>
     default: mymodule.withCompanyList(
       enums.companyType.factory,
       "/companyfactory/companies",
-      "/companyfactory/company"
+      "/companyfactory/companies/add"
     )
   }))
 );
@@ -75,7 +75,7 @@ const CompaniesOverseas = React.lazy(() =>
     default: mymodule.withCompanyList(
       enums.companyType.overseasCustomer,
       "/companyoverseas/companies",
-      "/companyoverseas/company"
+      "/companyoverseas/companies/add"
     )
   }))
 );
@@ -93,7 +93,7 @@ const CompaniesDomestic = React.lazy(() =>
     default: mymodule.withCompanyList(
       enums.companyType.domesticCustomer,
       "/companydomestic/companies",
-      "/companydomestic/company"
+      "/companydomestic/companies/add"
     )
   }))
 );
@@ -111,7 +111,7 @@ const CompaniesShipping = React.lazy(() =>
     default: mymodule.withCompanyList(
       enums.companyType.shippingCompany,
       "/companyshipping/companies",
-      "/companyshipping/company"
+      "/companyshipping/companies/add"
     )
   }))
 );
@@ -148,7 +148,7 @@ const routes = [
     authTag: "user"
   },
   {
-    path: "/users/user",
+    path: "/users/users/add",
     exact: true,
     name: "用户新增",
     component: User,
@@ -169,7 +169,7 @@ const routes = [
     authTag: "user"
   },
   {
-    path: "/users/role",
+    path: "/users/roles/add",
     exact: true,
     name: "角色新增",
     component: Role,
@@ -193,22 +193,22 @@ const routes = [
     component: Commonitems,
     authTag: "commonitem"
   },
+  // {
+  //   path: "/commonitems/commonitemsList",
+  //   exact: true,
+  //   name: "通用选项集",
+  //   component: Commonitems,
+  //   authTag: "commonitem"
+  // },
   {
-    path: "/commonitems/commonitemsList",
+    path: "/commonitems/commonitemsList/:commonType/add", // 必须在commonType下新增
     exact: true,
-    name: "通用选项集",
-    component: Commonitems,
-    authTag: "commonitem"
-  },
-  {
-    path: "/commonitems/commonitem/:commonType", // 必须在commonType下新增
-    exact: true,
-    name: "通用选项",
+    name: "通用选项新增",
     component: Commonitem,
     authTag: "commonitem"
   },
   {
-    path: "/commonitems/commonitems/:id",
+    path: "/commonitems/commonitemsList/:commonType/:id",
     exact: true,
     name: "通用选项",
     component: Commonitem,
@@ -229,7 +229,7 @@ const routes = [
     exact: true,
     name: "国家地区集",
     component: Regions,
-    authTag: "regions"
+    authTag: "region"
   },
   //--------------------------------------------- 公司
   {
@@ -240,9 +240,9 @@ const routes = [
     authTag: "companyinternal"
   },
   {
-    path: "/companyinternal/company",
+    path: "/companyinternal/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.internal],
+    name: enumsLabel.companyType[enums.companyType.internal] + "新增",
     component: CompanyInternal,
     authTag: "companyinternal"
   },
@@ -262,9 +262,9 @@ const routes = [
     authTag: "companyfactory"
   },
   {
-    path: "/companyfactory/company",
+    path: "/companyfactory/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.factory],
+    name: enumsLabel.companyType[enums.companyType.factory] + "新增",
     component: CompanyFactory,
     authTag: "companyfactory"
   },
@@ -284,9 +284,9 @@ const routes = [
     authTag: "companyoverseas"
   },
   {
-    path: "/companyoverseas/company",
+    path: "/companyoverseas/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.overseasCustomer],
+    name: enumsLabel.companyType[enums.companyType.overseasCustomer] + "新增",
     component: CompanyOverseas,
     authTag: "companyoverseas"
   },
@@ -306,9 +306,9 @@ const routes = [
     authTag: "companydomestic"
   },
   {
-    path: "/companydomestic/company",
+    path: "/companydomestic/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.domesticCustomer],
+    name: enumsLabel.companyType[enums.companyType.domesticCustomer] + "新增",
     component: CompanyDomestic,
     authTag: "companydomestic"
   },
@@ -328,9 +328,9 @@ const routes = [
     authTag: "companyshipping"
   },
   {
-    path: "/companyshipping/company",
+    path: "/companyshipping/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.shippingCompany],
+    name: enumsLabel.companyType[enums.companyType.shippingCompany] + "新增",
     component: CompanyShipping,
     authTag: "companyshipping"
   },
@@ -348,7 +348,7 @@ const routes = [
     exact: true,
     name: "产品类别集",
     component: ProductCategories,
-    authTag: "categories"
+    authTag: "category"
   },
   {
     path: "/product/products",
@@ -372,9 +372,9 @@ const routes = [
     authTag: "product"
   },
   {
-    path: "/product/product",
+    path: "/product/products/add",
     exact: true,
-    name: "产品",
+    name: "产品新增",
     component: ProductProduct,
     authTag: "product"
   },
@@ -405,7 +405,7 @@ const routes = [
     authTag: "commodity"
   },
   {
-    path: "/commodity/commodity",
+    path: "/commodity/commodities/add",
     exact: true,
     name: "商品新增",
     component: Commodity,

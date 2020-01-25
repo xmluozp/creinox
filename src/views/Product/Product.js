@@ -239,7 +239,7 @@ export const withProduct = () => {
 
               <Grid item lg={6} xs={12}>
                 <Inputs.MyDatePicker
-                  inputid="retriveTime"
+                  inputid="retrieveTime"
                   disabled={disabled}
                 />
               </Grid>

@@ -41,7 +41,8 @@ function get_disposable_dropdown(keyword, preConditions, isIncludeMeta = true) {
         },
         error => {
           dispatch(loadedFailure);
-          dispatch(failure(error.toString()));
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
         }
       );
   };
@@ -64,7 +65,8 @@ function get_disposable_byId(id) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -80,7 +82,8 @@ function get_bySearch_component(pagination, searchTerms = {}) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -99,7 +102,8 @@ function post_create_assemble(item, callBack = () => {}) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure("添加失败" + error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure("添加失败." + errorInfo.toString()));
       }
     );
   };

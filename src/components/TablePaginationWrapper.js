@@ -34,6 +34,8 @@ function TablePaginationActions(props) {
     const theme = useTheme();
     const { count, page, rowsPerPage, onChangePage } = props;
     const [inputPage, setInputPage] = React.useState(page + 1);
+    const [isShowPageInput, setIsShowPageInput] = React.useState(false)
+    const inputEl = React.useRef(null)
 
     const lastPage = Math.ceil(count / rowsPerPage);
   
@@ -64,17 +66,27 @@ function TablePaginationActions(props) {
 
     return (
       <div className={classes.root}>
-
-          <Input type="text"
-          value={inputPage} 
-          onChange={(e)=>{setInputPage(parseInt(e.target.value) || 1)}}
-          onClick={e=>{e.target.select()}}
-          onKeyDown={handleJumpToPage}
-          inputProps={{
-            'aria-label': '页' ,
-            style: { width:"2rem",textAlign: "right", padding:"1pt", fontSize:"0.875rem" }
-          }}
-          /> / {lastPage} 页
+          <span onClick={()=>{setIsShowPageInput(true);}}>
+           
+            { isShowPageInput ? 
+            
+              <Input type="text"
+            value={inputPage} 
+            onChange={(e)=>{setInputPage(parseInt(e.target.value) || 1)}}
+            onClick={e=>{e.target.select()}}
+            onFocus={e=>{e.target.select()}}
+            onKeyDown={handleJumpToPage}
+            onBlur={()=>{setIsShowPageInput(false)}}
+            autoFocus = {true}
+            ref={inputEl}
+            inputProps={{
+              'aria-label': '页' ,
+              style: { width:"2rem",textAlign: "right", padding:"1pt", fontSize:"0.875rem"}
+            }}
+            /> 
+            
+            : page + 1 }
+            / {lastPage} 页 </span>
 
         <IconButton
           onClick={handleFirstPageButtonClick}

@@ -33,7 +33,8 @@ function get_bySearch_groupByCompany(pagination, searchTerms = {}) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
@@ -49,7 +50,8 @@ function get_bySearch_history(pagination, searchTerms = {}) {
       },
       error => {
         dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
       }
     );
   };
