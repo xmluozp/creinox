@@ -52,7 +52,10 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
         values = h_filterImage(values, "imageLicense_id.row");
         values = h_filterImage(values, "imageBizCard_id.row");
 
-        onPutUpdate({ companyType: companyType, ...values });
+        // 因为有图片，所以需要刷新一下，好显示图片的thumbnail
+        onPutUpdate({ companyType: companyType, ...values }, () => {
+          injector(dataById.row)
+        });
       } else {
         // onPostCreate(values, history.location.pathname);
         onPostCreate({ companyType: companyType, ...values }, id => {
@@ -61,6 +64,18 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
         });
       }
     };
+
+    // ******************************** injector:update the form. otherwise, form is separated from store(input and output)
+    const [injector, setInjector] = useState(null);
+    const handleGetInjector = inj => {
+      setInjector(inj);
+    };
+
+
+    const folder_id = dataById && dataById.row && dataById.row.gallary_folder_id
+    const imageLicense_id = dataById && dataById.row && dataById.row.imageLicense_id // 删除用
+    const imageBizCard_id = dataById && dataById.row && dataById.row.imageBizCard_id
+    
 
     return (
       <>
@@ -98,6 +113,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                     isFromEdit={isFromEdit}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
+                    onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
                       <Grid item lg={8} md={8} xs={12}>
@@ -109,10 +125,12 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                         <Grid container spacing={2}>
                           <Inputs.MyImage
                             inputid="imageLicense_id.row"
+                            imageId={imageLicense_id}
                             disabled={disabled}
                           />
                           <Inputs.MyImage
                             inputid="imageBizCard_id.row"
+                            imageId={imageBizCard_id}
                             disabled={disabled}
                           />
                         </Grid>
@@ -143,11 +161,9 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
                   <Gallery
+                    folder_id = {folder_id}
                     preConditions={{
-                      gallary_folder_id:
-                        dataById &&
-                        dataById.row &&
-                        dataById.row.gallary_folder_id
+                      gallary_folder_id:folder_id
                     }}
                   />
                 </TabPanel>

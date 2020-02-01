@@ -12,7 +12,6 @@ export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
         const actionPromise = _.get(myActions, [`${table}Actions`, actionName])
         // const data = await myActions.roleActions.readAll()(store.dispatch)
 
- 
         const data = await actionPromise(...params)(store.dispatch) // 调用了这里导致的
             .then((response, reject) => {          
                 return response; 
@@ -81,12 +80,12 @@ export function h_queryString(pagination = {}, searchTerm = {}, table) {
     let newSearchTerms = {...oldSearchTerms, ...searchTerm} 
 
     for (let [key, value] of Object.entries(newSearchTerms)) {
-        if(!isNaN(value)) {
-            newSearchTerms[key] = value.toString()
+        if(!isNaN(value) && value !== null) {
+            newSearchTerms[key] = value.toString() // 后台json只认string
         }
         
     }
-    console.log(newSearchTerms)
+    console.log("newSearchTerms", newSearchTerms)
 
 
     let searchString; 

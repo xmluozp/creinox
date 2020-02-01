@@ -38,8 +38,9 @@ export const companyModel = {
         updateUser_id:  {label: "上次操作人",     type: _DATATYPES.SELECT, ref:"user", refLabel: ["userName"]},
         region_id:      {label: "地区",     type: _DATATYPES.TREE, ref:"region", refLabel: ["name"]},
 
-        imageLicense_id:   {label: "工厂证照",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
-        "imageLicense_id.row":   {label: "工厂证照",   type: _DATATYPES.ROW},
+        imageLicense_id:   {label: "证照",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
+        "imageLicense_id.row":   {label: "证照",   type: _DATATYPES.ROW},
+        
 
         imageBizCard_id:   {label: "名片",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
         "imageBizCard_id.row": {label: "名片",   type: _DATATYPES.ROW},

@@ -8,6 +8,7 @@ export const CreinoxUploadButton = ({
   filesLimit = 10,
   onSave = () => {}, // 在外部处理。规范：如果是批量保存，直接保存。如果是单图，显示预览
   className,
+  label,
   ...props
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +29,7 @@ export const CreinoxUploadButton = ({
         onClick={handleModalOpen.bind(null, true)}
         {...props}
       >
-        {ICONS.ADD("mr-1")}上传图片
+        {ICONS.ADD("mr-1")}上传{label}
       </Button>
       <DropzoneDialog
         fullWidth

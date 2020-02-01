@@ -103,12 +103,13 @@ export const CreinoxTreeview = ({
 
   //========================================generate tree
   useEffect(() => {
-    if (!(data && data.rows)) {
-      // first fetch
-      onGetBySearch(parentNode);
-    } else {
+    if (data && data.rows) {
       // turn data to tree structure
       dataToTree(data.rows);
+    } else if( !(data && data.pagination)) { // 如果有pagination没有rows说明读过了但读不到数据
+      // first fetch
+      onGetBySearch(parentNode);
+      console.log("parentNode", parentNode)
     }
   }, [data, onGetBySearch, parentNode]);
 

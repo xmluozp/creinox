@@ -107,6 +107,17 @@ export function h_nilFilter(object) {
     return object;
 }
 
+// 更新时去空值要考虑用户原本就想空值的问题
+export function h_nilFilter_update(object) {
+    console.log(object)
+    for (let [key, value] of Object.entries(object)) {
+
+        
+        // if(!value){ delete object[key]}
+    }
+    return object;
+}
+
 
 export function h_headCellsMaker(model, column) {
 
@@ -159,8 +170,53 @@ export function h_filterImage(values, columnName) {
         const isUploaded = Object.prototype.toString.call(returnValues[columnName]) === "[object File]";
         if(!isUploaded) {
           delete returnValues[columnName];
-        }          
-    }  
+        } 
+    }
     
     return returnValues;
+}
+
+// 图片混合表单，表单字段当做图片的name：
+export function h_formData(item) {
+
+    const item_withoutnull = h_nilFilter_update(item)
+
+    // TODO: formData 生成器
+    // 生成：判断是不是file，是file的提出来，不是file的全部丢到doc里，其中file的部分删除
+
+    const formData  = new FormData();
+
+    // file和文件分开放
+    for(const name in item_withoutnull) {
+
+      // 如果是file
+      const isUploaded = Object.prototype.toString.call(item_withoutnull[name]) === "[object File]";
+      if(isUploaded) {
+        formData.append(name, item_withoutnull[name]);
+        delete item_withoutnull[name]
+      }
+    }
+
+    formData.append("doc", JSON.stringify(item_withoutnull));
+
+    return formData
+}
+
+// 传单纯的图片列表，图片名当做图片的name：
+export function h_formData_files(itemList) {
+
+    const formData  = new FormData();
+
+    // file和文件分开放
+    for(const idx in itemList) {
+
+      // 如果是file
+      const isUploaded = Object.prototype.toString.call(itemList[idx]) === "[object File]";
+      if(isUploaded) {
+        formData.append(itemList[idx].name, itemList[idx]);
+        delete itemList[idx]
+      }
+    }
+
+    return formData
 }

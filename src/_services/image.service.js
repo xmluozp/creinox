@@ -1,94 +1,99 @@
-import { authHeader, handleResponse, h_queryString } from '../_helper';
+import { authHeader, handleResponse, h_queryString, h_formData_files } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
 export const imageService = {
     get_bySearch,
     get_byId,
-    post_create,
+    // post_create,
     post_createMultiple,
-    put_update,
-    _delete: _delete,
+    // put_update,
+    // _delete: _delete,
     _deleteMultiple: _deleteMultiple
 };
 
 const TABLENAME = "image";
+const URL = `/api/image`;
 
-// const url = 'http://localhost:3000/api/';
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const requestOptions = {
-        method: 'GET',
+        method: "GET",
         headers: authHeader()
-    };
+      };
 
-    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/imagesdata.json'
-    console.log("search service:", queryString);
-
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
-
+      console.log("search service:", searchTerms);
+      const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+      console.log("search service:", queryString);
+      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_byId(id) {
 
     const requestOptions = {
-        method: 'GET',
+        method: "GET",
         headers: authHeader()
-    };
-
-    const url = './dataset/imagesdata_byId.json'
-    console.log("getId service,", id)
-
-    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}?id=${id}`, requestOptions).then(handleResponse);
+      };
+    
+      console.log("getId service,", id);
+      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
 
-function post_create(item) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+// function post_create(item) {
+    // const requestOptions = {
+    //     method: 'GET',
+    //     headers: authHeader()
+    // };
 
-    const url = './dataset/imagesdata_byId.json'
-    console.log("getId create,", item)
+    // const url = './dataset/imagesdata_byId.json'
+    // console.log("getId create,", item)
+
+    // // axios.post(url, {}  )
+    // // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
+    // return fetch(`${url}`, requestOptions).then(handleResponse);
+
+
+    // const requestOptions = {
+    //     method: "POST",
+    //     headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+    //     body: h_formData(item)
+    //   };
+    //   delete requestOptions.headers['Content-Type'];    
+    //   return fetch(`${URL}`, requestOptions).then(handleResponse);
+// }
+
+function post_createMultiple(itemList, folder_id) {
+
+    // const url = './dataset/imagesdata_byId.json'
+    console.log("getId create,", itemList, folder_id)
 
     // axios.post(url, {}  )
     // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}`, requestOptions).then(handleResponse);
-}
+    // return fetch(`${url}`, requestOptions).then(handleResponse);
 
-function post_createMultiple(itemList) {
     const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
+        method: "POST",
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+        body: h_formData_files(itemList)
+      };
+      delete requestOptions.headers['Content-Type'];
+
+      return fetch(`${URL}/${folder_id}`, requestOptions).
+      then(handleResponse).
+      then(() => get_bySearch({perPage: -1}, {gallary_folder_id: folder_id}));  
+}
+
+function _deleteMultiple(list) {
+
+    const requestOptions = {
+        method: "PUT",
+        headers: { ...authHeader(), "Content-Type": "application/json" },
+        body: JSON.stringify(list)
     };
-
-    const url = './dataset/imagesdata_byId.json'
-    console.log("getId create,", itemList)
-
-    // axios.post(url, {}  )
-    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}`, requestOptions).then(handleResponse);
-}
-
-
-
-// 测试错误信息
-function put_update(item) {
-    return new Promise(resolve => resolve("on update service"))
-}
-
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id, pagination, searchTerms) {
-    console.log("on delete service:", id);
-    return new Promise(resolve => resolve("on delete service"))
-}
-
-function _deleteMultiple(pagination, list) {
-    console.log("on delete service:", list);
-    return new Promise(resolve => resolve("on delete service"))
+    
+    return fetch(`${URL}_delete`, requestOptions).
+    then(handleResponse);  
 }
 

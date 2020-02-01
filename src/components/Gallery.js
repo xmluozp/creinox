@@ -15,10 +15,11 @@ const GalleryBeforeConnect = ({
   onGetBySearch,
   onDeleteMultiple,
   onPostCreateMultiple,
-  preConditions
+  preConditions,
+  folder_id
 }) => {
   useEffect(() => {
-    onGetBySearch({}, preConditions);
+    onGetBySearch({perPage: -1}, preConditions);
     return () => {};
   }, []);
 
@@ -56,12 +57,12 @@ const GalleryBeforeConnect = ({
   };
 
   const handleImageSave = files => {
-    onPostCreateMultiple(files);
+    onPostCreateMultiple(files, folder_id);
   };
 
   // 删除
   const deleteSelected = () => {
-    onDeleteMultiple(Array.from(selectedImages));
+    onDeleteMultiple(Array.from(selectedImages), {perPage:-1}, preConditions);
   };
 
   // Edit mode; Browse mode; select all; delete; upload

@@ -399,7 +399,7 @@ export const CreinoxTable = ({
         })}
         {emptyRows > 0 && ( // 补行
           <TableRow style={{ height: 33 * emptyRows }}>
-            <TableCell colSpan={headCells.length + 1 + (selectBox && 1) || 0} />
+            <TableCell colSpan={headCells.length + 1 + ((selectBox && 1) || 0)} />
           </TableRow>
         )}
       </TableBody>

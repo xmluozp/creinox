@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, h_nilFilter, h_queryString } from '../_helper';
+import { authHeader, handleResponse, h_queryString, h_formData } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -71,12 +71,13 @@ function get_byId(id) {
 }
 
 function post_create(item) {
+
     const requestOptions = {
         method: "POST",
-        headers: { ...authHeader(), "Content-Type": "application/json" },
-        body: JSON.stringify(h_nilFilter(item))
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+        body: h_formData(item)
       };
-    
+      delete requestOptions.headers['Content-Type'];    
       return fetch(`${URL}`, requestOptions).then(handleResponse);
 
 }
@@ -85,23 +86,22 @@ function put_update(item) {
 
     const requestOptions = {
         method: "PUT",
-        headers: { ...authHeader(), "Content-Type": "application/json" },
-        body: JSON.stringify(h_nilFilter(item))
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+        body: h_formData(item)
       };
-    
+      delete requestOptions.headers['Content-Type'];
       return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
-function _delete(id, pagination, searchTerms) {
+function _delete(id) {
+
+    
     const requestOptions = {
         method: "DELETE",
         headers: authHeader()
       };
     
-      const queryString = h_queryString(pagination, searchTerms, TABLENAME);
-    
-      return fetch(`${URL}/${id}?${queryString}`, requestOptions)
-        .then(handleResponse)
-        .then(() => get_bySearch(pagination, searchTerms));
+      return fetch(`${URL}/${id}`, requestOptions)
+        .then(handleResponse);
 }
 

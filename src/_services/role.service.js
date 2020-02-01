@@ -1,4 +1,4 @@
-import { authHeader, handleResponse,  h_queryString, h_nilFilter } from "../_helper";
+import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_update } from "../_helper";
 // import axios from 'axios'
 
 export const roleService = {
@@ -67,23 +67,20 @@ function put_update(item) {
   const requestOptions = {
     method: "PUT",
     headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(h_nilFilter(item))
+    body: JSON.stringify(h_nilFilter_update(item))
   };
 
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id, pagination, searchTerms = {}) {
+function _delete(id) {
   console.log("on delete service:", id);
   const requestOptions = {
     method: "DELETE",
     headers: authHeader()
   };
 
-  const queryString = h_queryString(pagination, searchTerms, TABLENAME);
-
-  return fetch(`${URL}/${id}?${queryString}`, requestOptions)
-    .then(handleResponse)
-    .then(() => get_bySearch(pagination, searchTerms));
+  return fetch(`${URL}/${id}`, requestOptions)
+    .then(handleResponse);
 }
