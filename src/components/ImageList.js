@@ -36,12 +36,12 @@ export const ImageList = ({
         return {
           id: image.id,
           path: image.path,
-          src: image.thumbnailPath,
-          height: image.height,
-          width: image.width,
-          maxheight: image.height,
-          maxwidth: image.width,
-          title: image.name
+          src: image.thumbnailPath || "images/nopic.png" ,
+          height: image.height || 200,
+          width: image.width || 200,
+          maxheight: image.height || 200,
+          maxwidth: image.width || 200,
+          title: image.name || "无图片"
         };
       })}
       renderImage={imageRenderer}

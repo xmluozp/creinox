@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, h_queryString } from '../_helper';
+import { authHeader, handleResponse, h_queryString, h_formData } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -17,10 +17,13 @@ export const productService = {
 
 const TABLENAME = "product";
 
-// const url = 'http://localhost:3000/api/';
+const URL = `/api/product`;
+const URL_DROP_DOWN = `/api/product_dropDown`;
+
+
 function get_dropdown(pagination, searchTerms, isIncludeMeta) {
 
-    // TODO: inIncludeMeta 会返回全部产品。否则返回没成为commodity的
+    // TODO: isIncludeMeta 会返回全部产品。否则返回没成为commodity的
 
     const requestOptions = {
         method: 'GET',
@@ -28,61 +31,73 @@ function get_dropdown(pagination, searchTerms, isIncludeMeta) {
     };
     console.log("service get dropdown:", searchTerms, "包括一对一绑定commodity的产品", isIncludeMeta);
 
-    
-    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
+    const queryString = h_queryString(pagination, {...searchTerms, isIncludeMeta: isIncludeMeta}, TABLENAME)
 
-    const url = './dataset/productdata.json'
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+    return fetch(`${URL_DROP_DOWN}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const requestOptions = {
-        method: 'GET',
+        method: "GET",
         headers: authHeader()
-    };
+      };
 
-    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/productdata.json'
-    console.log("search service:", queryString);
-    console.log("search terms:", searchTerms);
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+      console.log("search service:", searchTerms);
+      const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+      console.log("search service:", queryString);
+      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+
 
 }
 
 function get_byId(id) {
-
     const requestOptions = {
-        method: 'GET',
+        method: "GET",
         headers: authHeader()
-    };
-
-    const url = './dataset/productdata_byId.json'
-    console.log("getId service,", id)
-
-    // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    return fetch(`${url}?id=${id}`, requestOptions).then(handleResponse);
+      };
+    
+      console.log("getId service,", id);
+      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
 
     // TODO: 保存的时候更新category的最大编号（直接存入，不需要判断/ 或者比较当前和数据库的，如果大就存入，小就不变）
     // TODO: isCreateCommodity
-    return new Promise(resolve => resolve("on create service"))
+    const requestOptions = {
+        method: "POST",
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+        body: h_formData(item)
+      };
+      delete requestOptions.headers['Content-Type'];    
+      return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
 function put_update(item) {
 
     // TODO: 保存的时候更新category的最大编号（直接存入，不需要判断/ 或者比较当前和数据库的，如果大就存入，小就不变）
-    return new Promise(resolve => resolve("on update service"))
+      const requestOptions = {
+        method: "PUT",
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+        body: h_formData(item, true)
+      };
+      delete requestOptions.headers['Content-Type'];
+      return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id, pagination, searchTerms) {
+function _delete(id) {
     console.log("on delete service:", id);
-    return new Promise(resolve => resolve("on delete service"))
+    const requestOptions = {
+        method: "DELETE",
+        headers: authHeader()
+      };
+    
+      return fetch(`${URL}/${id}`, requestOptions)
+        .then(handleResponse);
 }
 
 

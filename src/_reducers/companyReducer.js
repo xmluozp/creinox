@@ -8,8 +8,12 @@ export default (state = {}, action) => {
     switch (action.type) {
       case CONST.GETDROPDOWN_SUCCESS:
       return {...state,  ...action.payload }; // 这里展开是因为不同的company type不一样
+      case CONST.GETBYSEARCH:
+        return { ...state, data: action.payload };
       case CONST.GETBYSEARCH_SUCCESS:
         return { ...state, data: action.payload };
+      case CONST.GET:
+        return { ...state, dataById: {}, errorById:{}};
       case CONST.GET_SUCCESS:
         return { ...state, dataById: action.payload, errorById:{}  };
       case CONST.UPDATE_SUCCESS:

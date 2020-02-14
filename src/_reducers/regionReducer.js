@@ -7,10 +7,16 @@ import { REGION as CONST } from "../_constants";
 // 数据传到界面上显示
 export default (state = {}, action) => {
   switch (action.type) {
+    case CONST.GETDROPDOWN: // waiting while logging
+    return {...state,  dropdown:{} };
     case CONST.GETDROPDOWN_SUCCESS: // waiting while logging
     return {...state,  dropdown: action.payload };
+    case CONST.GETBYSEARCH:
+      return { ...state, data: {} };
     case CONST.GETBYSEARCH_SUCCESS:
       return { ...state, data: action.payload };
+    case CONST.GET:
+      return { ...state, dataById: {}, errorById:{}};
     case CONST.GET_SUCCESS:
       return { ...state, dataById: action.payload };
     case CONST.UPDATE_SUCCESS:

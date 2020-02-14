@@ -16,6 +16,7 @@ import { enumsLabel } from "../../_constants";
 // import { h_confirm } from '../../_helper'
 const CurrentPage = ({
   dataById,
+  onGetDropdown,
   onPostCreate,
   onPutUpdate,
   onGetById,
@@ -37,18 +38,23 @@ const CurrentPage = ({
 
   // ********************************
 
+  const defaultValues = isFromEdit && dataById && { ...dataById.row };
+  const preConditions = { commonType: commonType };
+
   const handleOnSubmit = values => {
     if (isFromEdit) {
-      onPutUpdate({ ...values });
+      onPutUpdate({ ...values }, () => {
+        onGetDropdown(preConditions)
+      });
     } else {
       onPostCreate(values, () => {
+        onGetDropdown(preConditions)
         history.push(EDITURL + "/" + commonType);
       });
     }
   };
 
-  const defaultValues = isFromEdit && dataById && { ...dataById.row };
-  const preConditions = { commonType: commonType };
+
 
   return (
     <div className="animated fadeIn">
@@ -137,6 +143,7 @@ function mapState(state) {
 }
 
 const actionCreators = {
+  onGetDropdown: dataActions.get_dropdown,
   onPostCreate: dataActions.post_create,
   onPutUpdate: dataActions.put_update,
   onGetById: dataActions.get_byId

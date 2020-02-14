@@ -40,6 +40,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       // if there is ID, fetch data
       if (id) {
         onGetById(id);
+        console.log("fetch new data:", id)
       }
     }, [onGetById, id]);
 
@@ -75,6 +76,8 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     const folder_id = dataById && dataById.row && dataById.row.gallary_folder_id
     const imageLicense_id = dataById && dataById.row && dataById.row.imageLicense_id // 删除用
     const imageBizCard_id = dataById && dataById.row && dataById.row.imageBizCard_id
+
+    console.log("外面的锅",  isFromEdit && dataById && dataById.row)
     
 
     return (

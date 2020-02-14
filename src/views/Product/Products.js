@@ -37,7 +37,7 @@ export const withProductList = (
   const CurrentPage = ({ onDelete, pageName }) => {
 
     const [isImageListMode, setIsImageListMode] = useState(false)
-
+    const preConditions = pageCategoryId ? { category_id: pageCategoryId } : {}
 
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
@@ -103,7 +103,7 @@ export const withProductList = (
         dataModel={dataModel}
         isImageListMode={isImageListMode}
         onImageListMapping={handleImageListMapping}
-        preConditions={{ category_id: pageCategoryId }} // 假如需要选择分类的话，需要改造
+        preConditions={preConditions} // 假如需要选择分类的话，需要改造
         rowButtons={rowButtons}
         toolbarButtons={toolbarButtons}
         searchBar={searchBar}

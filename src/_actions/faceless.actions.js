@@ -8,13 +8,7 @@ import {
 export const withFacelessActions = (
   constPrefix = "FACELESS",
   tableName = "faceless",
-  targetUrl = {
-    get_bySearch_url: "",
-    get_byId_url: "",
-    post_create_url: "",
-    put_update_url: "",
-    _delete_url: ""
-  }
+  targetUrl = ""
 ) => {
   // 用function生成reducer用的const、 和后台交互用的service
   const CONST = constMaker(constPrefix);

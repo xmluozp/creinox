@@ -104,7 +104,9 @@ export const CreinoxTable = ({
         // 如果是外键，就取 外键.labelName 的字段。这个数据API预生成
         const refLabel = _.get(dataModel, ["columns", columnName, "refLabel"]);
         if (refLabel) {
-          originalContent = row[`${columnName}.${refLabel}`] || originalContent;
+          // originalContent = row[`${columnName}.${refLabel}`] || originalContent;
+          const refField = `${columnName}.row`; // 格式： imagexx_id.row.path
+          originalContent =  (row[refField] && row[refField][refLabel])|| originalContent;
         }
 
         // 如果是Enum，根据列名从datatypes里取文本

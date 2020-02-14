@@ -29,11 +29,11 @@ export * from "./commodity.actions";
 export const rostercontactActions = withFacelessActions(
   "ROSTERCONTACT",
   "rostercontact",
-  { get_bySearch_url: "./dataset/rostercontact.json", get_byId_url: "./dataset/rostercontact_byId.json" }
+  "/api/rostercontact"
 );
 
 export const bankaccountActions = withFacelessActions(
   "BANKACCOUNT",
   "bankaccount",
-  { get_bySearch_url: "./dataset/bankaccount.json", get_byId_url: "./dataset/bankaccount_byId.json" }
+  "/api/bankaccount"
 );

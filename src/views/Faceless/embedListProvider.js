@@ -80,13 +80,13 @@ export const embedListProvider = (
     };
 
     const handleOnEditSubmit = values => {
-      onPostCreate({ ...preConditions, ...values });
+      onPutUpdate({ ...preConditions, ...values });
       onGetBySearch({}, preConditions);
       handleOnEditClose();
     };
 
     const handleOnCreateSubmit = values => {
-      onPutUpdate({ ...preConditions, ...values });
+      onPostCreate({ ...preConditions, ...values });
       onGetBySearch({}, preConditions);
       handleOnCreateClose();
     };

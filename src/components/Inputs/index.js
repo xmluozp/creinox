@@ -230,8 +230,8 @@ const MyInput = React.memo(({
   const handleOnChange = (e) => {
 
     value = e.target.value;
-    if(isNumber && !isNaN(value)) {
-      value = Number(value)
+    if(isNumber){
+      value = !isNaN(value) ? Number(value): 0
     }
 
     onChange(null, id, value)
@@ -247,7 +247,7 @@ const MyInput = React.memo(({
       label={label}
       onChange={handleOnChange}
       margin="dense"
-      value={displayValue || ""}
+      value={displayValue || (isNumber ? 0: "")}
       helperText={!disabled && helperText}
       multiline={multiline}
       rows={rows}

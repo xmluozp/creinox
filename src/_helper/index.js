@@ -177,9 +177,9 @@ export function h_filterImage(values, columnName) {
 }
 
 // 图片混合表单，表单字段当做图片的name：
-export function h_formData(item) {
+export function h_formData(item, isUpdate = false) {
 
-    const item_withoutnull = h_nilFilter_update(item)
+    const item_withoutnull = isUpdate ? h_nilFilter_update(item) :h_nilFilter(item)  
 
     // TODO: formData 生成器
     // 生成：判断是不是file，是file的提出来，不是file的全部丢到doc里，其中file的部分删除

@@ -33,13 +33,22 @@ export const MySelect = React.memo(
     disabled = false,
     fullWidth = true
   }) => {
+
+    console.log("myselect",value, typeof(value),options )
+
+    const handleOnChange = (e) => {
+
+      onChange(e, id, parseInt(e.target.value))
+    }
+
+
     return (
       <FormControl fullWidth={fullWidth} disabled={disabled} margin="dense">
         <InputLabel htmlFor="age-native-simple">{label}</InputLabel>
         <Select
           native
           value={value}
-          onChange={onChange}
+          onChange={handleOnChange}
           margin="dense"
           inputProps={{
             name: label,
@@ -173,7 +182,10 @@ export const MyComboboxAsyncFK = React.memo(props => {
   const [inputValue, setInputValue] = useState();
 
   const handleInputChange = (e, value) => {
-    setInputValue(value);
+ 
+    if(value) {
+      setInputValue(value);
+    }    
   };
 
   // 第一次加载，根据value为id读出来一条记录
@@ -183,6 +195,7 @@ export const MyComboboxAsyncFK = React.memo(props => {
 
       h_fkFetchOnceAsync(tableName, [inputValue, {id: props.value, ...preConditions }], actionName)
         .then(response => {
+          console.log("下拉列表1:", response, actionName);
           if (isSubscribed) {
             onLoad(response);
             setoptions(response);
@@ -203,6 +216,7 @@ export const MyComboboxAsyncFK = React.memo(props => {
       e.preventDefault();
       h_fkFetchOnceAsync(tableName, [inputValue, preConditions], actionName)
         .then(response => {
+          console.log("下拉列表2:", response, actionName);
           onLoad(response);
           setoptions(response);
         })

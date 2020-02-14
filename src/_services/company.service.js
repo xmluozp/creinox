@@ -87,7 +87,7 @@ function put_update(item) {
     const requestOptions = {
         method: "PUT",
         headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
-        body: h_formData(item)
+        body: h_formData(item, true)
       };
       delete requestOptions.headers['Content-Type'];
       return fetch(`${URL}`, requestOptions).then(handleResponse);

@@ -31,6 +31,7 @@ function get_disposable_dropdown(keyword, preConditions, isIncludeMeta = true) {
         response => {
           dispatch(loaded);
           let returnValue = [];
+          console.log("dropdown test", response)
           if (response && response.rows) {
             returnValue = response.rows.map(item => {
               item.name = `[${item.code}] ${item.name}`;

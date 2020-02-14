@@ -9,7 +9,7 @@ import Tab from "@material-ui/core/Tab";
 
 //------redux
 import { connect } from "react-redux";
-import { productActions as dataActions } from "../../_actions";
+import { productActions as dataActions, categoryActions } from "../../_actions";
 import { productModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "../../components";
 // import { enumsLabel } from "../../_constants";
@@ -17,7 +17,6 @@ import { history, h_fkFetch, h_filterImage } from "../../_helper";
 import { EmbedProductPurchaseGroup } from "./EmbedProductPurchase";
 import { EmbedProductComponent } from "./EmbedProductComponent";
 import { EmbedCommodityFromProduct } from "./EmbedCommodityFromProduct";
-
 
 import { ICONS } from "../../_constants";
 
@@ -32,6 +31,7 @@ export const withProduct = () => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onRenewCategory,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
@@ -60,23 +60,25 @@ export const withProduct = () => {
 
     // 填入复制的产品
     const handleGetSourceProductOnChange = (e, element, id) => {
-      // fetch disposable data
-      h_fkFetch("product", [id], "get_disposable_byId")
-        .then(response => {
-          if (response && response.id) {
-            delete response["id"];
-            delete response["image_id"];
-            delete response["image_id.row"];
-            delete response["updateAt"];
-            delete response["createAt"];
-            delete response["updateUser_id"];
+      if (id > 0) {
+        // fetch disposable data
+        h_fkFetch("product", [id], "get_disposable_byId")
+          .then(response => {
+            if (response && response.id) {
+              delete response["id"];
+              delete response["image_id"];
+              delete response["image_id.row"];
+              delete response["updateAt"];
+              delete response["createAt"];
+              delete response["updateUser_id"];
 
-            productInjector(response);
-          }
-        })
-        .catch(error => {
-          console.log("搜索不到对应产品", error);
-        });
+              productInjector(response);
+            }
+          })
+          .catch(error => {
+            console.log("搜索不到对应产品", error);
+          });
+      }
     };
 
     // 选择产品类型
@@ -100,12 +102,12 @@ export const withProduct = () => {
       if (isFromEdit) {
         // 如果没有新的图片，就不上传图片
         values = h_filterImage(values, "image_id.row");
-
         onPutUpdate(values);
       } else {
         // onPostCreate(values, history.location.pathname);
         onPostCreate(values, id => {
           // not using async. because I want loadingbar's codes put with callback codes
+          onRenewCategory(0)
           history.push(EDITURL + "/" + id);
         });
       }
@@ -348,7 +350,7 @@ export const withProduct = () => {
                   <EmbedProductComponent product_id={id} isParent={false} />
                 </TabPanel>
                 <TabPanel value={tabSelect} index={4}>
-                  <EmbedCommodityFromProduct product_id={id}/>
+                  <EmbedCommodityFromProduct product_id={id} />
                 </TabPanel>
               </Card>
             </Col>
@@ -369,6 +371,7 @@ export const withProduct = () => {
 
   const actionCreators = {
     onPostCreate: dataActions.post_create,
+    onRenewCategory: categoryActions.get_treeNotesById,
     onPutUpdate: dataActions.put_update,
     onGetById: dataActions.get_byId
   };

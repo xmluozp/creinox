@@ -1,62 +1,69 @@
-import { authHeader, handleResponse, h_queryString } from '../_helper';
+import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '../_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 
 
-export const withFacelessService = (tableName="faceless",  targetUrl = {
-    get_bySearch_url: "",
-    get_byId_url : "",
-    post_create_url : "",
-    put_update_url: "",
-    _delete_url: "",
-  }) => {
+export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
        
-    // const url = 'http://localhost:3000/api/' + tableName;
     
     function get_bySearch(pagination, searchTerms, reNew = false) {
-    
+
         const requestOptions = {
-            method: 'GET',
+            method: "GET",
             headers: authHeader()
-        };
-    
-        const queryString = h_queryString(pagination, searchTerms, tableName)
-    
-        //  const url = './dataset/companydata.json'
-        const url = targetUrl.get_bySearch_url;
+          };
         
-        console.log("search service faceless:", queryString);
-    
-        return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
-    
+          const queryString = h_queryString(pagination, searchTerms, tableName);
+          console.log("search service:", queryString);
+          return fetch(`${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
+
     }
     
     function get_byId(id) {
-    
+
+
         const requestOptions = {
-            method: 'GET',
+            method: "GET",
             headers: authHeader()
-        };
-    
-        const url = targetUrl.get_byId_url
-        console.log("getId service faceless,", id)
-    
-        // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-        return fetch(`${url}?id=${id}`, requestOptions).then(handleResponse);
+          };
+        
+          console.log("getId service,", id);
+          return fetch(`${targetUrl}/${id}`, requestOptions).then(handleResponse);
     }
     
     function post_create(item) {
-        return new Promise(resolve => resolve("on create service faceless"))
+
+        const requestOptions = {
+            method: "POST",
+            headers: { ...authHeader(), "Content-Type": "application/json" },
+            body: JSON.stringify(h_nilFilter(item))
+          };
+        
+          console.log("处理过的json: create",h_nilFilter(item), targetUrl)
+          
+          return fetch(`${targetUrl}`, requestOptions).then(handleResponse);
     }
     
     function put_update(item) {
-        return new Promise(resolve => resolve("on update service faceless"))
+        const requestOptions = {
+            method: "PUT",
+            headers: { ...authHeader(), "Content-Type": "application/json" },
+            body: JSON.stringify(h_nilFilter_update(item))
+          };
+          console.log("处理过的json: update",h_nilFilter(item), targetUrl)
+          return fetch(`${targetUrl}`, requestOptions).then(handleResponse);
     }
     
     // prefixed function name with underscore because delete is a reserved word in javascript
-    function _delete(id, pagination, searchTerms) {
-        console.log("on delete service faceless:", id);
-        return new Promise(resolve => resolve("on delete service"))
+    function _delete(id) {
+        console.log("on delete service:", id);
+        const requestOptions = {
+          method: "DELETE",
+          headers: authHeader()
+        };
+      
+        return fetch(`${targetUrl}/${id}`, requestOptions)
+          .then(handleResponse);
     }
     
     return {

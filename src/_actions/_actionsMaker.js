@@ -19,6 +19,7 @@ export const _am = (CONST, service) => {
   function get_dropdown(pagination, searchTerms = {}) {
     return dispatch => {
       dispatch(loading);
+      dispatch(done({}, CONST.GETDROPDOWN));
       return service.get_dropdown(pagination, searchTerms).then(
         response => {
           dispatch(loaded);
@@ -39,6 +40,7 @@ export const _am = (CONST, service) => {
   function get_bySearch(pagination, searchTerms = {}) {
     return dispatch => {
       dispatch(loading);
+      dispatch(done({}, CONST.GETBYSEARCH));
       return service.get_bySearch(pagination, searchTerms).then(
         response => {
           dispatch(loaded);
@@ -59,6 +61,7 @@ export const _am = (CONST, service) => {
     // 通过某个分类，取所有的子级孙级分类
     return dispatch => {
       dispatch({ type: LOADING.LOADING });
+      // dispatch(done({}, CONST.GETBYSEARCH)); // 会导致死循环
       return service.get_treeNotesById(parentId).then(
         response => {
           dispatch({ type: LOADING.SUCCESS });
@@ -78,6 +81,7 @@ export const _am = (CONST, service) => {
   function get_byId(id) {
     return dispatch => {
       dispatch(loading);
+      dispatch(done({}, CONST.GET));
       return service.get_byId(id).then(
         response => {
           dispatch(loaded);        

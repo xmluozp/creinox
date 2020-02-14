@@ -7,12 +7,17 @@ import { COMMONITEM as CONST } from "../_constants";
 // 数据传到界面上显示
 export default (state = {}, action) => {
 
-  
   switch (action.type) {
+    case CONST.GETDROPDOWN:
+      return {...state };
     case CONST.GETDROPDOWN_SUCCESS:
     return {...state,  ...action.payload }; // 这里展开是因为不同的commonitem不一样
+    case CONST.GETBYSEARCH:
+      return { ...state, data: {} };  
     case CONST.GETBYSEARCH_SUCCESS:
       return { ...state, data: action.payload };
+    case CONST.GET:
+      return { ...state, dataById: {}, errorById:{}};
     case CONST.GET_SUCCESS:
       return { ...state, dataById: action.payload, errorById:{}  };
     case CONST.UPDATE_SUCCESS:
