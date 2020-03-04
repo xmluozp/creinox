@@ -50,12 +50,12 @@ const withProductList = (
       : { child_id: product_id };
 
     // ============================================= handles
-    const handleOnDisassemble = (pagination, rowId) => {
+    const handleOnDisassemble = (pagination, row) => {
       h_confirm("是否解除部件？").then(resolve => {
-        const parent_id = isParent ? product_id : rowId;
-        const child_id = isParent ? rowId : product_id;
+        const parent_id = isParent ? product_id : row.id;
+        const child_id = isParent ? row.id : product_id;
 
-        if (resolve) onDisassemble(pagination, {parent_id, child_id});
+        if (resolve) onDisassemble({parent_id, child_id}, pagination);
       });
     };
 

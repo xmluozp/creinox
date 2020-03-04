@@ -57,14 +57,15 @@ export const reducerMaker = (constOutside, constPrefix="FACELESS") => {
           case CONST.GET:
             return { ...state, dataById: {}, errorById:{}};
           case CONST.GET_SUCCESS:
-            return { ...state, dataById: action.payload };
+            return { ...state, dataById: action.payload, errorById:{}  };
           case CONST.UPDATE_SUCCESS:
-            return { ...state, dataById: action.payload };
+            return { ...state, dataById: action.payload, errorById:{} };
           case CONST.UPDATE_FAILURE:
             return { ...state, errorById: action.payload }; // error message included
           case CONST.CREATE_SUCCESS:
-            return { ...state, dataById: action.payload }; // jump to a new page (edit or create page)
+            return { ...state, dataById: action.payload, errorById:{}  }; // jump to a new page (edit or create page)
           case CONST.CREATE_FAILURE:
+            // console.log("hi")
             return { ...state, errorById: action.payload }; // error message included
           case CONST.DELETE_SUCCESS:
             return { ...state, data: action.payload };

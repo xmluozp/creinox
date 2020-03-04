@@ -18,6 +18,7 @@ export const productpurchaseModel = {
         spec2:      {label: "规格2",     type: _DATATYPES.VARCHAR},   
         spec3:      {label: "规格3",     type: _DATATYPES.VARCHAR},  
         thickness:  {label: "厚度(mm)",     type: _DATATYPES.DECIMAL},   
+        
         unitWeight: {label: "单位重量(g)",     type: _DATATYPES.DECIMAL},   
         netWeight:  {label: "净重(g)",     type: _DATATYPES.DECIMAL},   
         grossWeight: {label: "毛重(g)",     type: _DATATYPES.DECIMAL},   
@@ -44,5 +45,13 @@ export const productpurchaseModel = {
         polishing_id: {label: "抛光",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         texture_id:   {label: "材质",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         updateUser_id:{label: "上次操作人",     type: _DATATYPES.SELECT, ref:"user", refLabel: ["userName"]},
+        
+        //---------------------------
+        "company_id.row":   {label: "工厂",   type: _DATATYPES.ROW},
+        "currency_id.row":   {label: "币种",   type: _DATATYPES.ROW},
+        "polishing_id.row":   {label: "抛光",   type: _DATATYPES.ROW},
+        "texture_id.row":   {label: "材质",   type: _DATATYPES.ROW},
+        "pack_id.row":   {label: "包装形式",   type: _DATATYPES.ROW},
+
     }
 }

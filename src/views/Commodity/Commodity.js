@@ -112,7 +112,7 @@ export const withProduct = () => {
                   tableName="product"
                   inputid="product_id"
                   label="产品"
-                  actionName="get_disposable_dropdown_excludeMeta"
+                  actionName={isFromEdit? "get_disposable_dropdown":"get_disposable_dropdown_excludeMeta"}
 
                   // note: 如果没有meta产品(操作者从产品那里让它下架了)，允许重新选择一个
                   disabled={isFromEdit && defaultValues && Number.isInteger(defaultValues.product_id)}

@@ -80,15 +80,17 @@ export const embedListProvider = (
     };
 
     const handleOnEditSubmit = values => {
-      onPutUpdate({ ...preConditions, ...values });
-      onGetBySearch({}, preConditions);
-      handleOnEditClose();
+      onPutUpdate({ ...preConditions, ...values }, () => {
+        onGetBySearch({}, preConditions);
+        handleOnEditClose();
+      });
     };
 
     const handleOnCreateSubmit = values => {
-      onPostCreate({ ...preConditions, ...values });
-      onGetBySearch({}, preConditions);
-      handleOnCreateClose();
+      onPostCreate({ ...preConditions, ...values }, () => {
+        onGetBySearch({}, preConditions);
+        handleOnCreateClose();
+      });
     };
 
     // ============================================= Table Settings

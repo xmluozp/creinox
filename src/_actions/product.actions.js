@@ -21,7 +21,8 @@ const {
 } = _am(CONST, service);
 
 //======================== customized
-
+// includemeta是用来过滤掉已经和商品一一绑定的产品, 但会影响到显示（下拉菜单已选中项肯定是meta）。
+// 解决方案：所有都显示，多一列isMeta表示是否已是商品。已是商品绑定的时候会失败
 function get_disposable_dropdown(keyword, preConditions, isIncludeMeta = true) {
   return dispatch => {
     dispatch(loading);
@@ -120,10 +121,24 @@ function _delete_disassemble(item = {parent_id : 0, child_id : 0}, pagination) {
       error => {
         dispatch(alertActions.error("解除失败"));
       }
-    );
+    ).then(() => p_getbysearch(dispatch, pagination,{parent_id: item.parent_id, child_id: item.child_id}));;
   };
 }
 
+function p_getbysearch(dispatch, pagination, searchTerms) {
+  dispatch(loading);
+  return service.get_bySearch_component(pagination, searchTerms).then(
+    response => {
+      dispatch(loaded);
+      dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+    },
+    error => {
+      dispatch(loadedFailure);
+      const errorInfo =error && error.info ? error.info : ""
+      dispatch(failure(errorInfo.toString()));
+    }
+  );
+}
 
 export const productActions = {
   get_dropdown,

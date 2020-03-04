@@ -70,6 +70,8 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
         "是否取消商品化？(如果该商品是组合商品，所有下属子产品都会解除绑定; 不会影响到部件的绑定状态)"
       ).then(resolve => {
         if (resolve) onDelete(commodity_id);
+      }).then(()=>{
+        onGetById(0, product_id, true);
       });
     };
 
@@ -82,6 +84,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     const handleAssembleMeta = () => {
       onPostCreate({ product_id: product_id }, () => {
         onGetBySearch({}, preConditions);
+        onGetById(0, product_id, true);
       });
     };
 
@@ -123,8 +126,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
       //   disablePadding: true
       // },
       { name: "code" },
-      { name: "name" },
-      { name: "ename" }
+      { name: "name" }
     ];
 
     // ============================================= Table Settings
@@ -222,7 +224,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     onDelete: dataActions._delete,
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
-    onGetBySearch: dataActions.get_bySearch_getProduct,
+    onGetBySearch: dataActions.get_bySearch_getCommodity,
     onGetById: dataActions.get_byId
   };
 

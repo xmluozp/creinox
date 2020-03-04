@@ -115,9 +115,7 @@ export const _am = (CONST, service) => {
           callBack(id);
         },
         error => {
-          console.log(error)
           dispatch(loadedFailure);
-
           const errorInfo =error && error.info ? error.info : ""
           dispatch(failure("保存失败." + errorInfo.toString()));
           dispatch(done(error, CONST.CREATE_FAILURE));
@@ -142,7 +140,7 @@ export const _am = (CONST, service) => {
         },
         error => {
           dispatch(loadedFailure);
-
+          
           const errorInfo =error && error.info ? error.info : ""
           dispatch(failure("保存失败." + errorInfo.toString()));
           dispatch(done(error, CONST.CREATE_FAILURE));
@@ -174,7 +172,7 @@ export const _am = (CONST, service) => {
     };
   }
 
-  function _delete(id, pagination, searchTerms) {
+  function _delete(id, pagination, searchTerms, callBack = () => {}) {
     // pagination: 删除后刷新列表用
     return dispatch => {
       return service._delete(id).then(
@@ -183,6 +181,7 @@ export const _am = (CONST, service) => {
           const info = response && response.info ? response.info : ""
           dispatch(success("删除成功." + info.toString()));
           dispatch(done(response, CONST.DELETE_SUCCESS));
+          callBack()
         },
         error => {
           const errorInfo =error && error.info ? error.info : ""

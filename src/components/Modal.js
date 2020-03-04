@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { CreinoxForm } from "./index";
+import { CreinoxForm, Inputs } from "./index";
 
 export const MyModalForm = ({
   isOpen,
@@ -10,14 +10,16 @@ export const MyModalForm = ({
   rowButtons = [],
   className,
   component,
-  FormWrapper = () => null
+  ...props
 }) => {
   const pageId = 0;
   return (
     <Modal isOpen={isOpen} toggle={onClose} className={"modal-lg " + className}>
       <ModalHeader toggle={onClose}>{title}</ModalHeader>
       {!component ? (
-        <FormWrapper />
+        <>
+          {props.children}
+        </>
       ) : (
         <>
           <ModalBody>{component}</ModalBody>
@@ -95,44 +97,36 @@ export const MyModalFormWithData = ({
     }
   }, [onGetById, isOpen, isFromEdit]);
 
-  const FormWrapper = () => {
-    return (
-      <CreinoxForm
-        defaultValues={rowId && dataById && { ...dataById.row }}
-        errors={errorById}
-        isFromEdit={isFromEdit}
-        actionSubmit={onSubmit}
-        dataModel = {dataModel}
-        {...modalFormProps}
-        >
-
-        <ModalBody>{componentInputs(modalInputProps)}</ModalBody>
-    <ModalFooter>
-      <Button
-        type="button"
-        onClick={onClose}
-        variant="contained"
-        color="secondary"
-      >
-        取消
-      </Button>
-      <Button type="submit" variant="contained" color="primary">
-        保存
-      </Button>
-    </ModalFooter>
-        
-        
-        </CreinoxForm>
-    );
-  };
-
   return (
     <MyModalForm
       isOpen={isOpen}
       onClose={onClose}
       rowButtons={[]}
       title={title}
-      FormWrapper={FormWrapper}
-    />
+    >
+      <CreinoxForm
+        defaultValues={rowId && dataById && { ...dataById.row }}
+        errors={errorById}
+        isFromEdit={isFromEdit}
+        actionSubmit={onSubmit}
+        dataModel={dataModel}
+        {...modalFormProps}
+      >
+        <ModalBody>{componentInputs(modalInputProps)}</ModalBody>
+        <ModalFooter>
+          <Button
+            type="button"
+            onClick={onClose}
+            variant="contained"
+            color="secondary"
+          >
+            取消
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            保存
+          </Button>
+        </ModalFooter>
+      </CreinoxForm>
+    </MyModalForm>
   );
 };

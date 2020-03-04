@@ -47,9 +47,9 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
     const preConditions = { commodity_id: commodity_id };
 
     // ============================================= handles
-    const handleOnDisassemble = (pagination, rowId) => {
+    const handleOnDisassemble = (pagination, row) => {
       h_confirm("是否解除绑定？").then(resolve => {
-        if (resolve) onDisassemble(pagination, {commodity_id, product_id: rowId});
+        if (resolve) onDisassemble(pagination, {commodity_id, product_id: row.id});
       });
     };
 
@@ -75,7 +75,7 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
     };
 
     const handleAssemble = () => {
-      onAssemble({ commodity_id, selectedId }, () => {
+      onAssemble({ commodity_id, product_id: selectedId }, () => {
         onGetBySearch({}, preConditions); 
       });
     };

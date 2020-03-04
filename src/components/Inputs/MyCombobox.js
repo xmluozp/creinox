@@ -34,13 +34,9 @@ export const MySelect = React.memo(
     fullWidth = true
   }) => {
 
-    console.log("myselect",value, typeof(value),options )
-
     const handleOnChange = (e) => {
-
       onChange(e, id, parseInt(e.target.value))
     }
-
 
     return (
       <FormControl fullWidth={fullWidth} disabled={disabled} margin="dense">
@@ -82,6 +78,8 @@ export const MyCombobox = React.memo(
     hasDefault = true,
     fullWidth = true,
     multiple = false,
+    error = false,
+    helperText = "",
     ...props
   }) => {
     const classes = useStyles();
@@ -159,6 +157,8 @@ export const MyCombobox = React.memo(
               margin="dense"
               fullWidth={fullWidth}
               onKeyDown={props.onKeyDown}
+              error={!disabled && error}
+              helperText={!disabled && helperText}
             />
           )}
           onInputChange={props.onInputChange}
@@ -213,6 +213,8 @@ export const MyComboboxAsyncFK = React.memo(props => {
 
   const handleFetchData = e => {
     if (e.key === "Enter") {
+
+      console.log("hit enter")
       e.preventDefault();
       h_fkFetchOnceAsync(tableName, [inputValue, preConditions], actionName)
         .then(response => {

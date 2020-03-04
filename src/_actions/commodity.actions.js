@@ -24,6 +24,7 @@ const {
 function get_byId(commodity_id = 0, product_id = 0, isMeta = false) {
   return dispatch => {
     dispatch(loading);
+    dispatch(done({}, CONST.GET));
     return service.get_byId(commodity_id, product_id, isMeta).then(
       response => {
         dispatch(loaded);
@@ -120,10 +121,10 @@ function post_create_assemble(item, callBack = () => {}) {
   };
 }
 
-function _delete_disassemble(item, pagination) {
+function _delete_disassemble(pagination, item) {
   console.log("disassemble:", item);
   return dispatch => {
-    return service._delete_disassemble(item, pagination).then(
+    return service._delete_disassemble(item.commodity_id, item.product_id).then(
       response => {
         dispatch(success("解除成功"));
       },
@@ -131,9 +132,26 @@ function _delete_disassemble(item, pagination) {
         const errorInfo =error && error.info ? error.info : ""
         dispatch(failure("解除失败." + errorInfo.toString()));
       }
-    );
+    ).then(() => p_getbysearch_getproduct(dispatch, pagination, {commodity_id: item.commodity_id}));;;
   };
 }
+
+function p_getbysearch_getproduct(dispatch, pagination, searchTerms) {
+  dispatch(loading);
+  return service.get_bySearch_getProduct(pagination, searchTerms).then(
+    response => {
+      console.log("search again?")
+      dispatch(loaded);
+      dispatch(done(response, CONST.GETBYSEARCH_GETPRODUCT_SUCCESS));
+    },
+    error => {
+      dispatch(loadedFailure);
+      const errorInfo =error && error.info ? error.info : ""
+      dispatch(failure(errorInfo.toString()));
+    }
+  );
+}
+
 
 export const commodityActions = {
   get_dropdown,

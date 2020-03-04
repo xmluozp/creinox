@@ -3,9 +3,40 @@ import React, {useState} from 'react'
 export default () => {
 
     return <>This is my test:<br/>
-    
-        <InjectionTest/>
+    <FlipImage
+
+        a="https://upload.wikimedia.org/wikipedia/commons/0/0b/Cat_poster_1.jpg"
+        b="https://upload.wikimedia.org/wikipedia/commons/d/d9/Collage_of_Nine_Dogs.jpg"/>
     </>
+}
+
+
+const FlipImage = ({a, b}) => {
+
+    
+    const [state, setstate] = React.useState(true)
+
+    const flip = () => {
+        setstate(!state)
+    }
+
+    const styleFront = {
+        transformStyle: 'preserve-3d',
+        transform: 'rotateY(180deg)',
+        transition: 'transform 0.6s',
+    }
+
+    const styleFront2 = {
+        transformStyle: 'preserve-3d',
+        transform: 'rotateY(0deg)',
+        transition: 'transform 0.6s',
+    }
+
+    return (<div style={{perspective: 1000}}>
+        <img src ={state?a:b} height='400' width='400' onClick={flip} style = {state?styleFront: styleFront2}/>
+        </div>
+    )
+
 }
 
 

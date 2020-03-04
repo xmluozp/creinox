@@ -131,7 +131,6 @@ export class CreinoxForm extends React.Component {
 
   readValues() {
     const { defaultValues } = this.props;
-
     if (!this.state.isComponentLoaded) {
       const newState = {};
 
