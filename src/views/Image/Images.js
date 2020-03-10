@@ -57,16 +57,12 @@ export const withTablePage = () => {
    * Basic page for list
    * @param {} param0
    */
-  const CurrentPage = ({ onDelete, onDeleteMultiple, pageName }) => {
+  const CurrentPage = ({ onDeleteMultiple, pageName }) => {
     // ============================================= handles
-    const handleOnDelete = (id, row, pagination, searchTerms) => {
-      h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(id, pagination, searchTerms);
-      });
-    };
-    const handleSelectAction = list => {
+    const handleSelectAction = (list,pagination) => {
+      console.log(pagination)
       h_confirm("是否批量删除？").then(resolve => {
-        if (resolve) onDeleteMultiple(list);
+        if (resolve) onDeleteMultiple(list, pagination);
       });      
     };
 
@@ -81,14 +77,14 @@ export const withTablePage = () => {
     };
 
     // ============================================= Table Settings
-    const rowButtons = [
-      {
-        label: "删除",
-        color: "danger",
-        onClick: handleOnDelete,
-        icon: ICONS.DELETE()
-      }
-    ];
+    // const rowButtons = [
+    //   {
+    //     label: "删除",
+    //     color: "danger",
+    //     onClick: handleOnDelete,
+    //     icon: ICONS.DELETE()
+    //   }
+    // ];
 
     // ============================================= Render
     return (
@@ -98,7 +94,6 @@ export const withTablePage = () => {
           tableTitle={pageName}
           headCells={headCells}
           dataModel={dataModel}
-          rowButtons={rowButtons}
           searchBar={searchBar}
           selectBox={selectBox}
         />
@@ -110,7 +105,6 @@ export const withTablePage = () => {
 
   // ============================================= Redux
   const actionCreators = {
-    onDelete: dataActions._delete,
     onDeleteMultiple: dataActions._deleteMultiple
     // onAlertNotify: alertActions.dispatchNotify
   };

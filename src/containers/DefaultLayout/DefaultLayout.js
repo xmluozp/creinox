@@ -53,8 +53,10 @@ const authFilter = (authString, navsList) => {
 class DefaultLayout extends Component {
   constructor(props) {
     super(props);
+    
+    const authString = props.user && props.user["role_id.row"]  && props.user["role_id.row"].auth;
 
-    const authString = props.user && props.user["role_id.auth"];
+    console.log("auth", authString)
 
     this.state = {
       authenticatedNavigation: authFilter(authString, navigation),

@@ -79,7 +79,7 @@ function get_treeNotesById(regionId) { // 取子类
         headers: authHeader()
       };
     
-      const queryString = h_queryString({ orderBy:"path", order:"ASC"}, {root_id: regionId}, TABLENAME);
+      const queryString = h_queryString({perPage:-1, orderBy:"path", order:"ASC"}, {root_id: regionId}, TABLENAME);
       console.log("search service, get by root:", queryString);
       return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 

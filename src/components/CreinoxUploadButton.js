@@ -39,7 +39,7 @@ export const CreinoxUploadButton = ({
         showPreviews={true}
         filesLimit={filesLimit}
         showFileNames
-        dropzoneText={`把图片拖入，或者单击后选择(最多${filesLimit}张)`}
+        dropzoneText={`把图片拖入，或者单击后选择(最多${filesLimit}张, 最大5mb)`}
         maxFileSize={5000000}
         dialogTitle="上传图片"
         onClose={handleModalOpen.bind(null, false)}

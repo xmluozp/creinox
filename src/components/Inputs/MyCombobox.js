@@ -127,7 +127,7 @@ export const MyCombobox = React.memo(
       };
   
       handleOnChange = (e, item) => {
-        const returnValue = (item && item.id) || value;
+        const returnValue =  item && item.id >=0 ? item.id : value;
         onChange(e, id, returnValue);
       }
       handleGetOptionSelected = (item,index )=> {
@@ -135,9 +135,16 @@ export const MyCombobox = React.memo(
       }  
     }
 
+    const handleOnInputChange = (...props) => {
+      // console.log(props)
+      if (typeof(props.onInputChange) === 'function') {
+        props.onInputChange(...props)
+      }
+    }
+
     return (
         <Autocomplete
-          autoSelect={true}
+          autoSelect={false}
           multiple = {multiple}
           className={classes.root}
           disabled={disabled}
@@ -150,6 +157,7 @@ export const MyCombobox = React.memo(
           id={id}
           getOptionSelected={handleGetOptionSelected}
           value={currentValue}
+          disableClearable = {true}
           renderInput={params => (
             <TextField
               {...params}
@@ -161,7 +169,7 @@ export const MyCombobox = React.memo(
               helperText={!disabled && helperText}
             />
           )}
-          onInputChange={props.onInputChange}
+          onInputChange={handleOnInputChange}
         />
     );
   }
@@ -212,6 +220,7 @@ export const MyComboboxAsyncFK = React.memo(props => {
   }, []);
 
   const handleFetchData = e => {
+
     if (e.key === "Enter") {
 
       console.log("hit enter")

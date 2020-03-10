@@ -81,19 +81,19 @@ export const withTablePage = () => {
       });
     };
 
-    const handleSelectAction = list => {
-      console.log(`选中了 ${list.join(",")}`);
-    };
+    // const handleSelectAction = list => {
+    //   console.log(`选中了 ${list.join(",")}`);
+    // };
 
     const handleOnEdit = (id) => {
       history.push(`${EDITURL}/${id}`);
     };
 
-    const selectBox = {
-      icon: ICONS.ACTIVE(),
-      title: "批量启用",
-      onAction: handleSelectAction
-    };
+    // const selectBox = {
+    //   icon: ICONS.ACTIVE(),
+    //   title: "批量启用",
+    //   onAction: handleSelectAction
+    // };
 
     // ============================================= Table Settings
     const rowButtons = [
@@ -126,7 +126,6 @@ export const withTablePage = () => {
           rowButtons={rowButtons}
           toolbarButtons={toolbarButtons}
           searchBar={searchBar}
-          selectBox={selectBox}
         />
       </>
     );

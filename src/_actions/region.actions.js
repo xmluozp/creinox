@@ -11,7 +11,7 @@ const {
   get_byId,
   post_create,
   put_update,
-  _delete
+  _delete_treeNode
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
@@ -24,7 +24,7 @@ export const regionActions = {
   get_byId,
   post_create,
   put_update,
-  _delete,
+  _delete_treeNode,
 
   // customized
   get_treeNotesById

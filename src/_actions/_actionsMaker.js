@@ -37,46 +37,27 @@ export const _am = (CONST, service) => {
     };
   }
 
-  function get_bySearch(pagination, searchTerms = {}) {
-    return dispatch => {
-      dispatch(loading);
-      dispatch(done({}, CONST.GETBYSEARCH));
-      return service.get_bySearch(pagination, searchTerms).then(
-        response => {
-          dispatch(loaded);
-          console.log("getbysearch", response);
-          dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
-        },
-        error => {
-          dispatch(loadedFailure);
+  // function get_bySearch(pagination, searchTerms = {}) {
+  //   return dispatch => {
+  //     dispatch(loading);
+  //     dispatch(done({}, CONST.GETBYSEARCH));
+  //     return service.get_bySearch(pagination, searchTerms).then(
+  //       response => {
+  //         dispatch(loaded);
+  //         console.log("getbysearch", response);
+  //         dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
+  //       },
+  //       error => {
+  //         dispatch(loadedFailure);
 
-          const errorInfo =error && error.info ? error.info : ""
-          dispatch(failure(errorInfo.toString()));
-        }
-      );
-    };
-  }
+  //         const errorInfo =error && error.info ? error.info : ""
+  //         dispatch(failure(errorInfo.toString()));
+  //       }
+  //     );
+  //   };
+  // }
 
-  function get_treeNotesById(parentId = 0) {
-    // 通过某个分类，取所有的子级孙级分类
-    return dispatch => {
-      dispatch({ type: LOADING.LOADING });
-      // dispatch(done({}, CONST.GETBYSEARCH)); // 会导致死循环
-      return service.get_treeNotesById(parentId).then(
-        response => {
-          dispatch({ type: LOADING.SUCCESS });
-          console.log("getby treenode", response);
-          dispatch({ type: CONST.GETBYSEARCH_SUCCESS, payload: response });
-        },
-        error => {
-          dispatch({ type: LOADING.FAILURE });
 
-          const errorInfo =error && error.info ? error.info : ""
-          dispatch(failure(errorInfo.toString()));
-        }
-      );
-    };
-  }
 
   function get_byId(id) {
     return dispatch => {
@@ -191,6 +172,25 @@ export const _am = (CONST, service) => {
     };
   }
 
+  function _delete_treeNode(id, parentId, callBack = () => {}) {
+    // pagination: 删除后刷新列表用
+    return dispatch => {
+      return service._delete(id).then(
+        response => {
+          console.log(response)
+          const info = response && response.info ? response.info : ""
+          dispatch(success("删除成功." + info.toString()));
+          dispatch(done(response, CONST.DELETE_SUCCESS));
+          callBack()
+        },
+        error => {
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure("删除失败. " + errorInfo.toString()));
+        }
+      ).then(() => p_gettreeNotesById(dispatch, parentId));
+    };
+  }
+
   function _deleteMultiple(list, pagination, searchTerms) {
     // pagination: 删除后刷新列表用
     return dispatch => {
@@ -209,6 +209,24 @@ export const _am = (CONST, service) => {
     };
   }
 
+  function get_treeNotesById(parentId = 0) {
+    // 通过某个分类，取所有的子级孙级分类
+    return dispatch => {
+      dispatch({ type: LOADING.LOADING });
+      // dispatch(done({}, CONST.GETBYSEARCH)); // 会导致死循环
+      return p_gettreeNotesById(dispatch, parentId);
+    };
+  }
+
+  function get_bySearch(pagination, searchTerms = {}) {
+    return dispatch => {
+      dispatch(loading);
+      dispatch(done({}, CONST.GETBYSEARCH));
+      return p_getbysearch(dispatch, pagination, searchTerms);
+    };
+  }
+
+
   function p_getbysearch(dispatch, pagination, searchTerms) {
     return service.get_bySearch(pagination, searchTerms).then(
       response => {
@@ -221,8 +239,29 @@ export const _am = (CONST, service) => {
         const errorInfo =error && error.info ? error.info : ""
         dispatch(failure(errorInfo.toString()));
       }
-    )
+    );
   }
+
+  function p_gettreeNotesById(dispatch, parentId) {
+
+    return service.get_treeNotesById(parentId).then(
+      response => {
+        dispatch({ type: LOADING.SUCCESS });
+        console.log("getby treenode", response);
+        dispatch({ type: CONST.GETBYSEARCH_SUCCESS, payload: response });
+      },
+      error => {
+        dispatch({ type: LOADING.FAILURE });
+
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
+      }
+    );
+  }
+
+
+
+
 
   return {
     get_dropdown,
@@ -233,6 +272,7 @@ export const _am = (CONST, service) => {
     post_createMultiple,
     put_update,
     _delete,
+    _delete_treeNode,
     _deleteMultiple,
   };
 };

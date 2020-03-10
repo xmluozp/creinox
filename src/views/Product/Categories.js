@@ -143,7 +143,8 @@ const CurrentPage = ({
 
   return (
     <div className="animated fadeIn">
-      <Grid container spacing={2}>
+      {/* spacing会有个-8的margin导致双滚动条，不知道怎么解决只能绕过去 */}
+      <Grid container spacing={2} style={{margin:0}}>
         <Grid item lg={6} md={6} xs={12}>
           <MyTreeview
             onSelect={handleOnSelect}
@@ -282,7 +283,7 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  onDelete: dataActions._delete,
+  onDelete: dataActions._delete_treeNode,
   onPutUpdate: dataActions.put_update,
   onPostCreate: dataActions.post_create,
   onGetById: dataActions.get_byId

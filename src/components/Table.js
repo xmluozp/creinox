@@ -198,7 +198,7 @@ export const CreinoxTable = ({
     // setNextSearchTerms(searchTerms); // work with paginatitor
     // onGetBySearch(getPaginationFromState(), searchTerms);
 
-    p_updateData({}, searchTerms);
+    p_updateData(defaultPagination, searchTerms);
   };
 
   const handleRequestSort = (e, newOrderBy) => {
@@ -249,7 +249,7 @@ export const CreinoxTable = ({
   };
 
   const handleSelectOnAction = e => {
-    selectBox && selectBox.onAction(selected);
+    selectBox && selectBox.onAction(selected, { ...getPaginationFromState(), page: 0});
     setSelected([]);
   };
 
@@ -477,6 +477,8 @@ const ActionButton = ({
   getPaginationFromState,
   searchTerms
 }) => {
+
+  // 加这个的原因是：有的属性是根据row动态变化的，比如id
   let injectOptions;
   if (typeof onShow === "function") {
     injectOptions = onShow(row);

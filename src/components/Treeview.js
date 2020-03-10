@@ -51,12 +51,10 @@ export const CreinoxTreeview = ({
       const foundNodes = _.filter(data.rows, item => {
         let returnValue = false;
 
-        const compareStringName = item.name && item.name.toLowerCase();
-        const compareStringEName = item.ename && item.ename.toLowerCase();
-        const compareStringStartCode =
-          item.startCode && item.startCode.toLowerCase();
-          const compareStringCode =
-          item.code && item.code.toLowerCase();
+        const compareStringName = (item.name && item.name.toLowerCase()) || "";
+        const compareStringEName = (item.ename && item.ename.toLowerCase()) || "";
+        const compareStringStartCode = (item.startCode && item.startCode.toLowerCase()) || "";
+        const compareStringCode = (item.code && item.code.toLowerCase()) || "";
 
         returnValue =
           returnValue || compareStringName.indexOf(filterString) >= 0;
@@ -109,7 +107,6 @@ export const CreinoxTreeview = ({
     } else if( !(data && data.pagination)) { // 如果有pagination没有rows说明读过了但读不到数据
       // first fetch
       onGetBySearch(parentNode);
-      console.log("parentNode", parentNode)
     }
   }, [data, onGetBySearch, parentNode]);
 

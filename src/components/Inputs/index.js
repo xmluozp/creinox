@@ -76,7 +76,8 @@ const MyDatePicker = React.memo(({
         id={id}
         label={label}
         format="yyyy/MM/dd"
-        value={value || new Date()}
+        value={value || null}
+        emptyLabel = ""
         onChange={handleOnChange}
         KeyboardButtonProps={{
           "aria-label": "select date"
@@ -111,7 +112,8 @@ const MyDateTimePicker = React.memo(({
         id={id}
         label={label}
         format="yyyy/MM/dd HH:mm:ss"
-        value={value || new Date()}
+        value={value || null}
+        emptyLabel = ""
         onChange={handleOnChange}
         KeyboardButtonProps={{
           "aria-label": "select date"
@@ -141,8 +143,12 @@ const MyDateRangePicker = React.memo(({
   };
 
   // first load get default values
-  const [startDate, setStartDate] = useState(getDateArray(value)[0]);
-  const [endDate, setEndDate] = useState(getDateArray(value)[1]);
+  // const [startDate, setStartDate] = useState(getDateArray(value)[0]);
+  // const [endDate, setEndDate] = useState(getDateArray(value)[1]);
+
+  // changed: dont use default
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   // otherwise only submit
   const handleChangeStart = (timeString, timeObject) => {
@@ -168,6 +174,7 @@ const MyDateRangePicker = React.memo(({
             label={`${label || ""} 从`}
             format="yyyy/MM/dd"
             value={startDate}
+            emptyLabel = ""
             onChange={handleChangeStart}
             KeyboardButtonProps={{
               "aria-label": "change date"
@@ -183,6 +190,7 @@ const MyDateRangePicker = React.memo(({
             label="到"
             format="yyyy/MM/dd"
             value={endDate}
+            emptyLabel = ""
             onChange={handleChangeEnd}
             KeyboardButtonProps={{
               "aria-label": "change date"

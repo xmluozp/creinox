@@ -41,29 +41,6 @@ function get_byId(id) {
       return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
 
-// function post_create(item) {
-    // const requestOptions = {
-    //     method: 'GET',
-    //     headers: authHeader()
-    // };
-
-    // const url = './dataset/imagesdata_byId.json'
-    // console.log("getId create,", item)
-
-    // // axios.post(url, {}  )
-    // // return fetch(`${url}/${id}`, requestOptions).then(handleResponse);
-    // return fetch(`${url}`, requestOptions).then(handleResponse);
-
-
-    // const requestOptions = {
-    //     method: "POST",
-    //     headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
-    //     body: h_formData(item)
-    //   };
-    //   delete requestOptions.headers['Content-Type'];    
-    //   return fetch(`${URL}`, requestOptions).then(handleResponse);
-// }
-
 function post_createMultiple(itemList, folder_id) {
 
     // const url = './dataset/imagesdata_byId.json'
@@ -92,6 +69,8 @@ function _deleteMultiple(list) {
         headers: { ...authHeader(), "Content-Type": "application/json" },
         body: JSON.stringify(list)
     };
+
+    console.log("批量删除", list)
     
     return fetch(`${URL}_delete`, requestOptions).
     then(handleResponse);  

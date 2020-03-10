@@ -8,12 +8,12 @@ export const authCheck = (authString = "", authTag) => {
   if (!authTag) return true;
 
   // auth list取的是authlist里的
-  // const authList = authString.split(",");
-  // const autharray = authList.length > 0 ? authList.map((authIndex)=>{
-  //   return allAuthList[authIndex]
-  // }): [];
+  const authList = authString.split(",");
+  const autharray = authList.length > 0 ? authList.map((authIndex)=>{
+    return allAuthList[authIndex]
+  }): [];
 
-  const autharray = allAuthList;
+  // const autharray = allAuthList;
   const isPass = autharray.includes(authTag) || autharray.includes("all");
 
   return isPass;

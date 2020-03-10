@@ -67,7 +67,7 @@ export const MyImage = ({ id, value, onChange, disabled, label, imageId }) => {
       onChange(null, id, null);
 
       // 直接调用action，因为外键的关系fk会自动被清空
-      dataActions._delete(imageId)(store.dispatch)
+      dataActions._deleteGallary(imageId)(store.dispatch)
 
     }    
   };

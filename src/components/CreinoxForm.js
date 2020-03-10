@@ -22,8 +22,11 @@ export class CreinoxForm extends React.Component {
       isComponentLoaded: false
     };
 
+    this.formRef = React.createRef();
+
     this.submitForm = this.submitForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
+
   }
 
   // 提交函数
@@ -162,7 +165,20 @@ export class CreinoxForm extends React.Component {
       return "loading";
     } else {
       return (
-        <form onSubmit={this.submitForm}>
+        <form 
+          ref = {this.formRef}
+          onSubmit={this.submitForm}
+          
+          onKeyDown = {e=> {
+            if (e.ctrlKey && e.which == 83) {
+              this.submitForm(e)
+            }
+
+            if (e.target.type != 'textarea' && e.which === 13 /* Enter */) {
+              e.preventDefault();
+            }
+          }}        
+        >
           {recursiveMap(children, item => {
             // 遍历所有的components
             const isInput =

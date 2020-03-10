@@ -5,7 +5,7 @@ export const bankaccountModel = {
     table: "bankaccount",
     columns: {
         id :            {label: "ID",         type: _DATATYPES.INT },
-        accountName:    {label: "账户姓名",    type: _DATATYPES.VARCHAR},    
+        accountName:    {label: "账户名/姓名",    type: _DATATYPES.VARCHAR},    
         accountNo:      {label: "账号",        type: _DATATYPES.VARCHAR},    
         bankName:       {label: "银行名称",     type: _DATATYPES.VARCHAR}, 
         address:        {label: "银行地址",     type: _DATATYPES.VARCHAR}, 

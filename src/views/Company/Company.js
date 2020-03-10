@@ -40,7 +40,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       // if there is ID, fetch data
       if (id) {
         onGetById(id);
-        console.log("fetch new data:", id)
+        // console.log("fetch new data:", id)
       }
     }, [onGetById, id]);
 
@@ -54,8 +54,8 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
         values = h_filterImage(values, "imageBizCard_id.row");
 
         // 因为有图片，所以需要刷新一下，好显示图片的thumbnail
-        onPutUpdate({ companyType: companyType, ...values }, () => {
-          injector(dataById.row)
+        onPutUpdate({ companyType: companyType, ...values }, res => {
+          injector(res.row)
         });
       } else {
         // onPostCreate(values, history.location.pathname);
@@ -76,9 +76,6 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     const folder_id = dataById && dataById.row && dataById.row.gallary_folder_id
     const imageLicense_id = dataById && dataById.row && dataById.row.imageLicense_id // 删除用
     const imageBizCard_id = dataById && dataById.row && dataById.row.imageBizCard_id
-
-    console.log("外面的锅",  isFromEdit && dataById && dataById.row)
-    
 
     return (
       <>

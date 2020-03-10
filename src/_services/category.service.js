@@ -79,7 +79,7 @@ function get_treeNotesById(categoryId) {
         headers: authHeader()
       };
     
-      const queryString = h_queryString({ orderBy:"path", order:"ASC"}, {root_id: categoryId}, TABLENAME);
+      const queryString = h_queryString({perPage:-1,  orderBy:"path", order:"ASC"}, {root_id: categoryId}, TABLENAME);
       console.log("search service, get by root:", queryString);
       return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }

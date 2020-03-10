@@ -50,6 +50,7 @@ export const embedListProvider = (
   }) => {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+    const [currentPagination, setcurrentPagination] = useState()
 
     const [selectedRowId, setSelectedRowId] = useState();
 
@@ -62,6 +63,8 @@ export const embedListProvider = (
 
     // 打开关闭创建框
     const handleOnCreateOpen = pagination => {
+      // 刷新的时候会用到
+      setcurrentPagination(pagination)
       setIsModalCreateOpen(true);
     };
 
@@ -70,7 +73,9 @@ export const embedListProvider = (
     };
 
     // 打开关闭编辑框
-    const handleOnEditOpen = (id) => {
+    const handleOnEditOpen = (id, row, pagination) => {
+      // 刷新的时候会用到
+      setcurrentPagination(pagination)
       setIsModalEditOpen(true);
       setSelectedRowId(id);
     };
@@ -81,14 +86,14 @@ export const embedListProvider = (
 
     const handleOnEditSubmit = values => {
       onPutUpdate({ ...preConditions, ...values }, () => {
-        onGetBySearch({}, preConditions);
+        onGetBySearch(currentPagination, preConditions);
         handleOnEditClose();
       });
     };
 
     const handleOnCreateSubmit = values => {
       onPostCreate({ ...preConditions, ...values }, () => {
-        onGetBySearch({}, preConditions);
+        onGetBySearch(currentPagination, preConditions);
         handleOnCreateClose();
       });
     };

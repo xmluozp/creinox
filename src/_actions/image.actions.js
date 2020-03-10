@@ -16,7 +16,7 @@ const {
 
 
 // 因为只删除图片，不提交刷新，所以这里特殊对待
-function _delete(id) {
+function _deleteGallary(id) {
   return dispatch => {
     return service._deleteMultiple([id]).then(
       response => {
@@ -41,6 +41,6 @@ export const imageActions = {
   get_byId,
   // post_create,
   post_createMultiple,
-  _delete,
+  _deleteGallary,
   _deleteMultiple
 };

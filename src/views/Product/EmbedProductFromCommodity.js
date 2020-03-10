@@ -107,7 +107,10 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
         label: "详情",
         color: "primary",
         url: EDITURL,
-        icon: ICONS.EDIT("mr-1")
+        icon: ICONS.EDIT("mr-1"),
+        onShow: () => {
+          return {target: '_blank'}
+        }
       },
       {
         label: "解绑",
