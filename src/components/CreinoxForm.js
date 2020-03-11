@@ -42,7 +42,6 @@ export class CreinoxForm extends React.Component {
 
   // when change value
   handleChange(e, key, value, ...other) {
-
     // console.log(key,typeof(value), e.target.value)
     if (key && typeof value !== "undefined") {
       // 防止value本身是个boolean
@@ -168,7 +167,7 @@ export class CreinoxForm extends React.Component {
         <form 
           ref = {this.formRef}
           onSubmit={this.submitForm}
-          
+
           onKeyDown = {e=> {
             if (e.ctrlKey && e.which == 83) {
               this.submitForm(e)
