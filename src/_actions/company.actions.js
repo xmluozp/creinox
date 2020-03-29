@@ -158,8 +158,10 @@ function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
 
-    console.log("preConditions", preConditions)
-    return service.get_disposable_dropdown({...preConditions, name:keyword })
+    // console.log("preConditions ???", preConditions, keyword)
+
+    // if(keyword) {preConditions.name = keyword}
+    return service.get_disposable_dropdown(preConditions)
       .then(
         response => {
           dispatch(loaded);

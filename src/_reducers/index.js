@@ -38,8 +38,16 @@ export default combineReducers({
   imageData: image,
 
   // 公司、组织
+  sellcontractData: reducerMaker(null, "SELLCONTRACT"),
+  sellsubitemData: reducerMaker(null, "SELLSUBITEM"),
+
+  buycontractData: reducerMaker(null, "BUYCONTRACT"),
+  buysubitemData: reducerMaker(null, "BUYSUBITEM"),
+
+
   companyData: company,
   regionData: region,
+  portData: reducerMaker(null, "PORT"),
 
   // 产品、商品
   categoryData: category,
@@ -50,5 +58,5 @@ export default combineReducers({
 
   // faceless 的单纯信息表
   rostercontactData: reducerMaker(null, "ROSTERCONTACT"),
-  bankaccountData: reducerMaker(null, "BANKACCOUNT")
+  bankaccountData: reducerMaker(null, "BANKACCOUNT")  
 });

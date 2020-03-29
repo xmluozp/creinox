@@ -1,0 +1,32 @@
+{
+    "rows":
+    {
+        "id": 1,
+        "code": "CR8328",
+        "activeAt": "2019-12-27 13:00",
+        "deliverAt": "2019-12-27 13:00",
+
+        "tt_quality":"随便期限1",
+        "tt_deliveryMethod":"随便期限2",
+        "tt_shippingTerm":"随便期限3",
+        "tt_loss":"随便期限4",
+
+        "tt_packingStandard":"随便期限5",
+        "tt_acceptanceCondition":"随便期限6",
+        "tt_accessories":"随便期限7",
+        "tt_payment":"随便期限8",
+        "tt_breach":"随便期限9",
+        "tt_dispute":"随便期限10",
+        "memo":"随便期限11",
+
+
+        "region_id": 1,
+        "sell_contract_id": 1,
+        "paymentType_id": 1,
+        "seller_company_id": 1,
+        "follower_id": 1,
+        "updateUser_id": 1,
+
+        "view_totalPrice": 123
+    }
+}

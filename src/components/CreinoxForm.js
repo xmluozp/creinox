@@ -86,7 +86,7 @@ export class CreinoxForm extends React.Component {
           }
           return null;
         });
-
+        console.log("set new state", this.state, newState)
         this.setState(newState);
       });
     }
@@ -169,15 +169,16 @@ export class CreinoxForm extends React.Component {
           onSubmit={this.submitForm}
 
           onKeyDown = {e=> {
-            if (e.ctrlKey && e.which == 83) {
+            if (e.ctrlKey && e.which === 83) {
               this.submitForm(e)
             }
 
-            if (e.target.type != 'textarea' && e.which === 13 /* Enter */) {
+            if (e.target.type !== 'textarea' && e.which === 13 /* Enter */) {
               e.preventDefault();
             }
           }}        
         >
+        <button type="button" onClick={() => {this.setState({buyer_company_id: 1932})}}> set </button>
           {recursiveMap(children, item => {
             // 遍历所有的components
             const isInput =

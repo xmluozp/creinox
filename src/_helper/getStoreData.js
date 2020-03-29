@@ -80,12 +80,19 @@ export function h_queryString(pagination = {}, searchTerm = {}, table) {
     let newSearchTerms = {...oldSearchTerms, ...searchTerm} 
 
     for (let [key, value] of Object.entries(newSearchTerms)) {
-        if(!isNaN(value) && value !== null) {
+
+        if(typeof(value) === "boolean") {
+            value = value?1:0
+        }
+        
+        if(
+            ! (key === "id" && (isNaN(value) ||  parseInt(value) <= 0 )) && // 如果搜索id，特殊对待：输入0就放空(因为number input输入空会自动变成0)
+            !isNaN(value) && value !== null) {
             newSearchTerms[key] = value.toString() // 后台json只认string
         }
         
     }
-    console.log("newSearchTerms", newSearchTerms)
+    // console.log("newSearchTerms", newSearchTerms)
 
 
     let searchString; 

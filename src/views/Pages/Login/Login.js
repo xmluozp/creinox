@@ -65,10 +65,6 @@ const Login = ({ onLogin }) => {
 }
 
 // 从reducer来的
-function mapState() {
-
-}
-
 const actionCreators = {
   onLogin: userActions.login,
 };

@@ -48,14 +48,13 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
 
     const handleOnSubmit = values => {
       if (isFromEdit) {
-
         // 如果没有新的图片，就不上传图片
         values = h_filterImage(values, "imageLicense_id.row");
         values = h_filterImage(values, "imageBizCard_id.row");
 
         // 因为有图片，所以需要刷新一下，好显示图片的thumbnail
         onPutUpdate({ companyType: companyType, ...values }, res => {
-          injector(res.row)
+          injector(res.row);
         });
       } else {
         // onPostCreate(values, history.location.pathname);
@@ -72,10 +71,12 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       setInjector(inj);
     };
 
-
-    const folder_id = dataById && dataById.row && dataById.row.gallary_folder_id
-    const imageLicense_id = dataById && dataById.row && dataById.row.imageLicense_id // 删除用
-    const imageBizCard_id = dataById && dataById.row && dataById.row.imageBizCard_id
+    const folder_id =
+      dataById && dataById.row && dataById.row.gallary_folder_id;
+    const imageLicense_id =
+      dataById && dataById.row && dataById.row.imageLicense_id; // 删除用
+    const imageBizCard_id =
+      dataById && dataById.row && dataById.row.imageBizCard_id;
 
     return (
       <>
@@ -161,9 +162,9 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
                   <Gallery
-                    folder_id = {folder_id}
+                    folder_id={folder_id}
                     preConditions={{
-                      gallary_folder_id:folder_id
+                      gallary_folder_id: folder_id
                     }}
                   />
                 </TabPanel>
@@ -181,100 +182,11 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     );
   };
 
+  // 1: 内部公司
   const formInputs = disabled => {
     return (
       <>
-        {/* 基本信息 */}{" "}
-        <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
-        </Grid>
-        <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyInput inputid="name" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="shortname" disabled={disabled} />
-        </Grid>
-        <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyInput inputid="ename" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="eshortname" disabled={disabled} />
-        </Grid>
-        <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyInput
-            inputid="address"
-            multiline
-            rows={1}
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="postcode" disabled={disabled} />
-        </Grid>
-        {/* 联系信息 */}
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="phone1" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="phone2" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="phone3" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="fax1" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="fax2" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="website" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="email1" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="email2" disabled={disabled} />
-        </Grid>
-        {/* 税务信息 */}
-        <Grid item xs={12}>
-          <Inputs.MyInput inputid="memo" multiline disabled={disabled} />
-        </Grid>
-        <Grid item xs={12}>
-          <Inputs.MyInput inputid="gsfj" disabled={disabled} />
-        </Grid>
-        <Grid item xs={12}>
-          <Inputs.MyInput inputid="fjdz" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} md={4} xs={6}>
-          <Inputs.MyInput inputid="fjyb" disabled={disabled} />
-        </Grid>
-        <Grid item lg={8} md={8} xs={6}>
-          <Inputs.MyInput inputid="taxcode" disabled={disabled} />
-        </Grid>
-        {/* 资料责任人信息 */}
-        <Grid item lg={6} xs={12}>
-          <Inputs.MyComboboxFK
-            inputid="retriever_id"
-            optionLabel="userName"
-            tableName="user"
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={6} xs={12}>
-          <Inputs.MyDatePicker inputid="retrieveTime" disabled={disabled} />
-        </Grid>
-        <Grid item lg={4} xs={12}>
-          <Inputs.MyComboboxFK
-            inputid="updateUser_id"
-            optionLabel="userName"
-            tableName="user"
-            disabled={true}
-          />
-        </Grid>
+        {companyType === 1 ? template_1(disabled) : templateCommon(disabled)}
         <Grid item lg={4} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
@@ -287,6 +199,166 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       </>
     );
   };
+
+  // ======================================= 公司资料模板 //不同类型的公司需要填的内容不一样，所以需要用不同模板区分 ======================================= 
+  const templateCommon = disabled => (
+    <>
+      {/* 基本信息 */}
+      <Grid item lg={8} md={8} xs={12}>
+        <Inputs.MyInput inputid="code" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
+      </Grid>
+      <Grid item lg={8} md={8} xs={12}>
+        <Inputs.MyInput inputid="name" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="shortname" disabled={disabled} />
+      </Grid>
+      <Grid item lg={8} md={8} xs={12}>
+        <Inputs.MyInput inputid="ename" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="eshortname" disabled={disabled} />
+      </Grid>
+      <Grid item lg={8} md={8} xs={12}>
+        <Inputs.MyInput
+          inputid="address"
+          multiline
+          rows={1}
+          disabled={disabled}
+        />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="postcode" disabled={disabled} />
+      </Grid>
+      {/* 联系信息 */}
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="phone1" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="phone2" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="phone3" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="fax1" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="fax2" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="website" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="email1" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="email2" disabled={disabled} />
+      </Grid>
+      {/* 税务信息 */}
+      <Grid item xs={12}>
+        <Inputs.MyInput inputid="memo" multiline disabled={disabled} />
+      </Grid>
+      <Grid item xs={12}>
+        <Inputs.MyInput inputid="gsfj" disabled={disabled} />
+      </Grid>
+      <Grid item xs={12}>
+        <Inputs.MyInput inputid="fjdz" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={6}>
+        <Inputs.MyInput inputid="fjyb" disabled={disabled} />
+      </Grid>
+      <Grid item lg={8} md={8} xs={6}>
+        <Inputs.MyInput inputid="taxcode" disabled={disabled} />
+      </Grid>
+      {/* 资料责任人信息 */}
+      <Grid item lg={6} xs={12}>
+        <Inputs.MyComboboxFK
+          inputid="retriever_id"
+          optionLabel="userName"
+          tableName="user"
+          disabled={disabled}
+        />
+      </Grid>
+      <Grid item lg={6} xs={12}>
+        <Inputs.MyDatePicker inputid="retrieveTime" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} xs={12}>
+        <Inputs.MyComboboxFK
+          inputid="updateUser_id"
+          optionLabel="userName"
+          tableName="user"
+          disabled={true}
+        />
+      </Grid>
+    </>
+  );
+
+  const template_1 = disabled => (
+    <>
+      {/* 基本信息 */}
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
+      </Grid>
+      <Grid item lg={8} md={8} xs={12}>
+        <Inputs.MyInput inputid="name" disabled={disabled} />
+      </Grid>
+      <Grid item xs={12}>
+        <Inputs.MyInput inputid="ename" disabled={disabled} />
+      </Grid>
+      <Grid item xs={12}>
+        <Inputs.MyInput
+          inputid="address"
+          multiline
+          rows={1}
+          disabled={disabled}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Inputs.MyInput
+          inputid="eaddress"
+          multiline
+          rows={1}
+          disabled={disabled}
+        />
+      </Grid>
+      {/* 联系信息 */}
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="phone1" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="phone2" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="fax1" disabled={disabled} />
+      </Grid>
+      {/* 税务信息 */}
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="zsl" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={12}>
+        <Inputs.MyInput inputid="hl" disabled={disabled} />
+      </Grid>
+      <Grid item lg={4} md={4} xs={6}>
+        <Inputs.MyInput inputid="tsl" disabled={disabled} />
+      </Grid>
+      <Grid item xs={12}>
+        <Inputs.MyInput inputid="taxcode" disabled={disabled} />
+      </Grid>
+      {/* 资料责任人信息 */}
+      <Grid item lg={4} xs={12}>
+        <Inputs.MyComboboxFK
+          inputid="updateUser_id"
+          optionLabel="userName"
+          tableName="user"
+          disabled={true}
+        />
+      </Grid>
+    </>
+  );
 
   // ============================================= Redux
 

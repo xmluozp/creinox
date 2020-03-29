@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // import _ from "lodash";
-import formatCurrency from 'format-currency';
+// import formatCurrency from "format-currency";
 
 import DateFnsUtils from "@date-io/date-fns";
 import TextField from "@material-ui/core/TextField";
@@ -27,7 +27,7 @@ import Button from "@material-ui/core/Button";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
-import {_DATATYPES} from "../../_constants"
+import { _DATATYPES } from "../../_constants";
 
 import {
   MyCombobox,
@@ -40,231 +40,248 @@ import {
   MyComboboxUnitType,
   MyComboboxShippingType,
   MyComboboxPricingTerm,
-  MyComboboxCurrency
+  MyComboboxCurrency,
+  MyComboboxPaymentType,
+  MyComboboxPaymentTypeE,
+  MyComboboxCommission
 } from "./MyCombobox";
 
-import {
-  MyImage
-} from "./MyImage";
+import { MyImage } from "./MyImage";
 
-import {
-  MyRegionPicker,
-  MyCategoryPicker
-} from "./MyPicker";
+import { MyRegionPicker, MyCategoryPicker } from "./MyPicker";
 
 // ==================================================================================Date picker
-const MyDatePicker = React.memo(({
-  id,
-  label = "选择日期",
-  value,
-  onChange = () => {},
-  fullWidth = true,
-  disabled = false
-}) => {
-  const handleOnChange = (timeString, timeObject) => {
-    if (typeof onChange === "function") {
-      onChange(null, id, new Date(timeObject).toISOString());
-    }
-  };
+const MyDatePicker = React.memo(
+  ({
+    id,
+    label = "选择日期",
+    value,
+    onChange = () => {},
+    fullWidth = true,
+    disabled = false
+  }) => {
+    const handleOnChange = (timeString, timeObject) => {
+      if (typeof onChange === "function") {
+        onChange(null, id, new Date(timeObject).toISOString());
+      }
+    };
 
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} style={{ marginTop: "0px" }}>
-      <KeyboardDatePicker
-        fullWidth={fullWidth}
-        disabled={disabled}
-        margin="dense"
-        id={id}
-        label={label}
-        format="yyyy/MM/dd"
-        value={value || null}
-        emptyLabel = ""
-        onChange={handleOnChange}
-        KeyboardButtonProps={{
-          "aria-label": "select date"
-        }}
-      />
-    </MuiPickersUtilsProvider>
-  );
-});
+    return (
+      <MuiPickersUtilsProvider
+        utils={DateFnsUtils}
+        style={{ marginTop: "0px" }}
+      >
+        <KeyboardDatePicker
+          fullWidth={fullWidth}
+          disabled={disabled}
+          margin="dense"
+          id={id}
+          label={label}
+          format="yyyy/MM/dd"
+          value={value || null}
+          emptyLabel=""
+          onChange={handleOnChange}
+          KeyboardButtonProps={{
+            "aria-label": "select date"
+          }}
+        />
+      </MuiPickersUtilsProvider>
+    );
+  }
+);
 
-const MyDateTimePicker = React.memo(({
-  id,
-  label = "选择日期",
-  value,
-  onChange = () => {},
-  fullWidth = true,
-  disabled = false
-}) => {
-  const handleOnChange = (timeString, timeObject) => {
-    if (typeof onChange === "function") {
-      onChange(null, id, new Date(timeObject).toISOString());
-    }
-  };
+const MyDateTimePicker = React.memo(
+  ({
+    id,
+    label = "选择日期",
+    value,
+    onChange = () => {},
+    fullWidth = true,
+    disabled = false
+  }) => {
+    const handleOnChange = (timeString, timeObject) => {
+      if (typeof onChange === "function") {
+        onChange(null, id, new Date(timeObject).toISOString());
+      }
+    };
 
-  // new Date(value).toISOString()
+    // new Date(value).toISOString()
 
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} style={{ marginTop: "0px" }}>
-      <KeyboardDateTimePicker
-        fullWidth={fullWidth}
-        disabled={disabled}
-        margin="dense"
-        id={id}
-        label={label}
-        format="yyyy/MM/dd HH:mm:ss"
-        value={value || null}
-        emptyLabel = ""
-        onChange={handleOnChange}
-        KeyboardButtonProps={{
-          "aria-label": "select date"
-        }}
-      />
-    </MuiPickersUtilsProvider>
-  );
-});
-
-
+    return (
+      <MuiPickersUtilsProvider
+        utils={DateFnsUtils}
+        style={{ marginTop: "0px" }}
+      >
+        <KeyboardDateTimePicker
+          fullWidth={fullWidth}
+          disabled={disabled}
+          margin="dense"
+          id={id}
+          label={label}
+          format="yyyy/MM/dd HH:mm:ss"
+          value={value || null}
+          emptyLabel=""
+          onChange={handleOnChange}
+          KeyboardButtonProps={{
+            "aria-label": "select date"
+          }}
+        />
+      </MuiPickersUtilsProvider>
+    );
+  }
+);
 
 // ==================================================================================Date picker for range
-const MyDateRangePicker = React.memo(({
-  id,
-  label,
-  value, // in case of endless loop, only used for default
-  onChange,
-  fullWidth = true,
-  disabled = false
-}) => {
-  // divide two dates by ","
-  const getDateArray = combineDate => {
-    if (combineDate) {
-      const separateDate = combineDate.split(",");
-      return separateDate;
-    } else return [new Date(), new Date()];
-  };
+const MyDateRangePicker = React.memo(
+  ({
+    id,
+    label,
+    value, // in case of endless loop, only used for default
+    onChange,
+    fullWidth = true,
+    disabled = false
+  }) => {
+    // divide two dates by ","
+    // const getDateArray = combineDate => {
+    //   if (combineDate) {
+    //     const separateDate = combineDate.split(",");
+    //     return separateDate;
+    //   } else return [new Date(), new Date()];
+    // };
 
-  // first load get default values
-  // const [startDate, setStartDate] = useState(getDateArray(value)[0]);
-  // const [endDate, setEndDate] = useState(getDateArray(value)[1]);
+    // first load get default values
+    // const [startDate, setStartDate] = useState(getDateArray(value)[0]);
+    // const [endDate, setEndDate] = useState(getDateArray(value)[1]);
 
-  // changed: dont use default
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+    // changed: dont use default
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
-  // otherwise only submit
-  const handleChangeStart = (timeString, timeObject) => {
-    const newCombineDate = `${timeObject},${endDate}`;
-    if (typeof onChange === "function") onChange(null, id, newCombineDate);
-    setStartDate(timeObject);
-  };
-  const handleChangeEnd = (timeString, timeObject) => {
-    const newCombineDate = `${startDate},${timeObject}`;
-    if (typeof onChange === "function") onChange(null, id, newCombineDate);
-    setEndDate(timeObject);
-  };
+    // otherwise only submit
+    const handleChangeStart = (timeString, timeObject) => {
+      const newCombineDate = `${timeObject},${endDate}`;
+      if (typeof onChange === "function") onChange(null, id, newCombineDate);
+      setStartDate(timeObject);
+    };
+    const handleChangeEnd = (timeString, timeObject) => {
+      const newCombineDate = `${startDate},${timeObject}`;
+      if (typeof onChange === "function") onChange(null, id, newCombineDate);
+      setEndDate(timeObject);
+    };
 
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} margin="dense">
-      <Grid container>
-        <Grid item xs={6}>
-          <KeyboardDatePicker
-            fullWidth={fullWidth}
-            disabled={disabled}
-            margin="dense"
-            id={`${id}_start`}
-            label={`${label || ""} 从`}
-            format="yyyy/MM/dd"
-            value={startDate}
-            emptyLabel = ""
-            onChange={handleChangeStart}
-            KeyboardButtonProps={{
-              "aria-label": "change date"
-            }}
-          />
+    return (
+      <MuiPickersUtilsProvider utils={DateFnsUtils} margin="dense">
+        <Grid container>
+          <Grid item xs={6}>
+            <KeyboardDatePicker
+              fullWidth={fullWidth}
+              disabled={disabled}
+              margin="dense"
+              id={`${id}_start`}
+              label={`${label || ""} 从`}
+              format="yyyy/MM/dd"
+              value={startDate}
+              emptyLabel=""
+              onChange={handleChangeStart}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <KeyboardDatePicker
+              fullWidth={fullWidth}
+              disabled={disabled}
+              margin="dense"
+              id={`${id}_end`}
+              label="到"
+              format="yyyy/MM/dd"
+              value={endDate}
+              emptyLabel=""
+              onChange={handleChangeEnd}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <KeyboardDatePicker
-            fullWidth={fullWidth}
-            disabled={disabled}
-            margin="dense"
-            id={`${id}_end`}
-            label="到"
-            format="yyyy/MM/dd"
-            value={endDate}
-            emptyLabel = ""
-            onChange={handleChangeEnd}
-            KeyboardButtonProps={{
-              "aria-label": "change date"
-            }}
-          />
-        </Grid>
-      </Grid>
-    </MuiPickersUtilsProvider>
-  );
-});
+      </MuiPickersUtilsProvider>
+    );
+  }
+);
 
 // ================================================================================== regular text
-const MyInput = React.memo(({
-  id,
-  label = "输入",
-  value = "",
-  onChange = () => {},
-  error = false,
-  dataType = _DATATYPES.VARCHAR,
-  helperText = "",
-  fullWidth = true,
-  disabled = false,
-  multiline = false,
-  rows,
-  rowsMax = 5
-}) => {
+const MyInput = React.memo(
+  ({
+    id,
+    label = "输入",
+    value = "",
+    onChange = () => {},
+    error = false,
+    dataType = _DATATYPES.VARCHAR,
+    helperText = "",
+    fullWidth = true,
+    disabled = false,
+    multiline = false,
+    rows,
+    rowsMax = 5
+  }) => {
+    // ============= 修饰显示格式
+    let inputStyle = {};
+    let displayValue = value;
+    let isNumber = false;
 
-  // ============= 修饰显示格式
-  let inputStyle = {}
-  let displayValue = value;
-  let isNumber = false
-
-  if(dataType === _DATATYPES.INT || dataType === _DATATYPES.DECIMAL || dataType === _DATATYPES.MONEY)
-  {
-    inputStyle = {textAlign: "right"}
-    isNumber = true
-  } 
-  
-  if(dataType === _DATATYPES.MONEY && !isNaN(value))
-  {
-    displayValue = formatCurrency(displayValue)
-    isNumber = true
-  }
-
-  const handleOnChange = (e) => {
-
-    value = e.target.value;
-    if(isNumber){
-      value = !isNaN(value) ? Number(value): 0
+    if (
+      dataType === _DATATYPES.INT ||
+      dataType === _DATATYPES.DECIMAL ||
+      dataType === _DATATYPES.MONEY
+    ) {
+      inputStyle = { textAlign: "right" };
+      isNumber = true;
     }
 
-    onChange(null, id, value)
+    if (dataType === _DATATYPES.MONEY && !isNaN(value)) {
+      // displayValue = formatCurrency(displayValue);
+      isNumber = true;
+    }
+
+    const handleOnChange = e => {
+      value = e.target.value;
+      if (isNumber) {
+        value = !isNaN(value) ? Number(value) : 0;
+      }
+
+      onChange(null, id, value);
+    };
+
+    return (
+      <TextField
+        fullWidth={fullWidth}
+        error={!disabled && error}
+        disabled={disabled}
+        id={id}
+        type={isNumber ? "number" : "text"}
+        label={label}
+        onChange={handleOnChange}
+        margin="dense"
+        value={displayValue || (isNumber ? 0 : "")}
+        helperText={!disabled && helperText}
+        multiline={multiline}
+        rows={rows}
+        rowsMax={rowsMax}
+        inputProps={{
+          style: { ...inputStyle }
+        }}
+      />
+    );
   }
+);
+
+const MyInputTT = React.memo(({ ...props }) => {
 
   return (
-    <TextField
-      fullWidth={fullWidth}
-      error={!disabled && error}
-      disabled={disabled}
-      id={id}
-      type={isNumber?"number":"text"}
-      label={label}
-      onChange={handleOnChange}
-      margin="dense"
-      value={displayValue || (isNumber ? 0: "")}
-      helperText={!disabled && helperText}
-      multiline={multiline}
-      rows={rows}
-      rowsMax={rowsMax}
-      inputProps={{
-        style: {...inputStyle }
-      }}
-    />
-  );
+    <MyInput {...props}/>
+  )
 });
 
 // ================================================================================== password text
@@ -275,104 +292,110 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const MyInputPassword = React.memo(({
-  id,
-  label = "密码",
-  value = "",
-  onChange = () => {},
-  error = false,
-  helperText = "",
-  fullWidth = true,
-  disabled = false
-}) => {
-  const classes = useStyles();
-  const [showPassword, setshowPassword] = useState(false);
+const MyInputPassword = React.memo(
+  ({
+    id,
+    label = "密码",
+    value = "",
+    onChange = () => {},
+    error = false,
+    helperText = "",
+    fullWidth = true,
+    disabled = false
+  }) => {
+    const classes = useStyles();
+    const [showPassword, setshowPassword] = useState(false);
 
-  const handleClickShowPassword = () => {
-    setshowPassword(!showPassword);
-  };
-  const handleMouseDownPassword = event => {
-    event.preventDefault();
-  };
-  
-  return (
-    <FormControl
-      className={clsx(classes.margin, classes.textField)}
-      margin="dense"
-      error={!disabled && error}
-      fullWidth={fullWidth}
-    >
-      <InputLabel htmlFor="standard-adornment-password">{label}</InputLabel>
-      <Input
-        id={id}
-        type={showPassword ? "text" : "password"}
-        value={value}
-        onChange={onChange}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-              disabled={disabled}
-            >
-              {showPassword ? <Visibility /> : <VisibilityOff />}
-            </IconButton>
-          </InputAdornment>
-        }
-        disabled={disabled}
-      />
-      <FormHelperText>{!disabled && helperText}</FormHelperText>
-    </FormControl>
-  );
-});
+    const handleClickShowPassword = () => {
+      setshowPassword(!showPassword);
+    };
+    const handleMouseDownPassword = event => {
+      event.preventDefault();
+    };
 
-// ================================================================================== switch
-const MySwitch = React.memo(({
-  id,
-  label = "",
-  value = false,
-  onChange = () => {},
-  disabled = false
-}) => {
-  const isChecked = value === true || value === "true";
-  const handleOnChange = (e, value) => {
-    onChange(e, id, value);
-  };
-
-  return (
-    <FormControlLabel
-      control={
-        <Switch
-          id={id}
-          checked={isChecked}
-          onChange={handleOnChange}
-          value={value ? true:false}
-          disabled={disabled}
-          color="primary"
-        />
-      }
-      label={`${label} : ${isChecked ? "是" : "否"}`}
-    />
-  );
-});
-
-// ================================================================================== switch
-const MyEditButton = React.memo(({ disabled = false, setdisabled = () => {} }) => {
-  return (
-    <>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          setdisabled(!disabled);
-        }}
+    return (
+      <FormControl
+        className={clsx(classes.margin, classes.textField)}
+        margin="dense"
+        error={!disabled && error}
+        fullWidth={fullWidth}
       >
-        {disabled ? "进入编辑模式" : "回到浏览模式"}
-      </Button>
-    </>
-  );
-});
+        <InputLabel htmlFor="standard-adornment-password">{label}</InputLabel>
+        <Input
+          id={id}
+          type={showPassword ? "text" : "password"}
+          value={value}
+          onChange={onChange}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                disabled={disabled}
+              >
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          }
+          disabled={disabled}
+        />
+        <FormHelperText>{!disabled && helperText}</FormHelperText>
+      </FormControl>
+    );
+  }
+);
+
+// ================================================================================== switch
+const MySwitch = React.memo(
+  ({
+    id,
+    label = "",
+    value = false,
+    onChange = () => {},
+    disabled = false
+  }) => {
+    const isChecked = value === true || value === "true";
+    const handleOnChange = (e, value) => {
+      onChange(e, id, value);
+    };
+
+    return (
+      <FormControlLabel
+        control={
+          <Switch
+            id={id}
+            checked={isChecked}
+            onChange={handleOnChange}
+            value={value ? true : false}
+            disabled={disabled}
+            color="primary"
+          />
+        }
+        label={`${label} : ${isChecked ? "是" : "否"}`}
+      />
+    );
+  }
+);
+
+// ================================================================================== switch
+const MyEditButton = React.memo(
+  ({ disabled = false, setdisabled = () => {} }) => {
+    return (
+      <>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setdisabled(!disabled);
+          }}
+        >
+          {disabled ? "进入编辑模式" : "回到浏览模式"}
+        </Button>
+      </>
+    );
+  }
+);
 
 export const Inputs = {
   MyCombobox,
@@ -385,12 +408,16 @@ export const Inputs = {
   MyComboboxShippingType,
   MyComboboxPricingTerm,
   MyComboboxCurrency,
+  MyComboboxPaymentType,
+  MyComboboxPaymentTypeE,
+  MyComboboxCommission,
   MySelect,
   MyDatePicker,
   MyDateTimePicker,
   MyDateRangePicker,
   MyEditButton,
   MyInput,
+  MyInputTT,
   MyInputPassword,
   MySwitch,
   MyImage,

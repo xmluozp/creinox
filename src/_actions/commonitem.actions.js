@@ -19,10 +19,8 @@ const {
   _delete
 } = _am(CONST, service);
 
-
 // FETCH  ---------------------------------------------
-function get_dropdown({commonType = 0}) {
-
+function get_dropdown({ commonType = 0 }) {
   return dispatch => {
     dispatch(loading);
     return service.get_dropdown(commonType).then(
@@ -51,6 +49,15 @@ function get_dropdown({commonType = 0}) {
           case enums.commonType.unitType:
             payload.dropdown_unitType = response;
             break;
+          case enums.commonType.paymentType:
+            payload.dropdown_paymentType = response;
+            break;
+          case enums.commonType.paymentTypeE:
+            payload.dropdown_paymentTypeE = response;
+            break;
+          case enums.commonType.commission:
+            payload.dropdown_commission = response;
+            break;
           default:
             break;
         }
@@ -61,7 +68,7 @@ function get_dropdown({commonType = 0}) {
       error => {
         dispatch(loadedFailure);
         dispatch(failure(error.toString()));
-        return []
+        return [];
       }
     );
   };
@@ -157,7 +164,6 @@ function get_dropdown({commonType = 0}) {
 //     );
 //   };
 // }
-
 
 // a table to store all common selections
 export const commonitemActions = {

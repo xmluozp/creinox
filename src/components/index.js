@@ -1,3 +1,5 @@
+import "./styles.css"
+
 export *  from './Table';
 export * from './CreinoxForm';
 export * from './Inputs';

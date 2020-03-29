@@ -43,7 +43,7 @@ export const MySelect = React.memo(
         <InputLabel htmlFor="age-native-simple">{label}</InputLabel>
         <Select
           native
-          value={value}
+          value={ value === null? "" : value }
           onChange={handleOnChange}
           margin="dense"
           inputProps={{
@@ -123,13 +123,28 @@ export const MyCombobox = React.memo(
       _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
       getOptionLabel = option => {
-        return option[optionLabel] || option || "--";
+
+        // 如果option是文本或者数字直接返回
+        if(typeof(option) === "string" || typeof(option) === "number") {
+          return option
+        }
+
+        // 如果是数组就取那个label
+        if( (typeof(option) === "object" || Array.isArray(option)) && option[optionLabel]) {
+          return option[optionLabel]
+        }
+        
+        return "--";
       };
   
       handleOnChange = (e, item) => {
        
+        // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
         const returnValue =  item && item.id >=0 ? item.id : hasDefault ? "": value;
-        onChange(e, id, returnValue);
+        // const returnValue =  item && item.id >=0 ? item.id : value;
+
+        // 20200327: 多返回一个item本身
+        onChange(e, id, returnValue, item);
       }
       handleGetOptionSelected = (item,index )=> {
         return item.id === (currentValue && currentValue.id);
@@ -142,6 +157,8 @@ export const MyCombobox = React.memo(
         props.onInputChange(e, value, reason)
       }
     }
+
+    console.log("combobox value", value, currentValue)
 
     return (
         <Autocomplete
@@ -189,8 +206,8 @@ export const MyComboboxAsyncFK = React.memo(props => {
   const [options, setoptions] = useState([]);
   const [inputValue, setInputValue] = useState();
 
+  // 控制文字
   const handleInputChange = (e, value) => {
- 
     if(value) {
       setInputValue(value);
     }    
@@ -198,9 +215,19 @@ export const MyComboboxAsyncFK = React.memo(props => {
 
   // 第一次加载，根据value为id读出来一条记录
   useEffect(() => {
-    if (props.value) {
+    loadData()
+  }, [props.value]);
+
+  const loadData = () => {
+
+    console.log("load??")
+    if (props.value ) {
       let isSubscribed = true;
 
+      // 这里搜索不应该搜索名字
+      delete preConditions.name
+
+      // inputValue这里是keyword但是貌似没用
       h_fkFetchOnceAsync(tableName, [inputValue, {id: props.value, ...preConditions }], actionName)
         .then(response => {
           console.log("下拉列表1:", response, actionName);
@@ -217,13 +244,13 @@ export const MyComboboxAsyncFK = React.memo(props => {
         isSubscribed = false;
       };
     }
-  }, []);
+  }
 
+  console.log("value:", props.value)
+
+  // 根据输入内容读记录
   const handleFetchData = e => {
-
     if (e.key === "Enter") {
-
-      console.log("hit enter")
       e.preventDefault();
       h_fkFetchOnceAsync(tableName, [inputValue, preConditions], actionName)
         .then(response => {
@@ -237,13 +264,15 @@ export const MyComboboxAsyncFK = React.memo(props => {
     }
   };
 
+  // 有value就有hasDefault
   return (
     <MyCombobox
       {...props}
+      value = {props.value}
       options={options}
       onKeyDown={handleFetchData}
       onInputChange={handleInputChange}
-      onChange={onChange}
+
       hasDefault={!!props.value}
     />
   );
@@ -354,3 +383,38 @@ export const MyComboboxCurrency = React.memo(props => {
     />
   );
 });
+
+export const MyComboboxPaymentType = React.memo(props => {
+  const commonTypeName = "paymentType";
+  return (
+    <MyComboboxFK
+      tableName="commonitem"
+      stateName={`dropdown_${commonTypeName}`}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
+      {...props}
+    />
+  );
+});
+export const MyComboboxPaymentTypeE = React.memo(props => {
+  const commonTypeName = "paymentTypeE";
+  return (
+    <MyComboboxFK
+      tableName="commonitem"
+      stateName={`dropdown_${commonTypeName}`}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
+      {...props}
+    />
+  );
+});
+export const MyComboboxCommission = React.memo(props => {
+  const commonTypeName = "commission";
+  return (
+    <MyComboboxFK
+      tableName="commonitem"
+      stateName={`dropdown_${commonTypeName}`}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
+      {...props}
+    />
+  );
+});
+

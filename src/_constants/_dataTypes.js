@@ -13,5 +13,5 @@ export const _DATATYPES = {
     MONEY:"MONEY",
     ROW: "ROW",
     LIST:"LIST",
-    ENUM: enumsLabel
-}
+    ENUM: enumsLabel,
+    TT: "TT"}

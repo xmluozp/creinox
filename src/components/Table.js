@@ -272,16 +272,15 @@ export const CreinoxTable = ({
 
     setSelected(newSelected);
   };
-
+  // style={{ minWidth: "1200px" }}
   const tableBody = (
     <Table
       className={classes.table}
       aria-labelledby={tableTitle}
       stickyHeader={false}
       size="small"
-      aria-label={tableTitle}
-      style={{ minWidth: "1200px" }}
-    >
+      aria-label={tableTitle}>
+
       {/* -------------------head (on select; headCells)----------------- */}
       <TableHeadWrapper
         classes={classes}
@@ -342,7 +341,8 @@ export const CreinoxTable = ({
                   column.name
                 ]);
                 const isNumber = dataModelColumn &&
-                  (dataModelColumn.type === _DATATYPES.INT ||
+                  (
+                  dataModelColumn.type === _DATATYPES.INT ||
                   dataModelColumn.type === _DATATYPES.DECIMAL ||
                   dataModelColumn.type === _DATATYPES.MONEY) && column.name !=="id";
 
@@ -363,14 +363,20 @@ export const CreinoxTable = ({
                   </div>
                 )); // 显示tip强制需要这段
 
+                // 控制列宽，防止超过或者挤压
+                
+                const minWidth = column.minWidth ? column.minWidth : 
+                                  dataModelColumn && dataModelColumn.minWidth ? dataModelColumn.minWidth: 100;
+                const maxWidth = column.maxWidth ? column.maxWidth : 
+                                  dataModelColumn && dataModelColumn.maxWidth ? dataModelColumn.maxWidth: "auto";
+
                 return (
                     <TableCell
                       key={`${rowId}_${index}`}
                       align={column.align? column.align : isNumber? "right" : "left"}
                       onClick={handleCellClick}
                       className={className}
-                      style={{borderRight: "1px dashed rgba(224, 224, 224, 1)"}}
-                    >
+                      style={{borderRight: "1px dashed rgba(224, 224, 224, 1)", minWidth: minWidth, maxWidth: maxWidth}}>
                       <Tooltip title={`${originalContent}`}>
                         <SolveRef />
                       </Tooltip>

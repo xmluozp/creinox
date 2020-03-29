@@ -1,0 +1,11 @@
+/* .input_colors input[disabled]{
+    color: #FF0000
+} */
+
+input, textarea {
+    color: #004a86 !important;
+}
+
+input[disabled], textarea[disabled], .MuiSwitch-colorPrimary.Mui-disabled{
+    color: #23282c !important;
+}

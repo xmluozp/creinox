@@ -6,8 +6,10 @@ export const authCheck = (authString = "", authTag) => {
 
   // 如果没有权限标签，直接放行
   if (!authTag) return true;
-
+  if(!authString) {return false}
   // auth list取的是authlist里的
+
+
   const authList = authString.split(",");
   const autharray = authList.length > 0 ? authList.map((authIndex)=>{
     return allAuthList[authIndex]

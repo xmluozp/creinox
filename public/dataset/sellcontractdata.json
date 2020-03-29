@@ -1,0 +1,33 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "code": "CR8328",
+            "activeAt": "2019-12-27 13:00",
+            "deliverAt": "2019-12-27 13:00",
+            "isInBaches": true,
+            "isTransport": true,
+            "shippingPrice": 10.2,
+            "comissionType": 1,
+            "tt_shipmentDue":"随便期限",
+            "tt_insurance":"随便期限",
+            "tt_paymentCondition":"随便期限",
+
+            "follower_id": 1,
+            "follower_id.row": {"userName":"某某人"},
+
+            "buyer_company_id": 1,
+            "buyer_company_id.row": {"name":"某某客户"}
+        }
+    ]
+}

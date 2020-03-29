@@ -13,6 +13,23 @@ const navs = {
       name: '测试',
       url: '/test',
       icon: 'icon-speedometer',
+    },   
+    {
+      name: '合同管理',
+      url: '#',
+      icon: 'icon-puzzle',
+      children: [
+        {
+          name: '销售合同',
+          url: '/contract/sellcontracts',
+          authTag:'sellcontract',
+        },        
+        {
+          name: '采购合同',
+          url: '/contract/buycontracts',
+          authTag:'buycontract',
+        }
+      ]
     },
     {
       name: '产品/商品',
@@ -78,6 +95,11 @@ const navs = {
           name: '商品类别树',
           url: '/product/categories',
           authTag:'category',
+        },
+        {
+          name: '港口',
+          url: '/setting/ports',
+          authTag:'port',
         },
         {
           name: '国家地区集',

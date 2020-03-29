@@ -107,14 +107,14 @@ export function h_nilFilter(object) {
     return object;
 }
 
-// 更新时去空值要考虑用户原本就想空值的问题
+// 更新时去空值要考虑用户原本就想空值的问题: 暂时用不着
 export function h_nilFilter_update(object) {
-    console.log(object)
-    for (let [key, value] of Object.entries(object)) {
+    // console.log(object)
+    // for (let [key, value] of Object.entries(object)) {
 
         
         // if(!value){ delete object[key]}
-    }
+    // }
     return object;
 }
 

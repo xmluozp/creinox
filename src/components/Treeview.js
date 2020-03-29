@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import "./styles.css"
 import _ from "lodash";
 // import { ICONS } from "../_constants";
 import { InputSearch } from "./InputSearch";

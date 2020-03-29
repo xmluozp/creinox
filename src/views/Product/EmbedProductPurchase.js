@@ -41,14 +41,15 @@ const FormInputs = ({onLoad}) => {
   const handleShowOuterVolume = (values) => {
 
     const {outerPackL, outerPackW, outerPackH} = values  
-    return outerPackL * outerPackW * outerPackH
+    return outerPackL * outerPackW * outerPackH || 0
   }
   const handleShowInnerVolume = (values) => {
 
     const {innerPackL ,innerPackW, innerPackH} = values  
-    return innerPackL * innerPackW * innerPackH
+    return innerPackL * innerPackW * innerPackH || 0
   }
 
+  // 20200327: disabled改成true
   return (
     <>
       <Grid container spacing={2}>
@@ -57,6 +58,7 @@ const FormInputs = ({onLoad}) => {
             inputid="product_id"
             tableName="product"
             actionName="get_disposable_dropdown"
+            disabled = {true}
             onLoad = {onLoad}
           />
         </Grid>      
@@ -75,7 +77,7 @@ const FormInputs = ({onLoad}) => {
           <Inputs.MyInput inputid="packAmount" />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MyComboboxUnitType inputid="unitType_id" />
+          <Inputs.MyComboboxUnitType inputid="unitType_id" optionLabel="name" />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyPrice" />

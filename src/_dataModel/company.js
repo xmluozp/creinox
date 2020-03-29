@@ -7,11 +7,13 @@ export const companyModel = {
         id :        {label:"ID",        type: _DATATYPES.INT },
         companyType:{label: "公司类型",   type: _DATATYPES.ENUM},
         code:       {label: "代码",     type: _DATATYPES.VARCHAR},
-        name:       {label: "公司名",     type: _DATATYPES.VARCHAR},    
+        name:       {label: "公司名",     type: _DATATYPES.VARCHAR, minWidth: 250},    
         ename:      {label: "英文名",     type: _DATATYPES.VARCHAR},    
         shortname:  {label: "简称",     type: _DATATYPES.VARCHAR},    
         eshortname: {label: "英文简称",     type: _DATATYPES.VARCHAR},    
-        address:    {label: "地址",   type: _DATATYPES.VARCHAR},
+        address:    {label: "地址",   type: _DATATYPES.VARCHAR, minWidth: 250},
+        eaddress:    {label: "英文地址",   type: _DATATYPES.VARCHAR, minWidth: 250},
+        
         postcode:   {label: "邮编",   type: _DATATYPES.VARCHAR},
         phone1:     {label: "电话1",   type: _DATATYPES.VARCHAR},
         phone2:     {label: "电话2",   type: _DATATYPES.VARCHAR},
@@ -31,6 +33,11 @@ export const companyModel = {
         gsfj:       {label: "国税分局",   type: _DATATYPES.VARCHAR},
         fjdz:       {label: "分局地址",   type: _DATATYPES.VARCHAR},
         fjyb:       {label: "分局邮编",   type: _DATATYPES.VARCHAR},
+
+        zsl:       {label: "增税率",   type: _DATATYPES.DECIMAL},
+        hl:       {label: "汇率",   type: _DATATYPES.DECIMAL},
+        tsl:       {label: "退税率",   type: _DATATYPES.DECIMAL},
+
         taxcode:    {label: "统一税号",     type: _DATATYPES.VARCHAR},
         isDelete:       {label: "是否删除",     type: _DATATYPES.VARCHAR},
 

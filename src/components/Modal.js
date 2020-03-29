@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { CreinoxForm, Inputs } from "./index";
+import { CreinoxForm } from "./index";
 
 export const MyModalForm = ({
   isOpen,

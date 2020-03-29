@@ -45,7 +45,7 @@ export const embedListProvider = (
     modalFormEditProps = {},
     modalInputCreateProps = {},
     modalInputEditProps = {},
-
+    onUpdate, // 任何修改的时候触发
     isBorder = false
   }) => {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
@@ -57,7 +57,9 @@ export const embedListProvider = (
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(id, pagination, searchTerms);
+        if (resolve) onDelete(id, pagination, searchTerms, () => {
+          if(typeof(onUpdate) === 'function') {onUpdate()}
+        });
       });
     };
 
@@ -87,6 +89,7 @@ export const embedListProvider = (
     const handleOnEditSubmit = values => {
       onPutUpdate({ ...preConditions, ...values }, () => {
         onGetBySearch(currentPagination, preConditions);
+        if(typeof(onUpdate) === 'function') {onUpdate()}
         handleOnEditClose();
       });
     };
@@ -94,6 +97,7 @@ export const embedListProvider = (
     const handleOnCreateSubmit = values => {
       onPostCreate({ ...preConditions, ...values }, () => {
         onGetBySearch(currentPagination, preConditions);
+        if(typeof(onUpdate) === 'function') {onUpdate()}
         handleOnCreateClose();
       });
     };

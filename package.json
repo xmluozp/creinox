@@ -45,6 +45,7 @@
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
     "format-currency": "^1.0.0",
+    "http-proxy-middleware": "^1.0.1",
     "lodash": "^4.17.15",
     "material-table": "^1.54.1",
     "material-ui-dropzone": "^2.4.7",
@@ -82,6 +83,7 @@
     "redux-api-middleware": "^3.2.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "request": "^2.88.2",
     "simple-line-icons": "^2.4.1",
     "spinkit": "1.2.5",
     "yup": "^0.27.0"

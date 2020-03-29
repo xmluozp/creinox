@@ -1,0 +1,28 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "code": "CR8328",
+            "activeAt": "2019-12-27 13:00",
+            "deliverAt": "2019-12-27 13:00",
+
+            "view_totalPrice": 123,
+
+            "follower_id": 1,
+            "follower_id.row.name": "张三",
+
+            "seller_company_id": 1,
+            "seller_company_id.row.name": "某某工厂"
+        }
+    ]
+}

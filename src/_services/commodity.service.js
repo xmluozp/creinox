@@ -29,11 +29,13 @@ function get_dropdown(pagination, searchTerms) {
         method: 'GET',
         headers: authHeader()
     };
+
     console.log("service get dropdown:", searchTerms);
+
     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
 
-    const url = './dataset/commoditydata.json'
-    return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
+    // const url = './dataset/commoditydata.json'
+    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 

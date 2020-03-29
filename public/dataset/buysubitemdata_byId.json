@@ -1,0 +1,36 @@
+{
+    "row": 
+        {
+            "id": 1,
+            "sellerCode":"CR8328",
+            "isReceipt": true,
+
+            "amount":23,
+            "packAmount":5,
+            "unitPrice":20.98,
+
+            "spec1": "(up)dia18.5/(down)dia14.5*H22.5cm",
+            "thickness": 0.6,
+            "unitWeight": 8,
+            "netWeight": 10,
+            "grossWeight": 15,
+            "outerPackL":50,
+            "outerPackW":60,
+            "outerPackH":70,
+
+            "innerPackL":55,
+            "innerPackW":65,
+            "innerPackH":75,
+            "fcl20":111,
+            "fcl40":222,
+
+            "sell_subitem_id":1,
+            "product_id":1,
+
+            "unitType_id":1,
+            "currency_id":1,
+            "polishing_id":1,
+            "texture_id":1,
+            "pack_id":1
+        }
+}

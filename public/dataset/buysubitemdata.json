@@ -1,0 +1,23 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "product_id" : 50,
+            "product_id.row.name" : "某商品",
+            "product_id.row.code" : "某商品编号",
+            "sellerCode": "CR8328",
+            "amount": 50,
+            "view_packAmount_unitType":"50 只/箱"
+        }
+    ]
+}

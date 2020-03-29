@@ -32,6 +32,16 @@ const Commodities = React.lazy(() => import("./views/Commodity/Commodities"));
 //================ region
 const Regions = React.lazy(() => import("./views/Setting/Regions"));
 
+//================ ports
+const Ports = React.lazy(() => import("./views/Setting/Ports"));
+const Port = React.lazy(() => import("./views/Setting/Port"));
+
+//================ contracts
+const Sellcontract = React.lazy(() => import("./views/Contract/Sellcontract"));
+const Sellcontracts = React.lazy(() => import("./views/Contract/Sellcontracts"));
+const Buycontract = React.lazy(() => import("./views/Contract/Buycontract"));
+const Buycontracts = React.lazy(() => import("./views/Contract/Buycontracts"));
+
 //================ company types
 
 const CompaniesInternal = React.lazy(() =>
@@ -231,6 +241,73 @@ const routes = [
     component: Regions,
     authTag: "region"
   },
+  //--------------------------------------------- 港口
+  {
+    path: "/setting/ports",
+    exact: true,
+    name: "港口",
+    component: Ports,
+    authTag: "port"
+  },
+  {
+    path: "/setting/ports/add",
+    exact: true,
+    name: "港口新增",
+    component: Port,
+    authTag: "port"
+  },
+  {
+    path: "/setting/ports/:id",
+    exact: true,
+    name: "港口详情",
+    component: Port,
+    authTag: "port"
+  },
+  //--------------------------------------------- 合同
+  {
+    path: "/contract/sellcontracts",
+    exact: true,
+    name: "销售合同",
+    component: Sellcontracts,
+    authTag: "sellcontract"
+  },
+  {
+    path: "/contract/sellcontracts/add",
+    exact: true,
+    name: "销售合同新增",
+    component: Sellcontract,
+    authTag: "sellcontract"
+  },
+  {
+    path: "/contract/sellcontracts/:id",
+    exact: true,
+    name: "销售合同详情",
+    component: Sellcontract,
+    authTag: "sellcontract"
+  },
+
+  {
+    path: "/contract/buycontracts",
+    exact: true,
+    name: "采购合同",
+    component: Buycontracts,
+    authTag: "buycontract"
+  },
+  {
+    path: "/contract/buycontracts/add",
+    exact: true,
+    name: "采购合同新增",
+    component: Buycontract,
+    authTag: "buycontract"
+  },
+  {
+    path: "/contract/buycontracts/:id",
+    exact: true,
+    name: "采购合同详情",
+    component: Buycontract,
+    authTag: "buycontract"
+  },
+
   //--------------------------------------------- 公司
   {
     path: "/companyinternal/companies",

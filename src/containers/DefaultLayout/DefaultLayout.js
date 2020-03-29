@@ -56,7 +56,7 @@ class DefaultLayout extends Component {
     
     const authString = props.user && props.user["role_id.row"]  && props.user["role_id.row"].auth;
 
-    console.log("auth", authString)
+    // console.log("auth", authString)
 
     this.state = {
       authenticatedNavigation: authFilter(authString, navigation),

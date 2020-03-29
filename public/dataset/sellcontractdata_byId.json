@@ -1,0 +1,35 @@
+{
+    "row": {
+            "id": 1,
+            "code": "CR8328",
+            "activeAt": "2019-12-27 13:00",
+            "deliverAt": "2019-12-27 13:00",
+            "isInBaches": true,
+            "isTransport": true,
+            "shippingPrice": 10.2,
+            "comissionType": 1,
+            "tt_shipmentDue":"随便期限",
+            "tt_insurance":"随便期限",
+            "tt_paymentCondition":"随便期限",
+
+            "follower_id": 1,
+  
+            
+            "seller_company_id": 1028,
+     
+
+            "buyer_company_id": 1,
+
+
+            "shippingType_id": 1,
+            "pricingTerm_id": 1,
+            "paymentType_id": 1,
+            "commission_id": 1,
+            "region_id": 1,
+            "departure_port_id": 1,
+            "destination_port_id": 1,
+            "currency_id": 1,
+            "shipping_currency_id": 1,
+            "view_totalPrice": 123.11
+        }
+}

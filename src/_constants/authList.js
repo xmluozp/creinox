@@ -15,6 +15,9 @@ export const allAuthList = [
     "category",
     "productpurchase",
     "commodity",
+    "port",
+    "sellcontract",
+    "buycontract"
   ];
     
   export const allAuthListLabel = [
@@ -34,6 +37,9 @@ export const allAuthList = [
     "产品类别",
     "产品采购价",
     "商品",
+    "港口",
+    "销售合同",
+    "采购合同"
   ];
   
   // 根据这个列表生成object用于下拉选项

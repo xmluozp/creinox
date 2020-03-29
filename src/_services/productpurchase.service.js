@@ -11,7 +11,8 @@ export const productpurchaseService = {
     _delete: _delete,
 
     get_bySearch_groupByCompany,
-    get_bySearch_history
+    get_bySearch_history,
+    get_disposable_byProductId
 };
 
 const TABLENAME = "product_purchase";
@@ -19,7 +20,7 @@ const TABLENAME = "product_purchase";
 const URL = `/api/productPurchase`;
 const URL_BY_COMPANY = `/api/productPurchase_companySearch`;
 const URL_BY_HISTORY = `/api/productPurchase_historySearch`;
-
+const URL_BY_PRODUCT_ID = `/api/productPurchase_byProductId`;
 
 
 // const url = 'http://localhost:3000/api/';
@@ -121,4 +122,14 @@ function get_bySearch_history(pagination, searchTerms) {
       console.log("search service history:", queryString);
       console.log("search terms history:", searchTerms); 
       return fetch(`${URL_BY_HISTORY}?${queryString}`, requestOptions).then(handleResponse);
+}
+
+function get_disposable_byProductId(product_id) {
+
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+
+  return fetch(`${URL_BY_PRODUCT_ID}/${product_id}`, requestOptions).then(handleResponse);
 }

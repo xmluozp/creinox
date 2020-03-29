@@ -57,9 +57,9 @@ function post_createMultiple(itemList, folder_id) {
       };
       delete requestOptions.headers['Content-Type'];
 
-      return fetch(`${URL}/${folder_id}`, requestOptions).
-      then(handleResponse).
-      then(() => get_bySearch({perPage: -1}, {gallary_folder_id: folder_id}));  
+      return fetch(`${URL}/${folder_id}`, requestOptions).then(
+          handleResponse).then(
+              () => get_bySearch({perPage: -1}, {gallary_folder_id: folder_id}));  
 }
 
 function _deleteMultiple(list) {
@@ -72,7 +72,6 @@ function _deleteMultiple(list) {
 
     console.log("批量删除", list)
     
-    return fetch(`${URL}_delete`, requestOptions).
-    then(handleResponse);  
+    return fetch(`${URL}_delete`, requestOptions).then(handleResponse);  
 }
 

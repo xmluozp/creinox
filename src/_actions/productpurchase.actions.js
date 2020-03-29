@@ -57,6 +57,29 @@ function get_bySearch_history(pagination, searchTerms = {}) {
   };
 }
 
+// 取根据product id最新的一条。用途：合同录入的时候，选择商品，快捷注入信息
+function get_disposable_byProductId(product_id) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_disposable_byProductId(product_id).then(
+      response => {
+        dispatch(loaded);
+        let returnValue = {};
+        if (response && response.row) {
+          returnValue = response.row;
+        }
+        return returnValue;
+      },
+      error => {
+        dispatch(loadedFailure);
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
+      }
+    );
+  };
+}
+
+
 export const productpurchaseActions = {
   get_dropdown,
   get_bySearch,
@@ -67,5 +90,6 @@ export const productpurchaseActions = {
 
   // customized
   get_bySearch_groupByCompany,
-  get_bySearch_history
+  get_bySearch_history,
+  get_disposable_byProductId
 };
