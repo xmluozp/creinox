@@ -2,34 +2,38 @@ import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_upd
 // import _ from 'lodash';
 // import axios from 'axios'
 
-export const buysubitemService = {
-    get_dropdown,
+export const mouldcontractService = {
+    // get_dropdown,
     get_bySearch,
     get_byId,
     post_create,
     put_update,
-    _delete: _delete
+    _delete: _delete,
+    
+    get_last
 };
 
-const TABLENAME = "buy_subitem";
-const URL = `/api/buysubitem`;
+const TABLENAME = "mould_contract";
+const URL = `/api/mouldcontract`;
+const URL_GET_LAST = `/api/mouldcontract_getlast`;
 
-const testurl1 = './dataset/buysubitemdata.json'
-const testurl2 = './dataset/buysubitemdata_byId.json'
 
-function get_dropdown(companyType) {
+const testurl1 = './dataset/mouldcontractdata.json'
+const testurl2 = './dataset/mouldcontractdata_byId.json'
 
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+// function get_dropdown(companyType) {
 
-    const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
-    console.log("getdropdown service:", companyType);
-    // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
+//     const requestOptions = {
+//         method: 'GET',
+//         headers: authHeader()
+//     };
 
-    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
-}
+//     const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
+//     console.log("getdropdown service:", companyType);
+//     // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
+
+//     return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+// }
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 
@@ -42,8 +46,8 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
       console.log("search service:", searchTerms);
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
       console.log("search service:", queryString);
-      // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 
+      return fetch(`${testurl1}`, requestOptions).then(handleResponse);
       return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }
@@ -56,10 +60,24 @@ function get_byId(id) {
       };
     
       console.log("getId service,", id);
-      // return fetch(`${testurl2}`, requestOptions).then(handleResponse);
+      return fetch(`${testurl2}`, requestOptions).then(handleResponse);
 
       return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
+
+// DONETODO: 取最新的一条
+function get_last() {
+
+  const requestOptions = {
+      method: "GET",
+      headers: authHeader()
+    };
+  
+    console.log("getLast service,");
+
+    return fetch(`${URL_GET_LAST}`, requestOptions).then(handleResponse);
+}
+
 
 function post_create(item) {
     const requestOptions = {
@@ -70,7 +88,7 @@ function post_create(item) {
   
     console.log("处理过的json",h_nilFilter(item))
 
-    // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
+    return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
     return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
@@ -81,7 +99,7 @@ function put_update(item) {
     headers: { ...authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify(h_nilFilter_update(item))
   };
-  // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
+  return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 

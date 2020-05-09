@@ -16,12 +16,14 @@ const GalleryBeforeConnect = ({
   onDeleteMultiple,
   onPostCreateMultiple,
   preConditions,
-  folder_id
+  folder_id = -1, // 如果没有这个就运行folder_structure生成文件夹
+  folder_structure,
 }) => {
   useEffect(() => {
-    onGetBySearch({perPage: -1}, preConditions);
+    onGetBySearch({perPage: -1}, {gallary_folder_id: folder_id || -1, ...preConditions});
+    
     return () => {};
-  }, []);
+  }, [folder_id]);
 
   // 图片选择和删除
   const [selectedImages, setSelectedImages] = useState(new Set([]));
@@ -57,12 +59,12 @@ const GalleryBeforeConnect = ({
   };
 
   const handleImageSave = files => {
-    onPostCreateMultiple(files, folder_id);
+    onPostCreateMultiple(files, folder_id, folder_structure);
   };
 
   // 删除
   const deleteSelected = () => {
-    onDeleteMultiple(Array.from(selectedImages), {perPage:-1}, preConditions);
+    onDeleteMultiple(Array.from(selectedImages), {perPage:-1}, {gallary_folder_id: folder_id, ...preConditions});
   };
 
   // Edit mode; Browse mode; select all; delete; upload

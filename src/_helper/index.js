@@ -202,8 +202,8 @@ export function h_formData(item, isUpdate = false) {
     return formData
 }
 
-// 传单纯的图片列表，图片名当做图片的name：
-export function h_formData_files(itemList) {
+// 传单纯的图片列表，图片名当做图片的name，如果没有folder就根据folder_structure生成一个：
+export function h_formData_files(itemList, folder_structure) {
 
     const formData  = new FormData();
 
@@ -217,6 +217,8 @@ export function h_formData_files(itemList) {
         delete itemList[idx]
       }
     }
+
+    formData.append("doc", JSON.stringify(folder_structure));
 
     return formData
 }

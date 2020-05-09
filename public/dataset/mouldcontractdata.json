@@ -1,0 +1,40 @@
+{
+    "pagination": {
+        "page": 0,
+        "rowCount": 5,
+        "perPage": 5,
+        "totalCount": 10,
+        "totalPage": 2,
+        "order": "desc",
+        "orderBy": "id"
+    },
+    "searchTerms": {},
+    "rows": [
+        {
+            "id": 1,
+            "code": "CR8328",
+            "activeAt": "2019-12-27 13:00",
+            "deliverAt": "2019-12-27 13:00",
+            "prepayAt": "2019-12-27 13:00",
+
+
+            "totalPrice": 123,
+            "name": "某某模具",
+            "image_id": "1",
+			"image_id.row": {
+                "id": 1,
+                "name": "某图片",
+                "sort": 0,
+                "height": 150,
+                "width": 100,
+                "path": "uploads/001.jpg",
+                "thumbnailPath": "uploads/001_thumb.jpg",
+                "ext": "jpg",
+                "createAt": "2019-12-23",
+                "gallary_folder_id": 1,
+                "gallary_folder_id.memo": "某某模具"
+			},
+            "view_seller_company_name": "某某工厂"
+        }
+    ]
+}

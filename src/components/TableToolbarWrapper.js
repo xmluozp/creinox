@@ -67,7 +67,7 @@ const TableToolbarWrapper = ({
         <Typography className={classes.title} color="inherit" variant="subtitle1">
           {numSelected > 0 && selectBox && 
           <Tooltip title={selectBox.title}>
-            <IconButton aria-label="操作" onClick = {selectOnAction} className="mr-2">
+            <IconButton aria-label={selectBox.title} onClick = {selectOnAction.bind(null, getPaginationFromState())} className="mr-2">
               {selectBox.icon}
             </IconButton>
           </Tooltip>}

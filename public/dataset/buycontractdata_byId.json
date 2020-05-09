@@ -1,5 +1,5 @@
 {
-    "rows":
+    "row":
     {
         "id": 1,
         "code": "CR8328",
@@ -21,7 +21,7 @@
 
 
         "region_id": 1,
-        "sell_contract_id": 1,
+        "sell_contract_id": 3,
         "paymentType_id": 1,
         "seller_company_id": 1,
         "follower_id": 1,

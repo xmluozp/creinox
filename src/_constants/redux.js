@@ -10,10 +10,7 @@ export const AUTH = {
 }
 
 export const USER = constMaker("USER")
-
-
 export const PORT = constMaker("PORT")
-
 
 export const ROLE = constMaker("ROLE")
 // {
@@ -33,6 +30,7 @@ export const ROLE = constMaker("ROLE")
 // }
 
 export const COMMONITEM = constMaker("COMMONITEM")
+export const TEXTTEMPLATE = constMaker("TEXTTEMPLATE")
 
 //================================================= image
 export const IMAGE = constMaker("IMAGE")
@@ -48,6 +46,7 @@ export const SELLSUBITEM = constMaker("SELLSUBITEM")
 export const BUYCONTRACT = constMaker("BUYCONTRACT")
 export const BUYSUBITEM = constMaker("BUYSUBITEM")
 
+export const MOULDCONTRACT = constMaker("MOULDCONTRACT")
 
 //================================================= product
 export const PRODUCT = constMaker("PRODUCT")

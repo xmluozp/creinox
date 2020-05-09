@@ -11,7 +11,8 @@ const {
   get_byId,
   post_create,
   put_update,
-  _delete_treeNode
+  _delete_treeNode,
+  _clear
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
@@ -148,6 +149,7 @@ export const categoryActions = {
   post_create,
   put_update,
   _delete_treeNode,
+  _clear,
 
   // customized
   get_treeNotesById

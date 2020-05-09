@@ -4,6 +4,7 @@ import { withFacelessActions } from "./faceless.actions";
 
 export * from "./alert.actions";
 export * from "./loading.actions";
+export * from "./texttemplate.actions";
 export * from "./commonitem.actions";
 export * from "./image.actions";
 
@@ -14,6 +15,7 @@ export * from "./sellcontract.actions";
 export * from "./sellsubitem.actions";
 export * from "./buycontract.actions";
 export * from "./buysubitem.actions";
+export * from "./mouldcontract.actions";
 
 export * from "./company.actions";
 export * from "./region.actions";

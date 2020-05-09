@@ -17,32 +17,33 @@ import {
 } from "../../components";
 
 // ******************************************************************* page setting
-import { buycontractActions as dataActions } from "../../_actions";
-import { buycontractModel as dataModel } from "../../_dataModel";
+import { mouldcontractActions as dataActions } from "../../_actions";
+import { mouldcontractModel as dataModel } from "../../_dataModel";
 
 // ******************************************************************* page setting
 
-export const withBuycontractList = (
-  EDITURL = "/contract/buycontracts",
-  CREATEURL = "/contract/buycontracts/add"
+export const withSellcontractList = (
+  EDITURL = "/contract/mouldcontracts",
+  CREATEURL = "/contract/mouldcontracts/add"
 ) => {
   
   // inject data
   const MyTable = withDatatableStore(
     CreinoxTable, // tablecomponent
-    { data: "buycontractData" }, // data source
+    { data: "mouldcontractData" }, // data source
     dataActions.get_bySearch // fetch action
   );
 
   // =============================== render cell
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
-    { name: "sell_contract_id" },
     { name: "code" },
+    { name: "name" },
     { name: "activeAt" },
     { name: "deliverAt" },
-    { name: "seller_company_id" },
-    { name: "view_totalPrice", label:"总价" },
+    { name: "prepayAt" },
+    { name: "view_seller_company_name" },   
+    { name: "totalPrice" },  
     { name: "follower_id" },
   ];
 
@@ -53,12 +54,12 @@ export const withBuycontractList = (
     <Inputs.MyDateRangePicker inputid="activeAt" />
     <Inputs.MyInput  inputid="ename"/>
     <Inputs.MyComboboxFK
-        inputid="seller_company_id"
-        label="工厂"
+        inputid="buyer_company_id"
+        label="外贸客户"
         optionLabel="name"
         tableName="company"
-        stateName="dropdown_factory"
-        preConditions={{ companyType: enums.companyType.factory }}
+        stateName="dropdown_overseasCustomer"
+        preConditions={{ companyType: enums.companyType.overseasCustomer }}
       />
     <Inputs.MyComboboxFK
       inputid="follower_id"
@@ -129,4 +130,4 @@ export const withBuycontractList = (
   return connect(null, actionCreators)(CurrentPage);
 };
 
-export default withBuycontractList();
+export default withSellcontractList();

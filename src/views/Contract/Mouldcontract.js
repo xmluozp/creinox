@@ -6,19 +6,17 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import formatCurrency from "format-currency";
+// import formatCurrency from "format-currency";
 
 //------redux
 import { connect } from "react-redux";
-import { sellcontractActions as dataActions } from "../../_actions";
-import { sellcontractModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel } from "../../components";
+import { mouldcontractActions as dataActions } from "../../_actions";
+import { mouldcontractModel as dataModel } from "../../_dataModel";
+import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
 import { enumsLabel, enums } from "../../_constants";
 import { history, h_fkFetch } from "../../_helper";
 
-import Sellsubitems from "./Sellsubitems";
-
-export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
+export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   const CurrentPage = ({
     dataById,
     errorById,
@@ -67,8 +65,11 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
       setInjector(inj);
     };
 
+    const folder_id =
+      dataById && dataById.row && dataById.row.gallary_folder_id;
+
     const handleOnRead = () => {
-      h_fkFetch("sellcontract", [], "get_last")
+      h_fkFetch("mouldcontract", [], "get_last")
         .then(response => {
           if (response && response.id) {
             delete response["id"];
@@ -90,7 +91,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
               <Card>
                 <CardHeader>
                   <strong>
-                    <i className="icon-info pr-1"></i>id: {id} {dataById && dataById.row? "货款合计：" + formatCurrency(dataById.row.view_totalPrice) : null}
+                    <i className="icon-info pr-1"></i>id: {id}
                   </strong>
                 </CardHeader>
 
@@ -101,7 +102,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                   aria-label="tabs"
                 >
                   <Tab label="基本信息" />
-                  <Tab label="对应商品" disabled={!isFromEdit} />
+                  <Tab label="图片" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}
@@ -155,10 +156,16 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                   </CreinoxForm>
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
-                  {/* 更新embed的时候，外部也重新读取，这样才能获得最新的view */}
-                  <Sellsubitems                      
-                    onUpdate = {()=>{ onGetById(id)}}
-                    preConditions={{ sell_contract_id: id }}
+                  <Gallery
+                    folder_id={folder_id}
+                    folder_structure = {{
+                      memo:"mould_contract/" + id,
+                      RefSource: "mould_contract.gallary_folder_id",
+                      RefId: id,
+                      folderType:1,
+                      tableName: "mould_contract",
+                      columnName: "gallary_folder_id"
+                    }}
                   />
                 </TabPanel>
               </Card>
@@ -174,15 +181,59 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
     return (
       <>
         {/* 基本信息 */}
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="code" disabled={disabled} />
+        </Grid>
         <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyComboboxFK
-            inputid="follower_id"
-            optionLabel="userName"
-            tableName="user"
+          <Inputs.MyInput inputid="name" disabled={disabled} />
+        </Grid>       
+        <Grid item lg={3} md={2} xs={12}>
+          <Inputs.MyInput inputid="productCode" disabled={disabled} />
+        </Grid>        
+        <Grid item lg={3} md={2} xs={12}>
+          <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
+        </Grid>
+
+
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="totalPrice" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="unitPrice" disabled={disabled} />
+        </Grid>  
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="prepayPercentage" disabled={disabled} />
+        </Grid>  
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="prepayPrice" disabled={disabled} />
+        </Grid>  
+        <Grid item lg={4} md={2} xs={12}>
+          <Inputs.MyComboboxCurrency
+            inputid="currency_id"
             disabled={disabled}
           />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInput inputid="spec" disabled={disabled} />
+        </Grid>
+
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyDatePicker inputid="activeAt" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyDatePicker inputid="prepayAt" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="deliverDueDays" disabled={disabled} />
+        </Grid> 
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="confirmDueDays" disabled={disabled} />
+        </Grid> 
+
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
           disabled={disabled}
             inputid="buyer_company_id"
@@ -191,118 +242,68 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             preConditions={{ companyType: enums.companyType.overseasCustomer }}
           />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyInput inputid="buyer_signer" disabled={disabled} />
+        </Grid>
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyDatePicker inputid="buyer_signAt" disabled={disabled} />
+        </Grid>
+
+
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
           disabled={disabled}
             inputid="seller_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ companyType: enums.companyType.internal }}
+            preConditions={{ companyType: enums.companyType.overseasCustomer }}
           />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyInput inputid="seller_signer" disabled={disabled} />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="orderNumber" disabled={disabled} />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyDatePicker inputid="activeAt" disabled={disabled} />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyDatePicker inputid="seller_signAt" disabled={disabled} />
         </Grid>
 
 
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyComboboxShippingType
-            inputid="shippingType_id"
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyComboboxPricingTerm
-            inputid="pricingTerm_id"
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyComboboxPaymentTypeE
-            inputid="paymentType_id"
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInput inputid="memo" disabled={disabled} />
+        </Grid> 
+
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyInput inputid="buyer_accountName" disabled={disabled} />
+        </Grid> 
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyInput inputid="buyer_accountNo" disabled={disabled} />
+        </Grid> 
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyInput inputid="buyer_bankName" disabled={disabled} />
+        </Grid> 
+
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyInput inputid="seller_accountName" disabled={disabled} />
+        </Grid> 
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyInput inputid="seller_accountNo" disabled={disabled} />
+        </Grid> 
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyInput inputid="seller_bankName" disabled={disabled} />
+        </Grid> 
+
+
+
+
+        <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyComboboxFK
-              inputid="departure_port_id"
-              optionLabel="name"
-              tableName="port"
-              disabled={disabled}
-              preConditions={{ isDeparture: 1}}
-            />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyComboboxFK
-              inputid="destination_port_id"
-              optionLabel="name"
-              tableName="port"
-              disabled={disabled}
-              preConditions={{ isDestination: 1}}
-            />
-        </Grid>
-
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInputTT inputid="tt_shipmentDue" disabled={disabled}
-          targetTable = "sell_contract"
-          />
-        </Grid>
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyComboboxCurrency
-            inputid="currency_id"
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MySwitch inputid="isTransport" disabled={disabled} />
-        </Grid>
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MySwitch inputid="isInBaches" disabled={disabled} />
-        </Grid>
-
-        <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MyInput inputid="shippingPrice" disabled={disabled} />
-        </Grid>
-        <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MyComboboxCurrency
-            inputid="shipping_currency_id"
+            inputid="follower_id"
+            optionLabel="userName"
+            tableName="user"
             disabled={disabled}
           />
         </Grid>
 
-        <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MySelect options={enumsLabel.commissionType} hasDefault={false} inputid="comissionType" disabled={disabled}/>
-        </Grid>
-
-
-        <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MyComboboxCommission
-            inputid="commission_id"
-            disabled={disabled}
-          />
-        </Grid>
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT inputid="tt_insurance" disabled={disabled} 
-          targetTable = "sell_contract"/>
-        </Grid>
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT inputid="tt_paymentCondition" disabled={disabled} 
-          targetTable = "sell_contract"/>
-        </Grid>
-
-        <Grid item lg={6}  md={6} xs={12}>
+        <Grid item lg={4}  md={4} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
             optionLabel="userName"
@@ -310,7 +311,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             disabled={true}
           />
         </Grid>
-        <Grid item lg={6}  md={6} xs={12}>
+        <Grid item lg={4}  md={4} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
 
@@ -321,8 +322,8 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
 
   function mapState(state) {
     return {
-      dataById: state.sellcontractData.dataById,
-      errorById: state.sellcontractData.errorById
+      dataById: state.mouldcontractData.dataById,
+      errorById: state.mouldcontractData.errorById
     };
   }
 
@@ -336,4 +337,4 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
   return connect(mapState, actionCreators)(CurrentPage);
 };
 
-export default withSellcontract();
+export default withMouldcontract();

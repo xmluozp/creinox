@@ -37,10 +37,13 @@ const Ports = React.lazy(() => import("./views/Setting/Ports"));
 const Port = React.lazy(() => import("./views/Setting/Port"));
 
 //================ contracts
+const Allcontracts = React.lazy(() => import("./views/Contract/Allcontracts"));
 const Sellcontract = React.lazy(() => import("./views/Contract/Sellcontract"));
-const Sellcontracts = React.lazy(() => import("./views/Contract/Sellcontracts"));
+// const Sellcontracts = React.lazy(() => import("./views/Contract/Sellcontracts"));
 const Buycontract = React.lazy(() => import("./views/Contract/Buycontract"));
 const Buycontracts = React.lazy(() => import("./views/Contract/Buycontracts"));
+const Mouldcontract = React.lazy(() => import("./views/Contract/Mouldcontract"));
+const Mouldcontracts = React.lazy(() => import("./views/Contract/Mouldcontracts"));
 
 //================ company types
 
@@ -160,14 +163,14 @@ const routes = [
   {
     path: "/users/users/add",
     exact: true,
-    name: "用户新增",
+    name: "新增",
     component: User,
     authTag: "user"
   },
   {
     path: "/users/users/:id",
     exact: true,
-    name: "用户详情",
+    name: "详情",
     component: User,
     authTag: "user"
   },
@@ -181,14 +184,14 @@ const routes = [
   {
     path: "/users/roles/add",
     exact: true,
-    name: "角色新增",
+    name: "新增",
     component: Role,
     authTag: "user"
   },
   {
     path: "/users/roles/:id",
     exact: true,
-    name: "角色详情",
+    name: "详情",
     component: Role,
     authTag: "user"
   },
@@ -220,7 +223,7 @@ const routes = [
   {
     path: "/commonitems/commonitemsList/:commonType/:id",
     exact: true,
-    name: "通用选项",
+    name: "详情",
     component: Commonitem,
     authTag: "commonitem"
   },
@@ -252,40 +255,39 @@ const routes = [
   {
     path: "/setting/ports/add",
     exact: true,
-    name: "港口新增",
+    name: "新增",
     component: Port,
     authTag: "port"
   },
   {
     path: "/setting/ports/:id",
     exact: true,
-    name: "港口详情",
+    name: "详情",
     component: Port,
     authTag: "port"
   },
   //--------------------------------------------- 合同
   {
-    path: "/contract/sellcontracts",
+    path: "/contract/allcontracts",
     exact: true,
-    name: "销售合同",
-    component: Sellcontracts,
-    authTag: "sellcontract"
+    name: "合同检索",
+    component: Allcontracts,
+    authTag: "sellcontract" // 因为入口是销售合同所以用销售合同的权限
   },
   {
     path: "/contract/sellcontracts/add",
     exact: true,
-    name: "销售合同新增",
+    name: "新增",
     component: Sellcontract,
     authTag: "sellcontract"
   },
   {
     path: "/contract/sellcontracts/:id",
     exact: true,
-    name: "销售合同详情",
+    name: "详情",
     component: Sellcontract,
     authTag: "sellcontract"
   },
-
   {
     path: "/contract/buycontracts",
     exact: true,
@@ -296,18 +298,45 @@ const routes = [
   {
     path: "/contract/buycontracts/add",
     exact: true,
-    name: "采购合同新增",
+    name: "新增",
+    component: Buycontract,
+    authTag: "buycontract"
+  },  
+  {
+    path: "/contract/buycontracts/add/:sell_contract_id",
+    exact: true,
+    name: "从销售合同新增",
     component: Buycontract,
     authTag: "buycontract"
   },
   {
     path: "/contract/buycontracts/:id",
     exact: true,
-    name: "采购合同详情",
+    name: "详情",
     component: Buycontract,
     authTag: "buycontract"
   },
-
+  {
+    path: "/contract/mouldcontracts",
+    exact: true,
+    name: "产品开发合同",
+    component: Mouldcontracts,
+    authTag: "mouldcontract"
+  },
+  {
+    path: "/contract/mouldcontracts/add",
+    exact: true,
+    name: "新增",
+    component: Mouldcontract,
+    authTag: "mouldcontract"
+  },  
+  {
+    path: "/contract/mouldcontracts/:id",
+    exact: true,
+    name: "详情",
+    component: Mouldcontract,
+    authTag: "mouldcontract"
+  },
   //--------------------------------------------- 公司
   {
     path: "/companyinternal/companies",
@@ -319,14 +348,14 @@ const routes = [
   {
     path: "/companyinternal/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.internal] + "新增",
+    name: "新增",
     component: CompanyInternal,
     authTag: "companyinternal"
   },
   {
     path: "/companyinternal/companies/:id",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.internal],
+    name: "详情",
     component: CompanyInternal,
     authTag: "companyinternal"
   },
@@ -341,14 +370,14 @@ const routes = [
   {
     path: "/companyfactory/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.factory] + "新增",
+    name: "新增",
     component: CompanyFactory,
     authTag: "companyfactory"
   },
   {
     path: "/companyfactory/companies/:id",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.factory],
+    name: "详情",
     component: CompanyFactory,
     authTag: "companyfactory"
   },
@@ -363,14 +392,14 @@ const routes = [
   {
     path: "/companyoverseas/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.overseasCustomer] + "新增",
+    name: "新增",
     component: CompanyOverseas,
     authTag: "companyoverseas"
   },
   {
     path: "/companyoverseas/companies/:id",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.overseasCustomer],
+    name: "详情",
     component: CompanyOverseas,
     authTag: "companyoverseas"
   },
@@ -385,14 +414,14 @@ const routes = [
   {
     path: "/companydomestic/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.domesticCustomer] + "新增",
+    name: "新增",
     component: CompanyDomestic,
     authTag: "companydomestic"
   },
   {
     path: "/companydomestic/companies/:id",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.domesticCustomer],
+    name: "详情",
     component: CompanyDomestic,
     authTag: "companydomestic"
   },
@@ -407,14 +436,14 @@ const routes = [
   {
     path: "/companyshipping/companies/add",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.shippingCompany] + "新增",
+    name: "新增",
     component: CompanyShipping,
     authTag: "companyshipping"
   },
   {
     path: "/companyshipping/companies/:id",
     exact: true,
-    name: enumsLabel.companyType[enums.companyType.shippingCompany],
+    name: "详情",
     component: CompanyShipping,
     authTag: "companyshipping"
   },
@@ -451,14 +480,14 @@ const routes = [
   {
     path: "/product/products/add",
     exact: true,
-    name: "产品新增",
+    name: "新增",
     component: ProductProduct,
     authTag: "product"
   },
   {
     path: "/product/products/:id",
     exact: true,
-    name: "产品详情",
+    name: "详情",
     component: ProductProduct,
     authTag: "product"
   },
@@ -484,14 +513,14 @@ const routes = [
   {
     path: "/commodity/commodities/add",
     exact: true,
-    name: "商品新增",
+    name: "新增",
     component: Commodity,
     authTag: "commodity"
   },
   {
     path: "/commodity/commodities/:id",
     exact: true,
-    name: "商品详情",
+    name: "详情",
     component: Commodity,
     authTag: "commodity"
   },

@@ -10,7 +10,8 @@ export const sellcontractService = {
     put_update,
     _delete: _delete,
 
-    get_last
+    get_last,
+    get_disposable_dropdown
 };
 
 const TABLENAME = "sell_contract";
@@ -32,6 +33,20 @@ function get_dropdown(companyType) {
     // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 
     return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+}
+
+function get_disposable_dropdown(searchTerms) {
+
+  const requestOptions = {
+      method: 'GET',
+      headers: authHeader()
+  };
+
+  const queryString = h_queryString({}, searchTerms, TABLENAME)
+
+  console.log("getdropdown with search:", searchTerms);
+  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+
 }
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
@@ -64,7 +79,7 @@ function get_byId(id) {
       return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
 
-// TODO: 取最新的一条
+// DONETODO: 取最新的一条
 function get_last() {
 
   const requestOptions = {

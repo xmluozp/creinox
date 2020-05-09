@@ -7,13 +7,13 @@ export const sellsubitemModel = {
         id :        {label:"ID",           type: _DATATYPES.INT },
         buyerCode:   {label: "外商货号",     type: _DATATYPES.VARCHAR},
         barCode:    {label: "BarCode",     type: _DATATYPES.VARCHAR},
+
         amount:     {label: "数量",     type: _DATATYPES.INT}, 
         packAmount: {label: "包装数量",     type: _DATATYPES.INT}, 
         unitPrice:  {label: "外销单价",     type: _DATATYPES.MONEY},
 
         spec:       {label: "规格",     type: _DATATYPES.VARCHAR},   
         thickness:  {label: "厚度(mm)",     type: _DATATYPES.DECIMAL},   
-        
         unitWeight: {label: "单位重量(g)",     type: _DATATYPES.DECIMAL},   
         netWeight:  {label: "净重(g)",     type: _DATATYPES.DECIMAL},   
         grossWeight:{label: "毛重(g)",     type: _DATATYPES.DECIMAL},   
@@ -32,6 +32,7 @@ export const sellsubitemModel = {
 
         commodity_id:           {label: "对应商品",     type: _DATATYPES.SELECT, ref:"commodity", refLabel: ["name"]},
         sell_contract_id:       {label: "采购单",       type: _DATATYPES.SELECT, ref:"sell_contract", refLabel: ["code"]},     
+
         unitType_id:            {label: "计量单位",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         currency_id:            {label: "币种",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         polishing_id:           {label: "抛光",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},

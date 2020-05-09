@@ -8,6 +8,7 @@ export * from './sellcontract'
 export * from './sellsubitem'
 export * from './buycontract'
 export * from './buysubitem'
+export * from './mouldcontract'
 
 export * from './category'
 export * from './product'

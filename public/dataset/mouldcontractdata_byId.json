@@ -1,0 +1,49 @@
+{
+    "row":
+        {
+            "id": 1,
+            "code": "CR8328",
+            "name": "某某模具",
+            "totalPrice": 122,
+            "spec": "规格尺寸",
+            "unitPrice": 15,
+            "prepayPercentage": 0.5,
+            "prepayPrice": 66,
+            "prepayAt": "2019-12-27 13:00",
+            "activeAt": "2019-12-27 13:00",
+            "deliverAt": "2019-12-27 13:00",
+            "confirmDueDays": 5,
+            "buyer_signer": "张三",
+            "seller_signer": "李四",
+            "buyer_accountName": "广州钰诚贸易有限公司",
+            "buyer_accountNo":"123123123123",
+            "buyer_bankName":"工商银行",
+            "seller_accountName": "某某工厂公司",
+            "seller_accountNo": "123123123123",
+            "seller_bankName": "建设银行",
+            "memo": "备注信息的内容",
+
+            "updateAt":"2019-12-27 13:00",
+
+            "region_id": 1,
+            "buyer_company_id": 1043,
+            "seller_company_id": 842,
+            "currency_id": 144,
+            "updateUser_id": 56,
+
+            "image_id": "1",
+			"image_id.row": {
+                "id": 1,
+                "name": "某图片",
+                "sort": 0,
+                "height": 150,
+                "width": 100,
+                "path": "uploads/001.jpg",
+                "thumbnailPath": "uploads/001_thumb.jpg",
+                "ext": "jpg",
+                "createAt": "2019-12-23",
+                "gallary_folder_id": 1,
+                "gallary_folder_id.memo": "某某模具"
+			}
+        }
+}

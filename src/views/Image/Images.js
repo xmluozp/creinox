@@ -60,7 +60,7 @@ export const withTablePage = () => {
   const CurrentPage = ({ onDeleteMultiple, pageName }) => {
     // ============================================= handles
     const handleSelectAction = (list,pagination) => {
-      console.log(pagination)
+      console.log("批量删除的paginaion",pagination)
       h_confirm("是否批量删除？").then(resolve => {
         if (resolve) onDeleteMultiple(list, pagination);
       });      

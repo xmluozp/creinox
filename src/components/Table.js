@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
-import { format } from 'date-fns'
+import { format } from "date-fns";
 // import { history } from "../_helper";
+
+import Box from "@material-ui/core/Box";
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import formatCurrency from "format-currency";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +26,11 @@ import { _DATATYPES } from "../_constants/_dataTypes";
 import TableHeadWrapper from "./TableHeadWrapper";
 import TableToolbarWrapper from "./TableToolbarWrapper";
 import TablePaginationWrapper from "./TablePaginationWrapper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+
+import { TabPanel } from "./TabPanel";
+
 import { ImageList } from "./ImageList";
 
 // 所有pagination信息都从data来而不是本地
@@ -40,6 +51,7 @@ export const CreinoxTable = ({
   toolbarButtons = [],
   preConditions = {},
   isBorder = true,
+  collapsePanel = [],
   ...props
 }) => {
   // 默认数据（如果是页面，则从params里取）
@@ -49,7 +61,7 @@ export const CreinoxTable = ({
     totalCount: 0,
     totalPage: 0,
     order: "desc",
-    orderBy: "id"
+    orderBy: "id",
   };
 
   // const isData = data && data.pagination
@@ -63,7 +75,7 @@ export const CreinoxTable = ({
     totalPage:
       _.get(data, "pagination.totalPage") || defaultPagination.totalPage,
     order: _.get(data, "pagination.order") || defaultPagination.order,
-    orderBy: _.get(data, "pagination.orderBy") || defaultPagination.orderBy
+    orderBy: _.get(data, "pagination.orderBy") || defaultPagination.orderBy,
   };
 
   // 以下信息是用来提交pagination请求的，不涉及页面显示；页面如何显示完全来自于data
@@ -74,85 +86,25 @@ export const CreinoxTable = ({
   // const [nextSearchTerms, setNextSearchTerms] = useState(_.get(data, "searchTerms"));
   const [listOnShow, setListOnShow] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [collapseOpen, setcollapseOpen] = useState([]);
+  const [tabSelect, setTabSelect] = useState(0);
+
   // --------------- DISPLAY
   const classes = useStyles();
-  const isSelected = name => selected.indexOf(name) !== -1;
+  const isCollapsePanel = collapsePanel.length > 0;
 
   // 静态数据
   const dataRows = data && data.rows ? data.rows : [];
   const rowLength = data && data.rows ? data.rows.length : 0;
   const dataSearchTerms = data && data.searchTerms ? data.searchTerms : {};
-  const emptyRows =
-    dataPagination.perPage -
-    dataRows.length;
+  const emptyRows = dataPagination.perPage - dataRows.length;
 
-  // render数据预处理
   React.useEffect(() => {
     // 数据预处理。防止每次render都调用一遍
-    const listOnShowTemp = [];
     const dataRows = data && data.rows ? data.rows : [];
 
-    dataRows.map(row => {
-      const rowObj = {};
-      headCells.map(column => {
-        let columnContent;
-        const columnName = column.name;
-        let originalContent = row[columnName];
-
-        rowObj.id = row.id;
-
-        // 如果是外键，就取 外键.labelName 的字段。这个数据API预生成
-        const refLabel = _.get(dataModel, ["columns", columnName, "refLabel"]);
-        if (refLabel) {
-          // originalContent = row[`${columnName}.${refLabel}`] || originalContent;
-          const refField = `${columnName}.row`; // 格式： imagexx_id.row.path
-          originalContent =  (row[refField] && row[refField][refLabel])|| originalContent;
-        }
-
-        // 如果是Enum，根据列名从datatypes里取文本
-        const dataModelColumn = _.get(dataModel, ["columns", columnName]);
-        if (dataModelColumn && dataModelColumn.type === _DATATYPES.ENUM) {
-          originalContent = _DATATYPES.ENUM[columnName][originalContent];
-        }
-        // 如果是Money，变成currency
-        if (dataModelColumn && dataModelColumn.type === _DATATYPES.MONEY) {
-          originalContent = formatCurrency(originalContent);
-        }
-
-        // 如果是时间，改变格式
-        if (dataModelColumn && dataModelColumn.type === _DATATYPES.DATETIME) {
-
-          const newDateTime = new Date(originalContent)
-          originalContent = format(newDateTime, "yyyy/MM/dd HH:mm:ss");
-        } 
-
-        if (dataModelColumn && dataModelColumn.type === _DATATYPES.DATE) {
-
-          const newDateTime = new Date(originalContent)
-          originalContent = format(newDateTime, "yyyy/MM/dd");
-        }    
-
-        // 如果是callBak，预先生成结果
-        if (typeof column.onShow === "function") {
-          originalContent = column.onShow(originalContent, row);
-        }
-
-        // 如果是lookup预先翻译内容。但样式要在下面取
-        if (column.lookup) {
-          columnContent = column.lookup[originalContent];
-        } else {
-          columnContent = originalContent;
-        }
-
-        rowObj[column.name] = columnContent;
-        return null;
-      });
-      listOnShowTemp.push(rowObj);
-      return null;
-    });
-
-    // 用以渲染表格数据
-    setListOnShow(listOnShowTemp);
+    // render数据预处理用以渲染表格数据
+    setListOnShow(dataRowsPreprocess(dataRows, headCells, dataModel));
   }, [data, headCells, dataModel]);
 
   const getPaginationFromState = React.useCallback(
@@ -189,11 +141,11 @@ export const CreinoxTable = ({
   // }, [onGetBySearch, getPaginationFromState, nextSearchTerms, p_updateData])
 
   // *********************************************** handle for fetchData ****************************************
-  const handleOnRefresh = e => {
+  const handleOnRefresh = (e) => {
     p_fetchData();
   };
 
-  const handleOnSearch = searchTerms => {
+  const handleOnSearch = (searchTerms) => {
     // 分别更新本地和远程
     // setNextSearchTerms(searchTerms); // work with paginatitor
     // onGetBySearch(getPaginationFromState(), searchTerms);
@@ -221,12 +173,13 @@ export const CreinoxTable = ({
     setPage(newPage);
 
     // fetchData
-    p_updateData({ ...getPaginationFromState(), page: newPage }, 
-    dataSearchTerms// {}
+    p_updateData(
+      { ...getPaginationFromState(), page: newPage },
+      dataSearchTerms // {}
     );
   };
 
-  const handleChangeRowsPerPage = e => {
+  const handleChangeRowsPerPage = (e) => {
     const newPerPage = parseInt(e.target.value, 10);
     if (perPage === newPerPage) return;
 
@@ -236,27 +189,47 @@ export const CreinoxTable = ({
     // fetchData
     p_updateData({ ...getPaginationFromState(), page: 0, perPage: newPerPage });
   };
+  const handleTabChange = (event, newValue) => {
+    setTabSelect(newValue);
+  };
+
   // *********************************************** handle for fetchData ****************************************
 
   // ----------------------- handle for table component
-  const handleSelectAllClick = e => {
+  const handleSelectAllClick = (e) => {
     if (e.target.checked) {
-      const newSelecteds = data.rows.map(n => n.id);
+      const newSelecteds = data.rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleSelectOnAction = e => {
-    selectBox && selectBox.onAction(selected, { ...getPaginationFromState(), page: 0});
+  const handleCollapseAll = (e) => {
+    const newCollapseOpen = data.rows.map((n) => n.id);
+
+    console.log("collapseOpen", collapseOpen, collapseOpen.length);
+
+    if (collapseOpen.length === 0) {
+      setcollapseOpen(newCollapseOpen);
+      return;
+    } else {
+      setcollapseOpen([]);
+    }
+  };
+
+  const handleSelectOnAction = (e) => {
+    selectBox &&
+      selectBox.onAction(selected, { ...getPaginationFromState(), page: 0 });
     setSelected([]);
   };
 
+  // 处理选择框
   const handleClick = (e, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
+    // 如果是第一个框，就是全选，否则就是选当列
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -272,23 +245,221 @@ export const CreinoxTable = ({
 
     setSelected(newSelected);
   };
+
+  // 处理展开关闭
+  const handleClickCollapse = (e, rowId) => {
+    const clickIndex = collapseOpen.indexOf(rowId);
+    let newCollapseOpen = [];
+
+    if (clickIndex === -1) {
+      newCollapseOpen = newCollapseOpen.concat(collapseOpen, rowId);
+    } else if (clickIndex === 0) {
+      newCollapseOpen = newCollapseOpen.concat(collapseOpen.slice(1));
+    } else if (clickIndex === collapseOpen.length - 1) {
+      newCollapseOpen = newCollapseOpen.concat(collapseOpen.slice(0, -1));
+    } else if (clickIndex > 0) {
+      newCollapseOpen = newCollapseOpen.concat(
+        collapseOpen.slice(0, clickIndex),
+        collapseOpen.slice(clickIndex + 1)
+      );
+    }
+
+    setcollapseOpen(newCollapseOpen);
+  };
   // style={{ minWidth: "1200px" }}
+
+  // 空行里有几个空列，填充用
+  const colSpan =
+    headCells.length +
+    1 +
+    ((selectBox && 1) || 0) +
+    ((isCollapsePanel && 1) || 0);
+  const CreinoxTableRow = ({ row, rowIndex }) => {
+    const isItemSelected = selected.indexOf(row.id) !== -1;
+    const isCollapseOpen = collapseOpen.indexOf(row.id) !== -1;
+
+    const labelId = `enhanced-table-checkbox-${rowIndex}`;
+    const rowId = row.id;
+
+    const handleRowDbClick =
+      (typeof onRowDbClick === "function" &&
+        onRowDbClick.bind(null, rowId, row, getPaginationFromState())) ||
+      null;
+
+    return (
+      <>
+        <TableRow
+          hover
+          role="checkbox"
+          aria-checked={isItemSelected}
+          tabIndex={-1}
+          key={row.id}
+          onDoubleClick={handleRowDbClick}
+          selected={isItemSelected}
+          style={
+            isCollapsePanel && isCollapseOpen
+              ? { backgroundColor: "#fdffe9" }
+              : null
+          }
+        >
+          {/* 放折叠展开按钮 */}
+          {isCollapsePanel && (
+            <TableCell
+              onClick={(event) => handleClickCollapse(event, row.id)}
+              style={{width:50}}
+            >
+              <IconButton aria-label="expand row" size="small">
+                {isCollapseOpen ? (
+                  <KeyboardArrowUpIcon />
+                ) : (
+                  <KeyboardArrowDownIcon />
+                )}
+              </IconButton>
+            </TableCell>
+          )}
+
+          {/* 放选择框 */}
+          {selectBox && (
+            <TableCell
+              padding="checkbox"
+              onClick={(event) => handleClick(event, row.id)}
+            >
+              <Checkbox
+                checked={isItemSelected}
+                inputProps={{ "aria-labelledby": labelId }}
+              />
+            </TableCell>
+          )}
+
+          {
+            // 普通格子
+            headCells.map((column, index) => {
+              let originalContent = row[column.name];
+              {
+                /* let className = column.className; */
+              }
+
+              // 取出预处理后的cell:{cellProps, columnContent}
+              const columnObj =
+                listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
+              if (!columnObj) return; // 如果取不到就先不取
+
+              const columnContent = columnObj.columnContent;
+              const cellProps = columnObj.cellProps;
+
+              // 显示tip必须要这段
+              const SolveRef = React.forwardRef((props, ref) => (
+                <div {...props} ref={ref}>
+                  {columnContent}
+                </div>
+              ));
+
+              return (
+                <TableCell key={`${rowId}_${index}`} {...cellProps}>
+                  <Tooltip title={`${originalContent}`}>
+                    <SolveRef />
+                  </Tooltip>
+                </TableCell>
+              );
+            })
+          }
+          {
+            // 放操作按钮的格子
+            rowButtons ? (
+              <TableCell
+                align="right"
+                style={{ minWidth: 80 * rowButtons.length }}
+              >
+                {rowButtons.map((buttonObj, index) => (
+                  <ActionButton
+                    key={`button_${rowId}_${index}`}
+                    {...buttonObj}
+                    disabled="true"
+                    id={rowId}
+                    row={row}
+                    getPaginationFromState={getPaginationFromState}
+                    searchTerms={dataSearchTerms}
+                  />
+                ))}
+              </TableCell>
+            ) : null
+          }
+        </TableRow>
+
+        {/* 折叠的面板 */}
+        {isCollapsePanel && isCollapseOpen ? (
+          <TableRow>
+            <TableCell
+              style={{
+                padding: 0,
+                // backgroundColor: "#d9e8f3",
+                backgroundColor: "#e6eff6",
+                borderBottom: "1px solid #2f353a",
+              }}
+              colSpan={colSpan}
+            >
+              <Tabs
+                value={tabSelect}
+                style={{ borderBottom: "1px solid #E0E0E0" }}
+                onChange={handleTabChange}
+                aria-label="tabs"
+              >
+                {collapsePanel.map((v, i) => {
+                  var columnName = v.name;
+                  return (
+                    <Tab
+                      label={v.title}
+                      key={row.id + "_tab_" + columnName}
+                      style={{ padding: 0 }}
+                    />
+                  );
+                })}
+              </Tabs>
+
+              {collapsePanel.map((v, i) => {
+                var Com = v.RenderComponent;
+                var columnName = v.name;
+                return (
+                  <TabPanel
+                    key={row.id + "_panel_" + columnName}
+                    value={tabSelect}
+                    index={i}
+                    padding={0}
+                  >
+                    <Com data={row[columnName]} {...v.props} />
+                  </TabPanel>
+                );
+              })}
+            </TableCell>
+          </TableRow>
+        ) : null}
+      </>
+    );
+  };
+
   const tableBody = (
     <Table
       className={classes.table}
       aria-labelledby={tableTitle}
       stickyHeader={false}
       size="small"
-      aria-label={tableTitle}>
-
+      aria-label={tableTitle}
+    >
       {/* -------------------head (on select; headCells)----------------- */}
       <TableHeadWrapper
         classes={classes}
-        numSelected={selected.length}
-        selectBox={selectBox}
+        selectBox={{
+          isSelectBox: selectBox,
+          numSelected: selected.length,
+          onSelectAllClick: handleSelectAllClick,
+        }}
+        collapseBox={{
+          isCollapsePanel: isCollapsePanel,
+          onCollapseAll: handleCollapseAll,
+          isCollapseAll: collapseOpen.length > 0,
+        }}
         order={dataPagination.order}
         orderBy={dataPagination.orderBy}
-        onSelectAllClick={handleSelectAllClick}
         onRequestSort={handleRequestSort}
         dataModel={dataModel}
         rowCount={rowLength}
@@ -296,118 +467,12 @@ export const CreinoxTable = ({
         isButtons={rowButtons.length > 0}
       />
       <TableBody>
-        {dataRows.map((row, rowIndex) => {
-          const isItemSelected = isSelected(row.id);
-          const labelId = `enhanced-table-checkbox-${rowIndex}`;
-          const rowId = row.id;
-
-          const handleRowDbClick =
-            (typeof onRowDbClick === "function" &&
-              onRowDbClick.bind(null,  rowId, row, getPaginationFromState())) ||
-            null;
-
-          return (
-            <TableRow
-              hover
-              role="checkbox"
-              aria-checked={isItemSelected}
-              tabIndex={-1}
-              key={row.id}
-              onDoubleClick={handleRowDbClick}
-              selected={isItemSelected}
-            >
-              {/* 放选择框 */}
-              {selectBox && (
-                <TableCell
-                  padding="checkbox"
-                  onClick={event => handleClick(event, row.id)}
-                >
-                  <Checkbox
-                    checked={isItemSelected}
-                    inputProps={{ "aria-labelledby": labelId }}
-                  />
-                </TableCell>
-              )}
-
-              {// 普通格子
-              headCells.map((column, index) => {
-                let columnContent;
-                let originalContent = row[column.name];
-                let className = column.className;
-
-                // 如果是数字，右对齐
-                const dataModelColumn = _.get(dataModel, [
-                  "columns",
-                  column.name
-                ]);
-                const isNumber = dataModelColumn &&
-                  (
-                  dataModelColumn.type === _DATATYPES.INT ||
-                  dataModelColumn.type === _DATATYPES.DECIMAL ||
-                  dataModelColumn.type === _DATATYPES.MONEY) && column.name !=="id";
-
-                columnContent =
-                  listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值
-
-                if (column.lookup) {
-                  className =
-                    _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
-                }
-                const handleCellClick = column.onClick
-                  ? column.onClick.bind(null, rowId)
-                  : null;
-
-                const SolveRef = React.forwardRef((props, ref) => (
-                  <div {...props} ref={ref}>
-                    {columnContent}
-                  </div>
-                )); // 显示tip强制需要这段
-
-                // 控制列宽，防止超过或者挤压
-                
-                const minWidth = column.minWidth ? column.minWidth : 
-                                  dataModelColumn && dataModelColumn.minWidth ? dataModelColumn.minWidth: 100;
-                const maxWidth = column.maxWidth ? column.maxWidth : 
-                                  dataModelColumn && dataModelColumn.maxWidth ? dataModelColumn.maxWidth: "auto";
-
-                return (
-                    <TableCell
-                      key={`${rowId}_${index}`}
-                      align={column.align? column.align : isNumber? "right" : "left"}
-                      onClick={handleCellClick}
-                      className={className}
-                      style={{borderRight: "1px dashed rgba(224, 224, 224, 1)", minWidth: minWidth, maxWidth: maxWidth}}>
-                      <Tooltip title={`${originalContent}`}>
-                        <SolveRef />
-                      </Tooltip>
-                    </TableCell>
-                );
-              })}
-              {// 放操作按钮的格子
-              rowButtons ? (
-                <TableCell
-                  align="right"
-                  style={{ minWidth: 80 * rowButtons.length }}
-                >
-                  {rowButtons.map((buttonObj, index) => (
-                    <ActionButton
-                      key={`button_${rowId}_${index}`}
-                      {...buttonObj}
-                      disabled="true"
-                      id={rowId}
-                      row={row}
-                      getPaginationFromState={getPaginationFromState}
-                      searchTerms = {dataSearchTerms}
-                    />
-                  ))}
-                </TableCell>
-              ) : null}
-            </TableRow>
-          );
-        })}
+        {dataRows.map((row, rowIndex) => (
+          <CreinoxTableRow row={row} rowIndex={rowIndex} key={row.id} />
+        ))}
         {emptyRows > 0 && ( // 补行
           <TableRow style={{ height: 33 * emptyRows }}>
-            <TableCell colSpan={headCells.length + 1 + ((selectBox && 1) || 0)} />
+            <TableCell colSpan={colSpan} />
           </TableRow>
         )}
       </TableBody>
@@ -471,7 +536,7 @@ export const CreinoxTable = ({
 };
 
 // ============================================================右边按钮. 给button传入pagination因为删除后, 页面刷新
-const ActionButton = ({
+export const ActionButton = ({
   id,
   row,
   label,
@@ -481,9 +546,8 @@ const ActionButton = ({
   url,
   icon,
   getPaginationFromState,
-  searchTerms
+  searchTerms,
 }) => {
-
   // 加这个的原因是：有的属性是根据row动态变化的，比如id
   let injectOptions;
   if (typeof onShow === "function") {
@@ -508,7 +572,7 @@ const ActionButton = ({
   } else {
     const propsOnClick =
       typeof onClick === "function"
-        ? onClick.bind(null,  id, row, getPaginationFromState(),searchTerms)
+        ? onClick.bind(null, id, row, getPaginationFromState(), searchTerms)
         : null;
 
     returnValue = (
@@ -528,21 +592,140 @@ const ActionButton = ({
   return returnValue;
 };
 
+// render数据预处理函数
+export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
+  const listOnShowTemp = [];
+  dataRows.map((row) => {
+    const rowObj = {};
+    headCells.map((column) => {
+      let columnContent;
+      const columnName = column.name;
+      let originalContent = row[columnName];
+
+      //  ==================================================================== content
+      // 如果是外键，就取 外键.labelName 的字段。这个数据API预生成
+      const refLabel = _.get(dataModel, ["columns", columnName, "refLabel"]);
+      if (refLabel) {
+        // originalContent = row[`${columnName}.${refLabel}`] || originalContent;
+        const refField = `${columnName}.row`; // 格式： imagexx_id.row.path
+        originalContent =
+          (row[refField] && row[refField][refLabel]) || originalContent;
+      }
+
+      // 如果是Enum，根据列名从datatypes里取文本
+      const dataModelColumn = _.get(dataModel, ["columns", columnName]);
+      if (dataModelColumn && dataModelColumn.type === _DATATYPES.ENUM) {
+        originalContent = _DATATYPES.ENUM[columnName][originalContent];
+      }
+      // 如果是Money，变成currency
+      if (dataModelColumn && dataModelColumn.type === _DATATYPES.MONEY) {
+        originalContent = formatCurrency(originalContent);
+      }
+
+      // 如果是时间，改变格式
+      if (dataModelColumn && dataModelColumn.type === _DATATYPES.DATETIME) {
+        const newDateTime = new Date(originalContent);
+        originalContent = format(newDateTime, "yyyy/MM/dd HH:mm:ss");
+      }
+
+      if (dataModelColumn && dataModelColumn.type === _DATATYPES.DATE) {
+        const newDateTime = new Date(originalContent);
+        originalContent = format(newDateTime, "yyyy/MM/dd");
+      }
+
+      // 如果是callBak，预先生成结果
+      if (typeof column.onShow === "function") {
+        originalContent = column.onShow(originalContent, row);
+      }
+
+      // 如果是lookup预先翻译内容。但样式要在下面取
+      if (column.lookup) {
+        columnContent = column.lookup[originalContent];
+      } else {
+        columnContent = originalContent;
+      }
+
+      // ==================================================================== props
+      // 如果是数字，右对齐
+      const isNumber =
+        dataModelColumn &&
+        (dataModelColumn.type === _DATATYPES.INT ||
+          dataModelColumn.type === _DATATYPES.DECIMAL ||
+          dataModelColumn.type === _DATATYPES.MONEY) &&
+        column.name !== "id";
+
+      /* columnContent =
+                listOnShow[rowIndex] && listOnShow[rowIndex][column.name]; // 有预处理就取预处理，否则直接取值 */
+      let className = column.className;
+      if (column.lookup) {
+        className = _.get(column, ["className", originalContent]) || null; // 如果是lookup。样式就是个array。否则直接是样式
+      }
+
+      const handleCellClick = column.onClick
+        ? column.onClick.bind(null, row.id)
+        : null;
+
+      // 控制列宽，防止超过或者挤压, ID是例外
+      const minWidth = column.width
+        ? column.width
+        : column.minWidth
+        ? column.minWidth
+        : dataModelColumn && dataModelColumn.minWidth
+        ? dataModelColumn.minWidth
+        : dataModelColumn && dataModelColumn.label === "ID"
+        ? 50
+        : 100;
+      const maxWidth = column.width
+        ? column.width
+        : column.maxWidth
+        ? column.maxWidth
+        : dataModelColumn && dataModelColumn.maxWidth
+        ? dataModelColumn.maxWidth
+        : "auto";
+
+      const width = column.width ? column.width: "auto"
+
+      const cellProps = {
+        align: column.align ? column.align : isNumber ? "right" : "left",
+        style: {
+          borderRight: "1px dashed rgba(224, 224, 224, 1)",
+          width:width,
+          minWidth: minWidth,
+          maxWidth: maxWidth,
+        },
+        className: className,
+        onClick: handleCellClick,
+      };
+
+      rowObj[column.name] = {
+        cellProps: cellProps,
+        columnContent: columnContent,
+      };
+
+      return null;
+    });
+    listOnShowTemp.push(rowObj);
+    return null;
+  });
+
+  return listOnShowTemp;
+};
+
 // =========================================styles of material-ui
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%"
+    width: "100%",
   },
   paper: {
     width: "100%",
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 650
+    minWidth: 650,
   },
   tableWrapper: {
-    overflowX: "auto"
+    overflowX: "auto",
   },
   visuallyHidden: {
     border: 0,
@@ -553,6 +736,6 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     position: "absolute",
     top: 20,
-    width: 1
-  }
+    width: 1,
+  },
 }));

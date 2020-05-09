@@ -36,6 +36,7 @@ export default combineReducers({
   // 通用
   commonitemData: commonitem,
   imageData: image,
+  texttemplateData: reducerMaker(null, "TEXTTEMPLATE"),
 
   // 公司、组织
   sellcontractData: reducerMaker(null, "SELLCONTRACT"),
@@ -43,7 +44,8 @@ export default combineReducers({
 
   buycontractData: reducerMaker(null, "BUYCONTRACT"),
   buysubitemData: reducerMaker(null, "BUYSUBITEM"),
-
+  
+  mouldcontractData: reducerMaker(null, "MOULDCONTRACT"),
 
   companyData: company,
   regionData: region,

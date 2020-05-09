@@ -20,7 +20,8 @@ export const withFacelessActions = (
     get_byId,
     post_create,
     put_update,
-    _delete
+    _delete,
+    _clear
   } = _am(CONST, service);
 
   return {
@@ -29,6 +30,7 @@ export const withFacelessActions = (
     get_byId,
     post_create,
     put_update,
-    _delete
+    _delete,
+    _clear
   };
 };

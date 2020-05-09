@@ -1,6 +1,7 @@
 import "./styles.css"
 
 export *  from './Table';
+export * from './SimpleTable';
 export * from './CreinoxForm';
 export * from './Inputs';
 export * from './CreinoxUploadButton';

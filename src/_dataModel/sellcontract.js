@@ -8,8 +8,8 @@ export const sellcontractModel = {
         code:       {label: "合同号码",     type: _DATATYPES.VARCHAR},
         orderNumber:    {label: "订单号",     type: _DATATYPES.VARCHAR},
 
-        activeAt:   {label: "合同日期", type: _DATATYPES.DATETIME},
-        deliverAt:  {label: "交货日期", type: _DATATYPES.DATETIME},
+        activeAt:   {label: "合同日期", type: _DATATYPES.DATE},
+        deliverAt:  {label: "交货日期", type: _DATATYPES.DATE},
         updateAt: {label: "上次操作日期", type: _DATATYPES.DATETIME},
 
         isInBaches: {label: "可否分批",     type: _DATATYPES.BOOLEAN},   

@@ -57,6 +57,10 @@ export const withProduct = () => {
 
     // 从产品搜索字段填入
     const handleGetSourceProductOnChange = (e, element, id) => {
+
+      // 如果没有选中任何有id的选项(比如选了“无”)
+      if(id <= 0) {return}
+
       // fetch disposable data
       h_fkFetch("product", [id], "get_disposable_byId")
         .then(response => {

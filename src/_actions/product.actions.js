@@ -18,6 +18,7 @@ const {
   post_create,
   put_update,
   _delete,
+  _clear
 } = _am(CONST, service);
 
 //======================== customized
@@ -27,7 +28,7 @@ function get_disposable_dropdown(keyword, preConditions, isIncludeMeta = true) {
   return dispatch => {
     dispatch(loading);
     return service
-      .get_dropdown({}, { ...preConditions, code: keyword }, isIncludeMeta)
+      .get_dropdown({}, { ...preConditions, view_code_name: keyword }, isIncludeMeta)
       .then(
         response => {
           dispatch(loaded);
@@ -49,6 +50,34 @@ function get_disposable_dropdown(keyword, preConditions, isIncludeMeta = true) {
       );
   };
 }
+
+function get_disposable_dropdown_fromSellcontract(keyword, preConditions) {
+  return dispatch => {
+    dispatch(loading);
+    return service
+      .get_dropdown_fromSellcontract({}, { ...preConditions, view_code_name: keyword })
+      .then(
+        response => {
+          dispatch(loaded);
+          let returnValue = [];
+          console.log("dropdown test", response)
+          if (response && response.rows) {
+            returnValue = response.rows.map(item => {
+              item.name = `[${item.code}] ${item.name}`;
+              return item;
+            });
+          }
+          return { rows: returnValue };
+        },
+        error => {
+          dispatch(loadedFailure);
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
+        }
+      );
+  };
+}
+
 function get_disposable_dropdown_excludeMeta(keyword, preConditions) {
   return get_disposable_dropdown(keyword, preConditions, false);
 }
@@ -147,10 +176,12 @@ export const productActions = {
   post_create,
   put_update,
   _delete,
+  _clear,
 
   // customized
   get_disposable_dropdown,
   get_disposable_dropdown_excludeMeta,
+  get_disposable_dropdown_fromSellcontract,
   get_disposable_byId,
   get_bySearch_component,
   post_create_assemble,

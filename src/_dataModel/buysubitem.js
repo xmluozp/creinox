@@ -5,7 +5,7 @@ export const buysubitemModel = {
     table: "buy_subitem",
     columns: {
         id :        {label:"ID",           type: _DATATYPES.INT },
-        sellerCode:   {label: "采购合同号",     type: _DATATYPES.VARCHAR},
+        sellerCode:   {label: "工厂货号",     type: _DATATYPES.VARCHAR},
         isReceipt:    {label: "是否开票",     type: _DATATYPES.BOOLEAN},
 
         amount:     {label: "数量",     type: _DATATYPES.INT}, 
@@ -34,7 +34,8 @@ export const buysubitemModel = {
         
         // 这里应该是联动，选了sell_subitem_id以后才知道这个对应的产品是什么
         product_id:           {label: "对应产品",     type: _DATATYPES.SELECT, ref:"product", refLabel: ["name"]},
-        buy_contract_id:      {label: "采购合同",       type: _DATATYPES.SELECT, ref:"buy_contract", refLabel: ["code"]},     
+        buy_contract_id:      {label: "采购单",       type: _DATATYPES.SELECT, ref:"buy_contract", refLabel: ["code"]},     
+        sell_subitem_id:      {label: "外销子订单",     type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["name"]},
         unitType_id:          {label: "计量单位",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         currency_id:          {label: "币种",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         polishing_id:         {label: "抛光",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},

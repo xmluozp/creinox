@@ -17,7 +17,8 @@ const {
   get_byId,
   post_create,
   put_update,
-  _delete
+  _delete,
+  _clear
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
@@ -160,7 +161,7 @@ function get_disposable_dropdown(keyword, preConditions) {
 
     // console.log("preConditions ???", preConditions, keyword)
 
-    // if(keyword) {preConditions.name = keyword}
+    if(keyword) {preConditions.name = keyword}
     return service.get_disposable_dropdown(preConditions)
       .then(
         response => {
@@ -183,6 +184,7 @@ export const companyActions = {
   post_create,
   put_update,
   _delete,
+  _clear,
 
   get_disposable_dropdown
 };

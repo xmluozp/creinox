@@ -17,6 +17,7 @@ const DATA_STORE = "productpurchaseData";
 const headCells = [
   { name: "id", disablePadding: true, className: "ml-2" },
   { name: "activeAt" },
+  { name: "code" },
   { name: "company_id" },
   { name: "buyPrice" },
   { name: "currency_id" },
@@ -71,7 +72,7 @@ const FormInputs = ({onLoad}) => {
           />
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
-          {/* <Inputs.MyInput inputid="code" /> */}
+          <Inputs.MyInput inputid="code" />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="packAmount" />

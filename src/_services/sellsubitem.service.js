@@ -14,6 +14,8 @@ export const sellsubitemService = {
 const TABLENAME = "sell_subitem";
 const URL = `/api/sellsubitem`;
 
+
+
 // const testurl1 = './dataset/sellsubitemdata.json'
 // const testurl2 = './dataset/sellsubitemdata_byId.json'
 
@@ -47,6 +49,8 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
       return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }
+
+
 
 function get_byId(id) {
 

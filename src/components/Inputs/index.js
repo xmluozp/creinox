@@ -20,6 +20,7 @@ import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
+import { ICONS } from "../../_constants";
 import Input from "@material-ui/core/Input";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
@@ -47,6 +48,7 @@ import {
 } from "./MyCombobox";
 
 import { MyImage } from "./MyImage";
+import { MyInputTT } from "./MyInputTT";
 
 import { MyRegionPicker, MyCategoryPicker } from "./MyPicker";
 
@@ -277,12 +279,7 @@ const MyInput = React.memo(
   }
 );
 
-const MyInputTT = React.memo(({ ...props }) => {
 
-  return (
-    <MyInput {...props}/>
-  )
-});
 
 // ================================================================================== password text
 const useStyles = makeStyles(theme => ({
@@ -372,7 +369,7 @@ const MySwitch = React.memo(
             color="primary"
           />
         }
-        label={`${label} : ${isChecked ? "是" : "否"}`}
+        label={` [${isChecked ? "是" : "否"}] ${label}`}
       />
     );
   }

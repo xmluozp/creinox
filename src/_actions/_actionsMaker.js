@@ -57,6 +57,11 @@ export const _am = (CONST, service) => {
   //   };
   // }
 
+  function _clear() {
+    return dispatch => {
+      dispatch(done({}, CONST.GET));
+    }
+  }
 
 
   function get_byId(id) {
@@ -105,16 +110,22 @@ export const _am = (CONST, service) => {
     };
   }
 
-  function post_createMultiple(itemList, folder_id, callBack=()=>{}) {
+  function post_createMultiple(itemList, folder_id, folder_structure, callBack=()=>{}) {
+
+    const searchTerms = {gallary_folder_id: folder_id}
     console.log("action multiple create:", itemList);
     return dispatch => {
       dispatch(loading);
-      return service.post_createMultiple(itemList, folder_id).then(
+      return service.post_createMultiple(itemList, folder_id, folder_structure).then(
         response => {
           dispatch(loaded);
           const info = response && response.info ? response.info : ""
           dispatch(success("保存成功" + info.toString()));
           dispatch(done(response, CONST.CREATE_SUCCESS));
+
+          console.log("批量保存后的reponse", response)
+          // 如果folder不存在，会在后端生成一个新的并返回id
+          searchTerms.gallary_folder_id = response.row && response.row.id || -1
           // const id = (response.row && response.row.id) || null
           // 这里callback是一个id list. 但假如需要刷新，用不到这个list
           callBack(response);
@@ -126,7 +137,7 @@ export const _am = (CONST, service) => {
           dispatch(failure("保存失败." + errorInfo.toString()));
           dispatch(done(error, CONST.CREATE_FAILURE));
         }
-      );
+      ).then(() => p_getbysearch(dispatch, {perPage: -1}, searchTerms));
     };
   }
 
@@ -272,6 +283,7 @@ export const _am = (CONST, service) => {
     post_createMultiple,
     put_update,
     _delete,
+    _clear,
     _delete_treeNode,
     _deleteMultiple,
   };

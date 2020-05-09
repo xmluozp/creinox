@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import _ from "lodash";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -74,12 +74,14 @@ export const MyCombobox = React.memo(
     options = [],
     value = "",
     onChange = () => {},
+    onSelect = () => {},
     disabled = false,
     hasDefault = true,
     fullWidth = true,
     multiple = false,
     error = false,
     helperText = "",
+    inputRef,
     ...props
   }) => {
     const classes = useStyles();
@@ -115,11 +117,11 @@ export const MyCombobox = React.memo(
 
     // --------------------- 单选
     } else { 
-      optionsFix = hasDefault && !multiple
-      ? [{ id: 0, [optionLabel]: "无" }, ...options]
-      : options;
+      // 200329去掉hasDefault
+      // optionsFix = hasDefault && !multiple
+      optionsFix =  [{ id: 0, [optionLabel]: "无" }, ...options];
 
-      currentValue =
+      currentValue = 
       _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
       getOptionLabel = option => {
@@ -138,13 +140,18 @@ export const MyCombobox = React.memo(
       };
   
       handleOnChange = (e, item) => {
-       
+
         // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
-        const returnValue =  item && item.id >=0 ? item.id : hasDefault ? "": value;
+        // 200329去掉hasDefault
+        // const returnValue =  item && item.id >=0 ? item.id : hasDefault ? "": value;
+        const returnValue =  item && item.id >=0 ? item.id : value;
         // const returnValue =  item && item.id >=0 ? item.id : value;
 
         // 20200327: 多返回一个item本身
         onChange(e, id, returnValue, item);
+
+        // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
+        onSelect(item)
       }
       handleGetOptionSelected = (item,index )=> {
         return item.id === (currentValue && currentValue.id);
@@ -153,12 +160,11 @@ export const MyCombobox = React.memo(
 
     const handleOnInputChange = (e, value, reason) => {
 
-      if (typeof(props.onInputChange) === 'function') {
-        props.onInputChange(e, value, reason)
+      if (typeof(props.onInputChange) === 'function' && reason === 'input') {
+        // console.log("value", value)
+          props.onInputChange(e, value, reason)    
       }
     }
-
-    console.log("combobox value", value, currentValue)
 
     return (
         <Autocomplete
@@ -182,6 +188,7 @@ export const MyCombobox = React.memo(
               margin="dense"
               fullWidth={fullWidth}
               onKeyDown={props.onKeyDown}
+              inputRef = {inputRef}
               error={!disabled && error}
               helperText={!disabled && helperText}
             />
@@ -204,14 +211,10 @@ export const MyComboboxAsyncFK = React.memo(props => {
   } = props;
 
   const [options, setoptions] = useState([]);
-  const [inputValue, setInputValue] = useState();
 
-  // 控制文字
-  const handleInputChange = (e, value) => {
-    if(value) {
-      setInputValue(value);
-    }    
-  };
+  // 200329用ref控制搜索，因为如果用setState，会导致一动就触发re-render，怎么输入都刷新成“无”
+  const inputRef = useRef(null);
+
 
   // 第一次加载，根据value为id读出来一条记录
   useEffect(() => {
@@ -220,17 +223,16 @@ export const MyComboboxAsyncFK = React.memo(props => {
 
   const loadData = () => {
 
-    console.log("load??")
     if (props.value ) {
       let isSubscribed = true;
 
       // 这里搜索不应该搜索名字
       delete preConditions.name
 
-      // inputValue这里是keyword但是貌似没用
-      h_fkFetchOnceAsync(tableName, [inputValue, {id: props.value, ...preConditions }], actionName)
+      // inputValue这里是keyword。根据id搜索的话不需要关键字
+
+      h_fkFetchOnceAsync(tableName, ["", {id: props.value, ...preConditions }], actionName)
         .then(response => {
-          console.log("下拉列表1:", response, actionName);
           if (isSubscribed) {
             onLoad(response);
             setoptions(response);
@@ -246,15 +248,16 @@ export const MyComboboxAsyncFK = React.memo(props => {
     }
   }
 
-  console.log("value:", props.value)
-
   // 根据输入内容读记录
   const handleFetchData = e => {
     if (e.key === "Enter") {
+
+      const keyword = inputRef.current.value;
+
       e.preventDefault();
-      h_fkFetchOnceAsync(tableName, [inputValue, preConditions], actionName)
+      h_fkFetchOnceAsync(tableName, [keyword, preConditions], actionName)
         .then(response => {
-          console.log("下拉列表2:", response, actionName);
+          // console.log("下拉列表2:", response, actionName);
           onLoad(response);
           setoptions(response);
         })
@@ -268,11 +271,9 @@ export const MyComboboxAsyncFK = React.memo(props => {
   return (
     <MyCombobox
       {...props}
-      value = {props.value}
       options={options}
       onKeyDown={handleFetchData}
-      onInputChange={handleInputChange}
-
+      inputRef = {inputRef}
       hasDefault={!!props.value}
     />
   );

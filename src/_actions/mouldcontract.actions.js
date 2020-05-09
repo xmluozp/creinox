@@ -1,5 +1,5 @@
-import { BUYCONTRACT as CONST } from "../_constants";
-import { buycontractService as service } from "../_services";
+import { MOULDCONTRACT as CONST } from "../_constants";
+import { mouldcontractService as service } from "../_services";
 import {
   _am,
   failure,
@@ -40,8 +40,7 @@ function get_last() {
 }
 
 
-export const buycontractActions = {
-  // get_dropdown,
+export const mouldcontractActions = {
   get_bySearch,
   get_byId,
   post_create,

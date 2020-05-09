@@ -86,7 +86,6 @@ export class CreinoxForm extends React.Component {
           }
           return null;
         });
-        console.log("set new state", this.state, newState)
         this.setState(newState);
       });
     }
@@ -178,7 +177,7 @@ export class CreinoxForm extends React.Component {
             }
           }}        
         >
-        <button type="button" onClick={() => {this.setState({buyer_company_id: 1932})}}> set </button>
+
           {recursiveMap(children, item => {
             // 遍历所有的components
             const isInput =

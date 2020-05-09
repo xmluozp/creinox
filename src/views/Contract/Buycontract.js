@@ -6,28 +6,36 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import formatCurrency from "format-currency";
 
 //------redux
 import { connect } from "react-redux";
-import { companyActions as dataActions } from "../../_actions";
-import { companyModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
-import { enumsLabel } from "../../_constants";
-import { history, h_filterImage } from "../../_helper";
+import {
+  buycontractActions as dataActions,
+  sellcontractActions
+} from "../../_actions";
+import { buycontractModel as dataModel } from "../../_dataModel";
+import { CreinoxForm, Inputs, TabPanel } from "../../components";
+import { enumsLabel, enums } from "../../_constants";
+import { history, h_fkFetch } from "../../_helper";
 
-import Contacts from "./Buysubitems";
-import BankaccountsCompany from "../Bank/EmbedBankaccountsCompany";
+import Buysubitems from "./Buysubitems";
 
-export const withCompany = (companyType = 0, EDITURL = "") => {
+export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
   const CurrentPage = ({
     dataById,
+    sc_dataById,
     errorById,
     onPostCreate,
     onPutUpdate,
     onGetById,
+    sc_onGetById,
+    onClear,
+    sc_onClear,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
+
     const isFromEdit = Number.isInteger(id) ? true : false;
     const [disabled, setdisabled] = useState(isFromEdit);
     const [tabSelect, setTabSelect] = React.useState(0);
@@ -36,48 +44,82 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       setTabSelect(newValue);
     };
 
-    useEffect(() => {
-      // if there is ID, fetch data
-      if (id) {
-        onGetById(id);
-        // console.log("fetch new data:", id)
-      }
-    }, [onGetById, id]);
-
-    // ********************************
-
-    const handleOnSubmit = values => {
-      if (isFromEdit) {
-        // 如果没有新的图片，就不上传图片
-        values = h_filterImage(values, "imageLicense_id.row");
-        values = h_filterImage(values, "imageBizCard_id.row");
-
-        // 因为有图片，所以需要刷新一下，好显示图片的thumbnail
-        onPutUpdate({ companyType: companyType, ...values }, res => {
-          injector(res.row);
-        });
-      } else {
-        // onPostCreate(values, history.location.pathname);
-        onPostCreate({ companyType: companyType, ...values }, id => {
-          // not using async. because I want loading bar's codes put with callback codes
-          history.push(EDITURL + "/" + id);
-        });
-      }
-    };
-
-    // ******************************** injector:update the form. otherwise, form is separated from store(input and output)
+    // ******************************** injector: 用来读取最近一条合同
     const [injector, setInjector] = useState(null);
     const handleGetInjector = inj => {
       setInjector(inj);
     };
 
-    const folder_id =
-      dataById && dataById.row && dataById.row.gallary_folder_id;
-    const imageLicense_id =
-      dataById && dataById.row && dataById.row.imageLicense_id; // 删除用
-    const imageBizCard_id =
-      dataById && dataById.row && dataById.row.imageBizCard_id;
+    useEffect(() => {
+      // if there is ID, fetch data
+      if (id) { onGetById(id) }       
+      
+      return () => { onClear() }
+    }, [onGetById, id]);
 
+    //******************************************** 获取上级订单(
+    // 有3种可能获取上级订单：param，直接通过buyId读取对应的sellId，下拉选择sellContract
+    const parm_sc_id =
+      parseInt(_.get(props, "match.params.sell_contract_id")) || "";
+    const read_sc_id =
+      (dataById && dataById.row && dataById.row.sell_contract_id) ||
+      parm_sc_id || 0;
+
+    // 获取上级订单可能性 1: 从链接的Param
+    // 2：isEdit时候读取
+    useEffect(() => {
+      if (read_sc_id && injector) {
+        sc_onGetById(read_sc_id);
+        injector({      
+          sell_contract_id: read_sc_id});
+      } 
+
+      return () => {
+        sc_onClear();
+      }
+    }, [sc_onGetById, read_sc_id, injector]);
+
+    // 获取上级订单可能性3：下拉框选择时候读取
+    const handleOnSelect_sc = (item) => {
+      if(item && item.id) {
+        sc_onGetById(item.id);
+      }
+    }
+
+    // 读取上级订单以后，放到store里面便于之后调用(buy_subitem需要用到)
+    const sc_dataRow = (sc_dataById && sc_dataById.row) || null;
+
+    // ******************************************** )获取上级订单
+
+    const handleOnSubmit = values => {
+      if (isFromEdit) {
+        onPutUpdate(values);
+      } else {
+        // onPostCreate(values, history.location.pathname);
+        onPostCreate(values, id => {
+          history.push(EDITURL + "/" + id);
+        });
+      }
+    };
+
+    const handleOnRead = () => {
+      h_fkFetch("buycontract", [], "get_last")
+        .then(response => {
+          if (response && response.id) {
+            delete response["id"];
+            delete response["updateAt"];
+
+            injector(response);
+          }
+        })
+        .catch(error => {
+          console.log("暂时没有合同记录", error);
+        });
+    };
+
+    let defaultData = isFromEdit && dataById && { ...dataById.row}
+
+    console.log("default", defaultData )
     return (
       <>
         {/* 主框架 */}
@@ -87,8 +129,13 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
               <Card>
                 <CardHeader>
                   <strong>
-                    <i className="icon-info pr-1"></i>
-                    {enumsLabel.companyType[companyType]} id: {id}
+                    <i className="icon-info pr-1"></i>id: {id}
+                    {dataById && dataById.row
+                      ? "货款合计：" +
+                        formatCurrency(dataById.row.view_totalPrice)
+                      : null}
+                    {/* 外运编号就是客户订单号 */}
+                    客户订单号： {sc_dataRow && sc_dataRow.orderNumber}
                   </strong>
                 </CardHeader>
 
@@ -99,17 +146,13 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                   aria-label="tabs"
                 >
                   <Tab label="基本信息" />
-                  <Tab label="图册" disabled={!isFromEdit} />
-                  <Tab label="联系人名册" disabled={!isFromEdit} />
-                  <Tab label="银行账户" disabled={!isFromEdit} />
+                  <Tab label="对应商品" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}
                 <TabPanel value={tabSelect} index={0}>
                   <CreinoxForm
-                    defaultValues={
-                      isFromEdit && dataById && { ...dataById.row }
-                    }
+                    defaultValues={defaultData}
                     errors={errorById}
                     isFromEdit={isFromEdit}
                     actionSubmit={handleOnSubmit}
@@ -117,25 +160,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                     onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
-                      <Grid item lg={8} md={8} xs={12}>
-                        <Grid container spacing={2}>
-                          {formInputs(disabled)}
-                        </Grid>
-                      </Grid>
-                      <Grid item lg={4} md={4} xs={12}>
-                        <Grid container spacing={2}>
-                          <Inputs.MyImage
-                            inputid="imageLicense_id.row"
-                            imageId={imageLicense_id}
-                            disabled={disabled}
-                          />
-                          <Inputs.MyImage
-                            inputid="imageBizCard_id.row"
-                            imageId={imageBizCard_id}
-                            disabled={disabled}
-                          />
-                        </Grid>
-                      </Grid>
+                      {formInputs(disabled, isFromEdit, parm_sc_id, handleOnSelect_sc)}
                     </Grid>
                     <Grid container spacing={2}>
                       {isFromEdit && ( // only show edit button when update
@@ -146,6 +171,19 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                           />
                         </Grid>
                       )}
+                      {!isFromEdit && (
+                        <Grid item>
+                          <Button
+                            type="button"
+                            variant="contained"
+                            color="default"
+                            onClick={handleOnRead}
+                          >
+                            复制最近一张合同的内容
+                          </Button>
+                        </Grid>
+                      )}
+
                       {disabled || ( // when browsering, hide save button
                         <Grid item>
                           <Button
@@ -161,18 +199,13 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                   </CreinoxForm>
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
-                  <Gallery
-                    folder_id={folder_id}
-                    preConditions={{
-                      gallary_folder_id: folder_id
+                  {/* 更新embed的时候，外部也重新读取，这样才能获得最新的view */}
+                  <Buysubitems
+                    onUpdate={() => {
+                      onGetById(id);
                     }}
+                    preConditions={{ buy_contract_id: id, sell_contract_id: read_sc_id}}
                   />
-                </TabPanel>
-                <TabPanel value={tabSelect} index={2}>
-                  <Contacts preConditions={{ company_id: id }} />
-                </TabPanel>
-                <TabPanel value={tabSelect} index={3}>
-                  <BankaccountsCompany preConditions={{ company_id: id }} />
                 </TabPanel>
               </Card>
             </Col>
@@ -182,200 +215,179 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     );
   };
 
-  // 1: 内部公司
-  const formInputs = disabled => {
+  //
+  const formInputs = (disabled, isFromEdit, parm_sc_id, onSelect_sc) => {
     return (
       <>
-        {companyType === 1 ? template_1(disabled) : templateCommon(disabled)}
-        <Grid item lg={4} xs={12}>
+        {/* 基本信息 */}
+
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="code" disabled={disabled} />
+        </Grid>
+
+        {/* 假如从属性里获得了销售合同，就不允许手动选择 */}
+
+          <Grid item lg={4} md={4} xs={12}>
+            <Inputs.MyComboboxAsyncFK
+              disabled={isFromEdit || !!parm_sc_id}
+              inputid="sell_contract_id"
+              optionLabel="code"
+              tableName="sellcontract"
+              actionName="get_disposable_dropdown"
+              onSelect={onSelect_sc}
+            />
+          </Grid>
+
+
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyDatePicker inputid="activeAt" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyComboboxPaymentType
+            inputid="paymentType_id"
+            disabled={disabled}
+          />
+        </Grid>
+
+        <Grid item lg={8} md={8} xs={12}>
+          <Inputs.MyComboboxAsyncFK
+            disabled={disabled}
+            inputid="seller_company_id"
+            tableName="company"
+            actionName="get_disposable_dropdown"
+            preConditions={{ companyType: enums.companyType.factory }}
+          />
+        </Grid>
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
+        </Grid>
+
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_quality"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_deliveryMethod"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_shippingTerm"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_loss"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_packingStandard"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_acceptanceCondition"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_accessories"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_payment"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_breach"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="tt_dispute"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInputTT
+            inputid="memo"
+            disabled={disabled}
+            targetTable="buy_contract"
+          />
+        </Grid>
+
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyComboboxFK
+            inputid="follower_id"
+            optionLabel="userName"
+            tableName="user"
+            disabled={disabled}
+          />
+        </Grid>
+
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyComboboxFK
+            inputid="updateUser_id"
+            optionLabel="userName"
+            tableName="user"
+            disabled={true}
+          />
+        </Grid>
+        <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
-        </Grid>
-        <Grid item lg={4} xs={12}>
-          <Inputs.MyDatePicker inputid="createAt" disabled={true} />
-        </Grid>
-        <Grid item xs={12}>
-          <Inputs.MySwitch inputid="isActive" disabled={disabled} />
         </Grid>
       </>
     );
   };
-
-  // ======================================= 公司资料模板 //不同类型的公司需要填的内容不一样，所以需要用不同模板区分 ======================================= 
-  const templateCommon = disabled => (
-    <>
-      {/* 基本信息 */}
-      <Grid item lg={8} md={8} xs={12}>
-        <Inputs.MyInput inputid="code" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
-      </Grid>
-      <Grid item lg={8} md={8} xs={12}>
-        <Inputs.MyInput inputid="name" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="shortname" disabled={disabled} />
-      </Grid>
-      <Grid item lg={8} md={8} xs={12}>
-        <Inputs.MyInput inputid="ename" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="eshortname" disabled={disabled} />
-      </Grid>
-      <Grid item lg={8} md={8} xs={12}>
-        <Inputs.MyInput
-          inputid="address"
-          multiline
-          rows={1}
-          disabled={disabled}
-        />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="postcode" disabled={disabled} />
-      </Grid>
-      {/* 联系信息 */}
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="phone1" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="phone2" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="phone3" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="fax1" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="fax2" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="website" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="email1" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="email2" disabled={disabled} />
-      </Grid>
-      {/* 税务信息 */}
-      <Grid item xs={12}>
-        <Inputs.MyInput inputid="memo" multiline disabled={disabled} />
-      </Grid>
-      <Grid item xs={12}>
-        <Inputs.MyInput inputid="gsfj" disabled={disabled} />
-      </Grid>
-      <Grid item xs={12}>
-        <Inputs.MyInput inputid="fjdz" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={6}>
-        <Inputs.MyInput inputid="fjyb" disabled={disabled} />
-      </Grid>
-      <Grid item lg={8} md={8} xs={6}>
-        <Inputs.MyInput inputid="taxcode" disabled={disabled} />
-      </Grid>
-      {/* 资料责任人信息 */}
-      <Grid item lg={6} xs={12}>
-        <Inputs.MyComboboxFK
-          inputid="retriever_id"
-          optionLabel="userName"
-          tableName="user"
-          disabled={disabled}
-        />
-      </Grid>
-      <Grid item lg={6} xs={12}>
-        <Inputs.MyDatePicker inputid="retrieveTime" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} xs={12}>
-        <Inputs.MyComboboxFK
-          inputid="updateUser_id"
-          optionLabel="userName"
-          tableName="user"
-          disabled={true}
-        />
-      </Grid>
-    </>
-  );
-
-  const template_1 = disabled => (
-    <>
-      {/* 基本信息 */}
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
-      </Grid>
-      <Grid item lg={8} md={8} xs={12}>
-        <Inputs.MyInput inputid="name" disabled={disabled} />
-      </Grid>
-      <Grid item xs={12}>
-        <Inputs.MyInput inputid="ename" disabled={disabled} />
-      </Grid>
-      <Grid item xs={12}>
-        <Inputs.MyInput
-          inputid="address"
-          multiline
-          rows={1}
-          disabled={disabled}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Inputs.MyInput
-          inputid="eaddress"
-          multiline
-          rows={1}
-          disabled={disabled}
-        />
-      </Grid>
-      {/* 联系信息 */}
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="phone1" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="phone2" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="fax1" disabled={disabled} />
-      </Grid>
-      {/* 税务信息 */}
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="zsl" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={12}>
-        <Inputs.MyInput inputid="hl" disabled={disabled} />
-      </Grid>
-      <Grid item lg={4} md={4} xs={6}>
-        <Inputs.MyInput inputid="tsl" disabled={disabled} />
-      </Grid>
-      <Grid item xs={12}>
-        <Inputs.MyInput inputid="taxcode" disabled={disabled} />
-      </Grid>
-      {/* 资料责任人信息 */}
-      <Grid item lg={4} xs={12}>
-        <Inputs.MyComboboxFK
-          inputid="updateUser_id"
-          optionLabel="userName"
-          tableName="user"
-          disabled={true}
-        />
-      </Grid>
-    </>
-  );
-
   // ============================================= Redux
 
   function mapState(state) {
     return {
-      dataById: state.companyData.dataById,
-      errorById: state.companyData.errorById
+      dataById: state.buycontractData.dataById,
+      errorById: state.buycontractData.errorById,
+      sc_dataById: state.sellcontractData.dataById
     };
   }
 
   const actionCreators = {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
-    onGetById: dataActions.get_byId
+    onGetById: dataActions.get_byId,
+    onClear: dataActions._clear,
+    sc_onGetById: sellcontractActions.get_byId,
+    sc_onClear: sellcontractActions._clear,
   };
 
   return connect(mapState, actionCreators)(CurrentPage);
 };
 
-export default withCompany();
+export default withBuycontract();

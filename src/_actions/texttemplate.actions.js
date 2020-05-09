@@ -1,15 +1,16 @@
-import { BUYCONTRACT as CONST } from "../_constants";
-import { buycontractService as service } from "../_services";
+import { TEXTTEMPLATE as CONST } from "../_constants";
+import { texttemplateService as service } from "../_services";
 import {
   _am,
   failure,
   loading,
   loaded,
+  done,
   loadedFailure
 } from "./_actionsMaker";
 
 const {
-  // get_dropdown,
+  get_dropdown,
   get_bySearch,
   get_byId,
   post_create,
@@ -18,17 +19,15 @@ const {
   _clear
 } = _am(CONST, service);
 
-function get_last() {
+//======================== customized
+
+function get_bySearch_template(pagination, searchTerms = {}) {
   return dispatch => {
     dispatch(loading);
-    return service.get_last().then(
+    return service.get_bySearch_template(pagination, searchTerms).then(
       response => {
         dispatch(loaded);
-        let returnValue = {};
-        if (response && response.row) {
-          returnValue = response.row;
-        }
-        return returnValue;
+        dispatch(done(response, CONST.GETBYSEARCH_SUCCESS));
       },
       error => {
         dispatch(loadedFailure);
@@ -39,9 +38,8 @@ function get_last() {
   };
 }
 
-
-export const buycontractActions = {
-  // get_dropdown,
+export const texttemplateActions = {
+  get_dropdown,
   get_bySearch,
   get_byId,
   post_create,
@@ -49,5 +47,5 @@ export const buycontractActions = {
   _delete,
   _clear,
 
-  get_last
+  get_bySearch_template
 };

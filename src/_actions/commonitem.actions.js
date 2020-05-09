@@ -16,7 +16,8 @@ const {
   get_byId,
   post_create,
   put_update,
-  _delete
+  _delete,
+  _clear
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
@@ -172,5 +173,6 @@ export const commonitemActions = {
   get_byId,
   post_create,
   put_update,
-  _delete
+  _delete,
+  _clear
 };

@@ -11,9 +11,9 @@ const {
   // post_create,
   post_createMultiple,
   // _delete,
-  _deleteMultiple
+  _deleteMultiple,
+  _clear
 } = _am(CONST, service);
-
 
 // 因为只删除图片，不提交刷新，所以这里特殊对待
 function _deleteGallary(id) {
@@ -42,5 +42,6 @@ export const imageActions = {
   // post_create,
   post_createMultiple,
   _deleteGallary,
-  _deleteMultiple
+  _deleteMultiple,
+  _clear
 };

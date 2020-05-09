@@ -16,12 +16,10 @@ const DATA_STORE = "sellsubitemData";
 
 
 const renderCommodity = (content, row) => {
-  console.log(row)
   return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].name}`
 }
 
 const renderPackAmount = (content, row) => {
-  console.log(row)
   return `${row["packAmount"]} / ${row["unitType_id.row"].ename}`
 }
 
@@ -200,12 +198,11 @@ export default props => {
     setProductInjector(inj);
   }
   const handleGetSourceProductOnChange = (e, element, id, item) => { 
-
-    console.log("inject:", item)
+    const product_id = item ? item.product_id : 0
 
     // 根据商品id取产品， 可以取到：规格，厚度, 单位重量, 材质，抛光
-    if(item && item.product_id) {
-      h_fkFetch("product", [id], "get_disposable_byId")
+    if(item && product_id) {
+      h_fkFetch("product", [product_id], "get_disposable_byId")
         .then(response => {
           if (response && response.id) {
 
@@ -224,10 +221,9 @@ export default props => {
           console.log("搜索不到对应产品", error);
         });
 
-        h_fkFetch("productpurchase", [id], "get_disposable_byProductId")
+        h_fkFetch("productpurchase", [product_id], "get_disposable_byProductId")
         .then(response => {
           if (response && response.id) {
-            console.log(response)
             // 从产品取, 有部分字段覆盖上面的，因为虽然产品里也有相同的字段。但报价里的肯定是比较新的
             // 有的产品没有报价，所以上面取那一次也是必要的
             productInjector ({

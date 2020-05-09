@@ -13,11 +13,14 @@
         {
             "id": 1,
             "product_id" : 50,
-            "product_id.row.name" : "某商品",
-            "product_id.row.code" : "某商品编号",
+            "product_id.row" : {"name": "某商品", "code": "某商品编号"},
+            "sell_subitem_id" : 2,
+            "sell_subitem_id.row" : {"buyerCode": "B001"}, 
             "sellerCode": "CR8328",
+            "packAmount":10,
             "amount": 50,
-            "view_packAmount_unitType":"50 只/箱"
+            "view_packAmount_unitType":"50 只/箱",
+            "unitType_id.row": {"ename": "asdf"}
         }
     ]
 }

@@ -163,8 +163,13 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                 <TabPanel value={tabSelect} index={1}>
                   <Gallery
                     folder_id={folder_id}
-                    preConditions={{
-                      gallary_folder_id: folder_id
+                    folder_structure = {{
+                      memo:"company/" + id,
+                      RefSource: "company.gallary_folder_id",
+                      RefId: id,
+                      folderType:1,
+                      tableName: "company",
+                      columnName: "gallary_folder_id"
                     }}
                   />
                 </TabPanel>

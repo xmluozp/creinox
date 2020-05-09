@@ -21,13 +21,18 @@ const navs = {
       children: [
         {
           name: '销售合同',
-          url: '/contract/sellcontracts',
+          url: '/contract/allcontracts',
           authTag:'sellcontract',
-        },        
+        },       
         {
           name: '采购合同',
           url: '/contract/buycontracts',
           authTag:'buycontract',
+        },       
+        {
+          name: '产品开发合同',
+          url: '/contract/mouldcontracts',
+          authTag:'mouldcontract',
         }
       ]
     },

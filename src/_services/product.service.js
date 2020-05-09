@@ -17,6 +17,7 @@ export const productService = {
   _delete: _delete,
 
   get_bySearch_component,
+  get_dropdown_fromSellcontract,
   post_create_assemble,
   _delete_disassemble
 };
@@ -25,6 +26,7 @@ const TABLENAME = "product";
 
 const URL = `/api/product`;
 const URL_DROP_DOWN = `/api/product_dropDown`;
+const URL_DROP_DOWN_SELLCONTRACT = `/api/product_dropDown_sellContract`;
 const URL_COMPONENT = `/api/product_component`;
 
 function get_dropdown(pagination, searchTerms, isIncludeMeta) {
@@ -51,6 +53,32 @@ function get_dropdown(pagination, searchTerms, isIncludeMeta) {
     handleResponse
   );
 }
+
+
+// 这里传入的是buycontract
+function get_dropdown_fromSellcontract(pagination, searchTerms) {
+
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  console.log(
+    "service get dropdown 从采购订单（寻找外贸订单:",
+    searchTerms
+  );
+
+  const queryString = h_queryString(
+    pagination,
+    { ...searchTerms},
+    TABLENAME
+  );
+
+  return fetch(`${URL_DROP_DOWN_SELLCONTRACT}?${queryString}`, requestOptions).then(
+    handleResponse
+  );
+}
+
+
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
   const requestOptions = {

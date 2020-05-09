@@ -31,7 +31,8 @@ export const ImageList = ({
     [editMode, selectedImages]
   );
   return (
-    <RPGallary
+     (tileData && tileData.length > 0) ? 
+      <RPGallary
       photos={tileData.map(image => {
         return {
           id: image.id,
@@ -45,6 +46,7 @@ export const ImageList = ({
         };
       })}
       renderImage={imageRenderer}
-    />
+    /> : "暂无图片"
+
   );
 };
