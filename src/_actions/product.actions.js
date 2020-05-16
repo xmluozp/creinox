@@ -78,6 +78,35 @@ function get_disposable_dropdown_fromSellcontract(keyword, preConditions) {
   };
 }
 
+function get_dropdown_fromSellsubitem(preConditions) {
+  return dispatch => {
+    dispatch(loading);
+    return service
+      .get_dropdown_fromSellsubitem(preConditions)
+      .then(
+        response => {
+          dispatch(loaded);
+          let returnValue = [];
+          console.log("dropdown test", response)
+          if (response && response.rows) {
+            returnValue = response.rows.map(item => {
+              item.name = `[${item.code}] ${item.name}`;
+              return item;
+            });
+          }
+          return { rows: returnValue };
+        },
+        error => {
+          dispatch(loadedFailure);
+          const errorInfo =error && error.info ? error.info : ""
+          dispatch(failure(errorInfo.toString()));
+        }
+      );
+  };
+}
+
+
+
 function get_disposable_dropdown_excludeMeta(keyword, preConditions) {
   return get_disposable_dropdown(keyword, preConditions, false);
 }
@@ -179,6 +208,7 @@ export const productActions = {
   _clear,
 
   // customized
+  get_dropdown_fromSellsubitem,
   get_disposable_dropdown,
   get_disposable_dropdown_excludeMeta,
   get_disposable_dropdown_fromSellcontract,

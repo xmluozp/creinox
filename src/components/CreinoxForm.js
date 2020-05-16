@@ -1,5 +1,9 @@
 import React from "react";
 import _ from "lodash";
+import IconButton from "@material-ui/core/IconButton";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import { ICONS } from "../_constants/icons";
 
 /**
  * actionSubmit: redux action passed from parent. When submitting, form will call: fn(data)
@@ -19,14 +23,20 @@ export class CreinoxForm extends React.Component {
     super(props);
 
     this.state = {
-      isComponentLoaded: false
+      isComponentLoaded: false,
     };
+    this.renderTool = this.renderTool.bind(this);
 
     this.formRef = React.createRef();
-
     this.submitForm = this.submitForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.onCopy = this.onCopy.bind(this);
+    this.onPaste = this.onPaste.bind(this);
+    this.onCancel = this.onCancel.bind(this);
+    this.onPrint = this.onPrint.bind(this);
 
+
+    
   }
 
   // 提交函数
@@ -34,8 +44,8 @@ export class CreinoxForm extends React.Component {
     e.preventDefault();
     if (typeof this.props.actionSubmit === "function") {
       // preStates放后面不然会被一大堆 key:"" 的覆盖
-      const submitValues = { ...this.state, ...this.props.preStates }
-      delete submitValues.isComponentLoaded
+      const submitValues = { ...this.state, ...this.props.preStates };
+      delete submitValues.isComponentLoaded;
       this.props.actionSubmit(submitValues);
     }
   }
@@ -51,10 +61,43 @@ export class CreinoxForm extends React.Component {
     }
   }
 
+  //  ***************** 复制粘贴form的内容到localstorage
+  // fid: unique name of form. 比如 sellcontract
+  onCopy() {
+    const { dataModel } = this.props;
+    let newState = { ...this.state };
+    delete newState.isComponentLoaded;
+    localStorage.setItem("form." + dataModel.table, JSON.stringify(newState));
+  }
+
+  onPaste() {
+    const { dataModel } = this.props;
+
+    let newState = JSON.parse(localStorage.getItem("form." + dataModel.table));
+
+    if (newState) {
+      this.setState(newState);
+    }
+  }
+
+  onCancel() {
+    let newState = this.props.defaultValues;
+
+    if (newState) {
+      this.setState(newState);
+    }
+  }
+
+  onPrint() {
+
+    const { dataModel } = this.props;
+    console.log("print", dataModel.printTemplate)
+  }
+
   // step 1/3: generate empty items ********************************************
   componentDidMount() {
     // preConditions 是新增用的，是前提条件
-    const { isFromEdit, preConditions, onGetInjector } = this.props;
+    const { isFromEdit, preConditions, onGetInjector, onGetRef } = this.props;
 
     // set initial Values (empty)
     const initialValues = {};
@@ -62,7 +105,7 @@ export class CreinoxForm extends React.Component {
     // 根据所有的input生成一个空表单
     const { children } = this.props;
 
-    recursiveMap(children, item => {
+    recursiveMap(children, (item) => {
       if (item.props && item.props.inputid) {
         initialValues[item.props.inputid] = "";
       }
@@ -71,22 +114,25 @@ export class CreinoxForm extends React.Component {
     this.setState({
       isComponentLoaded: !isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
       ...initialValues,
-      ...preConditions
+      ...preConditions,
     });
 
     if (typeof onGetInjector === "function") {
-
-      
-      onGetInjector(() => newValues => {
-        
+      onGetInjector(() => (newValues) => {
         const newState = {};
-        Object.keys(newValues).map(value => {
+        Object.keys(newValues).map((value) => {
           if (this.state.hasOwnProperty(value)) {
             newState[value] = newValues[value];
           }
           return null;
         });
         this.setState(newState);
+      });
+    }
+
+    if (typeof onGetRef === "function") {
+      onGetRef(() => {
+        return this;
       });
     }
   }
@@ -125,7 +171,7 @@ export class CreinoxForm extends React.Component {
     if (snapshot) {
       this.setState({
         isComponentLoaded: true,
-        ...snapshot
+        ...snapshot,
       });
     }
   }
@@ -136,7 +182,7 @@ export class CreinoxForm extends React.Component {
       const newState = {};
 
       // 查看默认值列表。如果有对应的key，就赋值
-      Object.keys(defaultValues).map(value => {
+      Object.keys(defaultValues).map((value) => {
         if (this.state.hasOwnProperty(value)) {
           newState[value] = defaultValues[value];
         }
@@ -149,13 +195,81 @@ export class CreinoxForm extends React.Component {
 
       this.setState({
         isComponentLoaded: true,
-        ...newState
+        ...newState,
       });
     }
   }
 
+  renderTool() {
+    const { dataModel, isHideTool, isFromEdit } = this.props;
+
+    return (
+      <Box mb={2}>
+        <Grid
+          mb={5}
+          container
+          direction="row"
+          justify="flex-end"
+          alignItems="center"
+          style={{
+            backgroundColor: "#f0f3f5",
+            border: "1px solid #c5d2db",
+            borderRadius: 15,
+          }}
+          spacing={2}
+        >
+          {/* 如果需要显示copytool，就在这里显示 */}
+          {!isHideTool ? (
+            <>
+              <Grid item>
+                <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  onClick={this.onCopy}
+                >
+                  {ICONS.COPY()}
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  onClick={this.onPaste}
+                >
+                  {ICONS.PASTE()}
+                </IconButton>
+              </Grid>
+              {isFromEdit ? (
+                <Grid item>
+                  <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={this.onCancel}
+                  >
+                    {ICONS.REFRESH()}
+                  </IconButton>
+                </Grid>
+              ) : null}
+            </>
+          ) : null}
+          {dataModel && dataModel.printTemplate ? (
+            <Grid item>
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={this.onPrint}
+              >
+                {ICONS.PRINT()}
+              </IconButton>
+            </Grid>
+          ) : null}
+        </Grid>
+      </Box>
+    );
+  }
+
   render() {
-    const { children, dataModel, errors } = this.props;
+    const { children, dataModel, errors, isHideTool } = this.props;
     const values = this.state;
     const handleChange = this.handleChange;
 
@@ -163,33 +277,53 @@ export class CreinoxForm extends React.Component {
       return "loading";
     } else {
       return (
-        <form 
-          ref = {this.formRef}
+        <form
+          ref={this.formRef}
           onSubmit={this.submitForm}
-
-          onKeyDown = {e=> {
+          onKeyDown={(e) => {
             if (e.ctrlKey && e.which === 83) {
-              this.submitForm(e)
+              this.submitForm(e);
             }
 
-            if (e.target.type !== 'textarea' && e.which === 13 /* Enter */) {
+            if (e.target.type !== "textarea" && e.which === 13 /* Enter */) {
               e.preventDefault();
             }
-          }}        
+          }}
         >
+          {(!isHideTool && dataModel) || dataModel.printTemplate
+            ? this.renderTool()
+            : null}
 
-          {recursiveMap(children, item => {
+          {recursiveMap(children, (item) => {
             // 遍历所有的components
             const isInput =
               item.props && this.state.hasOwnProperty(item.props.inputid); // 是否输入控件
-            const isFiltered = 
-              item.props && typeof(item.props.onShow) === "function";
+            const isFiltered =
+              item.props && typeof item.props.onShow === "function";
+
+            // 结联 ==============
+            const listenConditions = {}
+            // 如果监听对象数组不为空，就把监听对象的键值对的数组传进控件。控制更新在控件内部做
+            const listen = item.props && item.props.listen ? item.props.listen : []
+            if(listen.length > 0) {
+              for (let i = 0; i < listen.length; i++) {
+                const listenColumnName = listen[i]
+                if(values.hasOwnProperty(listenColumnName)) {
+                  listenConditions[listenColumnName] = values[listenColumnName]
+                }                
+              }
+            }
+            // ===================
 
             if (isInput) {
               // 如果是控件就注入，否则原样返回
               const columnId = item.props.inputid;
-              const isError = errors && errors.message && errors.message.hasOwnProperty(columnId);
-              const errorMessage = errors && errors.message && errors.message[columnId];
+              const isError =
+                errors &&
+                errors.message &&
+                errors.message.hasOwnProperty(columnId);
+              const errorMessage =
+                errors && errors.message && errors.message[columnId];
 
               return injectedInputs({
                 item: item,
@@ -197,15 +331,16 @@ export class CreinoxForm extends React.Component {
                 errorMessage: errorMessage, // 从props取到的返回错误信息
                 handleChange: handleChange,
                 dataModel: dataModel,
-                value: values[columnId]
+                value: values[columnId],
+                listenConditions: listenConditions,
               });
-            } else if(isFiltered) {
+            } else if (isFiltered) {
               return injectedInputs({
                 item: item,
-                value: item.props.onShow(values)
-              })
-            }            
-            else {
+                value: item.props.onShow(values),
+                listenConditions: listenConditions,
+              });
+            } else {
               return item;
             }
           })}
@@ -221,20 +356,19 @@ const injectedInputs = ({
   dataModel,
   value,
   isError,
-  errorMessage = ""
+  errorMessage = "",
+  listenConditions,
 }) => {
   let returnValue = item;
-  const columnId = item.props &&  item.props.inputid;
-
+  const columnId = item.props && item.props.inputid;
 
   // 判断类型，进行注入
 
   // 如果id 和model对得上号;
   if (dataModel && dataModel.columns[columnId]) {
-
     // 外部的onChange比默认的优先级更高
-    const onChange = item.props.onChange ? item.props.onChange : handleChange
-    
+    const onChange = item.props.onChange ? item.props.onChange : handleChange;
+
     // TODO: 判断component类型。不同类型注入不同的东西
     returnValue = React.cloneElement(item, {
       id: columnId,
@@ -245,13 +379,16 @@ const injectedInputs = ({
       helperText: errorMessage,
       value: value,
       onChange: onChange,
-      fullWidth: true
+      fullWidth: true,
+      listenConditions: listenConditions
     });
-  } else { // 不是model的；非控制的控件
+  } else {
+    // 不是model的；非控制的控件
     returnValue = React.cloneElement(item, {
       value: value,
-      fullWidth: true
-    })
+      fullWidth: true,
+      listenConditions: listenConditions
+    });
   }
 
   return returnValue;
@@ -259,14 +396,14 @@ const injectedInputs = ({
 
 // literate all children
 function recursiveMap(children, fn) {
-  return React.Children.map(children, child => {
+  return React.Children.map(children, (child) => {
     if (!React.isValidElement(child)) {
       return child;
     }
 
     if (child.props.children) {
       child = React.cloneElement(child, {
-        children: recursiveMap(child.props.children, fn)
+        children: recursiveMap(child.props.children, fn),
       });
     }
 

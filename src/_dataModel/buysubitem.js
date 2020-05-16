@@ -30,12 +30,12 @@ export const buysubitemModel = {
         fcl40:      {label: "40 FCL",     type: _DATATYPES.DECIMAL},   
 
         // 用来定位20 FCL, 40 FCL
-        sell_subitem_id:      {label: "对应外贸子合同",       type: _DATATYPES.TREE, ref:"sell_subitem", refLabel: ["buyerCode"]},     
+        sell_subitem_id:      {label: "对应外贸子合同",       type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["buyerCode"]},     
         
         // 这里应该是联动，选了sell_subitem_id以后才知道这个对应的产品是什么
         product_id:           {label: "对应产品",     type: _DATATYPES.SELECT, ref:"product", refLabel: ["name"]},
         buy_contract_id:      {label: "采购单",       type: _DATATYPES.SELECT, ref:"buy_contract", refLabel: ["code"]},     
-        sell_subitem_id:      {label: "外销子订单",     type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["name"]},
+        // sell_subitem_id:      {label: "外销子订单",     type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["name"]},
         unitType_id:          {label: "计量单位",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         currency_id:          {label: "币种",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         polishing_id:         {label: "抛光",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},

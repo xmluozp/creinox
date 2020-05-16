@@ -181,16 +181,26 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
     return (
       <>
         {/* 基本信息 */}
+     
+        <Grid item lg={6} md={6} xs={12}>
+              <Inputs.MyComboboxAsyncFK
+                inputid="product_id"
+                tableName="product"
+                actionName="get_disposable_dropdown"
+              />
+        </Grid>   
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyComboboxFK
+            inputid="follower_id"
+            optionLabel="userName"
+            tableName="user"
+            disabled={disabled}
+          />
+        </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="code" disabled={disabled} />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyInput inputid="name" disabled={disabled} />
-        </Grid>       
-        <Grid item lg={3} md={2} xs={12}>
-          <Inputs.MyInput inputid="productCode" disabled={disabled} />
-        </Grid>        
-        <Grid item lg={3} md={2} xs={12}>
+        <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
         </Grid>
 
@@ -224,6 +234,9 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           <Inputs.MyDatePicker inputid="prepayAt" disabled={disabled} />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyDatePicker inputid="scheduleAt" disabled={disabled} />
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
@@ -239,7 +252,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
             inputid="buyer_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ companyType: enums.companyType.overseasCustomer }}
+            preConditions={{ companyType: enums.companyType.internal }}
           />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
@@ -256,7 +269,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
             inputid="seller_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ companyType: enums.companyType.overseasCustomer }}
+            preConditions={{ companyType: enums.companyType.factory }}
           />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
@@ -268,7 +281,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
 
 
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInput inputid="memo" disabled={disabled} />
+          <Inputs.MyInput inputid="tt_memo" disabled={disabled} />
         </Grid> 
 
         <Grid item lg={4} md={4} xs={12}>
@@ -292,18 +305,17 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
         </Grid> 
 
 
-
-
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyComboboxFK
-            inputid="follower_id"
-            optionLabel="userName"
-            tableName="user"
-            disabled={disabled}
-          />
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MySwitch inputid="isDone" disabled={disabled} />
         </Grid>
 
-        <Grid item lg={4}  md={4} xs={12}>
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInput inputid="order_memo" disabled={disabled} />
+        </Grid>
+
+
+
+        <Grid item lg={6}  md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
             optionLabel="userName"
@@ -311,7 +323,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
             disabled={true}
           />
         </Grid>
-        <Grid item lg={4}  md={4} xs={12}>
+        <Grid item lg={6}  md={6} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
 

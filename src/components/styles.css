@@ -6,6 +6,13 @@ input, textarea {
     color: #004a86 !important;
 }
 
-input[disabled], textarea[disabled], .MuiSwitch-colorPrimary.Mui-disabled{
+input[disabled], textarea[disabled]{
     color: #23282c !important;
+}
+
+.MuiSwitch-root .Mui-disabled.Mui-checked  .MuiSwitch-thumb{
+    color: #00b953 !important;
+}
+.Mui-disabled.MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track {
+    background-color: #00b953 !important;
 }

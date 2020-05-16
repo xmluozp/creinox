@@ -29,8 +29,6 @@ import {
 // ******************************************************************* page setting
 // customized：在销售合同下面新增工厂采购合同
 
-
-
 export const withSellcontractList = (
   EDITURL = "/contract/sellcontracts",
   CREATEURL = "/contract/sellcontracts/add"
@@ -50,7 +48,15 @@ export const withSellcontractList = (
     { name: "activeAt" },
     { name: "deliverAt" },
     { name: "buyer_company_id" },
-    { name: "view_totalPrice", label: "总价" },
+    { name: "totalPrice"},
+    { name: "paidPrice"},
+    {
+      name: "isDone",
+      align: "center",
+      label: "完成",
+      className: { true: "text-success" },
+      lookup: { true: ICONS.TRUE("mr-4") }
+    },
     { name: "follower_id" },
   ];
 
@@ -83,7 +89,7 @@ export const withSellcontractList = (
     { name: "activeAt", width:120  },
     { name: "deliverAt", width:120 },
     { name: "seller_company_id" },
-    { name: "view_totalPrice", label: "总价", width:150 },
+    { name: "totalPrice", width:150 },
     { name: "follower_id" , width:150},
   ];
 

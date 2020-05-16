@@ -43,7 +43,7 @@ export async function h_fkFetchOnceAsync(table, params=[], actionName="get_dropd
 }
 
 
-export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[]) {
+export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[], actionName="get_dropdown") {
 
     let rows;
     const state = store.getState();
@@ -52,7 +52,7 @@ export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[
     if( getFromStore ) {
         rows = getFromStore;
     } else {
-        const dataSource = await h_fkFetch(table, params);
+        const dataSource = await h_fkFetch(table, params, actionName);
         rows = _.get(dataSource, "rows");
 
         if(!rows){return Promise.reject()}

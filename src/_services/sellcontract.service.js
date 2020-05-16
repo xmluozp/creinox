@@ -15,7 +15,7 @@ export const sellcontractService = {
 };
 
 const TABLENAME = "sell_contract";
-const URL = `/api/sellcontract`;
+const URL = `http://localhost:8000/api/sellcontract`;
 const URL_GET_LAST = `/api/sellcontract_getlast`;
 
 // const testurl1 = './dataset/sellcontractdata.json'

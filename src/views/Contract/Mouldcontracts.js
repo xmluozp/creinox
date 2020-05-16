@@ -38,13 +38,16 @@ export const withSellcontractList = (
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
     { name: "code" },
-    { name: "name" },
+    { name: "view_productCode" },
+    { name: "view_image_thumbnail" },
     { name: "activeAt" },
+    { name: "view_seller_company_name" },
     { name: "deliverAt" },
     { name: "prepayAt" },
-    { name: "view_seller_company_name" },   
-    { name: "totalPrice" },  
-    { name: "follower_id" },
+    
+    { name: "totalPrice" },
+    { name: "view_paid" },
+    { name: "view_follower" },
   ];
 
   // =============================== Search Panel

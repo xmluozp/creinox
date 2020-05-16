@@ -268,9 +268,9 @@ const routes = [
   },
   //--------------------------------------------- 合同
   {
-    path: "/contract/allcontracts",
+    path: "/contract/sellcontracts",
     exact: true,
-    name: "合同检索",
+    name: "销售合同",
     component: Allcontracts,
     authTag: "sellcontract" // 因为入口是销售合同所以用销售合同的权限
   },

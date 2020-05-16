@@ -14,23 +14,31 @@ const TITLE_EDIT = "编辑订单子项";
 const TITLE_CREATE = "创建订单子项";
 const DATA_STORE = "sellsubitemData";
 
-
 const renderCommodity = (content, row) => {
-  return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].name}`
-}
+  return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].name}`;
+};
 
 const renderPackAmount = (content, row) => {
-  return `${row["packAmount"]} / ${row["unitType_id.row"].ename}`
-}
+  return `${row["packAmount"]} / ${row["unitType_id.row"].ename}`;
+};
 
 // ============================================= render cell
 const headCells = [
   { name: "id", disablePadding: true, className: "ml-2" },
-  { name: "commodity_id", label: "商品", onShow: renderCommodity, minWidth: 250},
+  {
+    name: "commodity_id",
+    label: "商品",
+    onShow: renderCommodity,
+    minWidth: 250,
+  },
   { name: "buyerCode" },
   { name: "amount" },
-  { name: "view_packAmount_unitType", label:"包装数量/单位", onShow: renderPackAmount },
-  { name: "unitPrice" }  
+  {
+    name: "view_packAmount_unitType",
+    label: "包装数量/单位",
+    onShow: renderPackAmount,
+  },
+  { name: "unitPrice" },
 ];
 
 // ============================================= Search Panel
@@ -40,43 +48,40 @@ const searchBar = (
   </>
 );
 // ============================================= Modal inputs
-const FormInputs = ({onLoad, getSourceProductOnChange}) => {
-//injectProduct
+const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
+  //injectProduct
 
   const handleShowOuterVolume = (values) => {
-
-    const {outerPackL, outerPackW, outerPackH} = values  
-    return outerPackL * outerPackW * outerPackH || 0
-  }
+    const { outerPackL, outerPackW, outerPackH } = values;
+    return outerPackL * outerPackW * outerPackH || 0;
+  };
   const handleShowInnerVolume = (values) => {
-
-    const {innerPackL ,innerPackW, innerPackH} = values  
-    return innerPackL * innerPackW * innerPackH || 0
-  }
+    const { innerPackL, innerPackW, innerPackH } = values;
+    return innerPackL * innerPackW * innerPackH || 0;
+  };
 
   const handleTotalNetWeight = (values) => {
-
-    const {netWeight, amount} = values  
-    return netWeight * amount || 0
-  }
+    const { netWeight, amount } = values;
+    return netWeight * amount || 0;
+  };
 
   const handleTotalGrossWeight = (values) => {
-
-    const {grossWeight, amount} = values  
-    return grossWeight * amount || 0
-  }
+    const { grossWeight, amount } = values;
+    return grossWeight * amount || 0;
+  };
 
   return (
     <>
       <Grid container spacing={2}>
-      <Grid item lg={6} md={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
             inputid="commodity_id"
             tableName="commodity"
             actionName="get_disposable_dropdown"
             onChange={getSourceProductOnChange}
-            onLoad = {onLoad}/>
-        </Grid>      
+            onLoad={onLoad}
+          />
+        </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyerCode" />
         </Grid>
@@ -91,12 +96,14 @@ const FormInputs = ({onLoad, getSourceProductOnChange}) => {
           <Inputs.MyInput inputid="packAmount" />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MyComboboxUnitType inputid="unitType_id" optionLabel="ename" />
+          <Inputs.MyComboboxUnitType
+            inputid="unitType_id"
+            optionLabel="ename"
+          />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxTexture inputid="texture_id" />
         </Grid>
-
 
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="unitPrice" />
@@ -107,7 +114,6 @@ const FormInputs = ({onLoad, getSourceProductOnChange}) => {
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyInput inputid="spec" />
         </Grid>
-
 
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="thickness" />
@@ -134,7 +140,7 @@ const FormInputs = ({onLoad, getSourceProductOnChange}) => {
           <Inputs.MyInput inputid="outerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(cm³)" onShow={handleShowOuterVolume}/>
+          <Inputs.MyInput label="体积(cm³)" onShow={handleShowOuterVolume} />
         </Grid>
 
         <Grid item lg={3} md={6} xs={12}>
@@ -147,14 +153,14 @@ const FormInputs = ({onLoad, getSourceProductOnChange}) => {
           <Inputs.MyInput inputid="innerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(cm³)" onShow={handleShowInnerVolume}/>
+          <Inputs.MyInput label="体积(cm³)" onShow={handleShowInnerVolume} />
         </Grid>
 
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="netWeight" />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
-          <Inputs.MyInput label="净重合计(KG)" onShow={handleTotalNetWeight}/>
+          <Inputs.MyInput label="净重合计(KG)" onShow={handleTotalNetWeight} />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="fcl20" />
@@ -164,13 +170,14 @@ const FormInputs = ({onLoad, getSourceProductOnChange}) => {
           <Inputs.MyInput inputid="grossWeight" />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
-          <Inputs.MyInput label="毛重合计(KG)" onShow={handleTotalGrossWeight}/>
+          <Inputs.MyInput
+            label="毛重合计(KG)"
+            onShow={handleTotalGrossWeight}
+          />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="fcl40" />
         </Grid>
-
-
       </Grid>
     </>
   );
@@ -186,47 +193,45 @@ const EmbedSellsubitem = embedListProvider(
   TITLE_CREATE,
   FormInputs,
   headCells,
-  searchBar,
+  searchBar
 );
 
 // 加了一层component为了处理injection
-export default props => {
-
+export default (props) => {
   const [productInjector, setProductInjector] = React.useState(null);
 
-  const handleGetInjector = inj => {
+  const handleGetInjector = (inj) => {
     setProductInjector(inj);
-  }
-  const handleGetSourceProductOnChange = (e, element, id, item) => { 
-    const product_id = item ? item.product_id : 0
+  };
+  const handleGetSourceProductOnChange = (e, element, id, item) => {
+    const product_id = item ? item.product_id : 0;
 
     // 根据商品id取产品， 可以取到：规格，厚度, 单位重量, 材质，抛光
-    if(item && product_id) {
+    if (item && product_id) {
       h_fkFetch("product", [product_id], "get_disposable_byId")
-        .then(response => {
+        .then((response) => {
           if (response && response.id) {
-
             // 从产品取
-            productInjector ({
+            productInjector({
               commodity_id: item.id,
               spec: response.spec1,
               thickness: response.thickness,
               unitWeight: response.unitWeight,
               texture_id: response.texture_id,
-              polishing_id: response.polishing_id
-            })
+              polishing_id: response.polishing_id,
+            });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("搜索不到对应产品", error);
         });
 
-        h_fkFetch("productpurchase", [product_id], "get_disposable_byProductId")
-        .then(response => {
+      h_fkFetch("productpurchase", [product_id], "get_disposable_byProductId")
+        .then((response) => {
           if (response && response.id) {
             // 从产品取, 有部分字段覆盖上面的，因为虽然产品里也有相同的字段。但报价里的肯定是比较新的
             // 有的产品没有报价，所以上面取那一次也是必要的
-            productInjector ({
+            productInjector({
               spec: response.spec1,
               thickness: response.thickness,
               unitWeight: response.unitWeight,
@@ -243,27 +248,30 @@ export default props => {
               unitType_id: response.unitType_id,
               polishing_id: response.polishing_id,
               texture_id: response.texture_id,
-              pack_id:response.pack_id
-            })
+              pack_id: response.pack_id,
+            });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("搜索不到对应产品", error);
         });
-
-    } 
+    }
 
     // 从报价表里取？ get_disposable_byProductId?
-  }
+  };
 
   return (
-    <EmbedSellsubitem 
-      isBorder={true} {...props} 
-      modalFormCreateProps = {{onGetInjector: handleGetInjector}}     
-      modalInputCreateProps = {{getSourceProductOnChange: handleGetSourceProductOnChange}}
-
-      modalFormEditProps = {{onGetInjector: handleGetInjector}}     
-      modalInputEditProps = {{getSourceProductOnChange: handleGetSourceProductOnChange}}     
+    <EmbedSellsubitem
+      isBorder={true}
+      {...props}
+      modalFormCreateProps={{ onGetInjector: handleGetInjector }}
+      modalInputCreateProps={{
+        getSourceProductOnChange: handleGetSourceProductOnChange,
+      }}
+      modalFormEditProps={{ onGetInjector: handleGetInjector }}
+      modalInputEditProps={{
+        getSourceProductOnChange: handleGetSourceProductOnChange,
+      }}
     />
   );
 };

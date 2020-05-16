@@ -12,7 +12,7 @@ import formatCurrency from "format-currency";
 import { connect } from "react-redux";
 import {
   buycontractActions as dataActions,
-  sellcontractActions
+  sellcontractActions,
 } from "../../_actions";
 import { buycontractModel as dataModel } from "../../_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "../../components";
@@ -46,15 +46,16 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
 
     // ******************************** injector: 用来读取最近一条合同
     const [injector, setInjector] = useState(null);
-    const handleGetInjector = inj => {
-      setInjector(inj);
-    };
 
     useEffect(() => {
       // if there is ID, fetch data
-      if (id) { onGetById(id) }       
-      
-      return () => { onClear() }
+      if (id) {
+        onGetById(id);
+      }
+
+      return () => {
+        onClear();
+      };
     }, [onGetById, id]);
 
     //******************************************** 获取上级订单(
@@ -63,40 +64,42 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
       parseInt(_.get(props, "match.params.sell_contract_id")) || "";
     const read_sc_id =
       (dataById && dataById.row && dataById.row.sell_contract_id) ||
-      parm_sc_id || 0;
+      parm_sc_id ||
+      0;
 
     // 获取上级订单可能性 1: 从链接的Param
     // 2：isEdit时候读取
     useEffect(() => {
       if (read_sc_id && injector) {
         sc_onGetById(read_sc_id);
-        injector({      
-          sell_contract_id: read_sc_id});
-      } 
+        injector({
+          sell_contract_id: read_sc_id,
+        });
+      }
 
       return () => {
         sc_onClear();
-      }
+      };
     }, [sc_onGetById, read_sc_id, injector]);
 
     // 获取上级订单可能性3：下拉框选择时候读取
     const handleOnSelect_sc = (item) => {
-      if(item && item.id) {
+      if (item && item.id) {
         sc_onGetById(item.id);
       }
-    }
+    };
 
     // 读取上级订单以后，放到store里面便于之后调用(buy_subitem需要用到)
     const sc_dataRow = (sc_dataById && sc_dataById.row) || null;
 
     // ******************************************** )获取上级订单
 
-    const handleOnSubmit = values => {
+    const handleOnSubmit = (values) => {
       if (isFromEdit) {
         onPutUpdate(values);
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate(values, id => {
+        onPostCreate(values, (id) => {
           history.push(EDITURL + "/" + id);
         });
       }
@@ -104,7 +107,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
 
     const handleOnRead = () => {
       h_fkFetch("buycontract", [], "get_last")
-        .then(response => {
+        .then((response) => {
           if (response && response.id) {
             delete response["id"];
             delete response["updateAt"];
@@ -112,14 +115,14 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
             injector(response);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("暂时没有合同记录", error);
         });
     };
 
-    let defaultData = isFromEdit && dataById && { ...dataById.row}
+    let defaultData = isFromEdit && dataById && { ...dataById.row };
 
-    console.log("default", defaultData )
+    // console.log("default", defaultData )
     return (
       <>
         {/* 主框架 */}
@@ -132,7 +135,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                     <i className="icon-info pr-1"></i>id: {id}
                     {dataById && dataById.row
                       ? "货款合计：" +
-                        formatCurrency(dataById.row.view_totalPrice)
+                        formatCurrency(dataById.row.totalPrice)
                       : null}
                     {/* 外运编号就是客户订单号 */}
                     客户订单号： {sc_dataRow && sc_dataRow.orderNumber}
@@ -157,10 +160,15 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                     isFromEdit={isFromEdit}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
-                    onGetInjector={handleGetInjector}
+                    onGetInjector={(f) => setInjector(f)}
                   >
                     <Grid container spacing={2}>
-                      {formInputs(disabled, isFromEdit, parm_sc_id, handleOnSelect_sc)}
+                      {formInputs(
+                        disabled,
+                        isFromEdit,
+                        parm_sc_id,
+                        handleOnSelect_sc
+                      )}
                     </Grid>
                     <Grid container spacing={2}>
                       {isFromEdit && ( // only show edit button when update
@@ -179,21 +187,21 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                             color="default"
                             onClick={handleOnRead}
                           >
-                            复制最近一张合同的内容
+                            引用上一张合同的内容
                           </Button>
                         </Grid>
                       )}
 
                       {disabled || ( // when browsering, hide save button
-                        <Grid item>
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                          >
-                            保存
-                          </Button>
-                        </Grid>
+                          <Grid item>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                            >
+                              保存
+                            </Button>
+                          </Grid>
                       )}
                     </Grid>
                   </CreinoxForm>
@@ -204,7 +212,10 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                     onUpdate={() => {
                       onGetById(id);
                     }}
-                    preConditions={{ buy_contract_id: id, sell_contract_id: read_sc_id}}
+                    preConditions={{
+                      buy_contract_id: id,
+                      sell_contract_id: read_sc_id,
+                    }}
                   />
                 </TabPanel>
               </Card>
@@ -219,25 +230,59 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
   const formInputs = (disabled, isFromEdit, parm_sc_id, onSelect_sc) => {
     return (
       <>
-        {/* 基本信息 */}
 
-        <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
-        </Grid>
 
         {/* 假如从属性里获得了销售合同，就不允许手动选择 */}
 
-          <Grid item lg={4} md={4} xs={12}>
-            <Inputs.MyComboboxAsyncFK
-              disabled={isFromEdit || !!parm_sc_id}
-              inputid="sell_contract_id"
-              optionLabel="code"
-              tableName="sellcontract"
-              actionName="get_disposable_dropdown"
-              onSelect={onSelect_sc}
-            />
-          </Grid>
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyComboboxFK
+            inputid="follower_id"
+            optionLabel="userName"
+            tableName="user"
+            disabled={disabled}
+          />
+        </Grid>
 
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyComboboxAsyncFK
+            disabled={disabled}
+            inputid="buyer_company_id"
+            tableName="company"
+            actionName="get_disposable_dropdown"
+            preConditions={{ 
+              //companyType: enums.companyType.factory 
+            }}
+          />
+        </Grid>
+
+        <Grid item lg={4} md={4} xs={12}>
+          <Inputs.MyComboboxAsyncFK
+            disabled={disabled}
+            inputid="seller_company_id"
+            tableName="company"
+            actionName="get_disposable_dropdown"
+            preConditions={{ 
+              //companyType: enums.companyType.factory 
+            }}
+          />
+        </Grid>
+
+        {/* 基本信息 */}
+
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyInput inputid="code" disabled={disabled} />
+        </Grid>
+
+        <Grid item lg={6} md={6} xs={12}>
+          <Inputs.MyComboboxAsyncFK
+            disabled={isFromEdit || !!parm_sc_id}
+            inputid="sell_contract_id"
+            optionLabel="code"
+            tableName="sellcontract"
+            actionName="get_disposable_dropdown"
+            onSelect={onSelect_sc}
+          />
+        </Grid>
 
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyDatePicker inputid="activeAt" disabled={disabled} />
@@ -252,15 +297,6 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
           />
         </Grid>
 
-        <Grid item lg={8} md={8} xs={12}>
-          <Inputs.MyComboboxAsyncFK
-            disabled={disabled}
-            inputid="seller_company_id"
-            tableName="company"
-            actionName="get_disposable_dropdown"
-            preConditions={{ companyType: enums.companyType.factory }}
-          />
-        </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
         </Grid>
@@ -339,22 +375,21 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyInputTT
-            inputid="memo"
+            inputid="tt_memo"
             disabled={disabled}
             targetTable="buy_contract"
           />
         </Grid>
 
-        <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyComboboxFK
-            inputid="follower_id"
-            optionLabel="userName"
-            tableName="user"
-            disabled={disabled}
-          />
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MySwitch inputid="isDone" disabled={disabled} />
         </Grid>
 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInput inputid="order_memo" disabled={disabled} />
+        </Grid>
+
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
             optionLabel="userName"
@@ -362,7 +397,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
             disabled={true}
           />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
       </>
@@ -374,7 +409,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
     return {
       dataById: state.buycontractData.dataById,
       errorById: state.buycontractData.errorById,
-      sc_dataById: state.sellcontractData.dataById
+      sc_dataById: state.sellcontractData.dataById,
     };
   }
 

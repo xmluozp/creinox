@@ -19,12 +19,10 @@ export const withSimpleTable = (headCells, dataModel) => {
 
     useEffect(() => {
       // render数据预处理用以渲染表格数据
+      data = data || []
+
       setListOnShow(dataRowsPreprocess(data, headCells, dataModel));
     }, [data, headCells, dataModel]);
-
-    if (!data || data.length === 0) {
-      return null;
-    }
 
     return (
       <TableContainer style={style} {...props}>
@@ -56,7 +54,7 @@ export const withSimpleTable = (headCells, dataModel) => {
           </TableHead>
           <TableBody>
             {/* ============================= row =============================== */}
-            {data.map((row, rowIndex) => (
+            {data && data.map((row, rowIndex) => (
               <TableRow key={row.id + row.code}>
                 {headCells.map((column, columnIndex) => {
                   // 取出预处理后的cell:{cellProps, columnContent}

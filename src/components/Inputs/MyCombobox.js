@@ -11,15 +11,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import { enums } from "../../_constants";
 import { h_fkFetchOnce, h_fkFetchOnceAsync } from "../../_helper";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiAutocomplete-inputRoot": {
-      padding: 0
+      padding: 0,
     },
     "& .MuiAutocomplete-input": {
-      padding: "5px !important"
-    }
-  }
+      padding: "5px !important",
+    },
+  },
 }));
 // ================================================================================== Select
 export const MySelect = React.memo(
@@ -31,24 +31,23 @@ export const MySelect = React.memo(
     onChange = () => {},
     hasDefault = true,
     disabled = false,
-    fullWidth = true
+    fullWidth = true,
   }) => {
-
     const handleOnChange = (e) => {
-      onChange(e, id, parseInt(e.target.value))
-    }
+      onChange(e, id, parseInt(e.target.value));
+    };
 
     return (
       <FormControl fullWidth={fullWidth} disabled={disabled} margin="dense">
         <InputLabel htmlFor="age-native-simple">{label}</InputLabel>
         <Select
           native
-          value={ value === null? "" : value }
+          value={value === null ? "" : value}
           onChange={handleOnChange}
           margin="dense"
           inputProps={{
             name: label,
-            id: id
+            id: id,
           }}
         >
           {hasDefault ? null : <option value="" />}
@@ -89,118 +88,122 @@ export const MyCombobox = React.memo(
     // 这个是专门为async准备的。MUI有BUG，一定要有默认值才能control。但async状态下又不能有默认值
     let optionsFix;
 
-    let currentValue, getOptionLabel, handleOnChange, handleGetOptionSelected, handleRenderOption;
+    let currentValue,
+      getOptionLabel,
+      handleOnChange,
+      handleGetOptionSelected,
+      handleRenderOption;
 
     // --------------------- 多选
-    if(multiple) {
-      optionsFix = options.map(item=> {
-        return item.id
-      })
+    if (multiple) {
+      optionsFix = options.map((item) => {
+        return item.id;
+      });
       currentValue = value ? value.split(",") : [];
 
-      getOptionLabel = option => {
+      getOptionLabel = (option) => {
         return (options[option] && options[option].name) || null;
       };
 
       handleOnChange = (e, items) => {
         const returnValue = items.join(",");
         onChange(e, id, returnValue);
-      }
+      };
 
-      handleGetOptionSelected = (item)=> {
-        return currentValue.includes(item.toString())
-      } 
+      handleGetOptionSelected = (item) => {
+        return currentValue.includes(item.toString());
+      };
 
-      handleRenderOption = (option, {selected}) => {
-        return `[${option}] ${options[option].name}`
-      }
+      handleRenderOption = (option, { selected }) => {
+        return `[${option}] ${options[option].name}`;
+      };
 
-    // --------------------- 单选
-    } else { 
+      // --------------------- 单选
+    } else {
       // 200329去掉hasDefault
       // optionsFix = hasDefault && !multiple
-      optionsFix =  [{ id: 0, [optionLabel]: "无" }, ...options];
+      optionsFix = [{ id: 0, [optionLabel]: "无" }, ...options];
 
-      currentValue = 
-      _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
+      currentValue =
+        _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
-      getOptionLabel = option => {
-
+      getOptionLabel = (option) => {
         // 如果option是文本或者数字直接返回
-        if(typeof(option) === "string" || typeof(option) === "number") {
-          return option
+        if (typeof option === "string" || typeof option === "number") {
+          return option;
         }
 
         // 如果是数组就取那个label
-        if( (typeof(option) === "object" || Array.isArray(option)) && option[optionLabel]) {
-          return option[optionLabel]
+        if (
+          (typeof option === "object" || Array.isArray(option)) &&
+          option[optionLabel]
+        ) {
+          return option[optionLabel];
         }
-        
+
         return "--";
       };
-  
-      handleOnChange = (e, item) => {
 
+      handleOnChange = (e, item) => {
         // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
         // 200329去掉hasDefault
         // const returnValue =  item && item.id >=0 ? item.id : hasDefault ? "": value;
-        const returnValue =  item && item.id >=0 ? item.id : value;
+        const returnValue = item && item.id >= 0 ? item.id : value;
         // const returnValue =  item && item.id >=0 ? item.id : value;
 
         // 20200327: 多返回一个item本身
         onChange(e, id, returnValue, item);
 
         // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
-        onSelect(item)
-      }
-      handleGetOptionSelected = (item,index )=> {
+        onSelect(item);
+      };
+      handleGetOptionSelected = (item, index) => {
         return item.id === (currentValue && currentValue.id);
-      }  
+      };
     }
 
     const handleOnInputChange = (e, value, reason) => {
-
-      if (typeof(props.onInputChange) === 'function' && reason === 'input') {
+      if (typeof props.onInputChange === "function" && reason === "input") {
         // console.log("value", value)
-          props.onInputChange(e, value, reason)    
+        props.onInputChange(e, value, reason);
       }
-    }
+    };
 
     return (
-        <Autocomplete
-          autoSelect={true}
-          multiple = {multiple}
-          className={classes.root}
-          disabled={disabled}
-          filterSelectedOptions = {multiple} // autocomplete有bug，从选项选择会自动乱选。所以必须把已选项屏蔽
-          disableCloseOnSelect={multiple}
-          options={optionsFix}
-          renderOption={handleRenderOption}
-          getOptionLabel={getOptionLabel}
-          onChange={disabled ? null: handleOnChange}
-          id={id}
-          getOptionSelected={handleGetOptionSelected}
-          value={currentValue}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label={label}
-              margin="dense"
-              fullWidth={fullWidth}
-              onKeyDown={props.onKeyDown}
-              inputRef = {inputRef}
-              error={!disabled && error}
-              helperText={!disabled && helperText}
-            />
-          )}
-          onInputChange={handleOnInputChange}
-        />
+      <Autocomplete
+        autoSelect={true}
+        multiple={multiple}
+        className={classes.root}
+        disabled={disabled}
+        filterSelectedOptions={multiple} // autocomplete有bug，从选项选择会自动乱选。所以必须把已选项屏蔽
+        disableCloseOnSelect={multiple}
+        options={optionsFix}
+        renderOption={handleRenderOption}
+        getOptionLabel={getOptionLabel}
+        onChange={disabled ? null : handleOnChange}
+        id={id}
+        getOptionSelected={handleGetOptionSelected}
+        value={currentValue}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={label}
+            margin="dense"
+            fullWidth={fullWidth}
+            onKeyDown={props.onKeyDown}
+            inputRef={inputRef}
+            error={!disabled && error}
+            helperText={!disabled && helperText}
+          />
+        )}
+        onInputChange={handleOnInputChange}
+      />
     );
   }
 );
 // ================================================================================== Combobox FK Async
 
-export const MyComboboxAsyncFK = React.memo(props => {
+export const MyComboboxAsyncFK = React.memo((props) => {
   // 表名称； reducer里面的名称，默认dropdown
   const {
     tableName = "",
@@ -215,30 +218,32 @@ export const MyComboboxAsyncFK = React.memo(props => {
   // 200329用ref控制搜索，因为如果用setState，会导致一动就触发re-render，怎么输入都刷新成“无”
   const inputRef = useRef(null);
 
-
   // 第一次加载，根据value为id读出来一条记录
   useEffect(() => {
-    loadData()
+    loadData();
   }, [props.value]);
 
   const loadData = () => {
-
-    if (props.value ) {
+    if (props.value) {
       let isSubscribed = true;
 
       // 这里搜索不应该搜索名字
-      delete preConditions.name
+      delete preConditions.name;
 
       // inputValue这里是keyword。根据id搜索的话不需要关键字
 
-      h_fkFetchOnceAsync(tableName, ["", {id: props.value, ...preConditions }], actionName)
-        .then(response => {
+      h_fkFetchOnceAsync(
+        tableName,
+        ["", { id: props.value, ...preConditions }],
+        actionName
+      )
+        .then((response) => {
           if (isSubscribed) {
             onLoad(response);
             setoptions(response);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("下拉列表为空", error);
         });
 
@@ -246,22 +251,21 @@ export const MyComboboxAsyncFK = React.memo(props => {
         isSubscribed = false;
       };
     }
-  }
+  };
 
   // 根据输入内容读记录
-  const handleFetchData = e => {
+  const handleFetchData = (e) => {
     if (e.key === "Enter") {
-
       const keyword = inputRef.current.value;
 
       e.preventDefault();
       h_fkFetchOnceAsync(tableName, [keyword, preConditions], actionName)
-        .then(response => {
+        .then((response) => {
           // console.log("下拉列表2:", response, actionName);
           onLoad(response);
           setoptions(response);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("下拉列表为空", error);
         });
     }
@@ -273,41 +277,77 @@ export const MyComboboxAsyncFK = React.memo(props => {
       {...props}
       options={options}
       onKeyDown={handleFetchData}
-      inputRef = {inputRef}
+      inputRef={inputRef}
       hasDefault={!!props.value}
     />
   );
 });
 
 // ================================================================================== Combobox FK
-export const MyComboboxFK = React.memo(props => {
+export const MyComboboxFK = React.memo((props) => {
   // 表名称； reducer里面的名称，默认dropdown
-  const { tableName = "", stateName = "dropdown", preConditions = {} } = props;
+  // listenConditions是从creinoxForm传来的。用来做结联。如果值变了，就更新.
+  const {
+    tableName = "",
+    stateName = "dropdown",
+    preConditions = {},
+    listenConditions = {},
+    actionName,
+  } = props;
 
   const [options, setoptions] = useState([]);
 
-  useEffect(() => {
-    let isSubscribed = true;
-    h_fkFetchOnce(tableName, stateName, [preConditions])
-      .then(response => {
+  // 结联用。从form传来的父节点:父节点值的集合。拆出父节点的值，用来监听值的变化
+  const listenValues = []
 
+  Object.keys(listenConditions).map(k => {
+    listenValues.push(listenConditions[k])
+  }) 
+
+  // 为了从外部调用
+  const fetchDropDown = (tableName, stateName) => {
+    let isSubscribed = true;
+
+    // const listenConditions = {}
+
+    // // 假如listen里面不是空的，就做结联。listen是从页面传进来的所有父控件的array，每一个对应一个监听的value
+    // if(listen.length > 0 && listen.length === listenValues.length) {
+    //   for (let i = 0; i < listen.length; i++) {
+    //     listenConditions[listen[i]] =  listenValues[i]   
+    //   }
+    // }
+
+    h_fkFetchOnce(
+      tableName,
+      stateName,
+      [{ ...preConditions, ...listenConditions }],
+      actionName
+    )
+      .then((response) => {
         if (isSubscribed) {
           setoptions(response);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("下拉列表为空", error);
       });
 
     return () => {
       isSubscribed = false;
     };
-  }, [tableName, stateName]);
+  }
+
+  useEffect(() => {
+
+    console.log("listen",listenConditions)
+
+    return fetchDropDown(tableName, stateName) 
+  }, [tableName, stateName, ...listenValues]);
 
   return <MyCombobox {...props} options={options} />;
 });
 
-export const MyComboboxPack = React.memo(props => {
+export const MyComboboxPack = React.memo((props) => {
   const commonTypeName = "pack";
   return (
     <MyComboboxFK
@@ -318,7 +358,7 @@ export const MyComboboxPack = React.memo(props => {
     />
   );
 });
-export const MyComboboxPolishing = React.memo(props => {
+export const MyComboboxPolishing = React.memo((props) => {
   const commonTypeName = "polishing";
   return (
     <MyComboboxFK
@@ -329,7 +369,7 @@ export const MyComboboxPolishing = React.memo(props => {
     />
   );
 });
-export const MyComboboxTexture = React.memo(props => {
+export const MyComboboxTexture = React.memo((props) => {
   const commonTypeName = "texture";
   return (
     <MyComboboxFK
@@ -340,7 +380,7 @@ export const MyComboboxTexture = React.memo(props => {
     />
   );
 });
-export const MyComboboxUnitType = React.memo(props => {
+export const MyComboboxUnitType = React.memo((props) => {
   const commonTypeName = "unitType";
   return (
     <MyComboboxFK
@@ -351,7 +391,7 @@ export const MyComboboxUnitType = React.memo(props => {
     />
   );
 });
-export const MyComboboxShippingType = React.memo(props => {
+export const MyComboboxShippingType = React.memo((props) => {
   const commonTypeName = "shippingType";
   return (
     <MyComboboxFK
@@ -362,7 +402,7 @@ export const MyComboboxShippingType = React.memo(props => {
     />
   );
 });
-export const MyComboboxPricingTerm = React.memo(props => {
+export const MyComboboxPricingTerm = React.memo((props) => {
   const commonTypeName = "pricingTerm";
   return (
     <MyComboboxFK
@@ -373,7 +413,7 @@ export const MyComboboxPricingTerm = React.memo(props => {
     />
   );
 });
-export const MyComboboxCurrency = React.memo(props => {
+export const MyComboboxCurrency = React.memo((props) => {
   const commonTypeName = "currency";
   return (
     <MyComboboxFK
@@ -385,7 +425,7 @@ export const MyComboboxCurrency = React.memo(props => {
   );
 });
 
-export const MyComboboxPaymentType = React.memo(props => {
+export const MyComboboxPaymentType = React.memo((props) => {
   const commonTypeName = "paymentType";
   return (
     <MyComboboxFK
@@ -396,7 +436,7 @@ export const MyComboboxPaymentType = React.memo(props => {
     />
   );
 });
-export const MyComboboxPaymentTypeE = React.memo(props => {
+export const MyComboboxPaymentTypeE = React.memo((props) => {
   const commonTypeName = "paymentTypeE";
   return (
     <MyComboboxFK
@@ -407,7 +447,7 @@ export const MyComboboxPaymentTypeE = React.memo(props => {
     />
   );
 });
-export const MyComboboxCommission = React.memo(props => {
+export const MyComboboxCommission = React.memo((props) => {
   const commonTypeName = "commission";
   return (
     <MyComboboxFK
@@ -418,4 +458,3 @@ export const MyComboboxCommission = React.memo(props => {
     />
   );
 });
-

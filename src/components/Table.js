@@ -101,7 +101,7 @@ export const CreinoxTable = ({
 
   React.useEffect(() => {
     // 数据预处理。防止每次render都调用一遍
-    const dataRows = data && data.rows ? data.rows : [];
+    const dataRows = (data && data.rows) ? data.rows : [];
 
     // render数据预处理用以渲染表格数据
     setListOnShow(dataRowsPreprocess(dataRows, headCells, dataModel));
@@ -207,8 +207,6 @@ export const CreinoxTable = ({
 
   const handleCollapseAll = (e) => {
     const newCollapseOpen = data.rows.map((n) => n.id);
-
-    console.log("collapseOpen", collapseOpen, collapseOpen.length);
 
     if (collapseOpen.length === 0) {
       setcollapseOpen(newCollapseOpen);

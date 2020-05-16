@@ -90,7 +90,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
               <Card>
                 <CardHeader>
                   <strong>
-                    <i className="icon-info pr-1"></i>id: {id} {dataById && dataById.row? "货款合计：" + formatCurrency(dataById.row.view_totalPrice) : null}
+                    <i className="icon-info pr-1"></i>id: {id} {dataById && dataById.row? "货款合计：" + formatCurrency(dataById.row.totalPrice) : null}
                   </strong>
                 </CardHeader>
 
@@ -135,7 +135,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                             variant="contained"
                             color="default"
                             onClick = {handleOnRead}
-                          >复制最近一张合同的内容</Button>
+                          >引用上一张合同的内容</Button>
                       </Grid>
                       }
                       
@@ -283,7 +283,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         </Grid>
 
         <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MySelect options={enumsLabel.commissionType} hasDefault={false} inputid="comissionType" disabled={disabled}/>
+          <Inputs.MySelect options={enumsLabel.commissionType} hasDefault={false} inputid="commissionType" disabled={disabled}/>
         </Grid>
 
 
@@ -300,6 +300,14 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyInputTT inputid="tt_paymentCondition" disabled={disabled} 
           targetTable = "sell_contract"/>
+        </Grid>
+
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MySwitch inputid="isDone" disabled={disabled} />
+        </Grid>
+
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInput inputid="order_memo" disabled={disabled} />
         </Grid>
 
         <Grid item lg={6}  md={6} xs={12}>

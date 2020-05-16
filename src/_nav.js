@@ -21,7 +21,7 @@ const navs = {
       children: [
         {
           name: '销售合同',
-          url: '/contract/allcontracts',
+          url: '/contract/sellcontracts',
           authTag:'sellcontract',
         },       
         {

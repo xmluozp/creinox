@@ -42,7 +42,15 @@ export const withBuycontractList = (
     { name: "activeAt" },
     { name: "deliverAt" },
     { name: "seller_company_id" },
-    { name: "view_totalPrice", label:"总价" },
+    { name: "totalPrice"},
+    { name: "paidPrice"},
+    {
+      name: "isDone",
+      align: "center",
+      label: "完成",
+      className: { true: "text-success" },
+      lookup: { true: ICONS.TRUE("mr-4") }
+    },
     { name: "follower_id" },
   ];
 

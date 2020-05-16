@@ -161,7 +161,7 @@ function get_disposable_dropdown(keyword, preConditions) {
 
     // console.log("preConditions ???", preConditions, keyword)
 
-    if(keyword) {preConditions.name = keyword}
+    if(keyword) {preConditions.keyword = keyword}
     return service.get_disposable_dropdown(preConditions)
       .then(
         response => {

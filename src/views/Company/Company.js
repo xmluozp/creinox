@@ -305,10 +305,15 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
   const template_1 = disabled => (
     <>
       {/* 基本信息 */}
-      <Grid item lg={4} md={4} xs={12}>
+
+      <Grid item lg={6} md={66} xs={12}>
+        <Inputs.MyInput inputid="code" disabled={disabled} />
+      </Grid>
+
+      <Grid item lg={6} md={6} xs={12}>
         <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
       </Grid>
-      <Grid item lg={8} md={8} xs={12}>
+      <Grid item lg={12} md={12} xs={12}>
         <Inputs.MyInput inputid="name" disabled={disabled} />
       </Grid>
       <Grid item xs={12}>
