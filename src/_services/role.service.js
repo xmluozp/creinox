@@ -1,4 +1,5 @@
 import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_update } from "../_helper";
+import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const roleService = {
@@ -12,7 +13,7 @@ export const roleService = {
 
 const TABLENAME = "role";
 
-const URL = `/api/role`;
+const URL = RESTURL + `/api/role`;
 
 function get_dropdown(pagination, searchTerms = {}) {
   const requestOptions = {

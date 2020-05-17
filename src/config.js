@@ -1,0 +1,1 @@
+export const RESTURL = "http://localhost:8000"

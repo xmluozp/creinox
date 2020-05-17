@@ -1,7 +1,7 @@
 import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
-
 
 export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
        
@@ -15,7 +15,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
         
           const queryString = h_queryString(pagination, searchTerms, tableName);
           console.log("search service:", queryString);
-          return fetch(`${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
+          return fetch(`${RESTURL}${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
 
     }
     

@@ -5,6 +5,7 @@ import {
   h_nilFilter,
   h_nilFilter_update,
 } from "../_helper";
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -18,7 +19,7 @@ export const sellsubitemService = {
 };
 
 const TABLENAME = "sell_subitem";
-const URL = `/api/sellsubitem`;
+const URL = RESTURL + `/api/sellsubitem`;
 
 // const testurl1 = './dataset/sellsubitemdata.json'
 // const testurl2 = './dataset/sellsubitemdata_byId.json'

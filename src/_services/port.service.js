@@ -1,4 +1,5 @@
 import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_update } from "../_helper";
+import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const portService = {
@@ -12,7 +13,7 @@ export const portService = {
 
 const TABLENAME = "port";
 
-const URL = `/api/port`;
+const URL = RESTURL + `/api/port`;
 
 // const testurl1 = './dataset/portdata.json'
 // const testurl2 = './dataset/portdata_byId.json'

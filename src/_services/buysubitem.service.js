@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -12,7 +13,7 @@ export const buysubitemService = {
 };
 
 const TABLENAME = "buy_subitem";
-const URL = `/api/buysubitem`;
+const URL = RESTURL + `/api/buysubitem`;
 
 const testurl1 = './dataset/buysubitemdata.json'
 const testurl2 = './dataset/buysubitemdata_byId.json'

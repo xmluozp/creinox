@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_nilFilter_update, h_nilFilter, h_queryString } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -13,8 +14,8 @@ export const commonitemService = {
 
 const TABLENAME = "common_item";
 
-const URL = `/api/commonitem`;
-const URL_DROP_DOWN = `/api/commonitem_dropDown`;
+const URL = RESTURL + `/api/commonitem`;
+const URL_DROP_DOWN = RESTURL + `/api/commonitem_dropDown`;
 
 
 function get_dropdown(commonType) {

@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_queryString , h_nilFilter, h_nilFilter_update } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -18,9 +19,9 @@ export const commodityService = {
 
 const TABLENAME = "commodity";
 
-const URL = `/api/commodity`;
-const URL_PRODUCT = `/api/commodity_getproduct`;
-const URL_COMMODITY = `/api/commodity_byproduct`;
+const URL = RESTURL + `/api/commodity`;
+const URL_PRODUCT = RESTURL + `/api/commodity_getproduct`;
+const URL_COMMODITY = RESTURL + `/api/commodity_byproduct`;
 
 // const url = 'http://localhost:3000/api/';
 function get_dropdown(pagination, searchTerms) {

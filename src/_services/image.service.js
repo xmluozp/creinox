@@ -6,6 +6,7 @@ import {
 } from "../_helper";
 // import _ from 'lodash';
 // import axios from 'axios'
+import {RESTURL} from '../config'
 
 export const imageService = {
   get_bySearch,
@@ -18,7 +19,7 @@ export const imageService = {
 };
 
 const TABLENAME = "image";
-const URL = `/api/image`;
+const URL = RESTURL + `/api/image`;
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
   const requestOptions = {

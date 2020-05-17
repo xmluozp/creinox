@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_queryString , h_nilFilter, h_nilFilter_update} from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -12,7 +13,7 @@ export const regionService = {
 };
 
 const TABLENAME = "region";
-const URL = `/api/region`;
+const URL = RESTURL + `/api/region`;
 
 
 function get_bySearch(pagination, searchTerms, reNew = false) {

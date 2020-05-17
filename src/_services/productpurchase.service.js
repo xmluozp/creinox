@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_queryString , h_nilFilter, h_nilFilter_update } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -17,10 +18,10 @@ export const productpurchaseService = {
 
 const TABLENAME = "product_purchase";
 
-const URL = `/api/productPurchase`;
-const URL_BY_COMPANY = `/api/productPurchase_companySearch`;
-const URL_BY_HISTORY = `/api/productPurchase_historySearch`;
-const URL_BY_PRODUCT_ID = `/api/productPurchase_byProductId`;
+const URL = RESTURL + `/api/productPurchase`;
+const URL_BY_COMPANY = RESTURL + `/api/productPurchase_companySearch`;
+const URL_BY_HISTORY = RESTURL + `/api/productPurchase_historySearch`;
+const URL_BY_PRODUCT_ID = RESTURL + `/api/productPurchase_byProductId`;
 
 
 // const url = 'http://localhost:3000/api/';

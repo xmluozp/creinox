@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -15,8 +16,8 @@ export const sellcontractService = {
 };
 
 const TABLENAME = "sell_contract";
-const URL = `http://localhost:8000/api/sellcontract`;
-const URL_GET_LAST = `/api/sellcontract_getlast`;
+const URL = RESTURL + `/api/sellcontract`;
+const URL_GET_LAST = RESTURL + `/api/sellcontract_getlast`;
 
 // const testurl1 = './dataset/sellcontractdata.json'
 // const testurl2 = './dataset/sellcontractdata_byId.json'

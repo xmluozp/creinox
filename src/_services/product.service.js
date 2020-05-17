@@ -7,6 +7,7 @@ import {
 } from "../_helper";
 // import _ from 'lodash';
 // import axios from 'axios'
+import {RESTURL} from '../config'
 
 export const productService = {
   get_dropdown,
@@ -25,10 +26,10 @@ export const productService = {
 
 const TABLENAME = "product";
 
-const URL = `/api/product`;
-const URL_DROP_DOWN = `/api/product_dropDown`;
-const URL_DROP_DOWN_SELLCONTRACT = `/api/product_dropDown_sellContract`;
-const URL_DROP_DOWN_SELLSUBITEM = `/api/product_dropDown_sellSubitem`;
+const URL = RESTURL + `/api/product`;
+const URL_DROP_DOWN = RESTURL + `/api/product_dropDown`;
+const URL_DROP_DOWN_SELLCONTRACT = RESTURL + `/api/product_dropDown_sellContract`;
+const URL_DROP_DOWN_SELLSUBITEM = RESTURL + `/api/product_dropDown_sellSubitem`;
 
 
 const URL_COMPONENT = `/api/product_component`;

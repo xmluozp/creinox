@@ -5,6 +5,7 @@ import {
   h_nilFilter,
   h_nilFilter_update
 } from "../_helper";
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -20,7 +21,7 @@ export const userService = {
 };
 
 const TABLENAME = "user";
-const URL = `/api/user`;
+const URL = RESTURL + `/api/user`;
 
 function login(nameAndPassword) {
   const requestOptions = {

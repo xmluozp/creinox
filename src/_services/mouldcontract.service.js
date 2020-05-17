@@ -1,4 +1,5 @@
 import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '../_helper';
+import {RESTURL} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -14,8 +15,8 @@ export const mouldcontractService = {
 };
 
 const TABLENAME = "mould_contract";
-const URL = `/api/mouldcontract`;
-const URL_GET_LAST = `/api/mouldcontract_getlast`;
+const URL = RESTURL + `/api/mouldcontract`;
+const URL_GET_LAST = RESTURL + `/api/mouldcontract_getlast`;
 
 
 const testurl1 = './dataset/mouldcontractdata.json'

@@ -1,4 +1,5 @@
 import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_update } from "../_helper";
+import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const texttemplateService = {
@@ -13,8 +14,8 @@ export const texttemplateService = {
 
 const TABLENAME = "text_template";
 
-const URL = `/api/texttemplate`;
-const URL_TEMPLATE = `/api/texttemplate_all`;
+const URL = RESTURL + `/api/texttemplate`;
+const URL_TEMPLATE = RESTURL + `/api/texttemplate_all`;
 
 function get_dropdown(searchTerms = {}) {
   const requestOptions = {
