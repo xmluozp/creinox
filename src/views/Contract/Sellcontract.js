@@ -45,17 +45,17 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
 
       return () => {
         onClear();
-      }
+      };
     }, [onGetById, id]);
 
     // ********************************
 
-    const handleOnSubmit = values => {
+    const handleOnSubmit = (values) => {
       if (isFromEdit) {
         onPutUpdate(values);
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate(values, id => {
+        onPostCreate(values, (id) => {
           history.push(EDITURL + "/" + id);
         });
       }
@@ -63,20 +63,20 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
 
     // ******************************** injector: 用来读取最近一条合同
     const [injector, setInjector] = useState(null);
-    const handleGetInjector = inj => {
+    const handleGetInjector = (inj) => {
       setInjector(inj);
     };
 
     const handleOnRead = () => {
       h_fkFetch("sellcontract", [], "get_last")
-        .then(response => {
+        .then((response) => {
           if (response && response.id) {
             delete response["id"];
             delete response["updateAt"];
             injector(response);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("暂时没有合同记录", error);
         });
     };
@@ -90,7 +90,10 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
               <Card>
                 <CardHeader>
                   <strong>
-                    <i className="icon-info pr-1"></i>id: {id} {dataById && dataById.row? "货款合计：" + formatCurrency(dataById.row.totalPrice) : null}
+                    <i className="icon-info pr-1"></i>id: {id}{" "}
+                    {dataById && dataById.row
+                      ? "货款合计：" + formatCurrency(dataById.row.totalPrice)
+                      : null}
                   </strong>
                 </CardHeader>
 
@@ -117,7 +120,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                     onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
-                          {formInputs(disabled)}
+                      {formInputs(disabled)}
                     </Grid>
                     <Grid container spacing={2}>
                       {isFromEdit && ( // only show edit button when update
@@ -128,17 +131,18 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                           />
                         </Grid>
                       )}
-                      {!isFromEdit && 
-                      <Grid item>
+                      {!isFromEdit && (
+                        <Grid item>
                           <Button
                             type="button"
                             variant="contained"
                             color="default"
-                            onClick = {handleOnRead}
-                          >引用上一张合同的内容</Button>
-                      </Grid>
-                      }
-                      
+                            onClick={handleOnRead}
+                          >
+                            引用上一张合同的内容
+                          </Button>
+                        </Grid>
+                      )}
 
                       {disabled || ( // when browsering, hide save button
                         <Grid item>
@@ -156,8 +160,10 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
                   {/* 更新embed的时候，外部也重新读取，这样才能获得最新的view */}
-                  <Sellsubitems                      
-                    onUpdate = {()=>{ onGetById(id)}}
+                  <Sellsubitems
+                    onUpdate={() => {
+                      onGetById(id);
+                    }}
                     preConditions={{ sell_contract_id: id }}
                   />
                 </TabPanel>
@@ -170,7 +176,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
   };
 
   //
-  const formInputs = disabled => {
+  const formInputs = (disabled) => {
     return (
       <>
         {/* 基本信息 */}
@@ -184,7 +190,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyComboboxAsyncFK
-          disabled={disabled}
+            disabled={disabled}
             inputid="buyer_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
@@ -193,7 +199,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyComboboxAsyncFK
-          disabled={disabled}
+            disabled={disabled}
             inputid="seller_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
@@ -212,7 +218,6 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
         </Grid>
-
 
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxShippingType
@@ -237,27 +242,25 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
-              inputid="departure_port_id"
-              optionLabel="name"
-              tableName="port"
-              disabled={disabled}
-              preConditions={{ isDeparture: 1}}
-            />
+            inputid="departure_port_id"
+            optionLabel="name"
+            tableName="port"
+            disabled={disabled}
+            preConditions={{ isDeparture: 1 }}
+          />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
-              inputid="destination_port_id"
-              optionLabel="name"
-              tableName="port"
-              disabled={disabled}
-              preConditions={{ isDestination: 1}}
-            />
+            inputid="destination_port_id"
+            optionLabel="name"
+            tableName="port"
+            disabled={disabled}
+            preConditions={{ isDestination: 1 }}
+          />
         </Grid>
 
         <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInputTT inputid="tt_shipmentDue" disabled={disabled}
-          targetTable = "sell_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_shipmentDue" disabled={disabled} />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxCurrency
@@ -283,9 +286,13 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         </Grid>
 
         <Grid item lg={3} md={3} xs={12}>
-          <Inputs.MySelect options={enumsLabel.commissionType} hasDefault={false} inputid="commissionType" disabled={disabled}/>
+          <Inputs.MySelect
+            options={enumsLabel.commissionType}
+            hasDefault={false}
+            inputid="commissionType"
+            disabled={disabled}
+          />
         </Grid>
-
 
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxCommission
@@ -294,12 +301,10 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
           />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT inputid="tt_insurance" disabled={disabled} 
-          targetTable = "sell_contract"/>
+          <Inputs.MyInputTT inputid="tt_insurance" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT inputid="tt_paymentCondition" disabled={disabled} 
-          targetTable = "sell_contract"/>
+          <Inputs.MyInputTT inputid="tt_paymentCondition" disabled={disabled} />
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
@@ -310,7 +315,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
           <Inputs.MyInput inputid="order_memo" disabled={disabled} />
         </Grid>
 
-        <Grid item lg={6}  md={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
             optionLabel="userName"
@@ -318,10 +323,9 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             disabled={true}
           />
         </Grid>
-        <Grid item lg={6}  md={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
-
       </>
     );
   };
@@ -330,7 +334,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
   function mapState(state) {
     return {
       dataById: state.sellcontractData.dataById,
-      errorById: state.sellcontractData.errorById
+      errorById: state.sellcontractData.errorById,
     };
   }
 

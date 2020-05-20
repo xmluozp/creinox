@@ -24,9 +24,10 @@ const InputTT = React.memo(
     helperText = "",
     fullWidth = true,
     disabled = false,
-    targetTable,
+    prefix,
     columnName= id,
     data,
+    dataModeltableName,
     onGetBySearch, // 第一次打开获取数据
     onPostCreate,
     onPutUpdate,
@@ -35,6 +36,7 @@ const InputTT = React.memo(
     const [isModalOpen, setIsModalOpen] = useState(false);
     const inputRef = useRef(null);
 
+    const targetTable = prefix || dataModeltableName
     // 读取对应的模板
     // useEffect(() => {
     //   if (!data) {
@@ -95,7 +97,7 @@ const InputTT = React.memo(
         }
     };
 
-    console.log("data:", data)
+    // console.log("data:", data)
     const dataRows = data && data.rows
 
     //

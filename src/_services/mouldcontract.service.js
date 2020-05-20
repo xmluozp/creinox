@@ -48,7 +48,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
       console.log("search service:", queryString);
 
-      return fetch(`${testurl1}`, requestOptions).then(handleResponse);
+      // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
       return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }
@@ -61,7 +61,7 @@ function get_byId(id) {
       };
     
       console.log("getId service,", id);
-      return fetch(`${testurl2}`, requestOptions).then(handleResponse);
+      // return fetch(`${testurl2}`, requestOptions).then(handleResponse);
 
       return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
 }
@@ -89,7 +89,7 @@ function post_create(item) {
   
     console.log("处理过的json",h_nilFilter(item))
 
-    return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
+    // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
     return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
@@ -100,7 +100,7 @@ function put_update(item) {
     headers: { ...authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify(h_nilFilter_update(item))
   };
-  return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
+  // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 

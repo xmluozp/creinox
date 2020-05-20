@@ -8,7 +8,7 @@ export const mouldcontractModel = {
         id :                {label:"ID",        type: _DATATYPES.INT },
         code:               {label: "产品开发合同号",     type: _DATATYPES.VARCHAR},
        
-        spec:               {label: "规格尺寸",     type: _DATATYPES.VARCHAR},   
+        spec:               {label: "规格尺寸",     type: _DATATYPES.TEXT},   
         unitPrice:          {label: "单价",     type: _DATATYPES.MONEY},
 
         prepayPercentage:   {label: "预付比例(%)",     type: _DATATYPES.DECIMAL},
@@ -28,6 +28,7 @@ export const mouldcontractModel = {
         buyer_signer:       {label: "甲方代表",     type: _DATATYPES.VARCHAR},   
         seller_signer:      {label: "乙方代表",     type: _DATATYPES.VARCHAR},
 
+        // 合同的银行和实际付款的银行不一定一致。可以下拉快捷输入但一定要可以修改
         buyer_accountName:  {label: "甲方账户名",     type: _DATATYPES.VARCHAR},   
         buyer_accountNo:    {label: "甲方账号",     type: _DATATYPES.VARCHAR},   
         buyer_bankName:     {label: "甲方银行",     type: _DATATYPES.VARCHAR},   
@@ -54,9 +55,10 @@ export const mouldcontractModel = {
         seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         buyer_company_id:       {label: "甲方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         isDone:                 {label: "合同是否完成", type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
-        order_memo:             {label: "管理员备注",   type: _DATATYPES.VARCHAR},
+        order_memo:             {label: "管理员备注",   type: _DATATYPES.TEXT},
 
-
+        temp_sellerbank:        {label: "乙方银行资料快捷读取",    type: _DATATYPES.SELECT},
+        temp_buyerbank:        {label: "甲方银行资料快捷读取",    type: _DATATYPES.SELECT},
         //--------------------------- 显示在列表里的时候需要（因为要取name）
         // "buyer_company_id.row":     {label: "甲方公司",   type: _DATATYPES.ROW},
         // "seller_company_id.row":    {label: "乙方公司",   type: _DATATYPES.ROW},

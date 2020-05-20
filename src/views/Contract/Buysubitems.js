@@ -114,10 +114,9 @@ const FormInputs = ({
                 />
               </Grid>
               <Grid item lg={5} md={6} xs={12}>
-                <Inputs.MyComboboxFK
+                <Inputs.MyComboboxCascade
                   inputid="product_id"
-                  listen={["sell_subitem_id"]}
-
+                  listen={{"sell_subitem_id": "sell_subitem_id"}}
                   tableName="product"
                   optionLabel="name"
                   actionName="get_dropdown_fromSellsubitem"

@@ -2,11 +2,21 @@
 import store from './store';
 import _ from 'lodash'
 
+// 不直接调用。如果是多次，就通过h_fkFetchOnceAsync，如果只调用一次存进store里就通过h_fkFetchOnce
 export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
 
     try {
+        let myActions
         // 根据表名称动态加载
-        let myActions = await import(`../_actions/${table}.actions`);
+        try {
+            myActions = await import(`../_actions/${table}.actions`);
+            // do stuff
+        } catch (ex) {
+            myActions = await import(`../_actions/index`);
+        }
+
+        // 20200518：用这个虽然也行，但我不想把全部action都import
+        // myActions = await import(`../_actions/index`);
         
         // 远程读取action里的方法
         const actionPromise = _.get(myActions, [`${table}Actions`, actionName])
@@ -20,7 +30,7 @@ export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
         
         return data;    
     } catch (error) {
-        console.log("调用action失败，表不存在", error)
+        console.log("调用action失败","表" ,table,"参数" ,params, "actionName", actionName,  error)
         return Promise.reject()
     }
 }
@@ -42,7 +52,7 @@ export async function h_fkFetchOnceAsync(table, params=[], actionName="get_dropd
     return rows; 
 }
 
-
+// 注意：这个只抓取一次，是一次性的值
 export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[], actionName="get_dropdown") {
 
     let rows;

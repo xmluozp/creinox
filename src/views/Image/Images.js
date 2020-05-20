@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { ICONS } from "../../_constants";
 import { h_confirm } from "../../_helper";
 import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
+import {ImageThumbLink } from "../../components/ImageThumb"
 
 // ******************************************************************* page setting
 import { imageActions as dataActions } from "../../_actions";
@@ -26,7 +27,7 @@ export const withTablePage = () => {
 
   // ============================================= render cell
   const renderOnShowThumbnail = (content, row) => {
-    return (<a href={row.path} rel="noopener noreferrer" target="_blank"><img src={content} height={100} alt={row.name}/></a>);
+    return (<ImageThumbLink image = {row} />);
   };
 
   const headCells = [

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import ImageSelectable from "./ImageSelectable";
 import RPGallary from "react-photo-gallery";
-
+// import {RESTURL} from '../config'
 
 // tileData 格式：数据库的image表的model
 export const ImageList = ({
@@ -37,7 +37,7 @@ export const ImageList = ({
         return {
           id: image.id,
           path: image.path,
-          src: image.thumbnailPath || "images/nopic.png" ,
+          src: image.thumbnailPath ? image.thumbnailPath : "/images/nopic.png" ,
           height: image.height || 200,
           width: image.width || 200,
           maxheight: image.height || 200,

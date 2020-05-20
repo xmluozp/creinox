@@ -118,7 +118,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
                     onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
-                          {formInputs(disabled)}
+                          {formInputs(disabled, injector)}
                     </Grid>
                     <Grid container spacing={2}>
                       {isFromEdit && ( // only show edit button when update
@@ -177,17 +177,48 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   };
 
   //
-  const formInputs = disabled => {
+  const formInputs = (disabled, injector) => {
+
+    const handleChangeSellerBank = (selectData) => {
+      if(selectData && selectData.id) {
+        injector({
+          seller_accountName: selectData.accountName,
+          seller_accountNo: selectData.accountNo,
+          seller_bankName: selectData.bankName
+        })
+      }
+    }
+
+    const handleChangeBuyerBank = (selectData) => {
+      if(selectData && selectData.id) {
+        injector({
+          buyer_accountName: selectData.accountName,
+          buyer_accountNo: selectData.accountNo,
+          buyer_bankName: selectData.bankName
+        })
+      }
+    }
+    
+    const handleChangeProduct = (selectData) => {
+      if(selectData && selectData.id) {
+        injector({
+          spec: selectData.spec1
+        })
+      }
+    }
+    
+
     return (
       <>
         {/* 基本信息 */}
      
         <Grid item lg={6} md={6} xs={12}>
-              <Inputs.MyComboboxAsyncFK
-                inputid="product_id"
-                tableName="product"
-                actionName="get_disposable_dropdown"
-              />
+          <Inputs.MyComboboxAsyncFK
+            inputid="product_id"
+            tableName="product"
+            actionName="get_disposable_dropdown"
+            onSelect = {handleChangeProduct}
+          />
         </Grid>   
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
@@ -224,7 +255,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           />
         </Grid>
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInput inputid="spec" disabled={disabled} />
+          <Inputs.MyInput inputid="spec" disabled={disabled}/>
         </Grid>
 
         <Grid item lg={2} md={2} xs={12}>
@@ -278,32 +309,54 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyDatePicker inputid="seller_signAt" disabled={disabled} />
         </Grid>
+        <Grid item lg={3} md={3} xs={12}>
 
-
-        <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInput inputid="tt_memo" disabled={disabled} />
+        <Inputs.MyComboboxCascade
+          inputid="temp_sellerbank"
+          disabled={disabled}
+          listen={{"buyer_company_id": "company_id"}}
+          tableName="bankaccount"
+          optionLabel="accountNo"
+          actionName="get_dropdown"
+          onSelect = {handleChangeBuyerBank}
+        />
         </Grid> 
 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyer_accountName" disabled={disabled} />
         </Grid> 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyer_accountNo" disabled={disabled} />
         </Grid> 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyer_bankName" disabled={disabled} />
         </Grid> 
 
-        <Grid item lg={4} md={4} xs={12}>
+
+        <Grid item lg={3} md={3} xs={12}>
+        <Inputs.MyComboboxCascade
+          inputid="temp_buyerbank"
+          disabled={disabled}
+          listen={{"seller_company_id": "company_id"}}
+          tableName="bankaccount"
+          optionLabel="accountNo"
+          actionName="get_dropdown"
+          onSelect = {handleChangeSellerBank}
+        /></Grid> 
+
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="seller_accountName" disabled={disabled} />
         </Grid> 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="seller_accountNo" disabled={disabled} />
         </Grid> 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="seller_bankName" disabled={disabled} />
         </Grid> 
 
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInputTT inputid="tt_memo" disabled={disabled} />
+        </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
           <Inputs.MySwitch inputid="isDone" disabled={disabled} />

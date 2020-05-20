@@ -78,7 +78,7 @@ function get_disposable_dropdown_fromSellcontract(keyword, preConditions) {
   };
 }
 
-function get_dropdown_fromSellsubitem(preConditions) {
+function get_dropdown_fromSellsubitem({}, preConditions) {
   return dispatch => {
     dispatch(loading);
     return service

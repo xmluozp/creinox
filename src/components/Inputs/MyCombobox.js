@@ -151,7 +151,7 @@ export const MyCombobox = React.memo(
         const returnValue = item && item.id >= 0 ? item.id : value;
         // const returnValue =  item && item.id >=0 ? item.id : value;
 
-        // 20200327: 多返回一个item本身
+        // 20200327: 多返回一个item本身. creinoxform用
         onChange(e, id, returnValue, item);
 
         // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
@@ -282,14 +282,12 @@ export const MyComboboxAsyncFK = React.memo((props) => {
     />
   );
 });
-
-// ================================================================================== Combobox FK
-export const MyComboboxFK = React.memo((props) => {
+// ================================================================================== Combobox Cascade
+export const MyComboboxCascade = React.memo((props) => {
   // 表名称； reducer里面的名称，默认dropdown
   // listenConditions是从creinoxForm传来的。用来做结联。如果值变了，就更新.
   const {
     tableName = "",
-    stateName = "dropdown",
     preConditions = {},
     listenConditions = {},
     actionName,
@@ -299,28 +297,78 @@ export const MyComboboxFK = React.memo((props) => {
 
   // 结联用。从form传来的父节点:父节点值的集合。拆出父节点的值，用来监听值的变化
   const listenValues = []
-
   Object.keys(listenConditions).map(k => {
     listenValues.push(listenConditions[k])
   }) 
+
+  // 为了从外部调用  export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
+  const fetchDropDown = (tableName) => {
+    let isSubscribed = true;
+
+    // 如果所有listen的值都是空的，就是空选项
+    let hasValue = false;
+    for (let i = 0; i < listenValues.length; i++) {
+      if(listenValues[i]) {
+        hasValue = true;
+        break;
+      }
+    }
+
+    if(!hasValue) {
+      setoptions([]);
+      return;
+    }
+
+    // 条件的第一个是pagination因为后台所有dropdown第一个参数都是pagination
+    h_fkFetchOnceAsync(
+      tableName,
+      [{}, { ...preConditions, ...listenConditions }],
+      actionName
+    )
+      .then((response) => {
+
+        console.log("有fetch嘛？", props.id, listenConditions, response)
+        if (isSubscribed) {
+          setoptions(response);
+        }
+      })
+      .catch((error) => {
+        console.log("下拉列表为空", error);
+      });
+
+    return () => {
+      isSubscribed = false;
+    };
+  }
+
+  useEffect(() => {
+    return fetchDropDown(tableName)  
+  }, [tableName, ...listenValues]);
+
+  return <MyCombobox {...props} options={options} />;
+});
+
+// ================================================================================== Combobox FK
+export const MyComboboxFK = React.memo((props) => {
+  // 表名称； reducer里面的名称，默认dropdown
+  const {
+    tableName = "",
+    preConditions = {},
+    stateName = "dropdown",
+    actionName,
+  } = props;
+
+  const [options, setoptions] = useState([]);
 
   // 为了从外部调用
   const fetchDropDown = (tableName, stateName) => {
     let isSubscribed = true;
 
-    // const listenConditions = {}
-
-    // // 假如listen里面不是空的，就做结联。listen是从页面传进来的所有父控件的array，每一个对应一个监听的value
-    // if(listen.length > 0 && listen.length === listenValues.length) {
-    //   for (let i = 0; i < listen.length; i++) {
-    //     listenConditions[listen[i]] =  listenValues[i]   
-    //   }
-    // }
-
+    // 条件的第一个是pagination因为后台所有dropdown第一个参数都是pagination
     h_fkFetchOnce(
       tableName,
       stateName,
-      [{ ...preConditions, ...listenConditions }],
+      [{}, { ...preConditions}],
       actionName
     )
       .then((response) => {
@@ -339,13 +387,13 @@ export const MyComboboxFK = React.memo((props) => {
 
   useEffect(() => {
 
-    console.log("listen",listenConditions)
-
     return fetchDropDown(tableName, stateName) 
-  }, [tableName, stateName, ...listenValues]);
+  }, [tableName, stateName]);
 
   return <MyCombobox {...props} options={options} />;
 });
+
+
 
 export const MyComboboxPack = React.memo((props) => {
   const commonTypeName = "pack";

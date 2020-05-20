@@ -134,8 +134,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                   <strong>
                     <i className="icon-info pr-1"></i>id: {id}
                     {dataById && dataById.row
-                      ? "货款合计：" +
-                        formatCurrency(dataById.row.totalPrice)
+                      ? "货款合计：" + formatCurrency(dataById.row.totalPrice)
                       : null}
                     {/* 外运编号就是客户订单号 */}
                     客户订单号： {sc_dataRow && sc_dataRow.orderNumber}
@@ -193,15 +192,15 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                       )}
 
                       {disabled || ( // when browsering, hide save button
-                          <Grid item>
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              color="primary"
-                            >
-                              保存
-                            </Button>
-                          </Grid>
+                        <Grid item>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                          >
+                            保存
+                          </Button>
+                        </Grid>
                       )}
                     </Grid>
                   </CreinoxForm>
@@ -230,8 +229,6 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
   const formInputs = (disabled, isFromEdit, parm_sc_id, onSelect_sc) => {
     return (
       <>
-
-
         {/* 假如从属性里获得了销售合同，就不允许手动选择 */}
 
         <Grid item lg={4} md={4} xs={12}>
@@ -249,9 +246,11 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
             inputid="buyer_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ 
-              //companyType: enums.companyType.factory 
-            }}
+            preConditions={
+              {
+                //companyType: enums.companyType.factory
+              }
+            }
           />
         </Grid>
 
@@ -261,9 +260,11 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
             inputid="seller_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ 
-              //companyType: enums.companyType.factory 
-            }}
+            preConditions={
+              {
+                //companyType: enums.companyType.factory
+              }
+            }
           />
         </Grid>
 
@@ -302,83 +303,42 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         </Grid>
 
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_quality"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_quality" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_deliveryMethod"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_deliveryMethod" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_shippingTerm"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_shippingTerm" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_loss"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_loss" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_packingStandard"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_packingStandard" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyInputTT
             inputid="tt_acceptanceCondition"
             disabled={disabled}
-            targetTable="buy_contract"
           />
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_accessories"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_accessories" disabled={disabled} />
         </Grid>
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_payment"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_payment" disabled={disabled} />
         </Grid>
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_breach"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_breach" disabled={disabled} />
         </Grid>
 
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_dispute"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_dispute" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInputTT
-            inputid="tt_memo"
-            disabled={disabled}
-            targetTable="buy_contract"
-          />
+          <Inputs.MyInputTT inputid="tt_memo" disabled={disabled} />
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>

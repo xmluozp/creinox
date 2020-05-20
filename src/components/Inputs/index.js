@@ -33,6 +33,7 @@ import { _DATATYPES } from "../../_constants";
 import {
   MyCombobox,
   MyComboboxAsyncFK,
+  MyComboboxCascade,
   MyComboboxFK,
   MySelect,
   MyComboboxPack,
@@ -268,7 +269,7 @@ const MyInput = React.memo(
         margin="dense"
         value={displayValue || (isNumber ? 0 : "")}
         helperText={!disabled && helperText}
-        multiline={multiline}
+        multiline={multiline || dataType === _DATATYPES.TEXT || dataType === _DATATYPES.TT}
         rows={rows}
         rowsMax={rowsMax}
         inputProps={{
@@ -397,6 +398,7 @@ const MyEditButton = React.memo(
 export const Inputs = {
   MyCombobox,
   MyComboboxFK,
+  MyComboboxCascade,
   MyComboboxAsyncFK,
   MyComboboxPack,
   MyComboboxPolishing,

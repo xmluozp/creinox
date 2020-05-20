@@ -4,7 +4,19 @@ import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
-       
+
+      function get_dropdown(pagination, searchTerms) {
+
+        const requestOptions = {
+            method: "GET",
+            headers: authHeader()
+          };
+
+          const queryString = h_queryString(pagination, searchTerms, tableName);
+          console.log("faceless dropdown:", queryString);
+          return fetch(`${RESTURL}${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
+
+    }      
     
     function get_bySearch(pagination, searchTerms, reNew = false) {
 
@@ -14,7 +26,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
           };
         
           const queryString = h_queryString(pagination, searchTerms, tableName);
-          console.log("search service:", queryString);
+          console.log("faceless search service:", queryString);
           return fetch(`${RESTURL}${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
 
     }
@@ -67,6 +79,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
     }
     
     return {
+        get_dropdown,
         get_bySearch,
         get_byId,
         post_create,

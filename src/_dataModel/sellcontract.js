@@ -41,7 +41,7 @@ export const sellcontractModel = {
         seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         buyer_company_id:       {label: "甲方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         isDone:                 {label: "合同是否完成", type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
-        order_memo:             {label: "管理员备注",   type: _DATATYPES.VARCHAR},
+        order_memo:             {label: "管理员备注",   type: _DATATYPES.TEXT},
 
 
         //--------------------------- 显示在列表里的时候需要（因为要取name）

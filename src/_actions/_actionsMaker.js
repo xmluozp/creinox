@@ -24,7 +24,7 @@ export const _am = (CONST, service) => {
         response => {
           dispatch(loaded);
           dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
-
+          console.log("getDropdown", response);
           return response;
         },
         error => {

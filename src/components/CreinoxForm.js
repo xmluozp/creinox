@@ -299,23 +299,28 @@ export class CreinoxForm extends React.Component {
             const isInput =
               item.props && this.state.hasOwnProperty(item.props.inputid); // 是否输入控件
             const isFiltered =
-              item.props && typeof item.props.onShow === "function";
-
-            // 结联 ==============
-            const listenConditions = {}
-            // 如果监听对象数组不为空，就把监听对象的键值对的数组传进控件。控制更新在控件内部做
-            const listen = item.props && item.props.listen ? item.props.listen : []
-            if(listen.length > 0) {
-              for (let i = 0; i < listen.length; i++) {
-                const listenColumnName = listen[i]
-                if(values.hasOwnProperty(listenColumnName)) {
-                  listenConditions[listenColumnName] = values[listenColumnName]
-                }                
-              }
-            }
-            // ===================
+              item.props && typeof item.props.onShow === "function"; // 是否有onshow方法
 
             if (isInput) {
+
+              const isListen = item.props && item.props.listen
+
+              // 结联 ==============
+              const listenConditions = {}
+              // 如果监听对象数组不为空，就把监听对象的键值对的数组传进控件。控制更新在控件内部做
+              // 20200518 监听不应该是数组，而是键值对，键是源控件的column名，值是搜目标表格用的column名
+              const listen = isListen ? item.props.listen : {}
+              const listenList = Object.keys(listen);
+              if(listenList.length > 0) {
+                for (let i = 0; i < listenList.length; i++) {
+                  const key = listenList[i]
+                  if(values.hasOwnProperty(key)) {
+                    listenConditions[listen[key]] = values[key]
+                  }                
+                }
+              }
+              // ===================
+
               // 如果是控件就注入，否则原样返回
               const columnId = item.props.inputid;
               const isError =
@@ -325,20 +330,22 @@ export class CreinoxForm extends React.Component {
               const errorMessage =
                 errors && errors.message && errors.message[columnId];
 
-              return injectedInputs({
+              const injectProps = {
                 item: item,
                 isError: isError,
                 errorMessage: errorMessage, // 从props取到的返回错误信息
                 handleChange: handleChange,
                 dataModel: dataModel,
-                value: values[columnId],
-                listenConditions: listenConditions,
-              });
+                value: values[columnId]
+              }
+
+              if(isListen) injectProps.listenConditions = listenConditions
+
+              return injectedInputs(injectProps);
             } else if (isFiltered) {
               return injectedInputs({
                 item: item,
-                value: item.props.onShow(values),
-                listenConditions: listenConditions,
+                value: item.props.onShow(values)
               });
             } else {
               return item;
@@ -361,7 +368,7 @@ const injectedInputs = ({
 }) => {
   let returnValue = item;
   const columnId = item.props && item.props.inputid;
-
+  let newProps
   // 判断类型，进行注入
 
   // 如果id 和model对得上号;
@@ -370,25 +377,27 @@ const injectedInputs = ({
     const onChange = item.props.onChange ? item.props.onChange : handleChange;
 
     // TODO: 判断component类型。不同类型注入不同的东西
-    returnValue = React.cloneElement(item, {
+    newProps = {
       id: columnId,
       key: columnId,
       label: dataModel.columns[columnId].label,
       dataType: dataModel.columns[columnId].type,
+      dataModeltableName: dataModel.table,
       error: isError,
       helperText: errorMessage,
       value: value,
       onChange: onChange,
       fullWidth: true,
       listenConditions: listenConditions
-    });
+    }
+    returnValue = React.cloneElement(item, newProps);
   } else {
     // 不是model的；非控制的控件
-    returnValue = React.cloneElement(item, {
+    newProps = {
       value: value,
-      fullWidth: true,
-      listenConditions: listenConditions
-    });
+      fullWidth: true
+    }
+    returnValue = React.cloneElement(item, newProps);
   }
 
   return returnValue;
