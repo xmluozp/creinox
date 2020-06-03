@@ -7,7 +7,7 @@ import React from "react";
 //------redux
 import { connect } from "react-redux";
 import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
+import { h_confirm, h_popfile } from "../../_helper";
 import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
 import {ImageThumbLink } from "../../components/ImageThumb"
 
@@ -58,7 +58,7 @@ export const withTablePage = () => {
    * Basic page for list
    * @param {} param0
    */
-  const CurrentPage = ({ onDeleteMultiple, pageName }) => {
+  const CurrentPage = ({ onDeleteMultiple, pageName, ...props }) => {
     // ============================================= handles
     const handleSelectAction = (list,pagination) => {
       console.log("批量删除的paginaion",pagination)
@@ -68,7 +68,8 @@ export const withTablePage = () => {
     };
 
     const handleOnEdit = (id, row) => {
-      window.open(row.path , "_blank");
+      h_popfile(row.path)
+      // window.open(row.path , "_blank");
     };
 
     const selectBox = {
@@ -91,12 +92,14 @@ export const withTablePage = () => {
     return (
       <>
         <MyTable
+        {...props}
           onRowDbClick={handleOnEdit}
           tableTitle={pageName}
           headCells={headCells}
           dataModel={dataModel}
           searchBar={searchBar}
           selectBox={selectBox}
+
         />
       </>
     );

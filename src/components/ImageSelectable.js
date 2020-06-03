@@ -1,4 +1,5 @@
 import React from "react";
+import {h_popfile} from '../_helper'
 
 
 const Checkmark = ({ selected }) => (
@@ -64,14 +65,16 @@ const ImageSelectable = ({
   }
 
   const handleOnClick = e => {
+
     if (editMode) {
       onSelect(id, isSelected);
     } else {
-
       if(typeof(onClick)==='function') {
         onClick.bind(null, id, photo)();
       } else {
-        window.open(photo.path, "_blank");
+        // window.open(photo.path, "_blank");
+        // 权限限制
+        h_popfile(photo.path)
       }
     }
   };

@@ -40,7 +40,8 @@ const withProductList = (
     onBySearch,
     pageName,
     product_id = 0,
-    isParent = true
+    isParent = true,
+    ...props
   }) => {
     const [isImageListMode, setIsImageListMode] = useState(false);
     const [selectedId, setSelectedId] = useState();
@@ -70,7 +71,7 @@ const withProductList = (
       const newDataRows =
         rows &&
         rows.map(item => {
-          return { ...item["image_id.row"], name: item.name } || null;
+          return { ...item["image_id.row"], name: item.name, url: `${EDITURL}/${item.id}` } || null;
         });
       return newDataRows;
     };
@@ -135,8 +136,10 @@ const withProductList = (
             <Grid container spacing={2}>
             <Grid item lg={12} md={12} xs={12}>
                 <Inputs.MyComboboxAsyncFK
+                inputid = "temp_product"
                 tableName="product"
                 label="用产品货号搜索部件"
+                value = {selectedId}
                 actionName="get_disposable_dropdown"
                 onChange={handleGetTargetProductId}
                 />
@@ -147,6 +150,7 @@ const withProductList = (
             </Grid>
         }
         <MyTable
+          {...props}
           onRowDbClick={handleOnEdit}
           tableTitle={pageName}
           headCells={headCells}

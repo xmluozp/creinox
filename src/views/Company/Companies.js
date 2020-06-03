@@ -69,7 +69,7 @@ export const withCompanyList = (
   // **************************************************************************************************
   // **************************************************************************************************
 
-  const CurrentPage = ({ onDelete, pageName }) => {
+  const CurrentPage = ({ onDelete, pageName,...props }) => {
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
@@ -104,6 +104,7 @@ export const withCompanyList = (
     // ============================================= Render
     return (
       <MyTable
+      {...props}
         onRowDbClick={handleOnEdit}
         tableTitle={pageName}
         headCells={headCells}
@@ -112,6 +113,7 @@ export const withCompanyList = (
         rowButtons={rowButtons}
         toolbarButtons={toolbarButtons}
         searchBar={searchBar}
+
       />
     );
   };

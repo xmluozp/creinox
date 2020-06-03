@@ -5,6 +5,7 @@ import { imageActions as dataActions } from "../../_actions";
 
 import { ICONS } from "../../_constants";
 import store from '../../_helper/store';
+import {h_popfile} from '../../_helper'
 
 
 // 思路：value默认是个image；上传以后变成是个file（如果onchange时不动它会导致form提交不对）
@@ -47,7 +48,8 @@ export const MyImage = ({ id, value, onChange, disabled, label, imageId }) => {
   // 查看原图
   const handleOnClick = e => {
     if (!isUploaded) {
-      window.open(photo.path, "_blank");
+      h_popfile(photo.path)
+      // window.open(photo.path, "_blank");
     }
   };
 

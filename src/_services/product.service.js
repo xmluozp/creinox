@@ -32,7 +32,7 @@ const URL_DROP_DOWN_SELLCONTRACT = RESTURL + `/api/product_dropDown_sellContract
 const URL_DROP_DOWN_SELLSUBITEM = RESTURL + `/api/product_dropDown_sellSubitem`;
 
 
-const URL_COMPONENT = `/api/product_component`;
+const URL_COMPONENT = RESTURL + `/api/product_component`;
 
 function get_dropdown(pagination, searchTerms, isIncludeMeta) {
   // TODO: isIncludeMeta 会返回全部产品。否则返回没成为commodity的

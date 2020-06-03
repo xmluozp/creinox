@@ -23,6 +23,7 @@ export const MyModalForm = ({
       ) : (
         <>
           <ModalBody>{component}</ModalBody>
+          {rowButtons?
           <ModalFooter>
             {rowButtons.map((buttonObj, index) => (
               <ActionButton
@@ -31,7 +32,7 @@ export const MyModalForm = ({
                 id={pageId}
               />
             ))}
-          </ModalFooter>
+          </ModalFooter>:null}
         </>
       )}
     </Modal>

@@ -44,6 +44,7 @@ export const productModel = {
         buyPrice:   {label: "最新采购价",     type: _DATATYPES.MONEY},    
         currency_id:  {label: "币种",     type: _DATATYPES.TREE, ref:"common_item", refLabel: ["name"]},
 
+        temp_product: { label: "产品", type:_DATATYPES.SELECT  },
         //============== 搜索用关联到外表的字段
         "comodity.code": {label: "客户货号",  type: _DATATYPES.VARCHAR},
         "companyFactory.id": {label: "工厂",  type: _DATATYPES.SELECT},

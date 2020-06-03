@@ -34,7 +34,7 @@ export const withCommodityList = (
     dataActions.get_bySearch // fetch action
   );
 
-  const CurrentPage = ({ onDelete, pageName }) => {
+  const CurrentPage = ({ onDelete, pageName, ...props }) => {
 
     const [isImageListMode, setIsImageListMode] = useState(false)
 
@@ -56,7 +56,7 @@ export const withCommodityList = (
     const handleImageListMapping = (rows) => {
       
       const newDataRows =  rows && rows.map(item=> {
-        return {...item["image_id.row"], name: item.name} || null;
+        return {...item["image_id.row"], name: item.name, url: `${EDITURL}/${item.id}`} || null;
       })
       return newDataRows
     }
@@ -96,6 +96,7 @@ export const withCommodityList = (
     // ============================================= Render
     return (
       <MyTable
+      {...props}
         onRowDbClick={handleOnEdit}
         tableTitle={pageName}
         headCells={headCells}

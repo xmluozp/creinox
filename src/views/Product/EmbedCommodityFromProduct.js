@@ -49,7 +49,8 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     onGetById,
     dataById,
     product_id = 0,
-    isParent = true
+    isParent = true,
+    ...props
   }) => {
     const [isImageListMode, setIsImageListMode] = useState(false);
     const preConditions = { product_id: product_id };
@@ -100,7 +101,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
       const newDataRows =
         rows &&
         rows.map(item => {
-          return { ...item["image_id.row"], name: item.name } || null;
+          return { ...item["image_id.row"], name: item.name, url: `${EDITURL}/${item.id}` } || null;
         });
       return newDataRows;
     };
@@ -197,6 +198,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
 
         
         <MyTable
+        {...props}
           onRowDbClick={handleOnEdit}
           tableTitle={pageName}
           headCells={headCells}

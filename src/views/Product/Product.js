@@ -153,6 +153,7 @@ export const withProduct = () => {
             <Grid container spacing={2}>
               <Grid item lg={8} md={8} xs={12}>
                 <Inputs.MyComboboxAsyncFK
+                  inputid = "temp_product"
                   tableName="product"
                   label="参考产品"
                   actionName="get_disposable_dropdown"

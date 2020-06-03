@@ -7,8 +7,8 @@ export default (state = {}, action) => {
     return { ...state, dropdown: {} };  
     case CONST.GETDROPDOWN_SUCCESS: // waiting while logging
       return { ...state, dropdown: action.payload };
-      case CONST.GETBYSEARCH:
-        return { ...state, data: {} };     
+    case CONST.GETBYSEARCH:
+      return { ...state, data: {} };     
     case CONST.GETBYSEARCH_SUCCESS:
       return { ...state, data: action.payload };
     case CONST.GET:

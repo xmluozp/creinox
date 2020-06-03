@@ -13,8 +13,8 @@ export const ImageList = ({
 }) => {
   // 子图片: 可选择
   const imageRenderer = useCallback(
-    ({ index, left, top, key, photo }) => (
-      <ImageSelectable
+    ({ index, left, top, key, photo }) => {
+      return <ImageSelectable
         id={photo.id}
         isSelected={  selectedImages.has(photo.id) ? true : false}
         onSelect={onSelect}
@@ -27,22 +27,25 @@ export const ImageList = ({
         left={left}
         top={top}
       />
-    ),
+      }
+    ,
     [editMode, selectedImages]
   );
   return (
      (tileData && tileData.length > 0) ? 
       <RPGallary
-      photos={tileData.map(image => {
+        photos={tileData.map(image => {
+        const{id, path, thumbnailPath, height, width, name, ...props} = image
         return {
-          id: image.id,
-          path: image.path,
-          src: image.thumbnailPath ? image.thumbnailPath : "/images/nopic.png" ,
-          height: image.height || 200,
-          width: image.width || 200,
-          maxheight: image.height || 200,
-          maxwidth: image.width || 200,
-          title: image.name || "无图片"
+          id: id,
+          path: path,
+          src: thumbnailPath ? thumbnailPath : "/images/nopic.png" ,
+          height: height || 200,
+          width: width || 200,
+          maxheight: height || 200,
+          maxwidth: width || 200,
+          title: name || "无图片",
+          other: props
         };
       })}
       renderImage={imageRenderer}

@@ -71,7 +71,7 @@ export const withTablePage = () => {
    * Basic page for list
    * @param {} param0
    */
-  const CurrentPage = ({ onDelete, pageName }) => {
+  const CurrentPage = ({ onDelete, pageName, ...props }) => {
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
@@ -107,6 +107,7 @@ export const withTablePage = () => {
     return (
       <>
         <MyTable
+        {...props}
           onRowDbClick={handleOnEdit}
           tableTitle={pageName}
           headCells={headCells}

@@ -169,6 +169,8 @@ export const MyCombobox = React.memo(
       }
     };
 
+    console.log("选中的?", currentValue, value)
+
     return (
       <Autocomplete
         autoSelect={true}
@@ -255,8 +257,11 @@ export const MyComboboxAsyncFK = React.memo((props) => {
 
   // 根据输入内容读记录
   const handleFetchData = (e) => {
+
     if (e.key === "Enter") {
       const keyword = inputRef.current.value;
+
+      console.log("fetch??",tableName,  keyword, preConditions, actionName)
 
       e.preventDefault();
       h_fkFetchOnceAsync(tableName, [keyword, preConditions], actionName)
@@ -326,8 +331,6 @@ export const MyComboboxCascade = React.memo((props) => {
       actionName
     )
       .then((response) => {
-
-        console.log("有fetch嘛？", props.id, listenConditions, response)
         if (isSubscribed) {
           setoptions(response);
         }
@@ -386,7 +389,6 @@ export const MyComboboxFK = React.memo((props) => {
   }
 
   useEffect(() => {
-
     return fetchDropDown(tableName, stateName) 
   }, [tableName, stateName]);
 

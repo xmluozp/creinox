@@ -67,6 +67,7 @@ export default function Search({
                 defaultValues={searchTerms}
                 actionSubmit={onSearch}
                 dataModel={dataModel}
+                isHideTool = {true}
               >
                 <DialogContent>
                   <DialogContentText>搜索</DialogContentText>

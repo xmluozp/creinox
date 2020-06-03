@@ -39,7 +39,8 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
     pageName,
     commodity_id = 0,
     product_id = 0,
-    isParent = true
+    isParent = true,
+    ...props
   }) => {
     const [isImageListMode, setIsImageListMode] = useState(false);
     const [selectedId, setSelectedId] = useState();
@@ -65,7 +66,7 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
       const newDataRows =
         rows &&
         rows.map(item => {
-          return { ...item["image_id.row"], name: item.name } || null;
+          return { ...item["image_id.row"], name: item.name, url: `${EDITURL}/${item.id}` } || null;
         });
       return newDataRows;
     };
@@ -139,6 +140,7 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
           <Grid container spacing={2}>
             <Grid item lg={12} md={12} xs={12}>
               <Inputs.MyComboboxAsyncFK
+                 inputid = "temp_product"
                 tableName="product"
                 label="用产品货号搜索产品"
                  // 取的下拉列表包括其它商品的元产品。本应排除自己的元产品，但可以从后台限制。就不用多此一举了
@@ -152,6 +154,7 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
           </Grid>
         )}
         <MyTable
+        {...props}
           onRowDbClick={handleOnEdit}
           tableTitle={pageName}
           headCells={headCells}
@@ -162,6 +165,7 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
           preConditions={preConditions}
           rowButtons={rowButtons}
           toolbarButtons={toolbarButtons}
+
         />
       </>
     );

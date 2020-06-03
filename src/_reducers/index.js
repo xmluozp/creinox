@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import auth from "./authReducer";
 import loading from "./loadingReducer";
 import alert from "./alertReducer";
+import print from "./printReducer";
 
 import role from "./roleReducer";
 import user from "./userReducer";
@@ -28,6 +29,7 @@ export default combineReducers({
   authData: auth, // login status
   loadingData: loading,
   alertData: alert,
+  printData: print,
 
   // 角色
   roleData: role,

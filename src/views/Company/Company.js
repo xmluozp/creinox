@@ -306,7 +306,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     <>
       {/* 基本信息 */}
 
-      <Grid item lg={6} md={66} xs={12}>
+      <Grid item lg={6} md={6} xs={12}>
         <Inputs.MyInput inputid="code" disabled={disabled} />
       </Grid>
 

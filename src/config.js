@@ -1,1 +1,2 @@
-export const RESTURL = "http://localhost:8000"
+
+export const RESTURL = process.env.REACT_APP_API

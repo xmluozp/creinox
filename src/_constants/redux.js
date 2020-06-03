@@ -76,6 +76,11 @@ export const LOADING = {
     CLEAR: 'LOADING_CLEAR'
 }
 
+export const PRINT = {
+    GET :'PRINT_GET',
+    GET_SUCCESS: 'PRINT_GET_SUCCESS',
+}
+
 // rostercontact, bankaccount, 
 export const FACELESS =  constMaker("FACELESS")
 // {

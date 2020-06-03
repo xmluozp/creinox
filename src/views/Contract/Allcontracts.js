@@ -66,7 +66,7 @@ export const withSellcontractList = (
       <Inputs.MyInput inputid="code" />
       <Inputs.MyDateRangePicker inputid="activeAt" />
       <Inputs.MyInput inputid="ename" />
-      <Inputs.MyComboboxFK
+      <Inputs.MyComboboxAsyncFK
         inputid="buyer_company_id"
         label="外贸客户"
         optionLabel="name"
@@ -171,7 +171,7 @@ export const withSellcontractList = (
   // **************************************************************************************************
   // **************************************************************************************************
 
-  const CurrentPage = ({ onDelete, pageName }) => {
+  const CurrentPage = ({ onDelete, pageName, ...props }) => {
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then((resolve) => {
@@ -212,6 +212,7 @@ export const withSellcontractList = (
     // ============================================= Render
     return (
       <MyTable
+      {...props}
         onRowDbClick={handleOnEdit}
         tableTitle={pageName}
         headCells={headCells}

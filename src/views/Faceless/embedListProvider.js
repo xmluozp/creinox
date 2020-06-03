@@ -46,7 +46,8 @@ export const embedListProvider = (
     modalInputCreateProps = {},
     modalInputEditProps = {},
     onUpdate, // 任何修改的时候触发
-    isBorder = false
+    isBorder = false,
+    ...props
   }) => {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
@@ -131,6 +132,7 @@ export const embedListProvider = (
     return (
       <>
         <MyTable
+        {...props}
           tableTitle={pageName}
           headCells={headCells}
           dataModel={dataModel}

@@ -139,6 +139,7 @@ export const withTablePage = () => {
           </Grid>
           <Grid item lg={10} xs={12}>
             <MyTable
+            {...props}
               onRowDbClick={handleOnEdit}
               tableTitle={enumsLabel.commonType[currentCommonType]}
               preConditions={preCondition}
@@ -148,6 +149,7 @@ export const withTablePage = () => {
               toolbarButtons={toolbarButtons}
               searchBar={searchBar}
               toggle={toggle}
+
             />
           </Grid>
         </Grid>

@@ -4,6 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { ICONS } from "../_constants/icons";
+import Print from './Print'
 
 /**
  * actionSubmit: redux action passed from parent. When submitting, form will call: fn(data)
@@ -89,9 +90,8 @@ export class CreinoxForm extends React.Component {
   }
 
   onPrint() {
-
     const { dataModel } = this.props;
-    console.log("print", dataModel.printTemplate)
+    console.log("print", dataModel.template)
   }
 
   // step 1/3: generate empty items ********************************************
@@ -204,7 +204,11 @@ export class CreinoxForm extends React.Component {
     const { dataModel, isHideTool, isFromEdit } = this.props;
 
     return (
-      <Box mb={2}>
+      <div style={{
+        margin: 5,
+        marginBottom: 10
+
+      }}>
         <Grid
           mb={5}
           container
@@ -216,12 +220,11 @@ export class CreinoxForm extends React.Component {
             border: "1px solid #c5d2db",
             borderRadius: 15,
           }}
-          spacing={2}
         >
           {/* 如果需要显示copytool，就在这里显示 */}
           {!isHideTool ? (
             <>
-              <Grid item>
+              <Grid item style = {{marginRight: 10}}>
                 <IconButton
                   aria-label="expand row"
                   size="small"
@@ -230,7 +233,7 @@ export class CreinoxForm extends React.Component {
                   {ICONS.COPY()}
                 </IconButton>
               </Grid>
-              <Grid item>
+              <Grid item style = {{marginRight: 10}}>
                 <IconButton
                   aria-label="expand row"
                   size="small"
@@ -240,7 +243,7 @@ export class CreinoxForm extends React.Component {
                 </IconButton>
               </Grid>
               {isFromEdit ? (
-                <Grid item>
+                <Grid item style = {{marginRight: 10}}>
                   <IconButton
                     aria-label="expand row"
                     size="small"
@@ -248,23 +251,14 @@ export class CreinoxForm extends React.Component {
                   >
                     {ICONS.REFRESH()}
                   </IconButton>
-                </Grid>
+                  </Grid>
               ) : null}
             </>
           ) : null}
-          {dataModel && dataModel.printTemplate ? (
-            <Grid item>
-              <IconButton
-                aria-label="expand row"
-                size="small"
-                onClick={this.onPrint}
-              >
-                {ICONS.PRINT()}
-              </IconButton>
-            </Grid>
-          ) : null}
+          
+            <Print dataModel={dataModel} id={this.state.id}/>
         </Grid>
-      </Box>
+      </div>
     );
   }
 
@@ -380,7 +374,7 @@ const injectedInputs = ({
     newProps = {
       id: columnId,
       key: columnId,
-      label: dataModel.columns[columnId].label,
+      label: item.props.label || dataModel.columns[columnId].label,
       dataType: dataModel.columns[columnId].type,
       dataModeltableName: dataModel.table,
       error: isError,

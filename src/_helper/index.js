@@ -30,7 +30,6 @@ export function authHeader() {
 }
 
 export function handleResponse(response) {
-
     return response.text().then(text => {
         const data = text && JSON.parse(text);
 
@@ -221,4 +220,95 @@ export function h_formData_files(itemList, folder_structure) {
     formData.append("doc", JSON.stringify(folder_structure));
 
     return formData
+}
+
+// 下载
+export function h_download(path) {
+
+    const requestOptions = {
+        method: "GET",
+        headers: authHeader(),
+      };
+
+    fetch(path, requestOptions).then( response => {
+        if(response.ok) {
+
+            var file = response.blob();
+            return file
+        }
+    }).then(response => {
+
+        const fileName = path.split("/").pop()
+
+        const newUrl = URL.createObjectURL(response);
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.href = newUrl;
+
+        var timeString = format(
+            new Date(),
+            'yyyy_MMdd_hhmmss'
+        )
+        const fA = fileName.split(".")
+        const ext = fA.pop()
+        const name = fA.join('.')
+        a.download = name + " [" +timeString + '].' + ext;
+        a.click();
+        window.URL.revokeObjectURL(newUrl);
+
+        // window.open(newUrl, "_blank");
+    });
+}
+
+// 打开成pdf
+export function h_pdf(path) {
+
+    const requestOptions = {
+        method: "GET",
+        headers: authHeader(),
+      };
+
+    fetch(path, requestOptions).then( response => {
+        if(response.ok) {
+
+            var file1 = response.blob();
+            return file1
+        }
+    }).then(response => {
+
+
+        const newUrl = URL.createObjectURL(response);
+
+        window.open(newUrl, "_blank");
+    });
+}
+
+// 直接打开
+export function h_popfile(path) {
+
+    const requestOptions = {
+        method: "GET",
+        headers: authHeader(),
+      };
+
+    fetch(path, requestOptions).then( response => {
+        if(response.ok) {
+            return response.blob()
+        }
+    }).then(response => {
+        const newUrl = URL.createObjectURL(response);
+        window.open(newUrl, "_blank");
+    });
+}
+
+// 为了返回上一页保留搜索结果用。设置搜索关键词
+export function h_setHistoryQuery (key, query) {
+
+    localStorage.setItem("query." + key, JSON.stringify(query));
+
+}
+
+// 为了返回上一页保留搜索结果用。读取搜索关键词
+export function h_getHistoryQuery (key) {
+    return JSON.parse(localStorage.getItem("query." + key));
 }

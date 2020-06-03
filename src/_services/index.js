@@ -1,5 +1,7 @@
 export * from './user.service';
 export * from './role.service';
+export * from './print.service';
+
 export * from './commonitem.service';
 export * from './texttemplate.service'
 export * from './faceless.service';

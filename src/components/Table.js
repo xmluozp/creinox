@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 import { format } from "date-fns";
-// import { history } from "../_helper";
+import { history , h_setHistoryQuery, h_getHistoryQuery} from "../_helper";
 
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -38,7 +38,7 @@ export const CreinoxTable = ({
   toggle = false,
   headCells,
   onRowDbClick,
-  onRowImageClick = onRowDbClick,
+  onRowImageClick,
   searchBar,
   tableTitle,
   data,
@@ -54,7 +54,8 @@ export const CreinoxTable = ({
   collapsePanel = [],
   ...props
 }) => {
-  // 默认数据（如果是页面，则从params里取）
+
+  // 默认数据（如果是页面，则从params里取）. 如果是用户返回，则取历史数据
   const defaultPagination = {
     page: 0,
     perPage: 10,
@@ -114,35 +115,70 @@ export const CreinoxTable = ({
     [page, perPage, order, orderBy]
   );
 
-  const p_updateData = (newPagination = {}, newSearchTerms = {}) => {
-    onGetBySearch(newPagination, { ...preConditions, ...newSearchTerms });
-  };
+  // table的唯一标识。用来在返回的时候，从storage里存储和读取搜索结果的历史记录用
+  const getTableUniqueCode = () => {
+
+    const str = dataModel.table + tableTitle
+
+    var number = "0x";
+    var length = str.length;
+    for (var i = 0; i < length; i++)
+        number += str.charCodeAt(i).toString(16);
+    return number;
+  }
 
   // 根据store的翻页信息更新data (刷新触发)
+  const p_updateData = (newPagination = defaultPagination, newSearchTerms = {}) => {
+
+    // call onGetBySearch #2
+    onGetBySearch(newPagination, { ...preConditions, ...newSearchTerms });
+
+    // 20200601 更新历史记录。用来做浏览器返回用。记录根据dataModel来
+    h_setHistoryQuery(getTableUniqueCode(), {pagination: newPagination, searchTerms: { ...preConditions, ...newSearchTerms }})
+  };
+
+  // 进入页面时更新data (跳转触发)
   const p_fetchData = React.useCallback(
     () => {
-      return onGetBySearch(defaultPagination, preConditions);
+      
+      let p, s
+      const query = h_getHistoryQuery(getTableUniqueCode())
+
+      // 如果是从浏览器返回，就读取历史记录的pagination
+      if(props.history && props.history.action === "POP" && query) {
+        p = query.pagination;
+        s = query.searchTerms;
+      } else {
+        p = defaultPagination;
+        s = {}
+      }
+
+      // call onGetBySearch #1
+      return onGetBySearch(p, {...preConditions, ...s});
     }, // submit empty. refresh by store
     [onGetBySearch, preConditions]
   );
 
   // fetch data first time
   React.useEffect(() => {
-    if (!data) p_fetchData();
+
+    if (!data) {
+      // 第一次取数据
+      p_fetchData()
+    };
   }, [data]);
 
+  // 从外部强制刷新数据用
   React.useEffect(() => {
     p_fetchData();
   }, [toggle]);
 
-  // fetch data after change page
-  // React.useEffect(() => {
-  //   if(loaded) p_updateData();
-  // }, [onGetBySearch, getPaginationFromState, nextSearchTerms, p_updateData])
-
   // *********************************************** handle for fetchData ****************************************
   const handleOnRefresh = (e) => {
-    p_fetchData();
+
+    // p_fetchData(); 
+    // 20200601： 因为fetchData时，需要判断是否从浏览器点击返回，如果返回则取历史记录。这里如果直接fetch，返回后刷新也会误取历史记录
+    p_updateData(defaultPagination, preConditions)
   };
 
   const handleOnSearch = (searchTerms) => {
@@ -363,7 +399,7 @@ export const CreinoxTable = ({
           }
           {
             // 放操作按钮的格子
-            rowButtons ? (
+            rowButtons && rowButtons.length > 0 ? (
               <TableCell
                 align="right"
                 style={{ minWidth: 80 * rowButtons.length }}
@@ -477,11 +513,19 @@ export const CreinoxTable = ({
     </Table>
   );
 
+  // 图片如果没有特殊的onclic的话，就打开详情页链接
+  const handleImageLinkToItem = (imageId, photo) => {
+    const url = photo && photo.other && photo.other.url ? photo.other.url : -1
+    if(url) {
+      history.push(url)
+    }    
+  }
+
   const imageListData = onImageListMapping(dataRows) || [];
   const imageListClick =
     typeof onRowImageClick === "function"
       ? onRowImageClick.bind(null, getPaginationFromState())
-      : null;
+      : handleImageLinkToItem;
   const imageListBody = (
     <div style={{ padding: 10 }}>
       <ImageList tileData={imageListData} onClick={imageListClick} />

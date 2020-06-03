@@ -21,6 +21,8 @@ const LoginPage = React.lazy(() => import("./views/Pages/Login"));
 // will initialize dropdown tables, but only those tables with few data.
 h_initializeDropDownTables();
 
+
+
 const App = ({ user }) => {
   // React.useEffect(() => {
   //   switch (loadingBar) {

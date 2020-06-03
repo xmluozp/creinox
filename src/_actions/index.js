@@ -10,6 +10,7 @@ export * from "./image.actions";
 
 export * from "./role.actions";
 export * from "./user.actions";
+export * from "./print.actions";
 
 export * from "./sellcontract.actions";
 export * from "./sellsubitem.actions";
