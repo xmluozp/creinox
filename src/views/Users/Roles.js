@@ -6,13 +6,13 @@ import React from "react";
 
 //------redux
 import { connect } from "react-redux";
-import { ICONS } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
-import { CreinoxTable, withDatatableStore } from "../../components";
+import { ICONS } from "_constants";
+import { h_confirm, history } from "_helper";
+import { CreinoxTable, withDatatableStore } from "components";
 
 // ******************************************************************* page setting
-import { roleActions as dataActions } from "../../_actions";
-import { roleModel as dataModel } from "../../_dataModel";
+import { roleActions as dataActions } from "_actions";
+import { roleModel as dataModel } from "_dataModel";
 
 
 const EDITURL = "/users/roles";

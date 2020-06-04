@@ -5,14 +5,14 @@ import React, {useState} from "react";
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS, enums } from "../../_constants";
-import { h_confirm } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
-import { history } from "../../_helper";
+import { ICONS, enums } from "_constants";
+import { h_confirm } from "_helper";
+import { CreinoxTable, Inputs, withDatatableStore } from "components";
+import { history } from "_helper";
 
 // ******************************************************************* page setting
-import { productActions as dataActions } from "../../_actions";
-import { productModel as dataModel } from "../../_dataModel";
+import { productActions as dataActions } from "_actions";
+import { productModel as dataModel } from "_dataModel";
 
 // ******************************************************************* page setting
 

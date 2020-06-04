@@ -1,5 +1,5 @@
-import { REGION as CONST } from "../_constants";
-import { regionService as service } from "../_services";
+import { REGION as CONST } from "_constants";
+import { regionService as service } from "_services";
 import {
   _am
 } from "./_actionsMaker";

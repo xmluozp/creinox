@@ -1,5 +1,5 @@
-import { PRINT as CONST } from "../_constants";
-import { printService as service } from "../_services";
+import { PRINT as CONST } from "_constants";
+import { printService as service } from "_services";
 import {
   _am,
   failure,

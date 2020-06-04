@@ -6,13 +6,13 @@ import _ from "lodash";
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS, _DATATYPES } from "../../_constants";
-import { h_confirm } from "../../_helper";
-import { CreinoxTable } from "../../components";
+import { ICONS, _DATATYPES } from "_constants";
+import { h_confirm } from "_helper";
+import { CreinoxTable } from "components";
 
 // ******************************************************************* page setting
-import { companyActions as dataActions } from "../../_actions";
-import { companyModel as dataModel } from "../../_dataModel";
+import { companyActions as dataActions } from "_actions";
+import { companyModel as dataModel } from "_dataModel";
 
 
 // ******************************************************************* page setting

@@ -1,4 +1,4 @@
-import { COMMONITEM as CONST } from "../_constants";
+import { COMMONITEM as CONST } from "_constants";
 // import {reducerMaker} from "../_helper/facelessMaker";
 
 // const returnFunction = reducerMaker(CONST);

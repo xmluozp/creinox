@@ -1,5 +1,5 @@
-import { COMMONITEM as CONST, enums } from "../_constants";
-import { commonitemService as service } from "../_services";
+import { COMMONITEM as CONST, enums } from "_constants";
+import { commonitemService as service } from "_services";
 import {
   _am,
   // done,

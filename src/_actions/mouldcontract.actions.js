@@ -1,5 +1,5 @@
-import { MOULDCONTRACT as CONST } from "../_constants";
-import { mouldcontractService as service } from "../_services";
+import { MOULDCONTRACT as CONST } from "_constants";
+import { mouldcontractService as service } from "_services";
 import {
   _am,
   failure,

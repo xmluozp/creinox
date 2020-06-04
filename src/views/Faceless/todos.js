@@ -6,14 +6,14 @@
 
 // //------redux
 // import { connect } from "react-redux";
-// import { ICONS } from "../../_constants";
-// import { h_confirm } from "../../_helper";
-// import { CreinoxTable } from "../../components";
-// import {withDatatableStore} from "../../components";
+// import { ICONS } from "_constants";
+// import { h_confirm } from "_helper";
+// import { CreinoxTable } from "components";
+// import {withDatatableStore} from "components";
 
 // // ******************************************************************* page setting
-// import { userActions as dataActions, alertActions } from "../../_actions";
-// import { userModel as dataModel } from "../../_dataModel";
+// import { userActions as dataActions, alertActions } from "_actions";
+// import { userModel as dataModel } from "_dataModel";
 
 // const TABLETITLE = "用户列表";
 // const EDITURL = "/users/user";

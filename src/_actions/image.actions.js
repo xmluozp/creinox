@@ -1,5 +1,5 @@
-import { IMAGE as CONST } from "../_constants";
-import { imageService as service } from "../_services";
+import { IMAGE as CONST } from "_constants";
+import { imageService as service } from "_services";
 import {
   _am, done, failure , success
 } from "./_actionsMaker";

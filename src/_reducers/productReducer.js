@@ -1,5 +1,5 @@
-import { PRODUCT as CONST } from "../_constants";
-import {reducerMaker} from "../_helper/facelessMaker";
+import { PRODUCT as CONST } from "_constants";
+import {reducerMaker} from "_helper/facelessMaker";
 
 const returnFunction = reducerMaker(CONST);
 export default returnFunction;

@@ -1,7 +1,7 @@
-import { CATEGORY as CONST } from "../_constants";
+import { CATEGORY as CONST } from "_constants";
 import { _am } from "./_actionsMaker";
 
-import { categoryService as service } from "../_services";
+import { categoryService as service } from "_services";
 
 
 const {

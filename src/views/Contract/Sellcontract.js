@@ -10,11 +10,11 @@ import formatCurrency from "format-currency";
 
 //------redux
 import { connect } from "react-redux";
-import { sellcontractActions as dataActions } from "../../_actions";
-import { sellcontractModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel } from "../../components";
-import { enumsLabel, enums } from "../../_constants";
-import { history, h_fkFetch } from "../../_helper";
+import { sellcontractActions as dataActions } from "_actions";
+import { sellcontractModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs, TabPanel } from "components";
+import { enumsLabel, enums } from "_constants";
+import { history, h_fkFetch } from "_helper";
 
 import Sellsubitems from "./Sellsubitems";
 

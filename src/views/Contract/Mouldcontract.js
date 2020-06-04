@@ -10,11 +10,11 @@ import Tab from "@material-ui/core/Tab";
 
 //------redux
 import { connect } from "react-redux";
-import { mouldcontractActions as dataActions } from "../../_actions";
-import { mouldcontractModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
-import { enumsLabel, enums } from "../../_constants";
-import { history, h_fkFetch } from "../../_helper";
+import { mouldcontractActions as dataActions } from "_actions";
+import { mouldcontractModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs, TabPanel, Gallery } from "components";
+import { enumsLabel, enums } from "_constants";
+import { history, h_fkFetch } from "_helper";
 
 export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   const CurrentPage = ({

@@ -9,11 +9,11 @@ import Tab from "@material-ui/core/Tab";
 
 //------redux
 import { connect } from "react-redux";
-import { companyActions as dataActions } from "../../_actions";
-import { companyModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel, Gallery } from "../../components";
-import { enumsLabel } from "../../_constants";
-import { history, h_filterImage } from "../../_helper";
+import { companyActions as dataActions } from "_actions";
+import { companyModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs, TabPanel, Gallery } from "components";
+import { enumsLabel } from "_constants";
+import { history, h_filterImage } from "_helper";
 
 import Contacts from "./Contacts";
 import BankaccountsCompany from "../Bank/EmbedBankaccountsCompany";

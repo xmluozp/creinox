@@ -3,14 +3,14 @@ import React, { useState } from "react";
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
+import { ICONS } from "_constants";
+import { h_confirm } from "_helper";
 
 import {
   MyModalFormWithData,
   CreinoxTable,
   withDatatableStore
-} from "../../components";
+} from "components";
 
 export const embedListProvider = (
   dataActions,

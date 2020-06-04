@@ -9,16 +9,16 @@ import Tab from "@material-ui/core/Tab";
 
 //------redux
 import { connect } from "react-redux";
-import { productActions as dataActions, categoryActions } from "../../_actions";
-import { productModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel } from "../../components";
-// import { enumsLabel } from "../../_constants";
-import { history, h_fkFetch, h_filterImage } from "../../_helper";
+import { productActions as dataActions, categoryActions } from "_actions";
+import { productModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs, TabPanel } from "components";
+// import { enumsLabel } from "_constants";
+import { history, h_fkFetch, h_filterImage } from "_helper";
 import { EmbedProductPurchaseGroup } from "./EmbedProductPurchase";
 import { EmbedProductComponent } from "./EmbedProductComponent";
 import { EmbedCommodityFromProduct } from "./EmbedCommodityFromProduct";
 
-import { ICONS } from "../../_constants";
+import { ICONS } from "_constants";
 
 const EDITURL = "/product/products";
 // const LISTURL = EDITURL

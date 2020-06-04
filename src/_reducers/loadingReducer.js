@@ -1,4 +1,4 @@
-import { LOADING as CONST} from '../_constants'
+import { LOADING as CONST} from '_constants'
 
 export default (state = {}, action) => {
     switch (action.type) {

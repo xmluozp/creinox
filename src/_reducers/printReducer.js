@@ -1,4 +1,4 @@
-import { PRINT as CONST} from '../_constants'
+import { PRINT as CONST} from '_constants'
 
 export default (state = {}, action) => {
     switch (action.type) {

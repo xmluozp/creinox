@@ -7,9 +7,9 @@
 
 // //------redux
 // import { connect } from "react-redux";
-// import { userActions as dataActions } from "../../_actions";
-// import { userModel as dataModel } from "../../_dataModel";
-// import { withCreinoxForm, Inputs } from "../../components";
+// import { userActions as dataActions } from "_actions";
+// import { userModel as dataModel } from "_dataModel";
+// import { withCreinoxForm, Inputs } from "components";
 
 
 // const CurrentPage = ({ dataById, onPostCreate, onPutUpdate, onGetById, ...props }) => {

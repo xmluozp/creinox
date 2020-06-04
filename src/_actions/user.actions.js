@@ -1,6 +1,6 @@
-import { AUTH, USER as CONST } from "../_constants";
-import { userService as service } from "../_services";
-import { history } from "../_helper";
+import { AUTH, USER as CONST } from "_constants";
+import { userService as service } from "_services";
+import { history } from "_helper";
 import { _am, done, failure } from "./_actionsMaker";
 
 const {

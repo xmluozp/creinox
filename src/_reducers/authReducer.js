@@ -1,4 +1,4 @@
-import { AUTH as CONST } from "../_constants";
+import { AUTH as CONST } from "_constants";
 
 let user;
 try {

@@ -2,7 +2,7 @@ import {
   authHeader,
   handleResponse,
   h_queryString,
-} from "../_helper";
+} from '_helper';
 import {RESTURL} from '../config'
 
 export const printService = {

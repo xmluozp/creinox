@@ -9,15 +9,15 @@ import Tab from "@material-ui/core/Tab";
 
 //------redux
 import { connect } from "react-redux";
-import { commodityActions as dataActions } from "../../_actions";
-import { commodityModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel } from "../../components";
-// import { enumsLabel } from "../../_constants";
-import { history, h_fkFetch } from "../../_helper";
+import { commodityActions as dataActions } from "_actions";
+import { commodityModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs, TabPanel } from "components";
+// import { enumsLabel } from "_constants";
+import { history, h_fkFetch } from "_helper";
 
 import { EmbedProductFromCommodity } from "../Product/EmbedProductFromCommodity";
 
-// import { ICONS } from "../../_constants";
+// import { ICONS } from "_constants";
 
 const EDITURL = "/commodity/commodities";
 // const LISTURL = EDITURL

@@ -1,8 +1,8 @@
 import React, { Component, Suspense } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Container } from "reactstrap";
-import Toastr from "../../components/toastr";
-import { authCheck } from "../../_helper";
+import Toastr from "components/toastr";
+import { authCheck } from "_helper";
 
 import {
   // AppAside,
@@ -17,9 +17,9 @@ import {
   AppSidebarNav
 } from "@coreui/react";
 // sidebar nav config
-import navigation from "../../_nav";
+import navigation from "_nav";
 // routes config
-import routes from "../../routes";
+import routes from "routes";
 
 // const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));

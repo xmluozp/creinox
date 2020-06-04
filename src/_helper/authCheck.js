@@ -1,5 +1,5 @@
 
-import {allAuthList} from '../_constants'
+import {allAuthList} from '_constants'
 // const testAuthList = 'system,company,product'
 
 export const authCheck = (authString = "", authTag) => {

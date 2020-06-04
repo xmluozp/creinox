@@ -1,5 +1,5 @@
 
-import {_DATATYPES} from "../_constants/_dataTypes"
+import {_DATATYPES} from "_constants/_dataTypes"
 
 export const productModel = {
     table: "product",

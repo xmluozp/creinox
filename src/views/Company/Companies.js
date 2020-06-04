@@ -7,18 +7,18 @@ import React from "react";
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
+import { ICONS } from "_constants";
+import { h_confirm, history } from "_helper";
 import {
   CreinoxTable,
   Inputs,
   // TabVertical, // 第三级菜单用
   withDatatableStore
-} from "../../components";
+} from "components";
 
 // ******************************************************************* page setting
-import { companyActions as dataActions } from "../../_actions";
-import { companyModel as dataModel } from "../../_dataModel";
+import { companyActions as dataActions } from "_actions";
+import { companyModel as dataModel } from "_dataModel";
 
 // ******************************************************************* page setting
 

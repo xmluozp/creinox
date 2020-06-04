@@ -4,16 +4,16 @@ import _ from "lodash";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { history } from "../../_helper";
+import { history } from "_helper";
 
 //------redux
 import { connect } from "react-redux";
-import { commonitemActions as dataActions } from "../../_actions";
-import { commonitemModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs } from "../../components";
-import { enumsLabel } from "../../_constants";
+import { commonitemActions as dataActions } from "_actions";
+import { commonitemModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs } from "components";
+import { enumsLabel } from "_constants";
 
-// import { h_confirm } from '../../_helper'
+// import { h_confirm } from '_helper'
 const CurrentPage = ({
   dataById,
   onGetDropdown,

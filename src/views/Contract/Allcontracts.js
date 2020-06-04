@@ -7,24 +7,24 @@ import React from "react";
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS, enums } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
+import { ICONS, enums } from "_constants";
+import { h_confirm, history } from "_helper";
 import {
   CreinoxTable,
   Inputs,
   // TabVertical, // 第三级菜单用
   withDatatableStore,
-} from "../../components";
+} from "components";
 
-import { withSimpleTable } from "../../components/SimpleTable";
+import { withSimpleTable } from "components/SimpleTable";
 
 // ******************************************************************* page setting
-import { sellcontractActions as dataActions } from "../../_actions";
+import { sellcontractActions as dataActions } from "_actions";
 import {
   sellcontractModel as dataModel,
   buycontractModel,
   sellsubitemModel,
-} from "../../_dataModel";
+} from "_dataModel";
 
 // ******************************************************************* page setting
 // customized：在销售合同下面新增工厂采购合同

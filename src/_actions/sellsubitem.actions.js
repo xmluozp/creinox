@@ -1,5 +1,5 @@
-import { SELLSUBITEM as CONST } from "../_constants";
-import { sellsubitemService as service } from "../_services";
+import { SELLSUBITEM as CONST } from "_constants";
+import { sellsubitemService as service } from "_services";
 import {
   _am,
 } from "./_actionsMaker";

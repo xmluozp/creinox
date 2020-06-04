@@ -13,11 +13,11 @@ import { connect } from "react-redux";
 import {
   buycontractActions as dataActions,
   sellcontractActions,
-} from "../../_actions";
-import { buycontractModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs, TabPanel } from "../../components";
-import { enumsLabel, enums } from "../../_constants";
-import { history, h_fkFetch } from "../../_helper";
+} from "_actions";
+import { buycontractModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs, TabPanel } from "components";
+import { enumsLabel, enums } from "_constants";
+import { history, h_fkFetch } from "_helper";
 
 import Buysubitems from "./Buysubitems";
 

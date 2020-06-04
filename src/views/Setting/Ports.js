@@ -6,13 +6,13 @@ import React from "react";
 
 //------redux
 import { connect } from "react-redux";
-import { ICONS } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
-import { CreinoxTable,Inputs, withDatatableStore } from "../../components";
+import { ICONS } from "_constants";
+import { h_confirm, history } from "_helper";
+import { CreinoxTable,Inputs, withDatatableStore } from "components";
 
 // ******************************************************************* page setting
-import { portActions as dataActions } from "../../_actions";
-import { portModel as dataModel } from "../../_dataModel";
+import { portActions as dataActions } from "_actions";
+import { portModel as dataModel } from "_dataModel";
 
 
 const EDITURL = "/setting/ports";

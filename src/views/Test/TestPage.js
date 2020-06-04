@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { CreinoxForm, Inputs } from "../../components";
+import { CreinoxForm, Inputs } from "components";
 
 export default () => {
 

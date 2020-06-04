@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
-import { Inputs } from "../../components";
-// import { enums } from "../../_constants";
-import { h_fkFetch } from "../../_helper";
+import { Inputs } from "components";
+// import { enums } from "_constants";
+import { h_fkFetch } from "_helper";
 
 // ******************************************************************* page setting
-import { buysubitemActions as dataActions } from "../../_actions";
-import { buysubitemModel as dataModel } from "../../_dataModel";
+import { buysubitemActions as dataActions } from "_actions";
+import { buysubitemModel as dataModel } from "_dataModel";
 
 const TITLE_EDIT = "编辑订单子项";
 const TITLE_CREATE = "创建订单子项";

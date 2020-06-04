@@ -7,18 +7,18 @@
 // //------redux
 // import { connect } from "react-redux";
 
-// import { ICONS, enums } from "../../_constants";
-// import { h_confirm, history } from "../../_helper";
+// import { ICONS, enums } from "_constants";
+// import { h_confirm, history } from "_helper";
 // import {
 //   CreinoxTable,
 //   Inputs,
 //   // TabVertical, // 第三级菜单用
 //   withDatatableStore
-// } from "../../components";
+// } from "components";
 
 // // ******************************************************************* page setting
-// import { sellcontractActions as dataActions } from "../../_actions";
-// import { sellcontractModel as dataModel } from "../../_dataModel";
+// import { sellcontractActions as dataActions } from "_actions";
+// import { sellcontractModel as dataModel } from "_dataModel";
 
 // // ******************************************************************* page setting
 

@@ -2,12 +2,12 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
-import { Inputs } from "../../components";
-import { enums } from "../../_constants";
+import { Inputs } from "components";
+import { enums } from "_constants";
 
 // ******************************************************************* page setting
-import { productpurchaseActions as dataActions } from "../../_actions";
-import { productpurchaseModel as dataModel } from "../../_dataModel";
+import { productpurchaseActions as dataActions } from "_actions";
+import { productpurchaseModel as dataModel } from "_dataModel";
 
 const TITLE_EDIT = "编辑工厂报价信息";
 const TITLE_CREATE = "创建工厂报价信息";

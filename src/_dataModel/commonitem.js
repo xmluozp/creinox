@@ -1,5 +1,5 @@
 
-import {_DATATYPES} from "../_constants/_dataTypes"
+import {_DATATYPES} from "_constants/_dataTypes"
 
 // 通用选项表
 export const commonitemModel = {

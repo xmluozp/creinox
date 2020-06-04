@@ -1,5 +1,5 @@
-import { PORT as CONST } from "../_constants";
-import { portService as service } from "../_services";
+import { PORT as CONST } from "_constants";
+import { portService as service } from "_services";
 import {
   _am,
 } from "./_actionsMaker";

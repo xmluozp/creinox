@@ -5,18 +5,18 @@ import _ from "lodash";
 import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 
-import { ICONS, enumsLabel } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
+import { ICONS, enumsLabel } from "_constants";
+import { h_confirm, history } from "_helper";
 import {
   CreinoxTable,
   Inputs,
   TabVertical,
   withDatatableStore
-} from "../../components";
+} from "components";
 
 // ******************************************************************* page setting
-import { commonitemActions as dataActions } from "../../_actions";
-import { commonitemModel as dataModel } from "../../_dataModel";
+import { commonitemActions as dataActions } from "_actions";
+import { commonitemModel as dataModel } from "_dataModel";
 
 const LISTURL = "/commonitems/commonitemsList";
 const EDITURL = "/commonitems/commonitemsList";

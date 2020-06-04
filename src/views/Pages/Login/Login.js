@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import Toastr from "../../../components/toastr";
-import { handleOnChange } from '../../../_helper'
-import { userActions } from '../../../_actions';
+import Toastr from 'components/toastr';
+import { handleOnChange } from '_helper'
+import { userActions } from '_actions';
 
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 

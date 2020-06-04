@@ -20,7 +20,7 @@ import commodity from "./commodityReducer";
 
 
 // usage: xxxData: reducerMaker(null, tableName="XXXTABLE")
-import { reducerMaker } from "../_helper/facelessMaker";
+import { reducerMaker } from "_helper/facelessMaker";
 
 // 多表格的时候这里是所有的reducer
 export default combineReducers({

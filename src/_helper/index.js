@@ -1,6 +1,6 @@
 // import React from 'react';
 import { createHashHistory } from 'history';
-import {userService} from '../_services'
+import {userService} from '_services'
 
 // import _ from 'lodash'
 import { format } from 'date-fns'

@@ -4,18 +4,18 @@ import _ from "lodash";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { history } from "../../_helper";
+import { history } from "_helper";
 
-import {authOptions} from '../../_constants'
-// import {} from "../../_helpe"
+import {authOptions} from '_constants'
+// import {} from "_helpe"
 
 //------redux
 import { connect } from "react-redux";
-import { roleActions as dataActions } from "../../_actions";
-import { roleModel as dataModel } from "../../_dataModel";
-import { CreinoxForm, Inputs } from "../../components";
+import { roleActions as dataActions } from "_actions";
+import { roleModel as dataModel } from "_dataModel";
+import { CreinoxForm, Inputs } from "components";
 
-// import { h_confirm } from '../../_helper'
+// import { h_confirm } from '_helper'
 const EDITURL = "/users/roles";
 
 const CurrentPage = ({

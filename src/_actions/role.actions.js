@@ -1,5 +1,5 @@
-import { ROLE as CONST } from "../_constants";
-import { roleService as service } from "../_services";
+import { ROLE as CONST } from "_constants";
+import { roleService as service } from "_services";
 import {
   _am,
 //   done,

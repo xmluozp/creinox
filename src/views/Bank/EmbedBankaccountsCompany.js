@@ -2,12 +2,12 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
-import { Inputs } from "../../components";
-import { enumsLabel } from "../../_constants";
+import { Inputs } from "components";
+import { enumsLabel } from "_constants";
 
 // ******************************************************************* page setting
-import { bankaccountActions as dataActions } from "../../_actions";
-import { bankaccountModel as dataModel } from "../../_dataModel";
+import { bankaccountActions as dataActions } from "_actions";
+import { bankaccountModel as dataModel } from "_dataModel";
 
 
 const TITLE_EDIT = "编辑账户";

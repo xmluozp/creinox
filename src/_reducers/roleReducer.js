@@ -1,4 +1,4 @@
-import { ROLE as CONST } from "../_constants";
+import { ROLE as CONST } from "_constants";
 
 // 数据传到界面上显示
 export default (state = {}, action) => {

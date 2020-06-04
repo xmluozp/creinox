@@ -1,5 +1,5 @@
-import { COMPANY as CONST, enums } from "../_constants";
-import { companyService as service } from "../_services";
+import { COMPANY as CONST, enums } from "_constants";
+import { companyService as service } from "_services";
 import {
   _am,
   // done,

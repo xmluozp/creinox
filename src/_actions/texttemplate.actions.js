@@ -1,5 +1,5 @@
-import { TEXTTEMPLATE as CONST } from "../_constants";
-import { texttemplateService as service } from "../_services";
+import { TEXTTEMPLATE as CONST } from "_constants";
+import { texttemplateService as service } from "_services";
 import {
   _am,
   failure,

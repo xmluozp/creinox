@@ -1,5 +1,5 @@
-import { BUYCONTRACT as CONST } from "../_constants";
-import { buycontractService as service } from "../_services";
+import { BUYCONTRACT as CONST } from "_constants";
+import { buycontractService as service } from "_services";
 import {
   _am,
   failure,

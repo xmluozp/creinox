@@ -6,14 +6,14 @@ import React from "react";
 
 //------redux
 import { connect } from "react-redux";
-import { ICONS } from "../../_constants";
-import { h_confirm, h_popfile } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
-import {ImageThumbLink } from "../../components/ImageThumb"
+import { ICONS } from "_constants";
+import { h_confirm, h_popfile } from "_helper";
+import { CreinoxTable, Inputs, withDatatableStore } from "components";
+import {ImageThumbLink } from "components/ImageThumb"
 
 // ******************************************************************* page setting
-import { imageActions as dataActions } from "../../_actions";
-import { imageModel as dataModel } from "../../_dataModel";
+import { imageActions as dataActions } from "_actions";
+import { imageModel as dataModel } from "_dataModel";
 
 const DATASTORE = "imageData";
 

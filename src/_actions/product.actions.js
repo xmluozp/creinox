@@ -1,5 +1,5 @@
-import { PRODUCT as CONST } from "../_constants";
-import { productService as service } from "../_services";
+import { PRODUCT as CONST } from "_constants";
+import { productService as service } from "_services";
 import { alertActions } from "./";
 import {
   _am,

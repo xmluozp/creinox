@@ -2,11 +2,11 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
-import { Inputs } from "../../components";
+import { Inputs } from "components";
 
 // ******************************************************************* page setting
-import { rostercontactActions as dataActions } from "../../_actions";
-import { rostercontactModel as dataModel } from "../../_dataModel";
+import { rostercontactActions as dataActions } from "_actions";
+import { rostercontactModel as dataModel } from "_dataModel";
 
 
 const TITLE_EDIT = "编辑联系人";

@@ -1,4 +1,4 @@
-import { LOADING } from '../_constants';
+import { LOADING } from '_constants';
 
 export const loadingActions = {
     loading,

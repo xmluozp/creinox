@@ -1,5 +1,7 @@
 
-import {_DATATYPES} from "../_constants/_dataTypes"
+import {_DATATYPES} from '_constants/_dataTypes'
+// import Hello from 'views/'
+
 
 export const categoryModel = {
     table: "category",

@@ -10,18 +10,18 @@ import Button from "@material-ui/core/Button";
 
 //------redux
 import { connect } from "react-redux";
-// import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
+// import { ICONS } from "_constants";
+import { h_confirm } from "_helper";
 import {
   CreinoxTreeview,
   Inputs,
   CreinoxForm,
   withDatatableStore
-} from "../../components";
-import { regionModel as dataModel } from "../../_dataModel";
+} from "components";
+import { regionModel as dataModel } from "_dataModel";
 
 // ******************************************************************* page setting
-import { regionActions as dataActions } from "../../_actions";
+import { regionActions as dataActions } from "_actions";
 
 const editModes = {
   none: 0,

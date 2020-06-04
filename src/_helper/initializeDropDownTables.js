@@ -1,5 +1,5 @@
 import {userActions, roleActions, commonitemActions} from '../_actions';
-import {enums} from '../_constants'
+import {enums} from '_constants'
 import store from './store';
 
 // run from App.js

@@ -6,13 +6,13 @@ import _ from "lodash";
 
 //------redux
 import { connect } from "react-redux";
-import { ICONS } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
-import { CreinoxTable, Inputs, withDatatableStore } from "../../components";
+import { ICONS } from "_constants";
+import { h_confirm, history } from "_helper";
+import { CreinoxTable, Inputs, withDatatableStore } from "components";
 
 // ******************************************************************* page setting
-import { userActions as dataActions } from "../../_actions";
-import { userModel as dataModel } from "../../_dataModel";
+import { userActions as dataActions } from "_actions";
+import { userModel as dataModel } from "_dataModel";
 
 
 const EDITURL = "/users/users";

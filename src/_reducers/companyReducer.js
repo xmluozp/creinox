@@ -1,4 +1,4 @@
-import { COMPANY as CONST } from "../_constants";
+import { COMPANY as CONST } from "_constants";
 // import {reducerMaker} from "../_helper/facelessMaker";
 
 // const returnFunction = reducerMaker(CONST);

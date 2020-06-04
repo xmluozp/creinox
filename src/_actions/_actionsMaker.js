@@ -1,4 +1,4 @@
-import { LOADING } from "../_constants";
+import { LOADING } from "_constants";
 import { alertActions } from ".";
 
 export const done = (payload, type) => {

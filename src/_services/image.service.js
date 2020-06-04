@@ -3,7 +3,7 @@ import {
   handleResponse,
   h_queryString,
   h_formData_files,
-} from "../_helper";
+} from '_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
 import {RESTURL} from '../config'

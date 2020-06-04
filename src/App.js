@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { loadingActions } from "./_actions";
-import Loading from './components/Loading'
+import Loading from 'components/Loading'
 import {h_initializeDropDownTables} from "./_helper";
 import "./App.scss";
 

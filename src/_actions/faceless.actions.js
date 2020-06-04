@@ -1,5 +1,5 @@
-import { withFacelessService } from "../_services";
-import { constMaker } from "../_helper";
+import { withFacelessService } from "_services";
+import { constMaker } from "_helper";
 import {
   _am
 } from "./_actionsMaker";

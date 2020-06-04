@@ -7,19 +7,19 @@ import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 
-import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
+import { ICONS } from "_constants";
+import { h_confirm } from "_helper";
 import {
   CreinoxTable,
   CreinoxForm,
   withDatatableStore,
   Inputs
-} from "../../components";
-import { history } from "../../_helper";
+} from "components";
+import { history } from "_helper";
 
 // ******************************************************************* page setting
-import { commodityActions as dataActions } from "../../_actions";
-import { commodityModel as dataModel } from "../../_dataModel";
+import { commodityActions as dataActions } from "_actions";
+import { commodityModel as dataModel } from "_dataModel";
 import { Button } from "reactstrap";
 
 // ******************************************************************* page setting

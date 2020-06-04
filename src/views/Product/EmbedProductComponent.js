@@ -6,14 +6,14 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 
-import { ICONS } from "../../_constants";
-import { h_confirm } from "../../_helper";
-import { CreinoxTable, withDatatableStore, Inputs } from "../../components";
-import { history } from "../../_helper";
+import { ICONS } from "_constants";
+import { h_confirm } from "_helper";
+import { CreinoxTable, withDatatableStore, Inputs } from "components";
+import { history } from "_helper";
 
 // ******************************************************************* page setting
-import { productActions as dataActions } from "../../_actions";
-import { productModel as dataModel } from "../../_dataModel";
+import { productActions as dataActions } from "_actions";
+import { productModel as dataModel } from "_dataModel";
 import { Button } from "reactstrap";
 
 // ******************************************************************* page setting

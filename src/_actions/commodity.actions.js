@@ -1,5 +1,5 @@
-import { COMMODITY as CONST } from "../_constants";
-import { commodityService as service } from "../_services";
+import { COMMODITY as CONST } from "_constants";
+import { commodityService as service } from "_services";
 import {
   _am,
   done,

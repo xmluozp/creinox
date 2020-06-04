@@ -7,20 +7,20 @@ import React from "react";
 //------redux
 import { connect } from "react-redux";
 
-import { ICONS, enums } from "../../_constants";
-import { h_confirm, history } from "../../_helper";
+import { ICONS, enums } from "_constants";
+import { h_confirm, history } from "_helper";
 import {
   CreinoxTable,
   Inputs,
   // TabVertical, // 第三级菜单用
   withDatatableStore,
-} from "../../components";
+} from "components";
 
-import { ImageThumb } from "../../components/ImageThumb";
+import { ImageThumb } from "components/ImageThumb";
 
 // ******************************************************************* page setting
-import { mouldcontractActions as dataActions } from "../../_actions";
-import { mouldcontractModel as dataModel } from "../../_dataModel";
+import { mouldcontractActions as dataActions } from "_actions";
+import { mouldcontractModel as dataModel } from "_dataModel";
 
 // ******************************************************************* page setting
 
