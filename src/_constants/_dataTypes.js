@@ -14,4 +14,5 @@ export const _DATATYPES = {
     ROW: "ROW",
     LIST:"LIST",
     ENUM: enumsLabel,
-    TT: "TT"}
+    TT: "TT",
+    IMAGE: "IMAGE"}

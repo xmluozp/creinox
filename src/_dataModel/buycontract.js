@@ -3,7 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const buycontractModel = {
     table: "buy_contract",
-    printTemplate: ["aaa.xslx"],
+    template: "buycontract",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         code:       {label: "采购合同号",     type: _DATATYPES.VARCHAR},

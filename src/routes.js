@@ -74,6 +74,7 @@ const CompaniesFactory = React.lazy(() =>
     )
   }))
 );
+
 const CompanyFactory = React.lazy(() =>
   import("./views/Company/Company").then(mymodule => ({
     default: mymodule.withCompany(

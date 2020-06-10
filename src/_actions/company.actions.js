@@ -22,43 +22,43 @@ const {
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
-function get_dropdown({ companyType = 0 }) {
-  return dispatch => {
-    dispatch(loading);
-    return service.get_dropdown(companyType).then(
-      response => {
-        const payload = {};
-        dispatch(loaded);
-        switch (companyType) {
-          case enums.companyType.internal:
-            payload.dropdown_internal = response;
-            break;
-          case enums.companyType.factory:
-            payload.dropdown_factory = response;
-            break;
-          case enums.companyType.domesticCustomer:
-            payload.dropdown_domesticCustomer = response;
-            break;
-          case enums.companyType.overseasCustomer:
-            payload.dropdown_overseasCustomer = response;
-            break;
-          case enums.companyType.shippingCompany:
-            payload.dropdown_shippingCompany = response;
-            break;
-          default:
-            break;
-        }
+// function get_dropdown({ companyType = 0 }) {
+//   return dispatch => {
+//     dispatch(loading);
+//     return service.get_dropdown(companyType).then(
+//       response => {
+//         const payload = {};
+//         dispatch(loaded);
+//         switch (companyType) {
+//           case enums.companyType.internal:
+//             payload.dropdown_internal = response;
+//             break;
+//           case enums.companyType.factory:
+//             payload.dropdown_factory = response;
+//             break;
+//           case enums.companyType.domesticCustomer:
+//             payload.dropdown_domesticCustomer = response;
+//             break;
+//           case enums.companyType.overseasCustomer:
+//             payload.dropdown_overseasCustomer = response;
+//             break;
+//           case enums.companyType.shippingCompany:
+//             payload.dropdown_shippingCompany = response;
+//             break;
+//           default:
+//             break;
+//         }
 
-        dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
-        return response;
-      },
-      error => {
-        dispatch(loadedFailure);
-        dispatch(failure(error.toString()));
-      }
-    );
-  };
-}
+//         dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
+//         return response;
+//       },
+//       error => {
+//         dispatch(loadedFailure);
+//         dispatch(failure(error.toString()));
+//       }
+//     );
+//   };
+// }
 
 // function get_bySearch(pagination, searchTerms = {}) {
 //   return dispatch => {
@@ -159,9 +159,8 @@ function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
 
-    // console.log("preConditions ???", preConditions, keyword)
-
-    if(keyword) {preConditions.keyword = keyword}
+    // 20200603: 不判断keyword是否为空因为有时候需要搜索空字符串
+    preConditions.keyword = keyword
     return service.get_disposable_dropdown(preConditions)
       .then(
         response => {
@@ -178,7 +177,7 @@ function get_disposable_dropdown(keyword, preConditions) {
 
 
 export const companyActions = {
-  get_dropdown,
+  // get_dropdown,
   get_bySearch,
   get_byId,
   post_create,

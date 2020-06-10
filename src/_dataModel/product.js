@@ -36,7 +36,7 @@ export const productModel = {
         updateUser_id:  {label: "上次操作人",     type: _DATATYPES.SELECT, ref:"user", refLabel: ["userName"]},
         category_id:      {label: "产品分类",     type: _DATATYPES.TREE, ref:"category", refLabel: ["name"]},
 
-        image_id:   {label: "图",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
+        image_id:   {label: "图",   type: _DATATYPES.IMAGE,  ref:"image", refLabel: ["thumbnailPath"]},
         "image_id.row": {label: "图",   type: _DATATYPES.ROW},
 
 

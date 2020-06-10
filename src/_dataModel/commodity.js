@@ -24,7 +24,7 @@ export const commodityModel = {
         
 
         // 不属于数据库的表，从外部获取。图片来自于产品
-        image_id:   {label: "图",   type: _DATATYPES.INT,  ref:"image", refLabel: ["thumbnailPath"]},
+        image_id:   {label: "图",   type: _DATATYPES.IMAGE,  ref:"image", refLabel: ["thumbnailPath"]},
         "image_id.row": {label: "图",   type: _DATATYPES.ROW},
 
         // 来自于销售价格表. commoditySell

@@ -68,12 +68,12 @@ export const withSellcontractList = (
       <Inputs.MyInput inputid="ename" />
       <Inputs.MyComboboxAsyncFK
         inputid="buyer_company_id"
-        label="外贸客户"
-        optionLabel="name"
         tableName="company"
-        stateName="dropdown_overseasCustomer"
+        actionName="get_disposable_dropdown"
         preConditions={{ companyType: enums.companyType.overseasCustomer }}
       />
+
+
       <Inputs.MyComboboxFK
         inputid="follower_id"
         optionLabel="userName"

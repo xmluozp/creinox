@@ -27,7 +27,6 @@ const Print = ({ dataModel, onGet, data, id }) => {
   const handleOnPrint = (file) => {
 
     const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.Name}`;
-    console.log("my path", path)
     h_pdf(path);
   };
 

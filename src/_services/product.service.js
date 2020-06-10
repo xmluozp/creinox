@@ -112,9 +112,10 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
     headers: authHeader()
   };
 
-  console.log("search service:", searchTerms);
   const queryString = h_queryString(pagination, searchTerms, TABLENAME);
-  console.log("search service:", queryString);
+
+  console.log("search service:", `${URL}?${queryString}`);
+
   return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }
 

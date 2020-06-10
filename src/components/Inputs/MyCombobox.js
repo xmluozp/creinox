@@ -122,7 +122,7 @@ export const MyCombobox = React.memo(
     } else {
       // 200329去掉hasDefault
       // optionsFix = hasDefault && !multiple
-      optionsFix = [{ id: 0, [optionLabel]: "无" }, ...options];
+      optionsFix = [{ id: 0, [optionLabel]: "-" }, ...options];
 
       currentValue =
         _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
@@ -145,6 +145,7 @@ export const MyCombobox = React.memo(
       };
 
       handleOnChange = (e, item) => {
+
         // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
         // 200329去掉hasDefault
         // const returnValue =  item && item.id >=0 ? item.id : hasDefault ? "": value;
@@ -164,12 +165,10 @@ export const MyCombobox = React.memo(
 
     const handleOnInputChange = (e, value, reason) => {
       if (typeof props.onInputChange === "function" && reason === "input") {
-        // console.log("value", value)
         props.onInputChange(e, value, reason);
       }
     };
 
-    console.log("选中的?", currentValue, value)
 
     return (
       <Autocomplete
@@ -204,6 +203,8 @@ export const MyCombobox = React.memo(
   }
 );
 // ================================================================================== Combobox FK Async
+
+// preConditions 如果是“或”的好几种preConditions。就得多取几次
 
 export const MyComboboxAsyncFK = React.memo((props) => {
   // 表名称； reducer里面的名称，默认dropdown
@@ -260,8 +261,6 @@ export const MyComboboxAsyncFK = React.memo((props) => {
 
     if (e.key === "Enter") {
       const keyword = inputRef.current.value;
-
-      console.log("fetch??",tableName,  keyword, preConditions, actionName)
 
       e.preventDefault();
       h_fkFetchOnceAsync(tableName, [keyword, preConditions], actionName)

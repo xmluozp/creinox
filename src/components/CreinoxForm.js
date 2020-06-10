@@ -3,7 +3,8 @@ import _ from "lodash";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import { ICONS } from "../_constants/icons";
+import { ICONS } from "_constants/icons";
+import {_DATATYPES} from "_constants/_dataTypes"
 import Print from './Print'
 
 /**
@@ -34,10 +35,7 @@ export class CreinoxForm extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.onPaste = this.onPaste.bind(this);
     this.onCancel = this.onCancel.bind(this);
-    this.onPrint = this.onPrint.bind(this);
-
-
-    
+    // this.onPrint = this.onPrint.bind(this);   
   }
 
   // 提交函数
@@ -68,6 +66,21 @@ export class CreinoxForm extends React.Component {
     const { dataModel } = this.props;
     let newState = { ...this.state };
     delete newState.isComponentLoaded;
+
+    // 图片类型和图库不参与复制粘贴
+    Object.keys(dataModel.columns).map((value) => {
+      if (
+        newState.hasOwnProperty(value) && (
+        dataModel.columns[value].type === _DATATYPES.IMAGE ||
+        dataModel.columns[value].type === _DATATYPES.GALLERY ||
+        dataModel.columns[value].type === _DATATYPES.ROW    //因为图片展示时候会读到.row里面。这个不需要复制
+        )
+      ) {
+        delete newState[value]
+      }
+      return null;
+    });
+
     localStorage.setItem("form." + dataModel.table, JSON.stringify(newState));
   }
 
@@ -89,10 +102,10 @@ export class CreinoxForm extends React.Component {
     }
   }
 
-  onPrint() {
-    const { dataModel } = this.props;
-    console.log("print", dataModel.template)
-  }
+  // onPrint() {
+  //   const { dataModel } = this.props;
+  //   console.log("print", dataModel.template)
+  // }
 
   // step 1/3: generate empty items ********************************************
   componentDidMount() {

@@ -60,13 +60,11 @@ export const withBuycontractList = (
     <Inputs.MyInput  inputid="code"/>
     <Inputs.MyDateRangePicker inputid="activeAt" />
     <Inputs.MyInput  inputid="ename"/>
-    <Inputs.MyComboboxFK
+    <Inputs.MyComboboxAsyncFK
         inputid="seller_company_id"
-        label="工厂"
-        optionLabel="name"
         tableName="company"
-        stateName="dropdown_factory"
-        preConditions={{ companyType: enums.companyType.factory }}
+        actionName="get_disposable_dropdown"
+        preConditions={{ }}
       />
     <Inputs.MyComboboxFK
       inputid="follower_id"
@@ -74,6 +72,8 @@ export const withBuycontractList = (
       tableName="user"/>   
     </>
   );
+
+
 
   // **************************************************************************************************
   // **************************************************************************************************

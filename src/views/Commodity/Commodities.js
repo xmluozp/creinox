@@ -113,25 +113,24 @@ export const withCommodityList = (
 
   // ============================================= Search Panel
   // 搜索框
+  // TODO: 暂时没有后台支持（因为没有订单系统），有订单系统了要根据这个字段在后台处理
   const searchBar = (
     <>
       <Inputs.MyCategoryPicker inputid="category_id" />
       <Inputs.MyInput inputid="code" />
-      <Inputs.MyComboboxFK
+      <Inputs.MyComboboxAsyncFK
         inputid="companyDomesticCustomer.id"
         label="内销客户"
-        optionLabel="name"
         tableName="company"
-        stateName="dropdown_domesticCustomer"
+        actionName="get_disposable_dropdown"
         preConditions={{ companyType: enums.companyType.domesticCustomer }}
       />
 
-      <Inputs.MyComboboxFK
+      <Inputs.MyComboboxAsyncFK
         inputid="companyOverseasCustomer.id"
         label="外贸客户"
-        optionLabel="name"
         tableName="company"
-        stateName="dropdown_overseasCustomer"
+        actionName="get_disposable_dropdown"
         preConditions={{ companyType: enums.companyType.overseasCustomer }}
       />
     </>

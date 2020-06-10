@@ -114,6 +114,7 @@ export const withProductList = (
 
   // ============================================= Search Panel
   // 搜索框
+  // DONETODO: 根据工厂搜索产品
   const searchBar = (
     <>
       <Inputs.MyCategoryPicker inputid="category_id" />
@@ -121,12 +122,10 @@ export const withProductList = (
 
        {/* 这里看的是客户的产品。看客户商品另外 */}
       <Inputs.MyInput inputid="comodity.code" />
-      <Inputs.MyComboboxFK
+      <Inputs.MyComboboxAsyncFK
         inputid="companyFactory.id"
-        label="工厂"
-        optionLabel="name"
         tableName="company"
-        stateName="dropdown_factory"
+        actionName="get_disposable_dropdown"
         preConditions={{ companyType: enums.companyType.factory }}
       />
 
