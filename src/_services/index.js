@@ -17,6 +17,8 @@ export * from './company.service';
 export * from './region.service';
 export * from './port.service';
 
+export * from './financialaccount.service'
+
 export * from './product.service';
 export * from './category.service';
 export * from './productpurchase.service'

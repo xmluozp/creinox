@@ -39,8 +39,8 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
             headers: authHeader()
           };
         
-          console.log("getId service,", id);
-          return fetch(`${targetUrl}/${id}`, requestOptions).then(handleResponse);
+          console.log("getId service,", `${targetUrl}/${id}`);
+          return fetch(`${RESTURL}${targetUrl}/${id}`, requestOptions).then(handleResponse);
     }
     
     function post_create(item) {
@@ -53,7 +53,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
         
           console.log("处理过的json: create",h_nilFilter(item), targetUrl)
           
-          return fetch(`${targetUrl}`, requestOptions).then(handleResponse);
+          return fetch(`${RESTURL}${targetUrl}`, requestOptions).then(handleResponse);
     }
     
     function put_update(item) {
@@ -63,7 +63,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
             body: JSON.stringify(h_nilFilter_update(item))
           };
           console.log("处理过的json: update",h_nilFilter(item), targetUrl)
-          return fetch(`${targetUrl}`, requestOptions).then(handleResponse);
+          return fetch(`${RESTURL}${targetUrl}`, requestOptions).then(handleResponse);
     }
     
     // prefixed function name with underscore because delete is a reserved word in javascript
@@ -74,7 +74,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
           headers: authHeader()
         };
       
-        return fetch(`${targetUrl}/${id}`, requestOptions)
+        return fetch(`${RESTURL}${targetUrl}/${id}`, requestOptions)
           .then(handleResponse);
     }
     

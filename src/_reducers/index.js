@@ -53,6 +53,8 @@ export default combineReducers({
   regionData: region,
   portData: reducerMaker(null, "PORT"),
 
+  financialaccountData: reducerMaker(null, "FINANCIALACCOUNT"),
+
   // 产品、商品
   categoryData: category,
   productData: product,

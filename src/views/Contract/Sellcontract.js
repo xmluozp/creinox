@@ -25,6 +25,8 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onGetDefaultCode,
+    onGetInvoiceCode,
     onClear,
     ...props
   }) => {
@@ -81,6 +83,16 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         });
     };
 
+    const handleOnGetDefaultCode = async () => {
+      const defaultValue = await onGetDefaultCode();
+      return defaultValue;
+    };
+
+    const handleOnGetInvoiceCode = async () => {
+      const defaultValue = await onGetInvoiceCode();
+      return defaultValue;
+    };
+
     return (
       <>
         {/* 主框架 */}
@@ -120,7 +132,11 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                     onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
-                      {formInputs(disabled)}
+                      {formInputs(
+                        disabled,
+                        handleOnGetDefaultCode,
+                        handleOnGetInvoiceCode
+                      )}
                     </Grid>
                     <Grid container spacing={2}>
                       {isFromEdit && ( // only show edit button when update
@@ -176,11 +192,11 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
   };
 
   //
-  const formInputs = (disabled) => {
+  const formInputs = (disabled, onGetDefaultCode, OnGetInvoiceCode) => {
     return (
       <>
         {/* 基本信息 */}
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
             inputid="follower_id"
             optionLabel="userName"
@@ -188,7 +204,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             disabled={disabled}
           />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={5} md={5} xs={12}>
           <Inputs.MyComboboxAsyncFK
             disabled={disabled}
             inputid="buyer_company_id"
@@ -197,7 +213,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             preConditions={{ companyType: enums.companyType.overseasCustomer }}
           />
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={5} md={5} xs={12}>
           <Inputs.MyComboboxAsyncFK
             disabled={disabled}
             inputid="seller_company_id"
@@ -207,7 +223,10 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
           />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
+          <Inputs.MyInput inputid="code" disabled={disabled} onGetDefault={onGetDefaultCode}/>
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="invoiceCode" disabled={disabled} onGetDefault={OnGetInvoiceCode}/>
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="orderNumber" disabled={disabled} />
@@ -225,22 +244,22 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             disabled={disabled}
           />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxPricingTerm
             inputid="pricingTerm_id"
             disabled={disabled}
           />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxPaymentTypeE
             inputid="paymentType_id"
             disabled={disabled}
           />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxFK
             inputid="departure_port_id"
             optionLabel="name"
@@ -249,7 +268,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             preConditions={{ isDeparture: 1 }}
           />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxFK
             inputid="destination_port_id"
             optionLabel="name"
@@ -258,11 +277,13 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             preConditions={{ isDestination: 1 }}
           />
         </Grid>
-
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyInputTT inputid="tt_packing" disabled={disabled} />
+        </Grid>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInputTT inputid="tt_shipmentDue" disabled={disabled} />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxCurrency
             inputid="currency_id"
             disabled={disabled}
@@ -342,6 +363,9 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
     onGetById: dataActions.get_byId,
+    onGetDefaultCode: dataActions.get_disposable_defaultCode,
+    onGetInvoiceCode: dataActions.get_disposable_invoiceCode,
+
     onClear: dataActions._clear,
   };
 

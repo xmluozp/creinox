@@ -17,6 +17,8 @@ export const ICONS = {
     COPY: (className) => <i className={`fa fa-copy icons ${className}`}></i>,
     PASTE: (className) => <i className={`fa fa-paste icons ${className}`}></i>,
     PRINT:(className) => <i className={`fa fa-print icons ${className}`}></i>,
+
+    DOWNLOAD:(className) => <i className={`fa fa-download icons ${className}`}></i>,
     
     ACTIVE: (className) => <i className={`cui-settings icons ${className}`}></i>,
   }

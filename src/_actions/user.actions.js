@@ -1,7 +1,7 @@
 import { AUTH, USER as CONST } from "_constants";
 import { userService as service } from "_services";
 import { history } from "_helper";
-import { _am, done, failure } from "./_actionsMaker";
+import { _am, done, failure, loading, loaded, loadedFailure } from "./_actionsMaker";
 
 const {
   get_dropdown,
@@ -50,6 +50,40 @@ function login(userName, password) {
   };
 }
 
+
+function get_loginUserList() {
+  return dispatch => {
+    dispatch(loading);
+
+    return service.get_loginUserList().then(
+      response => {
+        dispatch(loaded);
+        // dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
+ 
+        // console.log("dropdown test", response)
+        let returnValue = []
+        if (response && response.rows) {
+          returnValue = response.rows.map(item => {
+            item.name = `[${item.fullName}] ${item.userName}`;
+            return item;
+          });
+        }
+        return { rows: returnValue };
+
+
+        // return response;
+      },
+      error => {
+        dispatch(loadedFailure);
+
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
+      }
+    );
+  };
+}
+
+
 // LOGOUT ---------------------------------------------
 function logout() {
   service.logout();
@@ -67,5 +101,7 @@ export const userActions = {
   post_create,
   put_update,
   _delete,
+
+  get_loginUserList,
   _clear
 };

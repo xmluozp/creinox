@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 import { format } from "date-fns";
-import { history , h_setHistoryQuery, h_getHistoryQuery} from "../_helper";
+import { history , h_setHistoryQuery, h_getHistoryQuery, h_getTableUniqueCode, h_removeHistoryQuery} from "../_helper";
 
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -117,30 +117,28 @@ export const CreinoxTable = ({
 
   // table的唯一标识。用来在返回的时候，从storage里存储和读取搜索结果的历史记录用
   const getTableUniqueCode = () => {
+    return h_getTableUniqueCode(dataModel.table, tableTitle)
+  }  
 
-    const str = dataModel.table + tableTitle
-
-    var number = "0x";
-    var length = str.length;
-    for (var i = 0; i < length; i++)
-        number += str.charCodeAt(i).toString(16);
-    return number;
-  }
 
   // 根据store的翻页信息更新data (刷新触发)
   const p_updateData = (newPagination = defaultPagination, newSearchTerms = {}) => {
 
     // call onGetBySearch #2
-    onGetBySearch(newPagination, { ...preConditions, ...newSearchTerms });
+    // 200729: preConditions 应该有更高的优先级. 因为它代表的是前提条件.
+    onGetBySearch(newPagination, { ...newSearchTerms, ...preConditions});
 
     // 20200601 更新历史记录。用来做浏览器返回用。记录根据dataModel来
-    h_setHistoryQuery(getTableUniqueCode(), {pagination: newPagination, searchTerms: { ...preConditions, ...newSearchTerms }})
+    // h_setHistoryQuery(getTableUniqueCode(), {pagination: newPagination, searchTerms: { ...preConditions, ...newSearchTerms }})
+
+    // 20200728 preConditions让给外部操控。外部换了preCondition这里就应该是新的
+    h_setHistoryQuery(getTableUniqueCode(), {pagination: newPagination, searchTerms: { ...newSearchTerms, ...preConditions }})
   };
 
   // 进入页面时更新data (跳转触发)
   const p_fetchData = React.useCallback(
     () => {
-      
+ 
       let p, s
       const query = h_getHistoryQuery(getTableUniqueCode())
 
@@ -152,9 +150,8 @@ export const CreinoxTable = ({
         p = defaultPagination;
         s = {}
       }
-
       // call onGetBySearch #1
-      return onGetBySearch(p, {...preConditions, ...s});
+      return onGetBySearch(p, {...s, ...preConditions});
     }, // submit empty. refresh by store
     [onGetBySearch, preConditions]
   );
@@ -168,8 +165,10 @@ export const CreinoxTable = ({
     };
   }, [data]);
 
-  // 从外部强制刷新数据用
+  // 从外部强制刷新数据用. 页码设回0, 返回用的翻页记录清空.
   React.useEffect(() => {
+    setPage(0)
+    h_removeHistoryQuery(getTableUniqueCode())
     p_fetchData();
   }, [toggle]);
 
@@ -204,6 +203,8 @@ export const CreinoxTable = ({
   };
 
   const handleChangePage = (e, newPage) => {
+
+    console.log("change page", page, newPage)
     if (page === newPage) return;
 
     setPage(newPage);

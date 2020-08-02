@@ -2,7 +2,7 @@
 import { createHashHistory } from 'history';
 import {userService} from '_services'
 
-// import _ from 'lodash'
+import _ from 'lodash'
 import { format } from 'date-fns'
 
 
@@ -66,7 +66,6 @@ export function handleJsonResponse(response) {
                 window.location.reload(true);
             }
 
-            
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
@@ -76,6 +75,23 @@ export function handleJsonResponse(response) {
     });
 }
 
+// read byte[] file
+export function handleFileResponse(response) {
+    if (!response.ok) {
+        if (response.status === 401) {
+            // auto logout if 401 response returned from api
+            userService.logout();
+            window.location.reload(true);
+        }
+        
+        const error = response.statusText;
+        return Promise.reject(error);
+    } else {
+        return response
+    }
+}
+
+
 
 export function handleOnChange(e, setFunc) {
     e.preventDefault();
@@ -84,7 +100,33 @@ export function handleOnChange(e, setFunc) {
     // console.log("funcs:", test);
 }
 
+export function h_code_plus_one(s) {
 
+    if (typeof(s) !== "string") return s
+
+    const num = []
+    const str = s.split('')
+
+    while(str.length > 0) {
+        const c = str.pop()
+        if (c >= '0' && c <= '9') {
+            num.push(c)
+        } else {
+            str.push(c)
+            break;
+        }       
+    }
+
+    if (num.length > 0) {
+        const trailNumber = parseInt(num.reverse().join('')) 
+
+        const r1 = str.join('')
+        const r2 = trailNumber + 1
+        return r1 + _.padStart(r2, num.length, '0');
+    }
+
+    else return s
+}
 
 export function h_keyNames(object) {
     const returnValue = {}
@@ -222,13 +264,15 @@ export function h_formData_files(itemList, folder_structure) {
     return formData
 }
 
-// 下载
-export function h_download(path) {
+// 下载(目前只有xlsx在用，之后也许会增加)
+export function h_download(origin_path) {
 
     const requestOptions = {
         method: "GET",
         headers: authHeader(),
       };
+
+    const path = origin_path + "/xlsx"
 
     fetch(path, requestOptions).then( response => {
         if(response.ok) {
@@ -236,9 +280,10 @@ export function h_download(path) {
             var file = response.blob();
             return file
         }
+        return Promise.reject(response.statusText);
     }).then(response => {
 
-        const fileName = path.split("/").pop()
+        const fileName = origin_path.split("/").pop()
 
         const newUrl = URL.createObjectURL(response);
         var a = document.createElement("a");
@@ -260,30 +305,29 @@ export function h_download(path) {
     });
 }
 
-// 打开成pdf
-export function h_pdf(path) {
+// // 打开成pdf (做在action里，因为要loading条)
+// export function h_pdf(origin_path) {
 
-    const requestOptions = {
-        method: "GET",
-        headers: authHeader(),
-      };
+//     const requestOptions = {
+//         method: "GET",
+//         headers: authHeader(),
+//       };
 
-    fetch(path, requestOptions).then( response => {
-        if(response.ok) {
+//     const path = origin_path + "/pdf"
 
-            var file1 = response.blob();
-            return file1
-        }
-    }).then(response => {
+//     fetch(path, requestOptions).then( response => {
+//         if(response.ok) {
 
+//             var file1 = response.blob();
+//             return file1
+//         }
+//     }).then(response => {
+//         const newUrl = URL.createObjectURL(response);
+//         window.open(newUrl, "_blank");
+//     });
+// }
 
-        const newUrl = URL.createObjectURL(response);
-
-        window.open(newUrl, "_blank");
-    });
-}
-
-// 直接打开
+// 直接打开(看图片用)
 export function h_popfile(path) {
 
     const requestOptions = {
@@ -307,8 +351,22 @@ export function h_setHistoryQuery (key, query) {
     localStorage.setItem("query." + key, JSON.stringify(query));
 
 }
+export function h_removeHistoryQuery (key) {
+    localStorage.removeItem("query." + key)
+}
 
 // 为了返回上一页保留搜索结果用。读取搜索关键词
 export function h_getHistoryQuery (key) {
     return JSON.parse(localStorage.getItem("query." + key));
 }
+
+export function h_getTableUniqueCode (tableName, tableTitle) {
+
+    const str = tableName + tableTitle
+
+    var number = "0x";
+    var length = str.length;
+    for (var i = 0; i < length; i++)
+        number += str.charCodeAt(i).toString(16);
+    return number;
+  }

@@ -68,7 +68,7 @@ const InputTT = React.memo(
         if (selectedText) {
           onPutUpdate({
               targetTable,
-              columnName: id,
+              columnName,
               id: selectedId, 
               content: selectedText
             }, () => {
@@ -82,8 +82,8 @@ const InputTT = React.memo(
         if (targetTable) {
             onPostCreate({
                 name: targetTable +"/" + label,
-                targetTable: targetTable,
-                columnName: columnName,
+                targetTable,
+                columnName,
                 content: selectedText
             }, () => {
                 onGetBySearch({}, {targetTable, columnName});

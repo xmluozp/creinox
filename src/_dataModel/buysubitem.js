@@ -28,6 +28,8 @@ export const buysubitemModel = {
 
         fcl20:      {label: "20 FCL",     type: _DATATYPES.DECIMAL},   
         fcl40:      {label: "40 FCL",     type: _DATATYPES.DECIMAL},   
+        pickuptimeAt:    {label: "提货时间",     type: _DATATYPES.DATETIME},   
+
 
         // 用来定位20 FCL, 40 FCL
         sell_subitem_id:      {label: "对应外贸子合同",       type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["buyerCode"]},     

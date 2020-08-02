@@ -1,1 +1,18 @@
-// Here you can add other styles
+
+// nprogress bar color, 修改它是因为在弹出窗口的遮罩背景下看不清
+#nprogress .bar {
+    background: #ffba00;
+    z-index: 2000;
+    height: 3px;
+  }
+
+#nprogress .peg {
+display: block;
+position: absolute;
+right: 0px;
+width: 100px;
+height: 100%;
+box-shadow: 0 0 10px #ffba00, 0 0 5px #ffba00;
+
+
+}

@@ -29,6 +29,8 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onGetDefaultCode,
+    onGetInvoiceCode,
     sc_onGetById,
     onClear,
     sc_onClear,
@@ -60,6 +62,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
 
     //******************************************** 获取上级订单(
     // 有3种可能获取上级订单：param，直接通过buyId读取对应的sellId，下拉选择sellContract
+    // TODO: 0731 需要修改三种方式： param里面的上级的order_form_id, dataById里面的parent_id, 下拉选择的sellContract对应的 order_form_id
     const parm_sc_id =
       parseInt(_.get(props, "match.params.sell_contract_id")) || "";
     const read_sc_id =
@@ -120,6 +123,16 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         });
     };
 
+    const handleOnGetDefaultCode = async () => {
+      const defaultValue = await onGetDefaultCode();
+      return defaultValue;
+    };
+
+    const handleOnGetInvoiceCode = async () => {
+      const defaultValue = await onGetInvoiceCode();
+      return defaultValue;
+    };
+
     let defaultData = isFromEdit && dataById && { ...dataById.row };
 
     // console.log("default", defaultData )
@@ -166,7 +179,9 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                         disabled,
                         isFromEdit,
                         parm_sc_id,
-                        handleOnSelect_sc
+                        handleOnSelect_sc,
+                        handleOnGetDefaultCode,
+                        handleOnGetInvoiceCode
                       )}
                     </Grid>
                     <Grid container spacing={2}>
@@ -226,7 +241,14 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
   };
 
   //
-  const formInputs = (disabled, isFromEdit, parm_sc_id, onSelect_sc) => {
+  const formInputs = (
+    disabled,
+    isFromEdit,
+    parm_sc_id,
+    onSelect_sc,
+    onGetDefaultCode,
+    OnGetInvoiceCode
+  ) => {
     return (
       <>
         {/* 假如从属性里获得了销售合同，就不允许手动选择 */}
@@ -270,8 +292,19 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
 
         {/* 基本信息 */}
 
-        <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyInput
+            inputid="code"
+            disabled={disabled}
+            onGetDefault={onGetDefaultCode}
+          />
+        </Grid>
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyInput
+            inputid="invoiceCode"
+            disabled={disabled}
+            onGetDefault={OnGetInvoiceCode}
+          />
         </Grid>
 
         <Grid item lg={6} md={6} xs={12}>
@@ -301,7 +334,6 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
         </Grid>
-
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyInputTT inputid="tt_quality" disabled={disabled} />
         </Grid>
@@ -378,6 +410,9 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
     onPutUpdate: dataActions.put_update,
     onGetById: dataActions.get_byId,
     onClear: dataActions._clear,
+    onGetDefaultCode: dataActions.get_disposable_defaultCode,
+    onGetInvoiceCode: dataActions.get_disposable_invoiceCode,
+
     sc_onGetById: sellcontractActions.get_byId,
     sc_onClear: sellcontractActions._clear,
   };

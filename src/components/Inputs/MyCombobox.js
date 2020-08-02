@@ -496,8 +496,21 @@ export const MyComboboxPaymentTypeE = React.memo((props) => {
     />
   );
 });
+
 export const MyComboboxCommission = React.memo((props) => {
   const commonTypeName = "commission";
+  return (
+    <MyComboboxFK
+      tableName="commonitem"
+      stateName={`dropdown_${commonTypeName}`}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
+      {...props}
+    />
+  );
+});
+
+export const MyComboboxFinancialSubject = React.memo((props) => {
+  const commonTypeName = "financialSubject";
   return (
     <MyComboboxFK
       tableName="commonitem"

@@ -22,6 +22,7 @@ export * from "./company.actions";
 export * from "./region.actions";
 export * from "./port.actions";
 
+export * from "./financialaccount.actions";
 
 export * from "./product.actions";
 export * from "./category.actions";

@@ -115,6 +115,8 @@ export const withProduct = () => {
 
     // =============== 编辑页加载的值 ====================================={
     const defaultValues = isFromEdit && dataById && dataById.row;
+    const image_id =
+      dataById && dataById.row && dataById.row.image_id; // 删除用
 
     // values when add new productPurchase
     const preConditionsOfProductPurchase = defaultValues && {
@@ -280,7 +282,10 @@ export const withProduct = () => {
           </Grid>
           <Grid item lg={4} md={4} xs={12}>
             <Grid container spacing={2}>
-              <Inputs.MyImage inputid="image_id.row" disabled={disabled} />
+              <Inputs.MyImage 
+              inputid="image_id.row" 
+              imageId={image_id}
+              disabled={disabled} />
             </Grid>
           </Grid>
         </Grid>

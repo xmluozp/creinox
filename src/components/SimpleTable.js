@@ -55,7 +55,7 @@ export const withSimpleTable = (headCells, dataModel) => {
           <TableBody>
             {/* ============================= row =============================== */}
             {data && data.map((row, rowIndex) => (
-              <TableRow key={row.id + row.code}>
+              <TableRow key={`row_${rowIndex}`}>
                 {headCells.map((column, columnIndex) => {
                   // 取出预处理后的cell:{cellProps, columnContent}
                   const columnObj =
@@ -66,7 +66,7 @@ export const withSimpleTable = (headCells, dataModel) => {
                   const cellProps = columnObj.cellProps;
 
                   return (
-                    <TableCell key={`${row.id}_${columnIndex}`} {...cellProps}>
+                    <TableCell key={`column_${rowIndex}_${columnIndex}`} {...cellProps}>
                       {columnContent}
                     </TableCell>
                   );
@@ -81,7 +81,7 @@ export const withSimpleTable = (headCells, dataModel) => {
                     >
                       {rowButtons.map((buttonObj, index) => (
                         <ActionButton
-                          key={`button_${row.id}_${index}`}
+                          key={`row_${rowIndex}_button_${index}`}
                           {...buttonObj}
                           disabled="true"
                           id={row.id}

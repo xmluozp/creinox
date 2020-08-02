@@ -15,8 +15,8 @@ export const mouldcontractModel = {
         prepayPrice:        {label: "预付价",     type: _DATATYPES.MONEY},
 
         // 几个日期相关
-        prepayAt:           {label: "预付日期", type: _DATATYPES.DATE},
         activeAt:           {label: "签约日期", type: _DATATYPES.DATE},
+        prepayAt:           {label: "预付日期", type: _DATATYPES.DATE},
         scheduleAt:         {label: "预定交付期", type: _DATATYPES.DATE},
         deliverAt:          {label: "实际交付期", type: _DATATYPES.DATE},        
         buyer_signAt:       {label: "甲方签字日期", type: _DATATYPES.DATE},
@@ -50,6 +50,7 @@ export const mouldcontractModel = {
         gallary_folder_id:  {label: "图库",     type: _DATATYPES.GALLERY},
 
         // 从order form 读出来的内容
+        invoiceCode:            {label: "发票号",  type: _DATATYPES.VARCHAR}, 
         totalPrice:             {label: "总金额",  type: _DATATYPES.MONEY}, // 前端需要转成中文大写显示 https://juejin.im/post/5e1331046fb9a0482f7a37e0
         paidPrice:              {label: "已支付",  type: _DATATYPES.MONEY},
         seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
@@ -57,8 +58,9 @@ export const mouldcontractModel = {
         isDone:                 {label: "合同是否完成", type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         order_memo:             {label: "管理员备注",   type: _DATATYPES.TEXT},
 
-        temp_sellerbank:        {label: "乙方银行资料快捷读取",    type: _DATATYPES.SELECT},
         temp_buyerbank:        {label: "甲方银行资料快捷读取",    type: _DATATYPES.SELECT},
+        temp_sellerbank:        {label: "乙方银行资料快捷读取",    type: _DATATYPES.SELECT},
+
         //--------------------------- 显示在列表里的时候需要（因为要取name）
         // "buyer_company_id.row":     {label: "甲方公司",   type: _DATATYPES.ROW},
         // "seller_company_id.row":    {label: "乙方公司",   type: _DATATYPES.ROW},

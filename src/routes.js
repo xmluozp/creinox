@@ -45,6 +45,11 @@ const Buycontracts = React.lazy(() => import("./views/Contract/Buycontracts"));
 const Mouldcontract = React.lazy(() => import("./views/Contract/Mouldcontract"));
 const Mouldcontracts = React.lazy(() => import("./views/Contract/Mouldcontracts"));
 
+//================ financial
+const FinancialAccounts = React.lazy(() => import("./views/Financial/FinancialAccounts"));
+const FinancialAccount = React.lazy(() => import("./views/Financial/FinancialAccount"));
+
+
 //================ company types
 
 const CompaniesInternal = React.lazy(() =>
@@ -338,6 +343,33 @@ const routes = [
     component: Mouldcontract,
     authTag: "mouldcontract"
   },
+
+//
+
+  //--------------------------------------------- 财务
+  {
+    path: "/financial/financialaccounts/:where/",
+    exact: true,
+    name: "财务账户",
+    component: FinancialAccounts,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialaccounts/:where/add",
+    exact: true,
+    name: "新增",
+    component: FinancialAccount,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialaccounts/:where/:id",
+    exact: true,
+    name: "详情",
+    component: FinancialAccount,
+    authTag: "financial"
+  },
+
+
   //--------------------------------------------- 公司
   {
     path: "/companyinternal/companies",

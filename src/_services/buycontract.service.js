@@ -11,7 +11,7 @@ export const buycontractService = {
     put_update,
     _delete: _delete,
     
-    get_last
+    get_last,
 };
 
 const TABLENAME = "buy_contract";
@@ -79,7 +79,6 @@ function get_last() {
 
     return fetch(`${URL_GET_LAST}`, requestOptions).then(handleResponse);
 }
-
 
 function post_create(item) {
     const requestOptions = {

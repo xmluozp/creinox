@@ -23,6 +23,8 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onGetDefaultCode,
+    onGetInvoiceCode,
     onClear,
     ...props
   }) => {
@@ -43,17 +45,17 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
 
       return () => {
         onClear();
-      }
+      };
     }, [onGetById, id]);
 
     // ********************************
 
-    const handleOnSubmit = values => {
+    const handleOnSubmit = (values) => {
       if (isFromEdit) {
         onPutUpdate(values);
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate(values, id => {
+        onPostCreate(values, (id) => {
           history.push(EDITURL + "/" + id);
         });
       }
@@ -61,7 +63,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
 
     // ******************************** injector: 用来读取最近一条合同
     const [injector, setInjector] = useState(null);
-    const handleGetInjector = inj => {
+    const handleGetInjector = (inj) => {
       setInjector(inj);
     };
 
@@ -70,16 +72,26 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
 
     const handleOnRead = () => {
       h_fkFetch("mouldcontract", [], "get_last")
-        .then(response => {
+        .then((response) => {
           if (response && response.id) {
             delete response["id"];
             delete response["updateAt"];
             injector(response);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("暂时没有合同记录", error);
         });
+    };
+
+    const handleOnGetDefaultCode = async () => {
+      const defaultValue = await onGetDefaultCode();
+      return defaultValue;
+    };
+
+    const handleOnGetInvoiceCode = async () => {
+      const defaultValue = await onGetInvoiceCode();
+      return defaultValue;
     };
 
     return (
@@ -118,7 +130,12 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
                     onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
-                          {formInputs(disabled, injector)}
+                      {formInputs(
+                        disabled,
+                        injector,
+                        handleOnGetDefaultCode,
+                        handleOnGetInvoiceCode
+                      )}
                     </Grid>
                     <Grid container spacing={2}>
                       {isFromEdit && ( // only show edit button when update
@@ -129,17 +146,18 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
                           />
                         </Grid>
                       )}
-                      {!isFromEdit && 
-                      <Grid item>
+                      {!isFromEdit && (
+                        <Grid item>
                           <Button
                             type="button"
                             variant="contained"
                             color="default"
-                            onClick = {handleOnRead}
-                          >复制最近一张合同的内容</Button>
-                      </Grid>
-                      }
-                      
+                            onClick={handleOnRead}
+                          >
+                            复制最近一张合同的内容
+                          </Button>
+                        </Grid>
+                      )}
 
                       {disabled || ( // when browsering, hide save button
                         <Grid item>
@@ -158,13 +176,13 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
                 <TabPanel value={tabSelect} index={1}>
                   <Gallery
                     folder_id={folder_id}
-                    folder_structure = {{
-                      memo:"mould_contract/" + id,
+                    folder_structure={{
+                      memo: "mould_contract/" + id,
                       RefSource: "mould_contract.gallary_folder_id",
                       RefId: id,
-                      folderType:1,
+                      folderType: 1,
                       tableName: "mould_contract",
-                      columnName: "gallary_folder_id"
+                      columnName: "gallary_folder_id",
                     }}
                   />
                 </TabPanel>
@@ -177,49 +195,52 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   };
 
   //
-  const formInputs = (disabled, injector) => {
-
+  const formInputs = (
+    disabled,
+    injector,
+    onGetDefaultCode,
+    OnGetInvoiceCode
+  ) => {
     const handleChangeSellerBank = (selectData) => {
-      if(selectData && selectData.id) {
+      if (selectData && selectData.id) {
         injector({
           seller_accountName: selectData.accountName,
           seller_accountNo: selectData.accountNo,
-          seller_bankName: selectData.bankName
-        })
+          seller_bankName: selectData.bankName,
+        });
       }
-    }
+    };
 
     const handleChangeBuyerBank = (selectData) => {
-      if(selectData && selectData.id) {
+      if (selectData && selectData.id) {
         injector({
           buyer_accountName: selectData.accountName,
           buyer_accountNo: selectData.accountNo,
-          buyer_bankName: selectData.bankName
-        })
+          buyer_bankName: selectData.bankName,
+        });
       }
-    }
-    
+    };
+
     const handleChangeProduct = (selectData) => {
-      if(selectData && selectData.id) {
+      if (selectData && selectData.id) {
         injector({
-          spec: selectData.spec1
-        })
+          spec: selectData.spec1,
+        });
       }
-    }
-    
+    };
 
     return (
       <>
         {/* 基本信息 */}
-     
+
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
             inputid="product_id"
             tableName="product"
             actionName="get_disposable_dropdown"
-            onSelect = {handleChangeProduct}
+            onSelect={handleChangeProduct}
           />
-        </Grid>   
+        </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
             inputid="follower_id"
@@ -229,33 +250,35 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} />
+          <Inputs.MyInput inputid="code" disabled={disabled} onGetDefault={onGetDefaultCode}/>
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
+          <Inputs.MyInput inputid="invoiceCode" disabled={disabled} onGetDefault={OnGetInvoiceCode}/>
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
         </Grid>
-
 
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="totalPrice" disabled={disabled} />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="unitPrice" disabled={disabled} />
-        </Grid>  
+        </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="prepayPercentage" disabled={disabled} />
-        </Grid>  
+        </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="prepayPrice" disabled={disabled} />
-        </Grid>  
-        <Grid item lg={4} md={2} xs={12}>
+        </Grid>
+        <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxCurrency
             inputid="currency_id"
             disabled={disabled}
           />
         </Grid>
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MyInput inputid="spec" disabled={disabled}/>
+          <Inputs.MyInput inputid="spec" disabled={disabled} />
         </Grid>
 
         <Grid item lg={2} md={2} xs={12}>
@@ -272,14 +295,14 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="deliverDueDays" disabled={disabled} />
-        </Grid> 
+        </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="confirmDueDays" disabled={disabled} />
-        </Grid> 
+        </Grid>
 
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
-          disabled={disabled}
+            disabled={disabled}
             inputid="buyer_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
@@ -293,10 +316,9 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           <Inputs.MyDatePicker inputid="buyer_signAt" disabled={disabled} />
         </Grid>
 
-
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
-          disabled={disabled}
+            disabled={disabled}
             inputid="seller_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
@@ -310,49 +332,48 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           <Inputs.MyDatePicker inputid="seller_signAt" disabled={disabled} />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
-
-        <Inputs.MyComboboxCascade
-          inputid="temp_sellerbank"
-          disabled={disabled}
-          listen={{"buyer_company_id": "company_id"}}
-          tableName="bankaccount"
-          optionLabel="accountNo"
-          actionName="get_dropdown"
-          onSelect = {handleChangeBuyerBank}
-        />
-        </Grid> 
+          <Inputs.MyComboboxCascade
+            inputid="temp_buyerbank"
+            disabled={disabled}
+            listen={{ buyer_company_id: "company_id" }}
+            tableName="bankaccount"
+            optionLabel="accountNo"
+            actionName="get_dropdown"
+            onSelect={handleChangeBuyerBank}
+          />
+        </Grid>
 
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyer_accountName" disabled={disabled} />
-        </Grid> 
+        </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyer_accountNo" disabled={disabled} />
-        </Grid> 
+        </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="buyer_bankName" disabled={disabled} />
-        </Grid> 
-
+        </Grid>
 
         <Grid item lg={3} md={3} xs={12}>
-        <Inputs.MyComboboxCascade
-          inputid="temp_buyerbank"
-          disabled={disabled}
-          listen={{"seller_company_id": "company_id"}}
-          tableName="bankaccount"
-          optionLabel="accountNo"
-          actionName="get_dropdown"
-          onSelect = {handleChangeSellerBank}
-        /></Grid> 
+          <Inputs.MyComboboxCascade
+            inputid="temp_sellerbank"
+            disabled={disabled}
+            listen={{ seller_company_id: "company_id" }}
+            tableName="bankaccount"
+            optionLabel="accountNo"
+            actionName="get_dropdown"
+            onSelect={handleChangeSellerBank}
+          />
+        </Grid>
 
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="seller_accountName" disabled={disabled} />
-        </Grid> 
+        </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="seller_accountNo" disabled={disabled} />
-        </Grid> 
+        </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="seller_bankName" disabled={disabled} />
-        </Grid> 
+        </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
           <Inputs.MyInputTT inputid="tt_memo" disabled={disabled} />
@@ -366,9 +387,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           <Inputs.MyInput inputid="order_memo" disabled={disabled} />
         </Grid>
 
-
-
-        <Grid item lg={6}  md={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
             optionLabel="userName"
@@ -376,10 +395,9 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
             disabled={true}
           />
         </Grid>
-        <Grid item lg={6}  md={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
-
       </>
     );
   };
@@ -388,7 +406,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   function mapState(state) {
     return {
       dataById: state.mouldcontractData.dataById,
-      errorById: state.mouldcontractData.errorById
+      errorById: state.mouldcontractData.errorById,
     };
   }
 
@@ -396,6 +414,9 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
     onGetById: dataActions.get_byId,
+    onGetDefaultCode: dataActions.get_disposable_defaultCode,
+    onGetInvoiceCode: dataActions.get_disposable_invoiceCode,
+
     onClear: dataActions._clear,
   };
 

@@ -162,10 +162,12 @@ const FormInputs = ({
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxCurrency inputid="currency_id" />
         </Grid>
-        <Grid item lg={6} md={6} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="spec" />
         </Grid>
-
+        <Grid item lg={3} md={3} xs={12}>
+          <Inputs.MyDatePicker inputid="pickuptimeAt" />
+        </Grid>
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="thickness" />
         </Grid>

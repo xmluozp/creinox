@@ -1,8 +1,10 @@
 export * from './role'
 export * from './user'
 export * from './company'
+export * from './financialaccount'
 export * from './region'
 export * from './port'
+
 
 export * from './sellcontract'
 export * from './sellsubitem'

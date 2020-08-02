@@ -92,10 +92,16 @@ export const withTablePage = () => {
 
     // 3rd navigation: handle page switch
     const handleOnSelectCommonType = commonTypeIndex => {
+
       setPreCondition({ commonType: commonTypeIndex }); // 设置precondition为了toggle用
+
+      // 清空历史记录（否则为了方便编辑与返回上一页，历史记录会记住当前页面和搜索结果，导致切换分类时换不过去）
+      // 200729 放在table里面toggle的地方清空
+      // h_removeHistoryQuery(h_getTableUniqueCode(dataModel.table,  enumsLabel.commonType[currentCommonType]))
+
       history.push(`${LISTURL}/${commonTypeIndex}`); // 标记url的param。从edit返回用
 
-      setToggle(!toggle); // 强迫table reload
+      setToggle(prev => !prev); // 强迫table reload
     };
     // =============================== Table Settings
     const rowButtons = [

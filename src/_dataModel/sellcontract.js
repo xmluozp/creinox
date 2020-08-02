@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const sellcontractModel = {
     table: "sell_contract",
+    template: "sellcontract",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         code:       {label: "合同号码",     type: _DATATYPES.VARCHAR},
@@ -18,6 +19,7 @@ export const sellcontractModel = {
         shippingPrice:  {label: "运费金额",     type: _DATATYPES.DECIMAL}, 
         commissionType:  {label: "佣金类型",   type: _DATATYPES.ENUM},
 
+        tt_packing:             {label: "包装",   type: _DATATYPES.TT},
         tt_shipmentDue:         {label: "装运期限",   type: _DATATYPES.TT},
         tt_insurance:           {label: "保险",   type: _DATATYPES.TT},
         tt_paymentCondition:    {label: "付款条件",   type: _DATATYPES.TT},
@@ -36,6 +38,7 @@ export const sellcontractModel = {
         shipping_currency_id:   {label: "运费币种",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
   
         // 从order form 读出来的内容
+        invoiceCode:            {label: "发票号",  type: _DATATYPES.VARCHAR},
         totalPrice:             {label: "总金额",  type: _DATATYPES.MONEY},
         paidPrice:              {label: "已支付",  type: _DATATYPES.MONEY},
         seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},

@@ -39,6 +39,9 @@ export const IMAGE = constMaker("IMAGE")
 //================================================= company
 export const COMPANY = constMaker("COMPANY")
 export const REGION = constMaker("REGION")
+//================================================= financial
+export const FINANCIALACCOUNT = constMaker("FINANCIALACCOUNT")
+
 //================================================= contract
 export const SELLCONTRACT = constMaker("SELLCONTRACT")
 export const SELLSUBITEM = constMaker("SELLSUBITEM")

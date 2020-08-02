@@ -7,9 +7,9 @@ import { Button } from "reactstrap";
 import { RESTURL } from "../config";
 import { connect } from "react-redux";
 import { printActions as dataActions } from "../_actions";
-import {  h_download, h_popfile, h_pdf} from "../_helper"
+import {  h_download} from "../_helper"
 
-const Print = ({ dataModel, onGet, data, id }) => {
+const Print = ({ dataModel, onGet, onGetPdf, data, id }) => {
   const [state, setstate] = useState({
     isOpen: false,
   });
@@ -26,9 +26,19 @@ const Print = ({ dataModel, onGet, data, id }) => {
 
   const handleOnPrint = (file) => {
 
-    const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.Name}`;
-    h_pdf(path);
+    const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.FileName}`;
+   
+    // 这里用redux是因为要显示进度条
+    onGetPdf(path);    
   };
+
+  const handleOnDownload = (file) => {
+
+    const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.FileName}`;
+    h_download(path);    
+  };
+
+
 
   // 链接
   const component = (
@@ -46,6 +56,22 @@ const Print = ({ dataModel, onGet, data, id }) => {
                   >
                     {ICONS.PRINT("mr-1")}
                     {obj.Name}
+                  </Button>
+                );
+              })
+            : null}
+            <hr/>
+            {data && data.rows
+            ? data.rows.map((obj, idx) => {
+                return (
+                  <Button
+                    key={obj.Name}
+                    style={{ margin: "0px 0px 0px 3px" }}
+                    className={`btn btn-lb btn-secondary`}
+                    onClick={handleOnDownload.bind(null, obj)}
+                  >
+                    {ICONS.DOWNLOAD("mr-1")}
+                    {obj.FileName}
                   </Button>
                 );
               })
@@ -68,7 +94,7 @@ const Print = ({ dataModel, onGet, data, id }) => {
 
       {/* modal */}
       <MyModalForm
-        title="选择打印模板"
+        title="从xlsx模板打印或下载"
         isOpen={state.isOpen}
         onClose={handleOnOpen.bind(null, false)}
         component={component}
@@ -87,6 +113,7 @@ function mapState(state) {
 
 const actionCreators = {
   onGet: dataActions.get,
+  onGetPdf: dataActions.get_pdf
 };
 
 export default connect(mapState, actionCreators)(Print);

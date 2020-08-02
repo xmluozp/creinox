@@ -45,7 +45,8 @@ import {
   MyComboboxCurrency,
   MyComboboxPaymentType,
   MyComboboxPaymentTypeE,
-  MyComboboxCommission
+  MyComboboxCommission,
+  MyComboboxFinancialSubject
 } from "./MyCombobox";
 
 import { MyImage } from "./MyImage";
@@ -65,7 +66,10 @@ const MyDatePicker = React.memo(
   }) => {
     const handleOnChange = (timeString, timeObject) => {
       if (typeof onChange === "function") {
-        onChange(null, id, new Date(timeObject).toISOString());
+
+        const newValue = Object.prototype.toString.call(timeObject) === "[object Date]" ? 
+        new Date(timeObject).toISOString(): timeString
+        onChange(null, id, newValue);
       }
     };
 
@@ -104,7 +108,10 @@ const MyDateTimePicker = React.memo(
   }) => {
     const handleOnChange = (timeString, timeObject) => {
       if (typeof onChange === "function") {
-        onChange(null, id, new Date(timeObject).toISOString());
+        // onChange(null, id, new Date(timeObject).toISOString());
+        const newValue = Object.prototype.toString.call(timeObject) === "[object Date]" ? 
+        new Date(timeObject).toISOString(): timeString
+        onChange(null, id, newValue);
       }
     };
 
@@ -220,6 +227,7 @@ const MyInput = React.memo(
     label = "输入",
     value = "",
     onChange = () => {},
+    onGetDefault,
     error = false,
     dataType = _DATATYPES.VARCHAR,
     helperText = "",
@@ -257,6 +265,15 @@ const MyInput = React.memo(
       onChange(null, id, value);
     };
 
+   
+    const handleGetDefault = async e => {
+      if (typeof(onGetDefault) === "function") {
+        console.log("getdefault")
+        const defaultValue = await onGetDefault()
+        onChange(null, id, defaultValue);
+      }
+    }
+
     return (
       <TextField
         fullWidth={fullWidth}
@@ -274,6 +291,18 @@ const MyInput = React.memo(
         rowsMax={rowsMax}
         inputProps={{
           style: { ...inputStyle }
+        }}
+        InputProps={onGetDefault && {
+            endAdornment: (  
+              <InputAdornment position="end" onClick={handleGetDefault}>
+              <IconButton
+                  size="small"
+                  edge="end"
+                > {ICONS.ADD()}
+                </IconButton>
+        
+              </InputAdornment>
+            )
         }}
       />
     );
@@ -410,6 +439,7 @@ export const Inputs = {
   MyComboboxPaymentType,
   MyComboboxPaymentTypeE,
   MyComboboxCommission,
+  MyComboboxFinancialSubject,
   MySelect,
   MyDatePicker,
   MyDateTimePicker,

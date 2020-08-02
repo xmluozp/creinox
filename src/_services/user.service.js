@@ -17,11 +17,15 @@ export const userService = {
   get_byId,
   post_create,
   put_update,
-  _delete: _delete
+  _delete: _delete,
+
+  get_loginUserList,
 };
 
 const TABLENAME = "user";
 const URL = RESTURL + `/api/user`;
+const URL_LIST = RESTURL + `/api/userList`;
+
 
 function login(nameAndPassword) {
   const requestOptions = {
@@ -60,6 +64,16 @@ function login(nameAndPassword) {
       return response;
     });
 }
+
+function get_loginUserList() {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+
+  return fetch(`${URL_LIST}`, requestOptions).then(handleResponse);
+}
+
 
 function logout() {
   // remove user from local storage to log user out

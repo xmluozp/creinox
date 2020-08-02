@@ -82,12 +82,13 @@ export const withSellcontractList = (
     </>
   );
 
-  // =============================== SimpleTable (用简单表格展示)
+  // =============================== SimpleTable (用简单表格展示) 子表
   const headCells_buy = [
     { name: "id", disablePadding: true, className: "ml-2", width:80},
     { name: "code", width:150  },
     { name: "activeAt", width:120  },
     { name: "deliverAt", width:120 },
+    { name: "buyer_company_id" },
     { name: "seller_company_id" },
     { name: "totalPrice", width:150 },
     { name: "follower_id" , width:150},

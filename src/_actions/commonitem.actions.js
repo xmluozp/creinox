@@ -7,7 +7,7 @@ import {
   // success,
   loading,
   loaded,
-  loadedFailure
+  loadedFailure,
 } from "./_actionsMaker";
 
 const {
@@ -17,15 +17,15 @@ const {
   post_create,
   put_update,
   _delete,
-  _clear
+  _clear,
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
 function get_dropdown({ commonType = 0 }) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(loading);
     return service.get_dropdown(commonType).then(
-      response => {
+      (response) => {
         const payload = {};
         dispatch(loaded);
         switch (commonType) {
@@ -59,6 +59,9 @@ function get_dropdown({ commonType = 0 }) {
           case enums.commonType.commission:
             payload.dropdown_commission = response;
             break;
+          case enums.commonType.financialSubject:
+            payload.dropdown_financialSubject = response;
+            break;
           default:
             break;
         }
@@ -66,7 +69,7 @@ function get_dropdown({ commonType = 0 }) {
         dispatch({ type: CONST.GETDROPDOWN_SUCCESS, payload });
         return response;
       },
-      error => {
+      (error) => {
         dispatch(loadedFailure);
         dispatch(failure(error.toString()));
         return [];
@@ -174,5 +177,5 @@ export const commonitemActions = {
   post_create,
   put_update,
   _delete,
-  _clear
+  _clear,
 };

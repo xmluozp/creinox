@@ -1,5 +1,7 @@
 import { SELLCONTRACT as CONST } from "_constants";
 import { sellcontractService as service } from "_services";
+import {h_code_plus_one} from "_helper";
+
 import {
   _am,
   failure,
@@ -58,6 +60,54 @@ function get_last() {
   };
 }
 
+// 获取最新的合同，在合同号上+1
+function get_disposable_defaultCode() {
+  return (dispatch) => {
+    dispatch(loading);
+    return service.get_last().then(
+
+      (response) => {
+        dispatch(loaded);
+        let returnValue = "";
+        if (response && response.row) {
+          // 修改它的值
+          returnValue = h_code_plus_one(response.row.code);
+        }
+        return returnValue;
+      },
+      (error) => {
+        dispatch(loadedFailure);
+        const errorInfo = error && error.info ? error.info : "";
+        dispatch(failure(errorInfo.toString()));
+      }
+    );
+  };
+}
+
+// 获取最新的合同，在发票号上+1
+function get_disposable_invoiceCode() {
+  return (dispatch) => {
+    dispatch(loading);
+    return service.get_last().then(
+
+      (response) => {
+        dispatch(loaded);
+        let returnValue = "";
+        if (response && response.row) {
+          // 修改它的值
+          returnValue = h_code_plus_one(response.row.invoiceCode);
+        }
+        return returnValue;
+      },
+      (error) => {
+        dispatch(loadedFailure);
+        const errorInfo = error && error.info ? error.info : "";
+        dispatch(failure(errorInfo.toString()));
+      }
+    );
+  };
+}
+
 export const sellcontractActions = {
   get_dropdown,
   get_bySearch,
@@ -68,5 +118,7 @@ export const sellcontractActions = {
   _clear,
 
   get_disposable_dropdown,
-  get_last
+  get_last,
+  get_disposable_defaultCode,
+  get_disposable_invoiceCode,
 };

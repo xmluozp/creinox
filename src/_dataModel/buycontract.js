@@ -32,6 +32,7 @@ export const buycontractModel = {
         updateUser_id:          {label: "上次操作人",    type: _DATATYPES.SELECT, ref:"user", refLabel: ["userName"]},
 
         // 从order form 读出来的内容
+        invoiceCode:            {label: "发票号",  type: _DATATYPES.VARCHAR},
         totalPrice:             {label: "总金额",  type: _DATATYPES.MONEY},
         paidPrice:              {label: "已支付",  type: _DATATYPES.MONEY},
         seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},

@@ -15,7 +15,6 @@ export const loaded = { type: LOADING.SUCCESS };
 export const loadedFailure = { type: LOADING.FAILURE };
 
 export const _am = (CONST, service) => {
-
   function get_dropdown(pagination, searchTerms = {}) {
     return dispatch => {
       dispatch(loading);

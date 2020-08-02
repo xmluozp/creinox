@@ -55,7 +55,7 @@ export class CreinoxForm extends React.Component {
     if (key && typeof value !== "undefined") {
       // 防止value本身是个boolean
       this.setState({ [key]: value });
-    } else if (e.target && e.target.id) {
+    } else if (e && e.target && e.target.id) {
       this.setState({ [e.target.id]: e.target.value });
     }
   }
