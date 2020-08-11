@@ -52,7 +52,7 @@ import {
 import { MyImage } from "./MyImage";
 import { MyInputTT } from "./MyInputTT";
 
-import { MyRegionPicker, MyCategoryPicker } from "./MyPicker";
+import { MyRegionPicker, MyCategoryPicker, MyFinancialLedgerPicker } from "./MyPicker";
 
 // ==================================================================================Date picker
 const MyDatePicker = React.memo(
@@ -380,11 +380,17 @@ const MySwitch = React.memo(
     label = "",
     value = false,
     onChange = () => {},
-    disabled = false
+    onSwitch = () => {},
+    disabled = false,
+    labelTrue = "是",
+    labelFalse = "否",
   }) => {
     const isChecked = value === true || value === "true";
     const handleOnChange = (e, value) => {
       onChange(e, id, value);
+
+      // onChange被creinoxForm征用了。这个外部用
+      onSwitch(e, id, value);
     };
 
     return (
@@ -399,7 +405,7 @@ const MySwitch = React.memo(
             color="primary"
           />
         }
-        label={` [${isChecked ? "是" : "否"}] ${label}`}
+        label={` [${isChecked ? labelTrue : labelFalse}] ${label}`}
       />
     );
   }
@@ -451,5 +457,6 @@ export const Inputs = {
   MySwitch,
   MyImage,
   MyRegionPicker,
-  MyCategoryPicker
+  MyCategoryPicker,
+  MyFinancialLedgerPicker
 };

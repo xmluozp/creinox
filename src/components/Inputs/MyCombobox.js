@@ -70,6 +70,7 @@ export const MyCombobox = React.memo(
     id,
     label = "请选择",
     optionLabel = "name",
+    onRenderOption,
     options = [],
     value = "",
     onChange = () => {},
@@ -106,6 +107,7 @@ export const MyCombobox = React.memo(
       };
 
       handleOnChange = (e, items) => {
+        console.log("asdfalis dhflaisd hfilausdh filasdh filausd f")
         const returnValue = items.join(",");
         onChange(e, id, returnValue);
       };
@@ -127,8 +129,14 @@ export const MyCombobox = React.memo(
       currentValue =
         _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
+      
+
       getOptionLabel = (option) => {
-        // 如果option是文本或者数字直接返回
+        
+        // 如果外部有render方法，直接用外部的
+        if ( typeof(onRenderOption) === 'function') return onRenderOption(option)
+
+        // 否则如果option是文本或者数字直接返回
         if (typeof option === "string" || typeof option === "number") {
           return option;
         }
@@ -140,7 +148,6 @@ export const MyCombobox = React.memo(
         ) {
           return option[optionLabel];
         }
-
         return "--";
       };
 
@@ -156,19 +163,24 @@ export const MyCombobox = React.memo(
         onChange(e, id, returnValue, item);
 
         // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
-        onSelect(item);
+        // onSelect(item);
       };
+
       handleGetOptionSelected = (item, index) => {
         return item.id === (currentValue && currentValue.id);
       };
     }
+
+    useEffect(() => {
+      // 20200810: 从内部移出来，因为第一次onload也需要触发
+      onSelect(currentValue);
+    }, [currentValue])
 
     const handleOnInputChange = (e, value, reason) => {
       if (typeof props.onInputChange === "function" && reason === "input") {
         props.onInputChange(e, value, reason);
       }
     };
-
 
     return (
       <Autocomplete
@@ -242,6 +254,7 @@ export const MyComboboxAsyncFK = React.memo((props) => {
       )
         .then((response) => {
           if (isSubscribed) {
+            
             onLoad(response);
             setoptions(response);
           }

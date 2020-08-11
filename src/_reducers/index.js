@@ -4,6 +4,8 @@ import loading from "./loadingReducer";
 import alert from "./alertReducer";
 import print from "./printReducer";
 
+import financialledger from "./financialledgerReducer"
+
 import role from "./roleReducer";
 import user from "./userReducer";
 import commonitem from "./commonitemReducer";
@@ -54,6 +56,11 @@ export default combineReducers({
   portData: reducerMaker(null, "PORT"),
 
   financialaccountData: reducerMaker(null, "FINANCIALACCOUNT"),
+  financialledgerData: financialledger,
+  financialtransactionData: reducerMaker(null, "FINANCIALTRANSACTION"),
+  financialvoucherData: reducerMaker(null, "FINANCIALVOUCHER"),
+
+
 
   // 产品、商品
   categoryData: category,

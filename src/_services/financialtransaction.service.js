@@ -2,7 +2,7 @@ import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_up
 import {RESTURL} from '../config'
 // import axios from 'axios'
 
-export const financialaccountService = {
+export const financialtransactionService = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -11,12 +11,11 @@ export const financialaccountService = {
   _delete: _delete
 };
 
-const TABLENAME = "financial_account";
+const TABLENAME = "financial_transaction";
+const URL = RESTURL + `/api/financialTransaction`;
 
-const URL = RESTURL + `/api/financialAccount`;
 
-
-function get_dropdown(pagination, searchTerms = {}) {
+function get_dropdown(searchTerms = {}) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
@@ -71,6 +70,7 @@ function put_update(item) {
     headers: { ...authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify(h_nilFilter_update(item))
   };
+
 
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }

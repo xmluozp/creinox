@@ -2,7 +2,7 @@ import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_up
 import {RESTURL} from '../config'
 // import axios from 'axios'
 
-export const financialaccountService = {
+export const financialvoucherService = {
   get_dropdown,
   get_bySearch,
   get_byId,
@@ -11,12 +11,11 @@ export const financialaccountService = {
   _delete: _delete
 };
 
-const TABLENAME = "financial_account";
+const TABLENAME = "financial_voucher";
+const URL = RESTURL + `/api/financialVoucher`;
 
-const URL = RESTURL + `/api/financialAccount`;
 
-
-function get_dropdown(pagination, searchTerms = {}) {
+function get_dropdown(searchTerms = {}) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./styles.css"
+import "./styles.css";
 import _ from "lodash";
 // import { ICONS } from "../_constants";
 import { InputSearch } from "./InputSearch";
@@ -18,8 +18,11 @@ export const CreinoxTreeview = ({
   onGetBySearch,
   parentNode = 0,
   onSelect,
-  initialNode = { id: 0 , path: "0"},
-  selectedNode = initialNode
+  initialNode = { id: 0, path: "0" },
+  selectedNode = initialNode,
+  mainName = "name",
+  subName = "ename",
+  searchColumns = ["name"],
 }) => {
   const classes = useStyles();
 
@@ -35,7 +38,7 @@ export const CreinoxTreeview = ({
     e.stopPropagation();
     // setselectedNode(node);
     if (typeof onSelect === "function") {
-      onSelect(node);
+      onSelect(node, data && data.rows);
     }
   };
 
@@ -44,30 +47,40 @@ export const CreinoxTreeview = ({
     if (!value) {
       setFilterNodeList(["0"]);
       // setselectedNode(selectedNodeAfterSearch);
-      onSelect(selectedNodeAfterSearch)
+      // 如果没有value， 选中根节点
+      onSelect(selectedNodeAfterSearch, data && data.rows);
       // setExpandedNodes(["0"])
     } else if (data && data.rows) {
       const filterString = value.toLowerCase();
-      const foundNodes = _.filter(data.rows, item => {
+      const foundNodes = _.filter(data.rows, (item) => {
         let returnValue = false;
 
-        const compareStringName = (item.name && item.name.toLowerCase()) || "";
-        const compareStringEName = (item.ename && item.ename.toLowerCase()) || "";
-        const compareStringStartCode = (item.startCode && item.startCode.toLowerCase()) || "";
-        const compareStringCode = (item.code && item.code.toLowerCase()) || "";
+        // 搜索需要匹配的列。都先转成小写
+        for (let i = 0; i < searchColumns.length; i++) {
+          const targetValue =
+            (item[searchColumns[i]] && item[searchColumns[i]].toLowerCase()) ||
+            "";
 
-        returnValue =
-          returnValue || compareStringName.indexOf(filterString) >= 0;
-        returnValue =
-          returnValue || compareStringEName.indexOf(filterString) >= 0;
-        returnValue =
-          returnValue ||
-          (compareStringStartCode &&
-            compareStringStartCode.indexOf(filterString) >= 0);
-        returnValue =
-          returnValue ||
-          (compareStringCode &&
-            compareStringCode.indexOf(filterString) >= 0);
+          returnValue = returnValue || targetValue.indexOf(filterString) >= 0;
+        }
+
+        // const compareStringName = (item[mainName] && item[mainName].toLowerCase()) || "";
+        // const compareStringEName = (item[subName] && item[subName].toLowerCase()) || "";
+        // const compareStringStartCode = (item.startCode && item.startCode.toLowerCase()) || "";
+        // const compareStringCode = (item.code && item.code.toLowerCase()) || "";
+
+        // returnValue =
+        //   returnValue || compareStringName.indexOf(filterString) >= 0;
+        // returnValue =
+        //   returnValue || compareStringEName.indexOf(filterString) >= 0;
+        // returnValue =
+        //   returnValue ||
+        //   (compareStringStartCode &&
+        //     compareStringStartCode.indexOf(filterString) >= 0);
+        // returnValue =
+        //   returnValue ||
+        //   (compareStringCode &&
+        //     compareStringCode.indexOf(filterString) >= 0);
 
         return returnValue;
       });
@@ -77,21 +90,24 @@ export const CreinoxTreeview = ({
 
       // 展开搜到的节点
       let filterExpanded = [];
-      foundNodes.map(item => {
+      foundNodes.map((item) => {
         const returnValue = item.path && item.path.split(",");
         filterExpanded = filterExpanded.concat(
-          returnValue.filter(v => !filterExpanded.includes(v))
+          returnValue.filter((v) => !filterExpanded.includes(v))
         );
         return null;
       });
       setExpandedNodes(filterExpanded);
 
-      // 选中搜到的第一个节点
-      selectedNodeAfterSearch = foundNodes && foundNodes.length === 1 && foundNodes[0];
-    }
-    // setselectedNode(selectedNodeAfterSearch);
-    if (typeof onSelect === "function") {
-      onSelect(selectedNodeAfterSearch);
+      // 选中搜到的第一个节点. 如果超过一个，防止在拣选界面的时候误操作，就不选中
+      selectedNodeAfterSearch =
+        foundNodes && foundNodes.length === 1 && foundNodes[0];
+
+      // setselectedNode(selectedNodeAfterSearch);
+
+      if (typeof onSelect === "function" && selectedNodeAfterSearch) {
+        onSelect(selectedNodeAfterSearch, data && data.rows);
+      }
     }
   };
 
@@ -104,16 +120,17 @@ export const CreinoxTreeview = ({
     if (data && data.rows) {
       // turn data to tree structure
       dataToTree(data.rows);
-    } else if( !(data && data.pagination)) { // 如果有pagination没有rows说明读过了但读不到数据
+    } else if (!(data && data.pagination)) {
+      // 如果有pagination没有rows说明读过了但读不到数据
       // first fetch
       onGetBySearch(parentNode);
     }
   }, [data, onGetBySearch, parentNode]);
 
-  const dataToTree = dataRows => {
+  const dataToTree = (dataRows) => {
     const dataRowsShorted = _.orderBy(dataRows, ["path"], ["asc"]);
     const treeObjectTemp = {};
-    dataRowsShorted.map(item => {
+    dataRowsShorted.map((item) => {
       const pathArray = (item.path && item.path.split(",")) || [0];
 
       let pathWithChildren = "";
@@ -132,14 +149,14 @@ export const CreinoxTreeview = ({
     setTreeObject(treeObjectTemp);
   };
 
-  const getBranches = node => {
+  const getBranches = (node) => {
     if (node && node.children) {
-      return Object.keys(node.children).map(key => {
+      return Object.keys(node.children).map((key) => {
         const childNode = node.children[key];
         const nodeId = childNode.id || 0;
         const style = {};
         const isSearched = !_.isEmpty(
-          _.find(filterNodeList, item => {
+          _.find(filterNodeList, (item) => {
             return item.id === nodeId;
           })
         );
@@ -156,8 +173,11 @@ export const CreinoxTreeview = ({
             {(childNode.children && Object.keys(childNode.children).length) ||
               0}
             ){/* 节点名称 */}
-            {childNode.name || "main"}
-            <span className="ml-2">[{childNode.ename || null}]</span>
+
+            {
+              childNode[subName] ? <span className="ml-2">[{childNode[subName] || null}]</span> : null
+            }
+            {childNode[mainName] || "main"}
             {/* <IconButton
               size="small"
               className="ml-3">
@@ -228,8 +248,8 @@ function TransitionComponent(props) {
     from: { opacity: 0, transform: "translate3d(20px,0,0)" },
     to: {
       opacity: props.in ? 1 : 0,
-      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`
-    }
+      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
+    },
   });
 
   return (
@@ -243,24 +263,26 @@ TransitionComponent.propTypes = {
   /**
    * Show the component; triggers the enter or exit states
    */
-  in: PropTypes.bool
+  in: PropTypes.bool,
 };
 
-const StyledTreeItem = withStyles(theme => ({
+const StyledTreeItem = withStyles((theme) => ({
   iconContainer: {
     "& .close": {
-      opacity: 0.3
-    }
+      opacity: 0.3,
+    },
   },
   group: {
     marginLeft: 12,
     paddingLeft: 12,
-    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`
-  }
-}))(props => <TreeItem {...props} TransitionComponent={TransitionComponent} />);
+    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`,
+  },
+}))((props) => (
+  <TreeItem {...props} TransitionComponent={TransitionComponent} />
+));
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 });

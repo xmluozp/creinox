@@ -41,6 +41,9 @@ export const COMPANY = constMaker("COMPANY")
 export const REGION = constMaker("REGION")
 //================================================= financial
 export const FINANCIALACCOUNT = constMaker("FINANCIALACCOUNT")
+export const FINANCIALLEDGER = constMaker("FINANCIALLEDGER")
+export const FINANCIALTRANSACTION = constMaker("FINANCIALTRANSACTION")
+export const FINANCIALVOUCHER = constMaker("FINANCIALVOUCHER")
 
 //================================================= contract
 export const SELLCONTRACT = constMaker("SELLCONTRACT")

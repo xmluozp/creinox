@@ -150,6 +150,8 @@ const CurrentPage = ({
             onSelect={handleOnSelect}
             initialNode={initialNode}
             selectedNode={selectedNode}
+            subName = "prefix"
+            searchColumns = {["name", "ename", "prefix"]}
           />
         </Grid>
 

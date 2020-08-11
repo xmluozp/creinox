@@ -2,6 +2,10 @@ export * from './role'
 export * from './user'
 export * from './company'
 export * from './financialaccount'
+export * from './financialledger'
+export * from './financialtransaction'
+export * from './financialvoucher'
+
 export * from './region'
 export * from './port'
 

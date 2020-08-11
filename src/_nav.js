@@ -44,29 +44,29 @@ const navs = {
       ],
     },
     {
-      name: "财务",
+      name: "财务记录",
       url: "#",
       icon: "icon-puzzle",
       authTag: "financial",
       children: [
         {
-          name: "海外账户收付",
-          url: "",
+          name: "海外账户记录",
+          url: "/financial/financialaccountsTransactions/1",
           authTag: "financial",
         },
         {
-          name: "本地账户收付",
-          url: "",
+          name: "本地账户记录",
+          url: "/financial/financialaccountsTransactions/2",
           authTag: "financial",
         },
         {
-          name: "现金账户收付",
-          url: "",
+          name: "现金账户记录",
+          url: "/financial/financialaccountsTransactions/3",
           authTag: "financial",
         },
         {
           name: "转账凭证记录",
-          url: "",
+          url: "/financial/financialvouchers",
           authTag: "financial",
         },
         {
@@ -158,7 +158,14 @@ const navs = {
           name: "现金账户设置",
           url: "/financial/financialaccounts/3",
           authTag: "financial",
-        }
+        },
+        {
+          name: "科目设置",
+          url: "/financial/financialledgers",
+          authTag: "financial",
+        },
+
+        
       ],
     },
     {

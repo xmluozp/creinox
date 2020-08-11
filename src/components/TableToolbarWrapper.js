@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import { Button } from "reactstrap";
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -35,7 +36,7 @@ const useToolbarStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.secondary.dark,
       },
   title: {
-    flex: '1 1 100%',
+    flex: '1 1 50%',
   },
 }));
 
@@ -115,8 +116,13 @@ const ToolbarButton = ({ label, onClick, color, url, icon, getPaginationFromStat
     propsOnClick = onClick.bind(null, getPaginationFromState());
   }
   
-  returnValue = (<IconButton className={`text-${color}`} aria-label={label} onClick={propsOnClick} >
+  if(icon) {
+    returnValue = (<IconButton className={`text-${color}`} aria-label={label} onClick={propsOnClick} >
     {icon}</IconButton>)
+  } else {
+    returnValue = <Button className={`btn-sm btn-${color}`} onClick={propsOnClick}>{label}</Button>
+  }
+
 
   // if there url, wrap it with Link
   if (url) { returnValue = <Link to={url} style={{ textDecoration: 'none' }} aria-pressed="true">{returnValue}</Link> }

@@ -16,24 +16,24 @@ import {
   CreinoxTreeview,
   Inputs,
   CreinoxForm,
-  withDatatableStore
+  withDatatableStore,
 } from "components";
-import { regionModel as dataModel } from "_dataModel";
+import { financialledgerModel as dataModel } from "_dataModel";
 
 // ******************************************************************* page setting
-import { regionActions as dataActions } from "_actions";
+import { financialledgerActions as dataActions } from "_actions";
 
 const editModes = {
   none: 0,
   edit: 1,
-  create: 2
+  create: 2,
 };
 
 // inject data
 // ******************************************************************* page setting
 const MyTreeview = withDatatableStore(
   CreinoxTreeview, // tablecomponent
-  { data: "regionData" }, // data source
+  { data: "financialledgerData" }, // data source
   dataActions.get_treeNotesById // fetch action
 );
 
@@ -49,7 +49,7 @@ const CurrentPage = ({
   onGetById,
   pageName,
   dataById,
-  errorById
+  errorById,
 }) => {
   const initialNode = { id: 0, name: "根节点" };
   const [selectedNode, setSelectedNode] = useState(initialNode);
@@ -59,13 +59,13 @@ const CurrentPage = ({
   const [renewToggle, setrenewToggle] = useState(false);
 
   // ============================================= handles
-  const handleOnDelete = id => {
-    h_confirm("是否删除？").then(resolve => {
+  const handleOnDelete = (id) => {
+    h_confirm("是否删除？").then((resolve) => {
       if (resolve) onDelete(id);
     });
   };
 
-  const handleOnSubmit = values => {
+  const handleOnSubmit = (values) => {
     if (formEditMode === editModes.edit) {
       onPutUpdate({ ...selectedNode, ...values });
     } else if (formEditMode === editModes.create) {
@@ -73,7 +73,7 @@ const CurrentPage = ({
     }
   };
 
-  const handleOnSelect = node => {
+  const handleOnSelect = (node) => {
     if (node) {
       onGetById(node.id);
       setformEditMode(editModes.edit); // 设置成编辑模式
@@ -87,7 +87,7 @@ const CurrentPage = ({
     setlabelOfCreate(label); // 修改提示
   };
 
-  const handleSwitchToEdit = e => {
+  const handleSwitchToEdit = (e) => {
     setformEditMode(editModes.edit); // 设置成新建模式
   };
 
@@ -103,19 +103,25 @@ const CurrentPage = ({
   // }
 
   // ============================================= Edit and Create Form:
+
+  // 如果是内置节点就不让删除
   const childrenInputsEdit = (
     <>
       {FormInputs()}
-      {selectedNode.id ? (
+
         <Button
           variant="contained"
           onClick={handleOnDelete.bind(null, selectedNode.id)}
           color="secondary"
           className="mt-3 mr-2"
+          disabled={
+            selectedNode.isBuiltin || !selectedNode.id
+          }
         >
-          删除
+          删除{selectedNode.isBuiltin || !selectedNode.id ? "(系统自带科目不可删)" : null}
         </Button>
-      ) : null}
+
+
       <Button
         type="submit"
         variant="contained"
@@ -143,13 +149,14 @@ const CurrentPage = ({
   return (
     <div className="animated fadeIn">
       {/* spacing会有个-8的margin导致双滚动条，不知道怎么解决只能绕过去 */}
-      <Grid container spacing={2} style={{margin:0}}>
+      <Grid container spacing={2} style={{ margin: 0 }}>
         <Grid item lg={6} md={6} xs={12}>
           <MyTreeview
             onSelect={handleOnSelect}
             initialNode={initialNode}
             selectedNode={selectedNode}
-            searchColumns = {["name", "ename", "telPrefix", "code"]}
+            subName="code"
+            searchColumns={["name", "code"]}
           />
         </Grid>
 
@@ -260,14 +267,13 @@ const CurrentPage = ({
   );
 };
 
-const FormInputs = () => {
+const FormInputs = (disabled = false) => {
   return (
     <>
-      <Inputs.MyInput inputid="name" />
-      <Inputs.MyInput inputid="ename" />
-      <Inputs.MyInput inputid="telPrefix" />
-      <Inputs.MyInput inputid="code" />
-      <Inputs.MyInput multiline inputid="memo" />
+      <Inputs.MyInput inputid="name" disabled={disabled} />
+      <Inputs.MyInput inputid="code" disabled={disabled} />
+      <Inputs.MyInput inputid="sorting" disabled={disabled} />
+      <Inputs.MyInput multiline inputid="memo" disabled={disabled} />
     </>
   );
 };
@@ -276,8 +282,8 @@ const FormInputs = () => {
 // ============================================= Redux
 function mapState(state) {
   return {
-    dataById: state.regionData.dataById,
-    errorById: state.regionData.errorById
+    dataById: state.financialledgerData.dataById,
+    errorById: state.financialledgerData.errorById,
   };
 }
 
@@ -285,7 +291,7 @@ const actionCreators = {
   onDelete: dataActions._delete_treeNode,
   onPutUpdate: dataActions.put_update,
   onPostCreate: dataActions.post_create,
-  onGetById: dataActions.get_byId
+  onGetById: dataActions.get_byId,
 };
 
 export default connect(mapState, actionCreators)(CurrentPage);

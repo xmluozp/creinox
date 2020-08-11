@@ -250,10 +250,18 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="code" disabled={disabled} onGetDefault={onGetDefaultCode}/>
+          <Inputs.MyInput
+            inputid="code"
+            disabled={disabled}
+            onGetDefault={onGetDefaultCode}
+          />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="invoiceCode" disabled={disabled} onGetDefault={OnGetInvoiceCode}/>
+          <Inputs.MyInput
+            inputid="invoiceCode"
+            disabled={disabled}
+            onGetDefault={OnGetInvoiceCode}
+          />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />

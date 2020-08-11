@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import _, { isPlainObject } from "lodash";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -131,15 +131,31 @@ export class CreinoxForm extends React.Component {
     });
 
     if (typeof onGetInjector === "function") {
-      onGetInjector(() => (newValues) => {
-        const newState = {};
-        Object.keys(newValues).map((value) => {
-          if (this.state.hasOwnProperty(value)) {
-            newState[value] = newValues[value];
-          }
-          return null;
+      onGetInjector( () => (injectItemFromOutside, callBack=()=> {}) => {
+       
+        let newState = {};
+
+        // 假如注入的是一个function
+        if(typeof(injectItemFromOutside) === 'function') {
+          newState = injectItemFromOutside(this.state)
+        }
+
+        else if(typeof(injectItemFromOutside) === 'object') {
+          Object.keys(injectItemFromOutside).map((value) => {
+            // 20200811: 不知道为何之前要限制只能注入已有的，所以去掉了
+            // if (this.state.hasOwnProperty(value)) {
+            newState[value] = injectItemFromOutside[value];
+            // }
+            return null;
+          });
+        }
+
+        // 可以通过这样继续处理inject: inject(values, (newValues)=> { inject(xxx) })  callback hell，以后改进
+        this.setState(newState, () => {
+          if(typeof(callBack) === 'function') {
+            callBack(this.state)
+          }          
         });
-        this.setState(newState);
       });
     }
 

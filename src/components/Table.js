@@ -5,7 +5,7 @@ import { Button } from "reactstrap";
 import { format } from "date-fns";
 import { history , h_setHistoryQuery, h_getHistoryQuery, h_getTableUniqueCode, h_removeHistoryQuery} from "../_helper";
 
-import Box from "@material-ui/core/Box";
+
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -62,7 +62,7 @@ export const CreinoxTable = ({
     totalCount: 0,
     totalPage: 0,
     order: "desc",
-    orderBy: "id",
+    orderBy: "",
   };
 
   // const isData = data && data.pagination

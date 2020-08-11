@@ -49,6 +49,15 @@ const Mouldcontracts = React.lazy(() => import("./views/Contract/Mouldcontracts"
 const FinancialAccounts = React.lazy(() => import("./views/Financial/FinancialAccounts"));
 const FinancialAccount = React.lazy(() => import("./views/Financial/FinancialAccount"));
 
+const FinancialLedger = React.lazy(() => import("./views/Financial/FinancialLedger"));
+
+const FinancialAccountsTransactions = React.lazy(() => import("./views/Financial/FinancialAccountsTransactions"));
+const FinancialTransactions = React.lazy(() => import("./views/Financial/FinancialTransactions"));
+const FinancialTransaction = React.lazy(() => import("./views/Financial/FinancialTransaction"));
+
+const FinancialVouchers = React.lazy(() => import("./views/Financial/FinancialVouchers"));
+const FinancialVoucher = React.lazy(() => import("./views/Financial/FinancialVoucher"));
+
 
 //================ company types
 
@@ -366,6 +375,67 @@ const routes = [
     exact: true,
     name: "详情",
     component: FinancialAccount,
+    authTag: "financial"
+  },
+
+  // 科目
+  {
+    path: "/financial/financialledgers",
+    exact: true,
+    name: "国家地区集",
+    component: FinancialLedger,
+    authTag: "financial"
+  },
+  // 转账记录
+  {
+    path: "/financial/financialaccountsTransactions/:where/",
+    exact: true,
+    name: "财务账户转账记录",
+    component: FinancialAccountsTransactions,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialtransactions/:financialAccount_id/",
+    exact: true,
+    name: "转账记录",
+    component: FinancialTransactions,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialtransactions/:financialAccount_id/add",
+    exact: true,
+    name: "新增",
+    component: FinancialTransaction,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialtransactions/:financialAccount_id/:id",
+    exact: true,
+    name: "详情",
+    component: FinancialTransaction,
+    authTag: "financial"
+  },
+
+  // 转账凭据
+  {
+    path: "/financial/financialvouchers",
+    exact: true,
+    name: "转账凭证",
+    component: FinancialVouchers,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialvouchers/add",
+    exact: true,
+    name: "新增",
+    component: FinancialVoucher,
+    authTag: "financial"
+  },
+  {
+    path: "/financial/financialvouchers/:id",
+    exact: true,
+    name: "详情",
+    component: FinancialVoucher,
     authTag: "financial"
   },
 

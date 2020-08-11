@@ -57,6 +57,7 @@ export const InputSearch = ({ style, onSearch = () => {} }) => {
         className={classes.iconButton}
         aria-label="search"
         onClick={onSearch.bind(null, value)}
+        type="button"
       >
         <SearchIcon />
       </IconButton>

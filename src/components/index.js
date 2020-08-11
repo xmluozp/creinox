@@ -13,3 +13,4 @@ export * from './Modal';
 export * from './TabPanel';
 export * from './TabVertical';
 export * from './Loading';
+export * from './ToolBar'
