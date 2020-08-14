@@ -12,7 +12,7 @@ export const financialledgerService = {
     get_treeNotesById
 };
 
-const TABLENAME = "financial_ledger";
+const TABLENAME = "financialledger";
 const URL = RESTURL + `/api/financialLedger`;
 
 

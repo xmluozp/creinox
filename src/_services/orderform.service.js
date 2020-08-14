@@ -8,7 +8,7 @@ export const orderformService = {
     get_byId,
 };
 
-const TABLENAME = "order_form";
+const TABLENAME = "orderform";
 const URL = RESTURL + `/api/orderform`;
 const URL_DROPDOWN = RESTURL + `/api/orderform_dropDown`;
 

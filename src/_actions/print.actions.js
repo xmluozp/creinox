@@ -30,13 +30,13 @@ function get(templateFolder) {
   };
 }
 
-function get_pdf(origin_path) {
+function get_pdf(origin_path, dataStore) {
   return (dispatch) => {
     dispatch(loading);
 
     // 20200611: 这里先处理数据，then以后再dispatch错误，因为永远要在最后一步处理error
     return service
-      .get_pdf(origin_path)
+      .get_pdf(origin_path, dataStore)
       .then(response => {
         dispatch(loaded);
         var fileBytes = response.blob();

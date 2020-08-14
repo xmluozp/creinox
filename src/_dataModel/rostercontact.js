@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const rostercontactModel = {
     table: "rostercontact",
+    dataStore: "rostercontact",
     columns: {
         id :        {label: "ID",         type: _DATATYPES.INT },
         fullName:       {label: "姓名",       type: _DATATYPES.VARCHAR},    

@@ -81,13 +81,13 @@ export class CreinoxForm extends React.Component {
       return null;
     });
 
-    localStorage.setItem("form." + dataModel.table, JSON.stringify(newState));
+    localStorage.setItem("form." + dataModel.dataStore, JSON.stringify(newState));
   }
 
   onPaste() {
     const { dataModel } = this.props;
 
-    let newState = JSON.parse(localStorage.getItem("form." + dataModel.table));
+    let newState = JSON.parse(localStorage.getItem("form." + dataModel.dataStore));
 
     if (newState) {
       this.setState(newState);
@@ -206,7 +206,7 @@ export class CreinoxForm extends React.Component {
   }
 
   readValues() {
-    const { defaultValues } = this.props;
+    const { defaultValues, dataModel } = this.props;
     if (!this.state.isComponentLoaded) {
       const newState = {};
 
@@ -215,6 +215,16 @@ export class CreinoxForm extends React.Component {
         if (this.state.hasOwnProperty(value)) {
           newState[value] = defaultValues[value];
         }
+
+        // 如果是row，顺便记录源id
+        if (dataModel && 
+          dataModel["columns"][value] && 
+          dataModel["columns"][value].type === _DATATYPES.ROW) {
+          
+          const sourceIdName = value.split('.')[0]
+          newState[sourceIdName] = defaultValues[sourceIdName];
+        }
+
         return null;
       });
 
@@ -364,8 +374,11 @@ export class CreinoxForm extends React.Component {
 
               if(isListen) injectProps.listenConditions = listenConditions
 
-              return injectedInputs(injectProps);
-            } else if (isFiltered) {
+              // 传入整体的值
+              injectProps.values = values
+
+              return injectedInputs(injectProps)
+            } else if (isFiltered) { // 有onShow方法，显示的值直接用onShow方法来
               return injectedInputs({
                 item: item,
                 value: item.props.onShow(values)
@@ -388,6 +401,7 @@ const injectedInputs = ({
   isError,
   errorMessage = "",
   listenConditions,
+  values, // 取其他值用
 }) => {
   let returnValue = item;
   const columnId = item.props && item.props.inputid;
@@ -413,15 +427,22 @@ const injectedInputs = ({
       fullWidth: true,
       listenConditions: listenConditions
     }
-    returnValue = React.cloneElement(item, newProps);
+
+    // 如果是ROW类型，注入源ID。
+    if(newProps.dataType === _DATATYPES.ROW) {
+      newProps.sourceId = 
+      item.props.sourceId || 
+      values[columnId.split('.')[0]]
+    }
   } else {
     // 不是model的；非控制的控件
     newProps = {
       value: value,
       fullWidth: true
-    }
-    returnValue = React.cloneElement(item, newProps);
+    }    
   }
+
+  returnValue = React.cloneElement(item, newProps);
 
   return returnValue;
 };

@@ -10,13 +10,17 @@ export const ICONS = {
     REFRESH: (className) => <i className={`fa fa-refresh icons ${className}`}></i>,
     TRUE: (className) => <i className={`fa fa-check icons ${className}`}></i>,
     FALSE: (className) => <i className={`fa fa-times-circle icons ${className}`}></i>,
-    PICK: (className) => <i className={`icon-options-vertical icons ${className}`}></i>,
+    PICK: (className) => <i className={`icon-list icons ${className}`}></i>,
+    TREE: (className) => <i className={`icon-share icons ${className}`}></i>,
     IMAGE: (className) => <i className={`icon-picture icons ${className}`}></i>,
     LIST: (className) => <i className={`icon-list icons ${className}`}></i>,
     HISTORY: (className) => <i className={`icon-book-open icons ${className}`}></i>,
     COPY: (className) => <i className={`fa fa-copy icons ${className}`}></i>,
     PASTE: (className) => <i className={`fa fa-paste icons ${className}`}></i>,
     PRINT:(className) => <i className={`fa fa-print icons ${className}`}></i>,
+
+    MONEY:(className) => <i className={`fa fa-money icons ${className}`}></i>,
+    SHOPPING:(className) => <i className={`fa fa-shopping-bag icons ${className}`}></i>,
 
     DOWNLOAD:(className) => <i className={`fa fa-download icons ${className}`}></i>,
     

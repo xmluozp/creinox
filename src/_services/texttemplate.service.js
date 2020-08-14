@@ -12,7 +12,7 @@ export const texttemplateService = {
   get_bySearch_template
 };
 
-const TABLENAME = "text_template";
+const TABLENAME = "texttemplate";
 
 const URL = RESTURL + `/api/texttemplate`;
 const URL_TEMPLATE = RESTURL + `/api/texttemplate_all`;

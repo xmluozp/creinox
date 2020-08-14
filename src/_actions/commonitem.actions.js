@@ -53,14 +53,8 @@ function get_dropdown({ commonType = 0 }) {
           case enums.commonType.paymentType:
             payload.dropdown_paymentType = response;
             break;
-          case enums.commonType.paymentTypeE:
-            payload.dropdown_paymentTypeE = response;
-            break;
           case enums.commonType.commission:
             payload.dropdown_commission = response;
-            break;
-          case enums.commonType.financialSubject:
-            payload.dropdown_financialSubject = response;
             break;
           default:
             break;

@@ -44,9 +44,7 @@ import {
   MyComboboxPricingTerm,
   MyComboboxCurrency,
   MyComboboxPaymentType,
-  MyComboboxPaymentTypeE,
-  MyComboboxCommission,
-  MyComboboxFinancialSubject
+  MyComboboxCommission
 } from "./MyCombobox";
 
 import { MyImage } from "./MyImage";
@@ -443,9 +441,7 @@ export const Inputs = {
   MyComboboxPricingTerm,
   MyComboboxCurrency,
   MyComboboxPaymentType,
-  MyComboboxPaymentTypeE,
   MyComboboxCommission,
-  MyComboboxFinancialSubject,
   MySelect,
   MyDatePicker,
   MyDateTimePicker,

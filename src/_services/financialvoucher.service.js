@@ -11,7 +11,7 @@ export const financialvoucherService = {
   _delete: _delete
 };
 
-const TABLENAME = "financial_voucher";
+const TABLENAME = "financialvoucher";
 const URL = RESTURL + `/api/financialVoucher`;
 
 

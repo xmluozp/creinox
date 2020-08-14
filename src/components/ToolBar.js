@@ -7,14 +7,18 @@ export const ToolBar = ({ buttons = [] }) => {
   return (
     <Box display="flex" justifyContent="flex-end" mb={1} mt={1}>
       {buttons.map((item, idx) => {
+
+        const {onRender, onClick, url, label, color, disabled} = item
+
+        if(onRender) return onRender(`toolbar_${idx}`)
         const variables = {};
 
-        variables.color = item.color;
-        variables.disabled = item.disabled;
-        if (item.url) {
+        variables.color = color;
+        variables.disabled = disabled;
+        if (url) {
           {/* variables["href"] = item.url; */}
-        } else if (item.onClick) {
-          variables["onClick"] = item.onClick;
+        } else if (onClick) {
+          variables["onClick"] = onClick;
         }
 
         const btn = (
@@ -24,13 +28,13 @@ export const ToolBar = ({ buttons = [] }) => {
             className="ml-1"
             key={`toolbar_${idx}`}
           >
-            {item.label}
+            {label}
           </Button>
         );
 
-        if (item.url) {
-            return <Link to={item.url}  key={`toolbar_${idx}`}>{btn}</Link>;
-        } else if (item.onClick) {
+        if (url) {
+            return <Link to={url}  key={`toolbar_${idx}`}>{btn}</Link>;
+        } else if (onClick) {
             return btn;
         }
       })}

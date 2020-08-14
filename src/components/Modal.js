@@ -14,7 +14,9 @@ export const MyModalForm = ({
 }) => {
   const pageId = 0;
   return (
-    <Modal isOpen={isOpen} toggle={onClose} className={"modal-lg " + className}>
+    <Modal isOpen={isOpen} toggle={onClose} 
+    style={{width: 1000}}
+    className={"modal-lg " + className}>
       <ModalHeader toggle={onClose}>{title}</ModalHeader>
       {!component ? (
         <>

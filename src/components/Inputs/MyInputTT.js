@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import _ from "lodash";
+import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
@@ -149,7 +150,9 @@ const InputTT = React.memo(
             endAdornment: (
               
               <InputAdornment position="end" onClick={handleModalOpen}>
+                <IconButton size="small" disabled={disabled}>
                 {ICONS.PICK()}
+                </IconButton>
               </InputAdornment>
             )
           }}

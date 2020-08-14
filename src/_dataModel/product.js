@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const productModel = {
     table: "product",
+    dataStore: "product",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         code:       {label: "产品货号",     type: _DATATYPES.VARCHAR},
@@ -16,7 +17,7 @@ export const productModel = {
         spec2:      {label: "规格2",     type: _DATATYPES.VARCHAR},   
         spec3:      {label: "规格3",     type: _DATATYPES.VARCHAR},   
         barcode:    {label: "条码",     type: _DATATYPES.VARCHAR},   
-        thickness:  {label: "厚度(mm)",     type: _DATATYPES.DECIMAL},   
+        thickness:  {label: "厚度(mm)",     type: _DATATYPES.VARCHAR},   
         unitWeight: {label: "单位重量(g)",     type: _DATATYPES.DECIMAL},   
 
         retrieveTime:{label: "找回日期", type: _DATATYPES.DATE},

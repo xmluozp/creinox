@@ -14,13 +14,9 @@ export const buycontractService = {
     get_last,
 };
 
-const TABLENAME = "buy_contract";
+const TABLENAME = "buycontract";
 const URL = RESTURL + `/api/buycontract`;
 const URL_GET_LAST = RESTURL + `/api/buycontract_getlast`;
-
-
-const testurl1 = './dataset/buycontractdata.json'
-const testurl2 = './dataset/buycontractdata_byId.json'
 
 // 20200506: 好像没用
 // function get_dropdown(companyType) {

@@ -4,6 +4,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 // 通用选项表
 export const commonitemModel = {
     table: "common_item",
+    dataStore: "commonitem",
     columns: {
         id :            {label: "ID",         type: _DATATYPES.INT },
         name:           {label: "选项名",    type: _DATATYPES.VARCHAR},    

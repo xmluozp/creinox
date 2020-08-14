@@ -7,9 +7,17 @@ import { Button } from "reactstrap";
 import { RESTURL } from "../config";
 import { connect } from "react-redux";
 import { printActions as dataActions } from "../_actions";
-import {  h_download} from "../_helper"
+import { h_download } from "../_helper";
 
-const Print = ({ dataModel, onGet, onGetPdf, data, id }) => {
+const Print = ({
+  dataModel,
+  onGet,
+  onGetPdf,
+  onRender,
+  data,
+  id,
+  isSearchResult = false,
+}) => {
   const [state, setstate] = useState({
     isOpen: false,
   });
@@ -26,19 +34,26 @@ const Print = ({ dataModel, onGet, onGetPdf, data, id }) => {
 
   const handleOnPrint = (file) => {
 
-    const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.FileName}`;
-   
-    // 这里用redux是因为要显示进度条
-    onGetPdf(path);    
+    // 是搜索还是单页
+    if (isSearchResult) {
+      const path = `${RESTURL}/api/${file.Path}_print/list/${file.Path}/${file.FileName}`;
+      // 这里用redux是因为要显示进度条
+      onGetPdf(path, dataModel.dataStore);
+    } else {
+      const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.FileName}`;
+      onGetPdf(path);
+    }
   };
 
   const handleOnDownload = (file) => {
-
-    const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.FileName}`;
-    h_download(path);    
+    if (isSearchResult) {
+      const path = `${RESTURL}/api/${file.Path}_print/list/${file.Path}/${file.FileName}`;
+      h_download(path, dataModel.dataStore);
+    } else {
+      const path = `${RESTURL}/api/${file.Path}_print/${id}/${file.Path}/${file.FileName}`;
+      h_download(path);
+    }
   };
-
-
 
   // 链接
   const component = (
@@ -60,8 +75,8 @@ const Print = ({ dataModel, onGet, onGetPdf, data, id }) => {
                 );
               })
             : null}
-            <hr/>
-            {data && data.rows
+          <hr />
+          {data && data.rows
             ? data.rows.map((obj, idx) => {
                 return (
                   <Button
@@ -81,16 +96,28 @@ const Print = ({ dataModel, onGet, onGetPdf, data, id }) => {
     </>
   );
 
-  return dataModel && dataModel.template ? (
-    <Grid item>
-      {/* 按钮 */}
+  let PrintButton;
+  if (onRender) {
+    const newProps = {
+      onClick: handleOnOpen.bind(null, true),
+    };
+    PrintButton = React.cloneElement(onRender, newProps);
+  } else {
+    PrintButton = (
       <IconButton
-        aria-label="expand row"
+        aria-label="打印按钮"
         size="small"
         onClick={handleOnOpen.bind(null, true)}
       >
         {ICONS.PRINT()}
       </IconButton>
+    );
+  }
+
+  return dataModel && dataModel.template ? (
+    <Grid item>
+      {/* 按钮 */}
+      {PrintButton}
 
       {/* modal */}
       <MyModalForm
@@ -113,7 +140,7 @@ function mapState(state) {
 
 const actionCreators = {
   onGet: dataActions.get,
-  onGetPdf: dataActions.get_pdf
+  onGetPdf: dataActions.get_pdf,
 };
 
 export default connect(mapState, actionCreators)(Print);

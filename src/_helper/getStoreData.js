@@ -70,21 +70,22 @@ export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[
     return rows; 
 }
 
-export function h_dataPagination(table) {
+export function h_dataPagination(storeName) {
     const state = store.getState();
-    return _.get(state, [`${table}Data`, "data", "pagination"]);
+    return _.get(state, [`${storeName}Data`, "data", "pagination"]);
 }
 
-export function h_dataSearchTerms(table) {
+export function h_dataSearchTerms(storeName) {
     const state = store.getState();
-    return _.get(state, [`${table}Data`, "data", "searchTerms"]);
+    return _.get(state, [`${storeName}Data`, "data", "searchTerms"]);
 }
 
-export function h_queryString(pagination = {}, searchTerm = {}, table) {
+// 防止搜索结果丢失，需要从store里取旧的数据.
+export function h_queryString(pagination = {}, searchTerm = {}, storeName) {
 
-    // cover old data
-    const oldPagination = h_dataPagination(table);
-    const oldSearchTerms = h_dataSearchTerms(table);
+    // override old data
+    const oldPagination = storeName ? h_dataPagination(storeName) : {};
+    const oldSearchTerms = storeName ? h_dataSearchTerms(storeName) : {};
 
     const newPagination = {...oldPagination, ...pagination}
     let newSearchTerms = {...oldSearchTerms, ...searchTerm} 
@@ -112,11 +113,6 @@ export function h_queryString(pagination = {}, searchTerm = {}, table) {
 
     return paginationString +"&q=" + searchString;
 }
-
-
-
-
-
 
 
 // import React, {useEffect} from 'react'

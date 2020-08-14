@@ -12,7 +12,7 @@ export const commonitemService = {
     _delete: _delete
 };
 
-const TABLENAME = "common_item";
+const TABLENAME = "commonitem";
 
 const URL = RESTURL + `/api/commonitem`;
 const URL_DROP_DOWN = RESTURL + `/api/commonitem_dropDown`;

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import _ from "lodash";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+
 import { connect } from "react-redux";
+
 
 import { ICONS } from "../../_constants";
 import { MyModalForm } from "../Modal";
@@ -123,16 +126,26 @@ const CurrentPicker = React.memo(
         <TextField
           fullWidth={fullWidth}
           error={!disabled && error}
-          disabled={true}
+          disabled={disabled}
           id={id}
           label={label}
           onClick={handleModalOpen}
           margin="dense"
           value={text}
           helperText={!disabled && helperText}
+          inputProps={
+            {
+              onKeyDown: () => {},
+              onFocus: e => e.target.blur(),
+            }
+          }
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">{ICONS.PICK()}</InputAdornment>
+              <InputAdornment position="end" >
+                <IconButton size="small"  disabled={disabled}>
+                  {ICONS.TREE()}
+                </IconButton>
+              </InputAdornment>
             ),
           }}
         />

@@ -15,7 +15,7 @@ export const sellcontractService = {
     get_disposable_dropdown
 };
 
-const TABLENAME = "sell_contract";
+const TABLENAME = "sellcontract";
 const URL = RESTURL + `/api/sellcontract`;
 const URL_GET_LAST = RESTURL + `/api/sellcontract_getlast`;
 

@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const productpurchaseModel = {
     table: "product_purchase",
+    dataStore: "productpurchase",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         activeAt:   {label: "报价日期", type: _DATATYPES.DATETIME},
@@ -17,21 +18,21 @@ export const productpurchaseModel = {
         spec1:      {label: "规格1",     type: _DATATYPES.VARCHAR},   
         spec2:      {label: "规格2",     type: _DATATYPES.VARCHAR},   
         spec3:      {label: "规格3",     type: _DATATYPES.VARCHAR},  
-        thickness:  {label: "厚度(mm)",     type: _DATATYPES.DECIMAL},   
+        thickness:  {label: "厚度(mm)",     type: _DATATYPES.VARCHAR},   
         
-        unitWeight: {label: "单位重量(g)",     type: _DATATYPES.DECIMAL},   
-        netWeight:  {label: "净重(g)",     type: _DATATYPES.DECIMAL},   
-        grossWeight: {label: "毛重(g)",     type: _DATATYPES.DECIMAL},   
+        unitWeight: {label: "单位重量(KGS)",     type: _DATATYPES.DECIMAL},   
+        netWeight:  {label: "净重(KGS)",     type: _DATATYPES.DECIMAL},   
+        grossWeight: {label: "毛重(KGS)",     type: _DATATYPES.DECIMAL},   
 
         moq:         {label: "最小订量",     type: _DATATYPES.INT},   
         packAmount:  {label: "包装数量",     type: _DATATYPES.INT},   
         outerPackL:  {label: "外包装长(CM)",     type: _DATATYPES.DECIMAL},   
-        outerPackW:  {label: "宽",     type: _DATATYPES.DECIMAL},   
-        outerPackH:  {label: "高",     type: _DATATYPES.DECIMAL},   
+        outerPackW:  {label: "宽(CM)",     type: _DATATYPES.DECIMAL},   
+        outerPackH:  {label: "高(CM)",     type: _DATATYPES.DECIMAL},   
 
         innerPackL:  {label: "内包装长(CM)",     type: _DATATYPES.DECIMAL},   
-        innerPackW:  {label: "宽",     type: _DATATYPES.DECIMAL},   
-        innerPackH:  {label: "高",     type: _DATATYPES.DECIMAL},   
+        innerPackW:  {label: "宽(CM)",     type: _DATATYPES.DECIMAL},   
+        innerPackH:  {label: "高(CM)",     type: _DATATYPES.DECIMAL},   
 
 
         updateAt:     {label: "最后操作时间", type: _DATATYPES.DATETIME},

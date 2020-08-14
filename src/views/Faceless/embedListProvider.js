@@ -47,6 +47,7 @@ export const embedListProvider = (
     modalInputEditProps = {},
     onUpdate, // 任何修改的时候触发
     isBorder = false,
+    onFilterSubmit, // 提交之前过滤用(比如图片没改动，就不提交)
     ...props
   }) => {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
@@ -88,6 +89,11 @@ export const embedListProvider = (
     };
 
     const handleOnEditSubmit = values => {
+
+      if(typeof(onFilterSubmit) ==='function') {
+        values = onFilterSubmit(values, true)
+      }
+
       onPutUpdate({ ...preConditions, ...values }, () => {
         onGetBySearch(currentPagination, preConditions);
         if(typeof(onUpdate) === 'function') {onUpdate()}
@@ -96,6 +102,11 @@ export const embedListProvider = (
     };
 
     const handleOnCreateSubmit = values => {
+
+      if(typeof(onFilterSubmit) ==='function') {
+        values = onFilterSubmit(values, false)
+      }
+
       onPostCreate({ ...preConditions, ...values }, () => {
         onGetBySearch(currentPagination, preConditions);
         if(typeof(onUpdate) === 'function') {onUpdate()}

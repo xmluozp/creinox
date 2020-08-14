@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const financialaccountModel = {
     table: "financial_account",
+    dataStore: "financialaccount",
     columns: {
         id :            {label: "ID",         type: _DATATYPES.INT },
         name:           {label: "名称",    type: _DATATYPES.VARCHAR},

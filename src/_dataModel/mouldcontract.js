@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const mouldcontractModel = {
     table: "mould_contract",
+    dataStore: "mouldcontract",
     template: "mouldcontract",
     columns: {
         id :                {label:"ID",        type: _DATATYPES.INT },
@@ -53,8 +54,10 @@ export const mouldcontractModel = {
         invoiceCode:            {label: "发票号",  type: _DATATYPES.VARCHAR}, 
         totalPrice:             {label: "总金额",  type: _DATATYPES.MONEY}, // 前端需要转成中文大写显示 https://juejin.im/post/5e1331046fb9a0482f7a37e0
         paidPrice:              {label: "已支付",  type: _DATATYPES.MONEY},
-        seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
-        buyer_company_id:       {label: "甲方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
+        seller_company_id:      {label: "供方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
+        buyer_company_id:       {label: "需方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
+        sellerAddress:          {label: "供方地址", elabel: "Sellers' Address",   type: _DATATYPES.VARCHAR},
+        buyerAddress:           {label: "需方地址", elabel: "Buyers' Address",   type: _DATATYPES.VARCHAR},
         isDone:                 {label: "合同是否完成", type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         order_memo:             {label: "管理员备注",   type: _DATATYPES.TEXT},
 

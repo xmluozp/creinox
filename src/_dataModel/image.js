@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const imageModel = {
     table: "image",
+    dataStore: "image",
     columns: {
         id :            {label: "ID",         type: _DATATYPES.INT },
         name:           {label: "名称",    type: _DATATYPES.VARCHAR},    

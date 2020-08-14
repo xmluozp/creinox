@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const financialledgerModel = {
     table: "financial_ledger",
+    dataStore: "financialledger",
     columns: {
         id :        {label: "ID",         type: _DATATYPES.INT },
         name:       {label: "名称",       type: _DATATYPES.VARCHAR}, 

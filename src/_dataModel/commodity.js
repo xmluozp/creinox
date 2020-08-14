@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const commodityModel = {
     table: "commodity",
+    dataStore: "commodity",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         name:       {label: "商品名称",     type: _DATATYPES.VARCHAR},       

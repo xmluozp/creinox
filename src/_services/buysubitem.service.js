@@ -12,7 +12,7 @@ export const buysubitemService = {
     _delete: _delete
 };
 
-const TABLENAME = "buy_subitem";
+const TABLENAME = "buysubitem";
 const URL = RESTURL + `/api/buysubitem`;
 
 const testurl1 = './dataset/buysubitemdata.json'

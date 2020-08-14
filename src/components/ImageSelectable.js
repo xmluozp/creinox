@@ -50,12 +50,16 @@ const ImageSelectable = ({
   left,
   onClick,
   isSelected,
-  editMode
+  editMode,
+  autoZoom = false, 
 }) => {
   //calculate x,y scale
 
-  const sx = (100 - (30 / photo.width) * 100) / 100;
-  const sy = (100 - (30 / photo.height) * 100) / 100;
+  const {height, width, maxHeight, maxWidth, ...photoProps} = photo
+
+
+  const sx = (100 - (30 / width) * 100) / 100;
+  const sy = (100 - (30 / height) * 100) / 100;
   selectedImgStyle.transform = `translateZ(0px) scale3d(${sx}, ${sy}, 1)`;
 
   if (direction === "column") {
@@ -83,14 +87,25 @@ const ImageSelectable = ({
 
   const imgStyle = {
     transition: "transform .135s cubic-bezier(0.0,0.0,0.2,1),opacity linear .15s",
-    maxHeight: photo.maxheight * 2, 
-    maxWidth: photo.maxwidth * 2
+    maxHeight, 
+    maxWidth
   };
+
+  const photoScale = autoZoom ? {
+    height,
+    width,  
+    maxHeight, 
+    maxWidth,
+  } : {}
+
+  const imageProps = {
+    ...photoProps, ...photoScale
+  }
 
   return (
     <div>
       <div
-        style={{ margin, height: photo.height, width: photo.width,  maxHeight: photo.maxheight * 2, maxWidth: photo.maxwidth * 2, ...cont }}
+        style={{ margin, ...photoScale, ...cont }}
         className={!isDisplaySelect ? "not-selected" : ""}
       >
         <div
@@ -116,7 +131,7 @@ const ImageSelectable = ({
               ? { ...imgStyle, ...selectedImgStyle }
               : { ...imgStyle }
           }
-          {...photo}
+          {...imageProps}
           onClick={handleOnClick}
         />
         <style>{`.not-selected:hover{outline:2px solid #06befa}`}</style>

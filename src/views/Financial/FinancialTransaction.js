@@ -41,12 +41,14 @@ const CurrentPage = ({
 
   // ------------ 从合同入口，这里取合同
   const order_form_id =
-    parseInt(_.get(props, "match.params.orderForm_id")) || 0;
+    parseInt(_.get(props, "match.params.order_form_id")) || 0;
 
   const preConditions = {
     financialAccount_id,
     order_form_id,
   };
+
+  console.log(preConditions)
 
   // ------------ 是否针对合同，收还是付 (添加取param，编辑取数据库)
   let title = "收付款";
@@ -57,8 +59,10 @@ const CurrentPage = ({
   const id = parseInt(_.get(props, "match.params.id")) || "";
   const isFromEdit = Number.isInteger(id);
   const [disabled, setdisabled] = useState(isFromEdit);
-
   const [isIn, setisIn] = useState(false);
+
+  const [textReceivable, settextReceivable] = useState("")
+  const [textPayable, settextPayable] = useState("")
 
   useEffect(() => {
     // if there is ID, fetch data
@@ -116,6 +120,7 @@ const CurrentPage = ({
     const orderFormItem = oldValue && oldValue["order_form_id.row"];
     const isContractPayment = oldValue && oldValue.isContractPayment;
 
+    // 如果非合同就不处理，如果是合同，下面还需要进一步判断是普通收付，还是合同款项
     if (!orderFormItem) return;
 
     let returnValue = {};
@@ -135,6 +140,7 @@ const CurrentPage = ({
 
     // 如果是应收应付款
     if (isContractPayment && orderFormItem) {
+
       // 卖类合同
       if (inout === "sell") {
         returnValue.financialLedgerDebit_id =
@@ -142,7 +148,6 @@ const CurrentPage = ({
         returnValue.financialLedgerCredit_id =
           enums.financialLedgerType.ReceivablePayCredit;
         returnValue.tt_transUse = `收到${orderFormItem.code}货款`;
-
         returnValue.temp_isIn = true
       }
       // 买类合同
@@ -153,7 +158,6 @@ const CurrentPage = ({
           enums.financialLedgerType.PayablePayCredit;
 
         returnValue.tt_transUse = `支付${orderFormItem.code}货款`;
-
         returnValue.temp_isIn = true
       }
     }
@@ -174,6 +178,11 @@ const CurrentPage = ({
 
   // 选中合同触发的内容
   const handleOrderformOnSelect = (item) => {
+    if(item && item.id) {
+      settextReceivable(`收款金额 (已收: ${item.receivablePaid}/${item.receivable})`)
+      settextPayable(`付款金额 (已付: ${item.payablePaid}/${item.payable})`)
+    }   
+
     injector({ "order_form_id.row": item }, (newValue) => {
       injector(injectOrderFormToTransaction(newValue));
     });
@@ -292,6 +301,7 @@ const CurrentPage = ({
 
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyInput
+                      label = {textReceivable}
                       inputid="amount_in"
                       disabled={disabled || isFromEdit || isIn}
                     />
@@ -299,10 +309,12 @@ const CurrentPage = ({
 
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyInput
+                      label = {textPayable}
                       inputid="amount_out"
                       disabled={disabled || isFromEdit || !isIn}
                     />
                   </Grid>
+
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyInput
                       inputid="balance"

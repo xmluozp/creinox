@@ -3,6 +3,8 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const financialtransactionModel = {
     table: "financial_transaction",
+    dataStore: "financialtransaction",
+    template: "financialTransaction",
     columns: {
         id :            {label: "ID",         type: _DATATYPES.INT },
         transdateAt:    {label: "收/付款日期",    type: _DATATYPES.DATETIME},

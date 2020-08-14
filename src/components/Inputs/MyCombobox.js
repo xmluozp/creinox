@@ -51,7 +51,7 @@ export const MySelect = React.memo(
           }}
         >
           {hasDefault ? null : <option value="" />}
-          {options.map((optionvalue, index) => {
+          {options.filter(v=>!!v).map((optionvalue, index) => {
             return (
               <option value={index} key={optionvalue}>
                 {optionvalue}
@@ -75,6 +75,7 @@ export const MyCombobox = React.memo(
     value = "",
     onChange = () => {},
     onSelect = () => {},
+    onLoad = () => {},
     disabled = false,
     hasDefault = true,
     fullWidth = true,
@@ -97,7 +98,7 @@ export const MyCombobox = React.memo(
 
     // --------------------- 多选
     if (multiple) {
-      optionsFix = options.map((item) => {
+      optionsFix = options.filter(v=>!!v).map((item) => {
         return item.id;
       });
       currentValue = value ? value.split(",") : [];
@@ -122,14 +123,6 @@ export const MyCombobox = React.memo(
 
       // --------------------- 单选
     } else {
-      // 200329去掉hasDefault
-      // optionsFix = hasDefault && !multiple
-      optionsFix = [{ id: 0, [optionLabel]: "-" }, ...options];
-
-      currentValue =
-        _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
-
-      
 
       getOptionLabel = (option) => {
         
@@ -148,8 +141,15 @@ export const MyCombobox = React.memo(
         ) {
           return option[optionLabel];
         }
-        return "--";
+        return "";
       };
+
+      // 200329去掉hasDefault
+      // optionsFix = hasDefault && !multiple
+      optionsFix = [{ id: 0, [optionLabel]: "-" }, ...(options.filter(v=> getOptionLabel(v) !== ""))];
+
+      currentValue =
+        _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
       handleOnChange = (e, item) => {
 
@@ -163,7 +163,7 @@ export const MyCombobox = React.memo(
         onChange(e, id, returnValue, item);
 
         // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
-        // onSelect(item);
+        onSelect(item);
       };
 
       handleGetOptionSelected = (item, index) => {
@@ -173,7 +173,7 @@ export const MyCombobox = React.memo(
 
     useEffect(() => {
       // 20200810: 从内部移出来，因为第一次onload也需要触发
-      onSelect(currentValue);
+      onLoad(currentValue);
     }, [currentValue])
 
     const handleOnInputChange = (e, value, reason) => {
@@ -241,7 +241,6 @@ export const MyComboboxAsyncFK = React.memo((props) => {
   const loadData = () => {
     if (props.value) {
       let isSubscribed = true;
-
       // 这里搜索不应该搜索名字
       delete preConditions.name;
 
@@ -296,6 +295,7 @@ export const MyComboboxAsyncFK = React.memo((props) => {
       onKeyDown={handleFetchData}
       inputRef={inputRef}
       hasDefault={!!props.value}
+      label={`${props.label} [按回车搜索]`}
     />
   );
 });
@@ -498,17 +498,6 @@ export const MyComboboxPaymentType = React.memo((props) => {
     />
   );
 });
-export const MyComboboxPaymentTypeE = React.memo((props) => {
-  const commonTypeName = "paymentTypeE";
-  return (
-    <MyComboboxFK
-      tableName="commonitem"
-      stateName={`dropdown_${commonTypeName}`}
-      preConditions={{ commonType: enums.commonType[commonTypeName] }}
-      {...props}
-    />
-  );
-});
 
 export const MyComboboxCommission = React.memo((props) => {
   const commonTypeName = "commission";
@@ -522,14 +511,3 @@ export const MyComboboxCommission = React.memo((props) => {
   );
 });
 
-export const MyComboboxFinancialSubject = React.memo((props) => {
-  const commonTypeName = "financialSubject";
-  return (
-    <MyComboboxFK
-      tableName="commonitem"
-      stateName={`dropdown_${commonTypeName}`}
-      preConditions={{ commonType: enums.commonType[commonTypeName] }}
-      {...props}
-    />
-  );
-});

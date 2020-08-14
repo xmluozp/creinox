@@ -4,6 +4,7 @@ import {
   h_queryString,
   h_nilFilter,
   h_nilFilter_update,
+  h_formData,
 } from '_helper';
 import {RESTURL} from '../config'
 // import _ from 'lodash';
@@ -18,7 +19,7 @@ export const sellsubitemService = {
   _delete: _delete,
 };
 
-const TABLENAME = "sell_subitem";
+const TABLENAME = "sellsubitem";
 const URL = RESTURL + `/api/sellsubitem`;
 
 // const testurl1 = './dataset/sellsubitemdata.json'
@@ -67,23 +68,24 @@ function get_byId(id) {
 function post_create(item) {
   const requestOptions = {
     method: "POST",
-    headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(h_nilFilter(item)),
+    headers: { ...authHeader(), "Content-Type":"multipart/form-data"  },
+    body: h_formData(item),
   };
 
-  console.log("处理过的json", h_nilFilter(item));
-
-  // return fetch(`${testurl2}`, requestOptions).then(handleResponse);
+  console.log("处理过的json", item);
+  
+  delete requestOptions.headers['Content-Type'];  
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 
 function put_update(item) {
   const requestOptions = {
     method: "PUT",
-    headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(h_nilFilter_update(item)),
+    headers: { ...authHeader(), "Content-Type": "multipart/form-data"  },
+    body: h_formData(item),
   };
-  // return fetch(`${testurl2}`, requestOptions).then(handleResponse);
+
+  delete requestOptions.headers['Content-Type'];  
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 

@@ -14,7 +14,7 @@ export const mouldcontractService = {
     get_last
 };
 
-const TABLENAME = "mould_contract";
+const TABLENAME = "mouldcontract";
 const URL = RESTURL + `/api/mouldcontract`;
 const URL_GET_LAST = RESTURL + `/api/mouldcontract_getlast`;
 

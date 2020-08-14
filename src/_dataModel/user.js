@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const userModel = {
     table: "user",
+    dataStore: "user",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         userName:   {label: "用户名",   type: _DATATYPES.VARCHAR},

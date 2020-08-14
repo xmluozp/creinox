@@ -24,6 +24,7 @@ import {
   sellcontractModel as dataModel,
   buycontractModel,
   sellsubitemModel,
+  financialtransactionModel,
 } from "_dataModel";
 
 // ******************************************************************* page setting
@@ -34,6 +35,7 @@ export const withSellcontractList = (
   CREATEURL = "/contract/sellcontracts/add"
 ) => {
   const CREATEURL_BUY = "/contract/buycontracts/add"
+  const CREATEURL_TRANSACTION = "/financial/contractTransactions/add"
   // inject data
   const MyTable = withDatatableStore(
     CreinoxTable, // tablecomponent
@@ -83,6 +85,8 @@ export const withSellcontractList = (
   );
 
   // =============================== SimpleTable (用简单表格展示) 子表
+
+  // >>> 下属采购合同 ---------------------------------------
   const headCells_buy = [
     { name: "id", disablePadding: true, className: "ml-2", width:80},
     { name: "code", width:150  },
@@ -94,6 +98,22 @@ export const withSellcontractList = (
     { name: "follower_id" , width:150},
   ];
 
+  // 采购合同
+  const Allcontracts_buyContract_list = withSimpleTable(
+    headCells_buy,
+    buycontractModel
+  );
+
+  const buyContract_rowButtons = [
+    {
+      label: "详情",
+      color: "primary",
+      url: "/contract/buycontracts",
+      icon: ICONS.EDIT("mr-1"),
+    }
+  ];
+
+  // >>> 下属产品 ---------------------------------------
   const renderCommodity = (content, row) => {
     return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].name}`
   }
@@ -111,37 +131,40 @@ export const withSellcontractList = (
     { name: "unitPrice", width:120 }  
   ];
 
-
-
-
-  // 采购合同
-  const Allcontracts_buyContract_list = withSimpleTable(
-    headCells_buy,
-    buycontractModel
-  );
-
   const Allcontracts_subitems_list = withSimpleTable(
     headCells_subitems,
     sellsubitemModel
   );
+
+
   
+  // >>> 下属付款记录 ---------------------------------------
+  const headCells_financialTransactions = [
+    { name: "id", disablePadding: true, className: "ml-2", width:80 },
+    { name: "transdateAt", width: 170},
+    { name: "amount_out", width:140  },
+    { name: "amount_in", width:140 },
+    { name: "financialAccount_id", width:200 },
+    { name: "bankaccountName", width:200 },
+    { name: "bankaccountNo", width:220 },
+    { name: "tt_transUse"},
+  ];
+
+  const Allcontracts_financialTransaction_list = withSimpleTable(
+    headCells_financialTransactions,
+    financialtransactionModel
+  );
+
 
   // 订单的子项
   // obj 这里是一个数组
   //
-  const buyContract_rowButtons = [
-    {
-      label: "详情",
-      color: "primary",
-      url: "/contract/buycontracts",
-      icon: ICONS.EDIT("mr-1"),
-    }
-  ];
+
 
   const collapsePanel = [
     {
       title: "销售的商品",
-      name: "subitem_list",
+      name: "subitem_list", // 单条记录中取list，对应的key. (后台需要把list塞进这个key)
       RenderComponent: Allcontracts_subitems_list,
       props: {
         tableTitle: "销售的商品",
@@ -162,6 +185,30 @@ export const withSellcontractList = (
           padding: 10,
         },
         rowButtons: buyContract_rowButtons,
+      },
+    },
+    {
+      title: "付款记录",
+      name: "financialTransaction_contract_list",
+      RenderComponent: Allcontracts_financialTransaction_list,
+      props: {
+        tableTitle: "转账记录",
+        style: {
+          backgroundColor: "#e6eff6",
+          padding: 10,
+        },
+      },
+    },
+    {
+      title: "其他款项",
+      name: "financialTransaction_other_list",
+      RenderComponent: Allcontracts_financialTransaction_list,
+      props: {
+        tableTitle: "转账记录",
+        style: {
+          backgroundColor: "#e6eff6",
+          padding: 10,
+        },
       },
     },
   ];
@@ -187,10 +234,15 @@ export const withSellcontractList = (
     // ============================================= Table Settings
     const rowButtons = [
       {
+        label: "收付款",
+        color: "success",
+        url: row => CREATEURL_TRANSACTION + "/" + row.order_form_id,
+        icon: ICONS.MONEY("mr-1"),
+      },{
         label: "采购",
         color: "success",
         url: CREATEURL_BUY,
-        icon: ICONS.EDIT("mr-1"),
+        icon: ICONS.SHOPPING("mr-1"),
       },{
         label: "详情",
         color: "primary",
@@ -203,7 +255,6 @@ export const withSellcontractList = (
         onClick: handleOnDelete,
         icon: ICONS.DELETE(),
       }
-
     ];
 
     const toolbarButtons = [

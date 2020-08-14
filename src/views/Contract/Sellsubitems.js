@@ -4,7 +4,9 @@ import Grid from "@material-ui/core/Grid";
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
 import { Inputs } from "components";
 // import { enums } from "_constants";
-import { h_fkFetch } from "_helper";
+import { h_fkFetch, h_filterImage } from "_helper";
+
+import {ImageThumbLink } from "components/ImageThumb"
 
 // ******************************************************************* page setting
 import { sellsubitemActions as dataActions } from "_actions";
@@ -22,6 +24,13 @@ const renderPackAmount = (content, row) => {
   return `${row["packAmount"]} / ${row["unitType_id.row"].ename}`;
 };
 
+const renderImagePacking = (content, row) => {
+  return <ImageThumbLink image = {row["imagePacking_id.row"]} />
+};
+
+
+                          
+
 // ============================================= render cell
 const headCells = [
   { name: "id", disablePadding: true, className: "ml-2" },
@@ -38,6 +47,11 @@ const headCells = [
     label: "包装数量/单位",
     onShow: renderPackAmount,
   },
+  {
+    name: "imagePacking_id",
+    label: "包装彩盒图",
+    onShow: renderImagePacking,
+  },
   { name: "unitPrice" },
 ];
 
@@ -53,11 +67,11 @@ const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
 
   const handleShowOuterVolume = (values) => {
     const { outerPackL, outerPackW, outerPackH } = values;
-    return outerPackL * outerPackW * outerPackH || 0;
+    return (outerPackL * outerPackW * outerPackH) / 1000000  || 0;
   };
   const handleShowInnerVolume = (values) => {
     const { innerPackL, innerPackW, innerPackH } = values;
-    return innerPackL * innerPackW * innerPackH || 0;
+    return (innerPackL * innerPackW * innerPackH) / 1000000  || 0;
   };
 
   const handleTotalNetWeight = (values) => {
@@ -140,7 +154,7 @@ const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
           <Inputs.MyInput inputid="outerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(cm³)" onShow={handleShowOuterVolume} />
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowOuterVolume} />
         </Grid>
 
         <Grid item lg={3} md={6} xs={12}>
@@ -153,14 +167,14 @@ const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
           <Inputs.MyInput inputid="innerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(cm³)" onShow={handleShowInnerVolume} />
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume} />
         </Grid>
 
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="netWeight" />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
-          <Inputs.MyInput label="净重合计(KG)" onShow={handleTotalNetWeight} />
+          <Inputs.MyInput label="净重合计(KGS)" onShow={handleTotalNetWeight} />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="fcl20" />
@@ -171,13 +185,17 @@ const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput
-            label="毛重合计(KG)"
+            label="毛重合计(KGS)"
             onShow={handleTotalGrossWeight}
           />
         </Grid>
+        
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="fcl40" />
         </Grid>
+        <Inputs.MyImage
+          inputid="imagePacking_id.row"
+        />
       </Grid>
     </>
   );
@@ -260,10 +278,21 @@ export default (props) => {
     // 从报价表里取？ get_disposable_byProductId?
   };
 
+  const handleFilterSubmit = (values, isFromEdit) => {
+
+    if(isFromEdit) {
+      values = h_filterImage(values, "imagePacking_id.row");
+      return {...values}
+    }
+
+    return values
+  }
+
   return (
     <EmbedSellsubitem
       isBorder={true}
       {...props}
+      onFilterSubmit = {handleFilterSubmit}
       modalFormCreateProps={{ onGetInjector: handleGetInjector }}
       modalInputCreateProps={{
         getSourceProductOnChange: handleGetSourceProductOnChange,

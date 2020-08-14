@@ -1,4 +1,4 @@
-import { authHeader, handleResponse, handleFileResponse } from "_helper";
+import { authHeader, handleResponse, handleFileResponse, h_queryString, h_dataPagination, h_dataSearchTerms } from "_helper";
 import { RESTURL } from "../config";
 
 export const printService = {
@@ -8,28 +8,36 @@ export const printService = {
 
 const URL = RESTURL + `/api/printFolder`;
 
-const testurl1 = "./dataset/print.json";
-
+// 找模板
 function get(templateFolder) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
 
-  console.log("print template folder:", templateFolder);
-
-  // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
-
-  console.log("url", `${URL}/${templateFolder}`);
-  return fetch(`${URL}/${templateFolder}`, requestOptions).then(handleResponse);
+  let path = `${URL}/${templateFolder}`;
+  return fetch(path, requestOptions).then(handleResponse);
 }
 
-function get_pdf(origin_path) {
+// 直接打印pdf
+function get_pdf(origin_path, storeName) {
+
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
-  const path = origin_path + "/pdf";
+
+  let path = origin_path + "/pdf";
+
+  console.log("dayin",storeName)
+
+  // 如果有搜索条件
+  if(storeName) {
+    const queryString = h_queryString({
+      ...h_dataPagination(storeName),
+      perPage:-1},  h_dataSearchTerms(storeName));
+    path += "?" + queryString
+  }  
 
   return fetch(path, requestOptions).then(handleFileResponse);
 }

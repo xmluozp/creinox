@@ -16,7 +16,7 @@ export const productpurchaseService = {
     get_disposable_byProductId
 };
 
-const TABLENAME = "product_purchase";
+const TABLENAME = "productpurchase";
 
 const URL = RESTURL + `/api/productPurchase`;
 const URL_BY_COMPANY = RESTURL + `/api/productPurchase_companySearch`;

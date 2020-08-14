@@ -5,6 +5,7 @@ import {_DATATYPES} from '_constants/_dataTypes'
 
 export const categoryModel = {
     table: "category",
+    dataStore: "category",
     columns: {
         id :        {label: "ID",         type: _DATATYPES.INT },
         name:       {label: "名称",       type: _DATATYPES.VARCHAR},    

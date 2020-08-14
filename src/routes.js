@@ -415,6 +415,13 @@ const routes = [
     component: FinancialTransaction,
     authTag: "financial"
   },
+  {
+    path: "/financial/contractTransactions/add/:order_form_id",
+    exact: true,
+    name: "合同收付款",
+    component: FinancialTransaction,
+    authTag: "financial"
+  },
 
   // 转账凭据
   {

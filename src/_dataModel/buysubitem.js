@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const buysubitemModel = {
     table: "buy_subitem",
+    dataStore: "buysubitem",
     columns: {
         id :        {label:"ID",           type: _DATATYPES.INT },
         sellerCode:   {label: "工厂货号",     type: _DATATYPES.VARCHAR},
@@ -13,18 +14,18 @@ export const buysubitemModel = {
         unitPrice:  {label: "单价",     type: _DATATYPES.MONEY},
 
         spec:       {label: "规格",     type: _DATATYPES.VARCHAR},   
-        thickness:  {label: "厚度(mm)",     type: _DATATYPES.DECIMAL},    
-        unitWeight: {label: "单位重量(g)",     type: _DATATYPES.DECIMAL},   
-        netWeight:  {label: "净重(g)",     type: _DATATYPES.DECIMAL},   
-        grossWeight:{label: "毛重(g)",     type: _DATATYPES.DECIMAL},   
+        thickness:  {label: "厚度(mm)",     type: _DATATYPES.VARCHAR},    
+        unitWeight: {label: "单位重量(KGS)",     type: _DATATYPES.DECIMAL},   
+        netWeight:  {label: "净重(KGS)",     type: _DATATYPES.DECIMAL},   
+        grossWeight:{label: "毛重(KGS)",     type: _DATATYPES.DECIMAL},   
 
         outerPackL: {label: "外包装长(CM)",     type: _DATATYPES.DECIMAL},   
-        outerPackW: {label: "宽",     type: _DATATYPES.DECIMAL},   
-        outerPackH: {label: "高",     type: _DATATYPES.DECIMAL},   
+        outerPackW: {label: "宽(CM)",     type: _DATATYPES.DECIMAL},   
+        outerPackH: {label: "高(CM)",     type: _DATATYPES.DECIMAL},   
 
         innerPackL: {label: "内包装长(CM)",     type: _DATATYPES.DECIMAL},   
-        innerPackW: {label: "宽",     type: _DATATYPES.DECIMAL},   
-        innerPackH: {label: "高",     type: _DATATYPES.DECIMAL},  
+        innerPackW: {label: "宽(CM)",     type: _DATATYPES.DECIMAL},   
+        innerPackH: {label: "高(CM)",     type: _DATATYPES.DECIMAL},  
 
         fcl20:      {label: "20 FCL",     type: _DATATYPES.DECIMAL},   
         fcl40:      {label: "40 FCL",     type: _DATATYPES.DECIMAL},   

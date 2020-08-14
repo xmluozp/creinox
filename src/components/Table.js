@@ -117,7 +117,7 @@ export const CreinoxTable = ({
 
   // table的唯一标识。用来在返回的时候，从storage里存储和读取搜索结果的历史记录用
   const getTableUniqueCode = () => {
-    return h_getTableUniqueCode(dataModel.table, tableTitle)
+    return h_getTableUniqueCode(dataModel.dataStore, tableTitle)
   }  
 
 
@@ -599,9 +599,12 @@ export const ActionButton = ({
 
   let returnValue = label;
   if (url) {
+
+    // 可以用渲染也可以用文本
+    const renderUrl = typeof(url) === "function"? url(row) : `${url}/${id}`
     returnValue = (
       <Link
-        to={`${url}/${id}`}
+        to={renderUrl}
         className={`btn btn-sm btn-${color}`}
         role="button"
         style={{ margin: "0px 0px 0px 3px" }}

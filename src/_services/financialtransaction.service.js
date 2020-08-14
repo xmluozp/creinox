@@ -11,7 +11,7 @@ export const financialtransactionService = {
   _delete: _delete
 };
 
-const TABLENAME = "financial_transaction";
+const TABLENAME = "financialtransaction";
 const URL = RESTURL + `/api/financialTransaction`;
 
 

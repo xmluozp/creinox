@@ -263,16 +263,12 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         </Grid>
 
         <Grid item lg={4} md={4} xs={12}>
-          <Inputs.MyComboboxAsyncFK
+          <Inputs.MyComboboxFK
             disabled={disabled}
             inputid="buyer_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={
-              {
-                //companyType: enums.companyType.factory
-              }
-            }
+            preConditions={{ id: "1046,1043" }}
           />
         </Grid>
 

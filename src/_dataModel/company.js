@@ -3,6 +3,7 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const companyModel = {
     table: "company",
+    dataStore: "company",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         companyType:{label: "公司类型",   type: _DATATYPES.ENUM},

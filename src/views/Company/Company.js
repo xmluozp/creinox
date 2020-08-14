@@ -73,10 +73,10 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
 
     const folder_id =
       dataById && dataById.row && dataById.row.gallary_folder_id;
-    const imageLicense_id =
-      dataById && dataById.row && dataById.row.imageLicense_id; // 删除用
-    const imageBizCard_id =
-      dataById && dataById.row && dataById.row.imageBizCard_id;
+    // const imageLicense_id =
+    //   dataById && dataById.row && dataById.row.imageLicense_id; // 删除用
+    // const imageBizCard_id =
+    //   dataById && dataById.row && dataById.row.imageBizCard_id;
 
     return (
       <>
@@ -126,12 +126,10 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                         <Grid container spacing={2}>
                           <Inputs.MyImage
                             inputid="imageLicense_id.row"
-                            imageId={imageLicense_id}
                             disabled={disabled}
                           />
                           <Inputs.MyImage
                             inputid="imageBizCard_id.row"
-                            imageId={imageBizCard_id}
                             disabled={disabled}
                           />
                         </Grid>

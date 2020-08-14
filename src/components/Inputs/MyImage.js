@@ -9,8 +9,10 @@ import {h_popfile} from '../../_helper'
 
 
 // 思路：value默认是个image；上传以后变成是个file（如果onchange时不动它会导致form提交不对）
-export const MyImage = ({ id, value, onChange, disabled, label, imageId }) => {
+// 在CreinoxForm里面判断，如果是图片类型，就把对应的id加入imageItem里
+export const MyImage = ({ id, value, onChange, disabled, label, sourceId }) => {
   const myImageDisplay = useRef(null);
+
   // check if going to upload a new picture to over old one
   const isUploaded = Object.prototype.toString.call(value) === "[object File]";
 
@@ -60,6 +62,7 @@ export const MyImage = ({ id, value, onChange, disabled, label, imageId }) => {
     }    
   };
 
+
   // 删除
   const handleOnRemove = () => {
 
@@ -69,7 +72,8 @@ export const MyImage = ({ id, value, onChange, disabled, label, imageId }) => {
       onChange(null, id, null);
 
       // 直接调用action，因为外键的关系fk会自动被清空
-      dataActions._deleteGallary(imageId)(store.dispatch)
+
+      dataActions._deleteGallary(sourceId)(store.dispatch)
 
     }    
   };

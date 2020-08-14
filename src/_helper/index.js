@@ -4,6 +4,7 @@ import {userService} from '_services'
 
 import _ from 'lodash'
 import { format } from 'date-fns'
+import {h_dataPagination, h_dataSearchTerms, h_queryString } from './getStoreData'
 
 
 export * from './getStoreData'
@@ -264,16 +265,23 @@ export function h_formData_files(itemList, folder_structure) {
     return formData
 }
 
-// 下载(目前只有xlsx在用，之后也许会增加)
-export function h_download(origin_path) {
+// 下载(目前只有xlsx在用，之后也许会增加). 如果是列表，需要指定storeName，从里面fetch出searchTerm
+export function h_download(origin_path, storeName) {
 
     const requestOptions = {
         method: "GET",
         headers: authHeader(),
       };
+ 
+    let path = origin_path + "/xlsx"
 
-    const path = origin_path + "/xlsx"
-
+    if(storeName) {
+        const queryString = h_queryString({
+            ...h_dataPagination(storeName),
+            perPage:-1}, h_dataSearchTerms(storeName));
+        path += "?" + queryString
+    }
+    
     fetch(path, requestOptions).then( response => {
         if(response.ok) {
 

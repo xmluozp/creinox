@@ -3,10 +3,11 @@ import {_DATATYPES} from "_constants/_dataTypes"
 
 export const sellcontractModel = {
     table: "sell_contract",
+    dataStore: "sellcontract",
     template: "sellcontract",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
-        code:       {label: "合同号码",     type: _DATATYPES.VARCHAR},
+        code:       {label: "合同号码", elabel: "Code",    type: _DATATYPES.VARCHAR},
         orderNumber:{label: "订单号",     type: _DATATYPES.VARCHAR},
 
         activeAt:   {label: "合同日期", type: _DATATYPES.DATE},
@@ -41,8 +42,11 @@ export const sellcontractModel = {
         invoiceCode:            {label: "发票号",  type: _DATATYPES.VARCHAR},
         totalPrice:             {label: "总金额",  type: _DATATYPES.MONEY},
         paidPrice:              {label: "已支付",  type: _DATATYPES.MONEY},
-        seller_company_id:      {label: "乙方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
-        buyer_company_id:       {label: "甲方",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
+        seller_company_id:      {label: "供方", elabel: "Sellers",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
+        buyer_company_id:       {label: "需方", elabel: "Buyers",    type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
+        sellerAddress:          {label: "供方地址", elabel: "Sellers' Address",   type: _DATATYPES.VARCHAR},
+        buyerAddress:           {label: "需方地址", elabel: "Buyers' Address",   type: _DATATYPES.VARCHAR},
+
         isDone:                 {label: "合同是否完成", type: _DATATYPES.SELECT, ref:"company", refLabel: ["name"]},
         order_memo:             {label: "管理员备注",   type: _DATATYPES.TEXT},
 
@@ -50,7 +54,13 @@ export const sellcontractModel = {
         //--------------------------- 显示在列表里的时候需要（因为要取name）
         "follower_id.row":          {label: "跟单员",   type: _DATATYPES.ROW},
         // "seller_company_id.row":    {label: "外贸公司",   type: _DATATYPES.ROW},
-        "buyer_company_id.row":     {label: "甲方",   type: _DATATYPES.ROW},
-        "seller_company_id.row":     {label: "乙方",   type: _DATATYPES.ROW},
+        "buyer_company_id.row":     {label: "buyers",   type: _DATATYPES.ROW},
+        "seller_company_id.row":     {label: "sellers",   type: _DATATYPES.ROW},
+
+        //---------------------
+        subitem_list: {label: "销售的商品",   type: _DATATYPES.ROW},
+        buyContract_list: {label: "采购合同",   type: _DATATYPES.ROW},
+        financialTransaction_contract_list: {label: "付款记录",   type: _DATATYPES.ROW},
+        financialTransaction_other_list: {label: "其他款项",   type: _DATATYPES.ROW},
     }
 }

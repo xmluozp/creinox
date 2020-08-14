@@ -42,12 +42,12 @@ const FormInputs = ({onLoad}) => {
   const handleShowOuterVolume = (values) => {
 
     const {outerPackL, outerPackW, outerPackH} = values  
-    return outerPackL * outerPackW * outerPackH || 0
+    return (outerPackL * outerPackW * outerPackH) / 1000000  || 0
   }
   const handleShowInnerVolume = (values) => {
 
     const {innerPackL ,innerPackW, innerPackH} = values  
-    return innerPackL * innerPackW * innerPackH || 0
+    return (innerPackL * innerPackW * innerPackH) / 1000000  || 0
   }
 
   // 20200327: disabled改成true
@@ -146,7 +146,7 @@ const FormInputs = ({onLoad}) => {
           <Inputs.MyInput inputid="outerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(cm³)"  onShow={handleShowOuterVolume}/>
+          <Inputs.MyInput label="体积(m³)"  onShow={handleShowOuterVolume}/>
         </Grid>
 
         <Grid item lg={3} md={6} xs={12}>
@@ -159,7 +159,7 @@ const FormInputs = ({onLoad}) => {
           <Inputs.MyInput inputid="innerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(cm³)" onShow={handleShowInnerVolume}/>
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume}/>
         </Grid>
 
 

@@ -8,8 +8,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import FilterListIcon from "@material-ui/icons/FilterList";
+// import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
+import FindInPage from "@material-ui/icons/FindInPage"
+
 // import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import Popper from "@material-ui/core/Popper";
@@ -52,7 +54,8 @@ export default function Search({
     <>
       <Tooltip title="Advanced Search" ref={tipRef}>
         <IconButton aria-label="Advanced Search" onClick={handleClick}>
-          <FilterListIcon />
+          <FindInPage/>
+          {/* <FilterListIcon /> */}
         </IconButton>
       </Tooltip>
       {/* <ClickAwayListener onClickAway={e => {

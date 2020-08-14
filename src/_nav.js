@@ -93,7 +93,7 @@ const navs = {
           authTag: "product",
         },
         {
-          name: "商品/成套商品",
+          name: "商品/商品组合",
           url: "/commodity/commodities",
           authTag: "commodity",
         },
