@@ -7,7 +7,7 @@ export const sellcontractModel = {
     template: "sellcontract",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
-        code:       {label: "合同号码", elabel: "Code",    type: _DATATYPES.VARCHAR},
+        code:       {label: "合同号码", elabel: "Contract Code",    type: _DATATYPES.VARCHAR},
         orderNumber:{label: "订单号",     type: _DATATYPES.VARCHAR},
 
         activeAt:   {label: "合同日期", type: _DATATYPES.DATE},

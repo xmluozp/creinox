@@ -4,16 +4,15 @@ import {_DATATYPES} from "_constants/_dataTypes"
 export const financialvoucherModel = {
     table: "financial_voucher",
     dataStore: "financialvoucher",
+    template: "financialVoucher",
     columns: {
         id :            {label: "ID",         type: _DATATYPES.INT },
         word:           {label: "字",    type: _DATATYPES.VARCHAR},
         number:         {label: "号",    type: _DATATYPES.VARCHAR},
-        bankaccountNo:  {label: "对方账号",    type: _DATATYPES.VARCHAR},
         debit:          {label: "借",     type: _DATATYPES.MONEY},        
         credit:         {label: "贷",     type: _DATATYPES.MONEY}, 
-        financialLedger: {label: "财务科目打印显示",    type: _DATATYPES.VARCHAR},
 
-        memo:           {label: "备注",        type: _DATATYPES.VARCHAR},    
+        memo:           {label: "摘要",        type: _DATATYPES.VARCHAR},    
 
         createAt:       {label: "日期", type: _DATATYPES.DATETIME},
 

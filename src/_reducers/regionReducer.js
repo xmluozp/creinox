@@ -20,15 +20,15 @@ export default (state = {}, action) => {
     case CONST.GET_SUCCESS:
       return { ...state, dataById: action.payload };
     case CONST.UPDATE_SUCCESS:
-      return { ...state, dataById: action.payload, data: action.payload};
+      return { ...state, dataById: action.payload, data: action.payload, dropdown: {}};
     case CONST.UPDATE_FAILURE:
       return { ...state, errorById: action.payload }; // error message included
     case CONST.CREATE_SUCCESS:
-      return { ...state, dataById: action.payload, data: action.payload}; // jump to a new page (edit or create page)
+      return { ...state, dataById: action.payload, data: action.payload, dropdown: {}}; // jump to a new page (edit or create page)
     case CONST.CREATE_FAILURE:
       return { ...state, errorById: action.payload }; // error message included
     case CONST.DELETE_SUCCESS:
-      return { ...state, data: action.payload };
+      return { ...state, data: action.payload, dropdown: {}};
     case CONST.DELETE_FAILURE:
       return state;
     default:

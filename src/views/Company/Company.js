@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
+import useCancelableTimeout from "use-cancelable-timeout";
 
 import { Row, Col, Card, CardHeader } from "reactstrap";
 import Grid from "@material-ui/core/Grid";
@@ -13,7 +14,12 @@ import { companyActions as dataActions } from "_actions";
 import { companyModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs, TabPanel, Gallery } from "components";
 import { enumsLabel } from "_constants";
-import { history, h_filterImage } from "_helper";
+import {
+  history,
+  h_filterImage,
+  h_is_all_letters,
+  h_code_plus_one,
+} from "_helper";
 
 import Contacts from "./Contacts";
 import BankaccountsCompany from "../Bank/EmbedBankaccountsCompany";
@@ -25,6 +31,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onGetCode,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
@@ -46,28 +53,65 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
 
     // ********************************
 
-    const handleOnSubmit = values => {
+    const handleOnSubmit = (values) => {
       if (isFromEdit) {
         // 如果没有新的图片，就不上传图片
         values = h_filterImage(values, "imageLicense_id.row");
         values = h_filterImage(values, "imageBizCard_id.row");
 
         // 因为有图片，所以需要刷新一下，好显示图片的thumbnail
-        onPutUpdate({ companyType: companyType, ...values }, res => {
+        onPutUpdate({ companyType: companyType, ...values }, (res) => {
           injector(res.row);
         });
       } else {
         // onPostCreate(values, history.location.pathname);
-        onPostCreate({ companyType: companyType, ...values }, id => {
+        onPostCreate({ companyType: companyType, ...values }, (id) => {
           // not using async. because I want loading bar's codes put with callback codes
           history.push(EDITURL + "/" + id);
         });
       }
     };
 
+    // ============================================================= 延时取code (
+    // 因为延时控件不支持传值只好这样
+    const [currentCode, setcurrentCode] = useState("");
+
+    const getLastCode = async () => {
+      try {
+        const value = currentCode;
+        const itemOfMaxCode = await onGetCode(companyType, value);
+        if (itemOfMaxCode && itemOfMaxCode.row) {
+          const code = h_code_plus_one(itemOfMaxCode.row["code"]);
+          const region_id = itemOfMaxCode.row["region_id"];
+          injector({
+            code,
+            region_id,
+          });
+        }
+      } catch (error) {
+        console.log("取不到公司code", error);
+      }
+
+      // 无论有没有取到，停止延时
+      cancelGetLastCode();
+    };
+    const [onGetLastCode, cancelGetLastCode] = useCancelableTimeout(
+      getLastCode,
+      1000
+    );
+
+    const handleCodeOnChange = (null1, null2, value) => {
+      // 延时判断
+      if (companyType && value && h_is_all_letters(value)) {
+        setcurrentCode(value);
+        onGetLastCode();
+      }
+    };
+    // ============================================================= 延时取code )
+
     // ******************************** injector:update the form. otherwise, form is separated from store(input and output)
     const [injector, setInjector] = useState(null);
-    const handleGetInjector = inj => {
+    const handleGetInjector = (inj) => {
       setInjector(inj);
     };
 
@@ -119,7 +163,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                     <Grid container spacing={2}>
                       <Grid item lg={8} md={8} xs={12}>
                         <Grid container spacing={2}>
-                          {formInputs(disabled)}
+                          {formInputs(disabled, handleCodeOnChange)}
                         </Grid>
                       </Grid>
                       <Grid item lg={4} md={4} xs={12}>
@@ -161,13 +205,13 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                 <TabPanel value={tabSelect} index={1}>
                   <Gallery
                     folder_id={folder_id}
-                    folder_structure = {{
-                      memo:"company/" + id,
+                    folder_structure={{
+                      memo: "company/" + id,
                       RefSource: "company.gallary_folder_id",
                       RefId: id,
-                      folderType:1,
+                      folderType: 1,
                       tableName: "company",
-                      columnName: "gallary_folder_id"
+                      columnName: "gallary_folder_id",
                     }}
                   />
                 </TabPanel>
@@ -186,10 +230,12 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
   };
 
   // 1: 内部公司
-  const formInputs = disabled => {
+  const formInputs = (disabled, handleCodeOnChange) => {
     return (
       <>
-        {companyType === 1 ? template_1(disabled) : templateCommon(disabled)}
+        {companyType === 1
+          ? template_1(disabled)
+          : templateCommon(disabled, handleCodeOnChange)}
         <Grid item lg={4} xs={12}>
           <Inputs.MyDatePicker inputid="updateAt" disabled={true} />
         </Grid>
@@ -203,12 +249,16 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     );
   };
 
-  // ======================================= 公司资料模板 //不同类型的公司需要填的内容不一样，所以需要用不同模板区分 ======================================= 
-  const templateCommon = disabled => (
+  // ======================================= 公司资料模板 //不同类型的公司需要填的内容不一样，所以需要用不同模板区分 =======================================
+  const templateCommon = (disabled, handleCodeOnChange) => (
     <>
       {/* 基本信息 */}
       <Grid item lg={8} md={8} xs={12}>
-        <Inputs.MyInput inputid="code" disabled={disabled} />
+        <Inputs.MyInput
+          inputid="code"
+          disabled={disabled}
+          onChangeSideEffect={handleCodeOnChange}
+        />
       </Grid>
       <Grid item lg={4} md={4} xs={12}>
         <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
@@ -300,7 +350,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     </>
   );
 
-  const template_1 = disabled => (
+  const template_1 = (disabled) => (
     <>
       {/* 基本信息 */}
 
@@ -373,14 +423,15 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
   function mapState(state) {
     return {
       dataById: state.companyData.dataById,
-      errorById: state.companyData.errorById
+      errorById: state.companyData.errorById,
     };
   }
 
   const actionCreators = {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
-    onGetById: dataActions.get_byId
+    onGetById: dataActions.get_byId,
+    onGetCode: dataActions.get_code,
   };
 
   return connect(mapState, actionCreators)(CurrentPage);

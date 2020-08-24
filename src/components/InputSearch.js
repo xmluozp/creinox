@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 export const InputSearch = ({ style, onSearch = () => {} }) => {
   const [value, setvalue] = useState("");
+  const searchInputRef = useRef(null)
   const classes = useStyles();
 
   const handleOnChange = e => {
@@ -42,12 +43,16 @@ export const InputSearch = ({ style, onSearch = () => {} }) => {
     }
   }
 
+  React.useEffect(() => {
+    searchInputRef.current.focus()
+  }, [])
+
   return (
     <Paper component="form" className={classes.root} style={style}>
       <InputBase
         className={classes.input}
         placeholder="搜索"
-        inputProps={{ "aria-label": "search google maps" }}
+        inputProps={{ "aria-label": "search",ref: searchInputRef }}
         value={value}
         onChange={handleOnChange}
         onKeyDown={handleKeyDown}

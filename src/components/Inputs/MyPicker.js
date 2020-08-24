@@ -29,6 +29,7 @@ const CurrentPicker = React.memo(
     onChange = () => {}, //
     onSelect,
     onRender,
+    onRenderTreeNodes,
     error = false,
     helperText = "",
     fullWidth = true,
@@ -109,6 +110,7 @@ const CurrentPicker = React.memo(
         initialNode={selectedNode}
         selectedNode={selectedNode}
         data={data}
+        onRender = {onRenderTreeNodes}
         mainName = {mainName}
         subName = {subName}
         onGetBySearch={onGetBySearch}
@@ -132,6 +134,7 @@ const CurrentPicker = React.memo(
           onClick={handleModalOpen}
           margin="dense"
           value={text}
+          placeholder = "未选择"
           helperText={!disabled && helperText}
           inputProps={
             {
@@ -196,18 +199,59 @@ const MyRegionPickerWrapper = (props) => {
   );
 };
 const MyCategoryPickerWrapper = (props) => {
+
   return (
     <CurrentPicker
       {...props}
       subName="prefix"
+
       searchColumns={["name", "ename", "prefix"]}
     />
   );
 };
 const MyFinancialLedgerPickerWrapper = (props) => {
+
+  // 显示财务科目
+  const handleOnRenderFinancialLedger = (node, rows) => {
+    // if (!node) return "";
+
+    // const map = new Map();
+
+    // // 整棵树变成map
+    // for (let i = 0; i < rows.length; i++) {
+    //   if (!rows[i].id) continue;
+    //   map.set(rows[i].id.toString(), rows[i].name);
+    // }
+
+    // const pathArr = (node["path"] && node["path"].split(",")) || [];
+    // if (pathArr[0] === "0") pathArr.shift();
+
+    // for (let i = 0; i < pathArr.length; i++) {
+    //   pathArr[i] = map.get(pathArr[i]);
+    // }
+    // pathArr.push(node["name"]);
+
+    // return pathArr.join("/");
+
+    if(node && node.ledgerName) {
+
+      const nameArr = node.ledgerName.split('/')
+      const cate = nameArr.shift()
+
+      console.log(cate)
+      const newLedgerName = `[${cate}] ` + (nameArr ? nameArr.join('/') : "")
+
+      return newLedgerName
+    } else {
+      return ""
+    }
+  };
+
+
   return (
     <CurrentPicker
       {...props}
+      onRender={handleOnRenderFinancialLedger}
       subName="code"
       searchColumns={["name", "code"]}
     />

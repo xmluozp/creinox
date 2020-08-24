@@ -25,7 +25,7 @@ export const MyModalForm = ({
       ) : (
         <>
           <ModalBody>{component}</ModalBody>
-          {rowButtons?
+          {rowButtons && rowButtons.length > 0?
           <ModalFooter>
             {rowButtons.map((buttonObj, index) => (
               <ActionButton

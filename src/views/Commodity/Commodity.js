@@ -70,6 +70,7 @@ export const withProduct = () => {
               category_id: response.category_id,
               code: response.code,
               name: response.name,
+              ename: response.ename,
             });
           }
         })
@@ -129,18 +130,21 @@ export const withProduct = () => {
                   disabled={true}
                 />
               </Grid>
-              <Grid item lg={3} md={4} xs={12}>
+              <Grid item lg={2} md={4} xs={12}>
                 <Inputs.MyInput inputid="code" disabled={true} />
               </Grid>
-              <Grid item lg={3} md={4} xs={12}>
+              <Grid item lg={2} md={4} xs={12}>
                 <Inputs.MyInput inputid="sellPrice" disabled={true} />
               </Grid>
-              <Grid item lg={3} md={4} xs={12}>
+              <Grid item lg={2} md={4} xs={12}>
                 <Inputs.MyComboboxCurrency inputid="currency_id" disabled={true} />
               </Grid>
 
-              <Grid item lg={12} md={12} xs={12}>
+              <Grid item lg={6} md={6} xs={12}>
                 <Inputs.MyInput inputid="name" disabled={disabled} />
+              </Grid>
+              <Grid item lg={6} md={6} xs={12}>
+                <Inputs.MyInput inputid="ename" disabled={disabled} />
               </Grid>
 
               <Grid item lg={12} md={12} xs={12}>
@@ -214,7 +218,7 @@ export const withProduct = () => {
                   aria-label="tabs"
                 >
                   <Tab label="基本属性" />
-                  <Tab label="更多下属子产品" disabled={!isFromEdit} />
+                  <Tab label="商品组合" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}

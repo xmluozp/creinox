@@ -75,6 +75,11 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
           if (response && response.id) {
             delete response["id"];
             delete response["updateAt"];
+
+            delete response["totalPrice"];
+            delete response["paidPrice"];
+            delete response["isDone"];
+            
             injector(response);
           }
         })
@@ -152,6 +157,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
                     onGetInjector={handleGetInjector}
+                    isEnglish = {true}
                   >
                     <Grid container spacing={2}>
                       {formInputs(

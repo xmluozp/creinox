@@ -7,6 +7,7 @@ export const commodityModel = {
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
         name:       {label: "商品名称",     type: _DATATYPES.VARCHAR},       
+        ename:       {label: "英文名(销售合同上用)",     type: _DATATYPES.VARCHAR},       
         memo:       {label: "备注",     type: _DATATYPES.TEXT},     
 
         updateAt:   {label: "上次操作日期", type: _DATATYPES.DATETIME},

@@ -83,6 +83,7 @@ const MyDatePicker = React.memo(
           id={id}
           label={label}
           format="yyyy/MM/dd"
+          placeholder="格式如:2020/12/31"
           value={value || null}
           emptyLabel=""
           onChange={handleOnChange}

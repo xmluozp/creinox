@@ -1,16 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
-import _ from "lodash";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { connect } from "react-redux";
+import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { ICONS } from "../../_constants";
+import ButtonOL from "@material-ui/core/Button";
 
+import { Button } from "reactstrap";
+
+import _ from "lodash";
+import { connect } from "react-redux";
+import { ICONS } from "../../_constants";
+import { h_confirm } from "_helper";
 import { MyModalForm } from "../Modal";
 
-import { texttemplateActions as dataActions} from "../../_actions";
+import { texttemplateActions as dataActions } from "../../_actions";
 
 // 基本的按钮，负责modal弹出
 const InputTT = React.memo(
@@ -26,18 +30,20 @@ const InputTT = React.memo(
     fullWidth = true,
     disabled = false,
     prefix,
-    columnName= id,
+    columnName = id,
     data,
     dataModeltableName,
     onGetBySearch, // 第一次打开获取数据
     onPostCreate,
     onPutUpdate,
-    onDelete
+    onDelete,
   }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [addLine, setaddLine] = useState([]);
+
     const inputRef = useRef(null);
 
-    const targetTable = prefix || dataModeltableName
+    const targetTable = prefix || dataModeltableName;
     // 读取对应的模板
     // useEffect(() => {
     //   if (!data) {
@@ -53,77 +59,130 @@ const InputTT = React.memo(
     const handleModalOpen = () => {
       if (!disabled) {
         // searchTerms: 表格，columnName
-        onGetBySearch({}, {targetTable, columnName});
+        onGetBySearch({}, { targetTable, columnName });
         setIsModalOpen(true);
       }
     };
-    const handleOnSelect = selectedText => {
-      if (selectedText && typeof onChange === "function") {
 
+    const handleOnSelect = (selectedText) => {
+      if (selectedText && typeof onChange === "function") {
         onChange(null, id, selectedText);
         handleModalClose();
-
       }
     };
     const handleOnSave = (selectedId, selectedText) => {
-        if (selectedText) {
-          onPutUpdate({
-              targetTable,
-              columnName,
-              id: selectedId, 
-              content: selectedText
-            }, () => {
-                onGetBySearch({}, {targetTable, columnName});
-                // handleModalClose();
-            })
-        }
+      // 没有内容不保存
+      if (selectedText === "") return;
+
+      // 如果有id就是保存，没有就是新建
+      if (selectedId) {
+        onPutUpdate(
+          {
+            targetTable,
+            columnName,
+            id: selectedId,
+            content: selectedText,
+          },
+          () => {
+            onGetBySearch({}, { targetTable, columnName });
+            // handleModalClose();
+          }
+        );
+      } else {
+        handleOnCreate(selectedText);
+        setaddLine([]);
+      }
     };
 
     const handleOnCreate = (selectedText) => {
-        if (targetTable) {
-            onPostCreate({
-                name: targetTable +"/" + label,
-                targetTable,
-                columnName,
-                content: selectedText
-            }, () => {
-                onGetBySearch({}, {targetTable, columnName});
-            })            
-        }
-    }
+      if (targetTable) {
+        onPostCreate(
+          {
+            name: targetTable + "/" + label,
+            targetTable,
+            columnName,
+            content: selectedText,
+          },
+          () => {
+            onGetBySearch({}, { targetTable, columnName });
+          }
+        );
+      }
+    };
 
     const handleOnDelete = (selectedId) => {
-        if (selectedId) {
-          onDelete(selectedId, {}, {targetTable, columnName})
-        }
+      if (selectedId) {
+        onDelete(selectedId, {}, { targetTable, columnName });
+      }
+    };
+
+    // ============== 本页操作
+    const handleOnAddLine = () => {
+      setaddLine([
+        {
+          id: 0,
+          content: "",
+          name: "",
+        },
+      ]);
+    };
+
+    const handleOnCancel = (selectedId) => {
+      // 新增的时候点取消
+      if (!selectedId) {
+        setaddLine([]);
+      }
     };
 
     // console.log("data:", data)
-    const dataRows = data && data.rows
+    const dataRows = data && data.rows ? data.rows : [];
+
+    // 包括新增行
+    const displayRows = [...addLine, ...dataRows];
 
     //
     const PopupModal = (
       <div>
-        {dataRows &&
-          dataRows.length > 0 &&
-          dataRows.map((item, index) => {
-            return <InputLine
-                key={item.id} 
-                item = {item}
-                onSelect = {handleOnSelect}
-                onSave = {handleOnSave}
-                onDelete = {handleOnDelete}
-            />;
-          })}
-        {/* 读取列表, textarea和选择，保存，删除按钮。 */}
         {/* 新增按钮，点击增加一行，保存后重新读取 */}
-        <Button
-            color="default"
-            type="button"
-            variant="contained"
-            onClick={handleOnCreate.bind(null, "")}>
-          加一条
-        </Button>
+
+        {addLine.length === 0 ? (
+          <Box mb={2} mt={0}>
+            <Grid container>
+              <Grid item lg={6} md={6} xs={12}>
+                <h5 style={{ color: "rgb(193 195 165)" }}>
+                  点击文字选择：
+                </h5>
+              </Grid>
+              <Grid item lg={6} md={6} xs={12}>
+                <Box display="flex" justifyContent="flex-end">
+                  <ButtonOL
+                    color="default"
+                    type="button"
+                    variant="outlined"
+                    onClick={handleOnAddLine}
+                  >
+                    {ICONS.ADD("mr-2")}
+                    加一条选项
+                  </ButtonOL>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        ) : null}
+
+        {displayRows.length > 0 &&
+          displayRows.map((item, index) => {
+            return (
+              <InputLine
+                key={item.id}
+                item={item}
+                onSelect={handleOnSelect}
+                onSave={handleOnSave}
+                onDelete={handleOnDelete}
+                onCancel={handleOnCancel}
+              />
+            );
+          })}
       </div>
     );
 
@@ -145,16 +204,18 @@ const InputTT = React.memo(
           value={value || ""}
           onChange={onChange}
           inputRef={inputRef}
+          multiline={true}
+          rows={1}
+          rowsMax={10}
           helperText={!disabled && helperText}
           InputProps={{
             endAdornment: (
-              
               <InputAdornment position="end" onClick={handleModalOpen}>
                 <IconButton size="small" disabled={disabled}>
-                {ICONS.PICK()}
+                  {ICONS.PICK()}
                 </IconButton>
               </InputAdornment>
-            )
+            ),
           }}
         />
       </>
@@ -164,7 +225,7 @@ const InputTT = React.memo(
 
 function mapState(state) {
   return {
-    data: state.texttemplateData.data
+    data: state.texttemplateData.data,
   };
 }
 
@@ -172,70 +233,141 @@ const actionCreators = {
   onGetBySearch: dataActions.get_bySearch_template,
   onDelete: dataActions._delete,
   onPostCreate: dataActions.post_create,
-  onPutUpdate: dataActions.put_update
+  onPutUpdate: dataActions.put_update,
 };
 
 export const MyInputTT = connect(mapState, actionCreators)(InputTT);
 
+const InputLine = ({ item, onSelect, onSave, onDelete, onCancel }) => {
+  // const inputRef = useRef(null);
 
-const InputLine = ({
-    item,
-    onSelect,
-    onSave,
-    onDelete
-}) => {
+  const [isEdit, setisEdit] = useState(false);
+  const [defaultValue, setdefaultValue] = useState(item.content);
+  const [currentValue, setcurrentValue] = useState(item.content);
+  const [isMouseOver, setisMouseOver] = useState(false);
 
-    const inputRef = useRef(null)
-    const handleOnSelect = () => {
-        onSelect(inputRef.current.value)
+  // 可编辑状态： 编辑中，或者是没有id的新增时
+  const editAble = (isEdit && item.id) || !item.id;
+
+  const handleOnChange = (e) => {
+    setcurrentValue(e.target.value);
+  };
+
+  const handleOnSelect = (e) => {
+    if (!editAble) {
+      e.stopPropagation();
+      onSelect(currentValue);
     }
-    const handleOnSave = () => {
-        onSave(item.id, inputRef.current.value)
-    }
-    const handleOnDelete = () => {
-        onDelete(item.id)
-    }
+  };
+  const handleOnSave = () => {
+    setisEdit(false);
+    onSave(item.id, currentValue);
+  };
+  const handleOnDelete = () => {
+    h_confirm("是否删除？").then((resolve) => {
+      if (resolve) onDelete(item.id);
+    });
+  };
 
+  const handleOnCancel = () => {
+    setisEdit(false);
+    setcurrentValue(defaultValue);
+    onCancel(item.id);
+  };
 
+  // useEffect(() => {}, []);
 
-
-    return (
+  // 如果item没有id，就是新建行。只有“保存”和“取消”
+  return (
     <Grid container spacing={2}>
-        <Grid item lg={8} md={8} xs={12}>
-          <TextField
-            fullWidth={true}
-            id={item.name + item.id}
-            type={"text"}
-            inputRef = {inputRef}
-            defaultValue = {item.content || ""}
-            margin="dense"
-            multiline={true}
-            rows={2}
-            rowsMax={5}
-          />
-        </Grid>
-        <Grid key={item.id} item lg={4} md={4} xs={12}>
-          <Button
-            color="default"
-            type="button"
-            variant="contained"
-            onClick={handleOnSelect}
-          >选择
-          </Button>
-          <Button
-            color="default"
-            type="button"
-            variant="contained"
-            onClick={handleOnSave}
-          >保存
-          </Button>
-          <Button
-            color="default"
-            type="button"
-            variant="contained"
-            onClick={handleOnDelete}
-          >删除
-          </Button>
-        </Grid>
-      </Grid>)
-}
+      <Grid item lg={9} md={9} xs={12}
+          onMouseOver={setisMouseOver.bind(null, true)}
+          onMouseOut={setisMouseOver.bind(null, false)}     
+      >
+        <TextField
+          fullWidth={true}
+          id={item.name + item.id}
+          type="text"
+          disabled={!editAble}
+          value={currentValue}
+          onClick={handleOnSelect}
+          onChange={handleOnChange}
+          multiline={true}
+          rows={1}
+          rowsMax={5}
+          inputProps={
+            editAble
+              ? {}
+              : {
+                  style: { cursor: "pointer" },
+                }
+          }
+          InputProps={
+            isMouseOver && !editAble
+              ? {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {ICONS.TRUE("ml-2 text-success")}
+                    </InputAdornment>
+                  ),
+                }
+              : {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {ICONS.BULLET("ml-2 text-secondary")}
+                    </InputAdornment>
+                  ),
+                }
+          }
+        />
+      </Grid>
+      <Grid key={item.id} item lg={3} md={3} xs={12}>
+        <Box display="flex" justifyContent="flex-end">
+          {!editAble ? (
+            <>
+              <Button
+                style={{ margin: "0px 0px 0px 3px" }}
+                className={`btn btn-md btn-warning`}
+                type="button"
+                onClick={setisEdit.bind(null, true)}
+              >
+                {ICONS.PENCIL("mr-1")}
+                修改
+              </Button>
+              <Button
+                style={{ margin: "0px 0px 0px 3px" }}
+                className={`btn btn-md btn-danger`}
+                type="button"
+                onClick={handleOnDelete}
+              >
+                {ICONS.DELETE("mr-1")}
+                删除
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                style={{ margin: "0px 0px 0px 3px" }}
+                className={`btn btn-md btn-secondary`}
+                type="button"
+                onClick={handleOnCancel}
+              >
+                {ICONS.CANCEL("mr-1")}
+                取消
+              </Button>
+              <Button
+                style={{ margin: "0px 0px 0px 3px" }}
+                className={`btn btn-md btn-success`}
+                type="button"
+                onClick={handleOnSave}
+              >
+                {ICONS.SAVE("mr-1")}
+                保存
+              </Button>
+            </>
+          )}
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};

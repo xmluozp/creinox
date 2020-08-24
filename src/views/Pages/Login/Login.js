@@ -40,24 +40,28 @@ const Login = ({ onLogin }) => {
               <Card className="p-4">
                 <CardBody>
                   <Form>
-                    <h1>Login</h1>
-                    <p className="text-muted">Sign In to your account</p>
+                    <h1>登录Creinox管理系统</h1>
+                    <p className="text-muted">
+                      选择你的用户（如果下拉列表是空的请刷新一下页面）                      
+                    </p>
                     <InputGroup className="mb-3">
                       {/* <InputGroupAddon addonType="prepend">
                         <InputGroupText>
                           <i className="icon-user"></i>
                         </InputGroupText>
                       </InputGroupAddon> */}
-                      <Grid item lg={4} xs={12}>
+                      <Grid item xs={12}>
                         <Inputs.MyComboboxFK
-                        label="选择要登录的用户"
+                          label="选择要登录的用户"
                           optionLabel="name"
                           tableName="user"
                           actionName="get_loginUserList"
                           value={userid}
                           onChange={(a, b, c, item) => {
-                            setuserid(item.id);
-                            setUserName(item.userName);
+                            if (item) {
+                              setuserid(item.id);
+                              setUserName(item.userName);
+                            }
                           }}
                         />
                       </Grid>
@@ -72,7 +76,7 @@ const Login = ({ onLogin }) => {
                       </InputGroupAddon>
                       <Input
                         type="password"
-                        placeholder="Password"
+                        placeholder="请输入密码"
                         autoComplete="current-password"
                         name="password"
                         value={password}
@@ -90,7 +94,7 @@ const Login = ({ onLogin }) => {
                             onLogin({ userName, password });
                           }}
                         >
-                          Login
+                          登录系统
                         </Button>
                       </Col>
                       {/* <Col xs="6" className="text-right">

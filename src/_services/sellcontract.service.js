@@ -4,7 +4,6 @@ import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const sellcontractService = {
-    get_dropdown,
     get_bySearch,
     get_byId,
     post_create,
@@ -22,19 +21,18 @@ const URL_GET_LAST = RESTURL + `/api/sellcontract_getlast`;
 // const testurl1 = './dataset/sellcontractdata.json'
 // const testurl2 = './dataset/sellcontractdata_byId.json'
 
-function get_dropdown(companyType) {
+// function get_dropdown(companyType) {
+//     const requestOptions = {
+//         method: 'GET',
+//         headers: authHeader()
+//     };
 
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+//     const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
+//     console.log("getdropdown service:", companyType);
+//     // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 
-    const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
-    console.log("getdropdown service:", companyType);
-    // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
-
-    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
-}
+//     return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+// }
 
 function get_disposable_dropdown(searchTerms) {
 

@@ -16,18 +16,14 @@ export const loadedFailure = { type: LOADING.FAILURE };
 
 export const _am = (CONST, service) => {
   function get_dropdown(pagination, searchTerms = {}) {
-
-    
     return dispatch => {
       dispatch(loading);
       dispatch(done({}, CONST.GETDROPDOWN));
       return service.get_dropdown(pagination, searchTerms).then(
-        response => {
-
-    
+        response => {   
           dispatch(loaded);
           dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
-          console.log("getDropdown", response);
+          console.log("getDropdown action", response);
           return response;
         },
         error => {
@@ -88,7 +84,7 @@ export const _am = (CONST, service) => {
   }
 
   function post_create(item, callBack = () => {}) {
-    console.log("action create:", item);
+
     return dispatch => {
       dispatch(loading);
       return service.post_create(item).then(
@@ -126,7 +122,6 @@ export const _am = (CONST, service) => {
           dispatch(success("保存成功" + info.toString()));
           dispatch(done(response, CONST.CREATE_SUCCESS));
 
-          console.log("批量保存后的reponse", response)
           // 如果folder不存在，会在后端生成一个新的并返回id
           searchTerms.gallary_folder_id = response.row && response.row.id || -1
           // const id = (response.row && response.row.id) || null

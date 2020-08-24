@@ -13,7 +13,7 @@ import { productActions as dataActions, categoryActions } from "_actions";
 import { productModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "components";
 // import { enumsLabel } from "_constants";
-import { history, h_fkFetch, h_filterImage } from "_helper";
+import { history, h_fkFetch, h_filterImage, h_postfix_plus_one } from "_helper";
 import { EmbedProductPurchaseGroup } from "./EmbedProductPurchase";
 import { EmbedProductComponent } from "./EmbedProductComponent";
 import { EmbedCommodityFromProduct } from "./EmbedCommodityFromProduct";
@@ -83,16 +83,18 @@ export const withProduct = () => {
 
     // 选择产品类型
     const handleCategorySelect = node => {
+ 
+      console.log("分类", node)
       if (node && node.prefix && node.currentCode) {
         let currentCodeInt = parseInt(node.currentCode, 10);
         currentCodeInt = Number.isInteger(currentCodeInt) ? currentCodeInt : 0;
         // prefix & ( padzero(currentCode + 1)) 前缀，当前最大数值加一补零
+
+        // 前缀尾部的数字截掉，因为存入的时候是不带数字的
+        const newCode = h_postfix_plus_one(node.currentCode)
+
         productInjector({
-          code: `${node.prefix}${_.padStart(
-            currentCodeInt + 1,
-            node.currentCode.length,
-            "0"
-          )}`
+          code: newCode
         });
       }
     };

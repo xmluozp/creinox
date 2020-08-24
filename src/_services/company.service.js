@@ -4,32 +4,22 @@ import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const companyService = {
-    get_dropdown,
+    // get_dropdown,
     get_bySearch,
     get_byId,
     post_create,
     put_update,
     _delete: _delete,
 
-    get_disposable_dropdown
+    get_disposable_dropdown,
+    get_code,
 };
 
 const TABLENAME = "company";
 
 const URL = RESTURL + `/api/company`;
+const URL_GET_CODE = RESTURL + `/api/companyGetCode`;
 
-function get_dropdown(companyType) {
-
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
-    console.log("getdropdown service:", companyType);
-
-    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
-}
 
 function get_disposable_dropdown(searchTerms) {
 
@@ -96,7 +86,6 @@ function put_update(item) {
 
 function _delete(id) {
 
-    
     const requestOptions = {
         method: "DELETE",
         headers: authHeader()
@@ -106,3 +95,17 @@ function _delete(id) {
         .then(handleResponse);
 }
 
+// =========== customized
+
+function get_code(companyType, keyWord) {
+
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    // const queryString = h_queryString({}, searchTerms, TABLENAME)
+
+    console.log("get code:", companyType, keyWord);
+    return fetch(`${URL_GET_CODE}/${companyType}/${keyWord}`, requestOptions).then(handleResponse);
+}

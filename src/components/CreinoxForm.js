@@ -140,7 +140,7 @@ export class CreinoxForm extends React.Component {
           newState = injectItemFromOutside(this.state)
         }
 
-        else if(typeof(injectItemFromOutside) === 'object') {
+        else if(injectItemFromOutside && typeof(injectItemFromOutside) === 'object') {
           Object.keys(injectItemFromOutside).map((value) => {
             // 20200811: 不知道为何之前要限制只能注入已有的，所以去掉了
             // if (this.state.hasOwnProperty(value)) {
@@ -302,7 +302,7 @@ export class CreinoxForm extends React.Component {
   }
 
   render() {
-    const { children, dataModel, errors, isHideTool } = this.props;
+    const { children, dataModel, errors, isHideTool, isEnglish } = this.props;
     const values = this.state;
     const handleChange = this.handleChange;
 
@@ -335,7 +335,6 @@ export class CreinoxForm extends React.Component {
               item.props && typeof item.props.onShow === "function"; // 是否有onshow方法
 
             if (isInput) {
-
               const isListen = item.props && item.props.listen
 
               // 结联 ==============
@@ -364,12 +363,13 @@ export class CreinoxForm extends React.Component {
                 errors && errors.message && errors.message[columnId];
 
               const injectProps = {
-                item: item,
-                isError: isError,
-                errorMessage: errorMessage, // 从props取到的返回错误信息
-                handleChange: handleChange,
-                dataModel: dataModel,
-                value: values[columnId]
+                item,
+                isError,
+                errorMessage, // 从props取到的返回错误信息
+                handleChange,
+                dataModel,
+                value: values[columnId],
+                isEnglish,
               }
 
               if(isListen) injectProps.listenConditions = listenConditions
@@ -401,6 +401,7 @@ const injectedInputs = ({
   isError,
   errorMessage = "",
   listenConditions,
+  isEnglish,
   values, // 取其他值用
 }) => {
   let returnValue = item;
@@ -410,22 +411,39 @@ const injectedInputs = ({
 
   // 如果id 和model对得上号;
   if (dataModel && dataModel.columns[columnId]) {
-    // 外部的onChange比默认的优先级更高
-    const onChange = item.props.onChange ? item.props.onChange : handleChange;
+
+    let onChangeFunc = item.props.onChange ? item.props.onChange : handleChange;
+    let onChange
+
+    // 如果有伴生的onChange，在执行onChange后执行它
+    if(item.props.onChangeSideEffect && typeof(item.props.onChangeSideEffect) ==='function') {
+      onChange = (...params) => {
+        onChangeFunc(...params)
+        item.props.onChangeSideEffect(...params)
+      }
+    } else {
+
+      // 外部的onChange比默认的优先级更高
+      onChange = onChangeFunc
+    }
+
+
 
     // TODO: 判断component类型。不同类型注入不同的东西
     newProps = {
       id: columnId,
       key: columnId,
-      label: item.props.label || dataModel.columns[columnId].label,
+      label: item.props.label ? item.props.label :
+        isEnglish && dataModel.columns[columnId].elabel ? dataModel.columns[columnId].elabel : 
+        dataModel.columns[columnId].label,  // 判断是否显示英文版的label
       dataType: dataModel.columns[columnId].type,
       dataModeltableName: dataModel.table,
       error: isError,
       helperText: errorMessage,
-      value: value,
-      onChange: onChange,
+      value,
+      onChange,
       fullWidth: true,
-      listenConditions: listenConditions
+      listenConditions
     }
 
     // 如果是ROW类型，注入源ID。

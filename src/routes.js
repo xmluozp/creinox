@@ -422,7 +422,14 @@ const routes = [
     component: FinancialTransaction,
     authTag: "financial"
   },
-
+  {
+    path: "/applications/financialTransaction/add",
+    exact: true,
+    name: "收付款申请",
+    component: FinancialTransaction,
+    props: {isApp: true},
+    authTag: "application"
+  },
   // 转账凭据
   {
     path: "/financial/financialvouchers",
@@ -570,6 +577,13 @@ const routes = [
     path: "/product/products",
     exact: true,
     name: "产品列表",
+    component: ProductProducts,
+    authTag: "product"
+  },
+  {
+    path: "/product/productsFromCategory/:category_id",
+    exact: true,
+    name: "产品分类检索结果",
     component: ProductProducts,
     authTag: "product"
   },

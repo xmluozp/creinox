@@ -156,7 +156,9 @@ export const MyCombobox = React.memo(
         // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
         // 200329去掉hasDefault
         // const returnValue =  item && item.id >=0 ? item.id : hasDefault ? "": value;
-        const returnValue = item && item.id >= 0 ? item.id : value;
+
+        // 200814 如果没有item改成0。点叉的时候清空值用
+        const returnValue = item && item.id >= 0 ? item.id : 0;
         // const returnValue =  item && item.id >=0 ? item.id : value;
 
         // 20200327: 多返回一个item本身. creinoxform用
@@ -180,6 +182,13 @@ export const MyCombobox = React.memo(
       if (typeof props.onInputChange === "function" && reason === "input") {
         props.onInputChange(e, value, reason);
       }
+
+      // if (reason === "clear") {
+        
+      //   console.log("clear???????")
+      //   // onChange(e, id, 0);
+      //   onChange(e, id, 0)
+      // }
     };
 
     return (
@@ -236,6 +245,10 @@ export const MyComboboxAsyncFK = React.memo((props) => {
   // 第一次加载，根据value为id读出来一条记录
   useEffect(() => {
     loadData();
+
+    return () => {
+      setoptions([])
+    }
   }, [props.value]);
 
   const loadData = () => {
@@ -295,7 +308,7 @@ export const MyComboboxAsyncFK = React.memo((props) => {
       onKeyDown={handleFetchData}
       inputRef={inputRef}
       hasDefault={!!props.value}
-      label={`${props.label} [按回车搜索]`}
+      label={`${props.label} [回车搜索关键词]`}
     />
   );
 });
@@ -378,8 +391,8 @@ export const MyComboboxFK = React.memo((props) => {
   // 为了从外部调用
   const fetchDropDown = (tableName, stateName) => {
     let isSubscribed = true;
-
     // 条件的第一个是pagination因为后台所有dropdown第一个参数都是pagination
+
     h_fkFetchOnce(
       tableName,
       stateName,
@@ -396,6 +409,7 @@ export const MyComboboxFK = React.memo((props) => {
       });
 
     return () => {
+      setoptions([])
       isSubscribed = false;
     };
   }

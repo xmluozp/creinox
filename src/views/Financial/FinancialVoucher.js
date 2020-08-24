@@ -11,8 +11,8 @@ import { history } from "_helper";
 
 //------redux
 import { connect } from "react-redux";
-import { financialaccountActions as dataActions } from "_actions";
-import { financialaccountModel as dataModel } from "_dataModel";
+import { financialvoucherActions as dataActions } from "_actions";
+import { financialvoucherModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs } from "components";
 
 // import { h_confirm } from '_helper'
@@ -28,10 +28,7 @@ const CurrentPage = ({
 }) => {
 
   // ------------ 不同的账户类型
-  const accountType = parseInt(_.get(props, "match.params.where")) || 0;
-  const preConditions = {accountType}
-  const EDITURL = "/financial/financialaccounts/" + accountType;
-
+  const EDITURL = "/financial/financialvouchers";
   const id = parseInt(_.get(props, "match.params.id")) || "";
   const isFromEdit = Number.isInteger(id);
   const [disabled, setdisabled] = useState(isFromEdit);
@@ -64,38 +61,56 @@ const CurrentPage = ({
           <Card>
             <CardHeader>
               <strong>
-                <i className="icon-info pr-1"></i>id: {id}
+                (注：转账凭证只是转账后的凭证，直接修改它不会影响对应账户余额) <i className="icon-info pr-1"></i>id: {id}
               </strong>
             </CardHeader>
             <CreinoxForm
               dataModel={dataModel}
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
-              preConditions={preConditions}
               isFromEdit={isFromEdit}
               actionSubmit={handleOnSubmit}
               errors={errorById}
+              isHideTool
             >
               <CardBody>
                 {/* form */}
 
                 <Grid container spacing={2}>
-                  <Grid item lg={6} md = {6} xs={12}>
-                    <Inputs.MyInput inputid="name" disabled={disabled} />
+                  <Grid item lg={12} md = {12} xs={12}>
+                    <Inputs.MyComboboxFK
+                          inputid="financialAccount_id"
+                          disabled={disabled}
+                          label="我方账户 (仅列表界面检索用)"
+                          tableName="financialaccount"
+                          optionLabel="name"
+                          actionName="get_dropdown"
+                    />
                   </Grid>
                   <Grid item lg={6} md = {6} xs={12}>
-                    <Inputs.MyInput inputid="balance" disabled={disabled} />
+                    <Inputs.MyDatePicker inputid="createAt" disabled={disabled} />
                   </Grid>
-                  <Grid item lg={6} md = {6} xs={12}>
-                    <Inputs.MyComboboxCurrency inputid="currency_id"  disabled={disabled} />
+                  <Grid item lg={3} md = {3} xs={12}>
+                    <Inputs.MyInput inputid="word" disabled={disabled} />
                   </Grid>
-                  <Grid item lg={6} md = {6} xs={12}>
-                    <Inputs.MyInput inputid="originBalance" disabled={disabled} />
+                  <Grid item lg={3} md = {3} xs={12}>
+                    <Inputs.MyInput inputid="number" disabled={disabled} />
+                  </Grid>
+                  <Grid item lg={12} md = {12} xs={12}>
+                    <Inputs.MyInputTT inputid="memo" disabled={disabled} />
+                  </Grid>
+                  <Grid item lg={6} md = {12} xs={12}>
+                    <Inputs.MyFinancialLedgerPicker inputid="financialLedger_id"  disabled={disabled} />
                   </Grid>
 
-                  <Grid item xs={12}>
-                    <Inputs.MyInput inputid="memo"  disabled={disabled} />
+                  <Grid item lg={3} md = {6} xs={12}>
+                    <Inputs.MyInput inputid="debit" disabled={disabled} />
                   </Grid>
-                                   
+                  <Grid item lg={3} md = {6} xs={12}>
+                    <Inputs.MyInput inputid="credit" disabled={disabled} />
+                  </Grid>
+
+
+                               
 
                 </Grid>	        
                 <Grid container spacing={2}>
@@ -128,8 +143,8 @@ const CurrentPage = ({
 
 function mapState(state) {
   return {
-    dataById: state.financialaccountData.dataById,
-    errorById: state.financialaccountData.errorById
+    dataById: state.financialvoucherData.dataById,
+    errorById: state.financialvoucherData.errorById
   };
 }
 

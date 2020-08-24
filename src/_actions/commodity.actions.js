@@ -51,7 +51,7 @@ function get_disposable_dropdown(keyword, preConditions) {
         let returnValue = [];
         if (response && response.rows) {
           returnValue = response.rows.map(item => {
-            item.name = `[${item.code}] ${item.name}`;
+            item.name = `[${item.code}] ${item.ename}`;
             return item;
           });
         }

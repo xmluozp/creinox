@@ -4,7 +4,6 @@ import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const buysubitemService = {
-    get_dropdown,
     get_bySearch,
     get_byId,
     post_create,
@@ -15,22 +14,20 @@ export const buysubitemService = {
 const TABLENAME = "buysubitem";
 const URL = RESTURL + `/api/buysubitem`;
 
-const testurl1 = './dataset/buysubitemdata.json'
-const testurl2 = './dataset/buysubitemdata_byId.json'
 
-function get_dropdown(companyType) {
+// function get_dropdown(companyType) {
 
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+//     const requestOptions = {
+//         method: 'GET',
+//         headers: authHeader()
+//     };
 
-    const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
-    console.log("getdropdown service:", companyType);
-    // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
+//     const queryString = h_queryString({}, {companyType: companyType}, TABLENAME);
+//     console.log("getdropdown service:", companyType);
+//     // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 
-    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
-}
+//     return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+// }
 
 function get_bySearch(pagination, searchTerms, reNew = false) {
 

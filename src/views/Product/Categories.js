@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import {Link} from "react-router-dom"
 import _ from "lodash";
 // import { format } from 'date-fns'
 
@@ -74,8 +74,6 @@ const CurrentPage = ({
   };
 
   const handleOnSelect = node => {
-
-    console.log(onGetById)
     onGetById(node.id);
     setformEditMode(editModes.edit); // 设置成编辑模式
     setSelectedNode(node);
@@ -102,6 +100,46 @@ const CurrentPage = ({
   //   defaultValues = { ...dataById.row };
   // }
 
+
+  // 生成id: value 的map
+  const handleTreeNodeOnRender = (rows, treeObject) => {
+    // if(!node) return "空节点"
+    
+
+    // 遍历每一列
+
+    const map = new Map([])
+    generateText(treeObject["0"], map)
+
+    return map
+
+  }
+
+  const generateText = (node, map) => {
+
+    if(!node) return 0
+
+    // const nodeKey = Object.keys(node)[0]
+
+    let currentCount = node.productCount || 0
+
+    const children = node.children || {}
+
+    // 子集是个key:value
+    const keyArray = Object.keys(children)
+
+    keyArray.map(v => {      
+      const childNode =children[v]
+      currentCount += generateText(childNode, map)
+    })
+
+    const prefix = node.prefix? `[${node.prefix}]` : ""
+
+    map.set(node.id, `${prefix} ${node.name} (${currentCount})`)
+
+    return currentCount
+  }
+
   // ============================================= Edit and Create Form:
   const childrenInputsEdit = (
     <>
@@ -120,10 +158,16 @@ const CurrentPage = ({
         type="submit"
         variant="contained"
         color="primary"
-        className="mt-3"
+        className="mt-3 mr-2"
       >
         保存修改
       </Button>
+
+      <Link to={`/product/productsFromCategory/${selectedNode.id}`}>
+        <Button href="" color="primary" className="mt-3 mr-2">
+          检索产品
+        </Button>
+      </Link>
     </>
   );
 
@@ -150,6 +194,7 @@ const CurrentPage = ({
             onSelect={handleOnSelect}
             initialNode={initialNode}
             selectedNode={selectedNode}
+            onRenderTree= {handleTreeNodeOnRender}
             subName = "prefix"
             searchColumns = {["name", "ename", "prefix"]}
           />
@@ -170,7 +215,7 @@ const CurrentPage = ({
                   {formEditMode === editModes.create ? labelOfCreate : null}
                 </CardHeader>
                 <CardBody>
-                  <Grid container spacing={1}>
+                  <Grid container spacing={1} >
                     <Grid item>
                       <Button
                         variant="contained"
@@ -236,6 +281,7 @@ const CurrentPage = ({
                       actionSubmit={handleOnSubmit}
                       renewToggle={renewToggle}
                       dataModel={dataModel}
+                      isHideTool                      
                     >
                       {childrenInputsEdit}
                     </CreinoxForm>
@@ -248,6 +294,7 @@ const CurrentPage = ({
                       actionSubmit={handleOnSubmit}
                       renewToggle={renewToggle}
                       dataModel={dataModel}
+                      isHideTool
                     >
                       {childrenInputsCreate}
                     </CreinoxForm>

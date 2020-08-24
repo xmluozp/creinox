@@ -19,13 +19,13 @@ const URL = RESTURL + `/api/port`;
 // const testurl2 = './dataset/portdata_byId.json'
 
 
-function get_dropdown(searchTerms = {}) {
+function get_dropdown(pagination, searchTerms = {}) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
 
-  console.log("get_all service:", searchTerms);
+  console.log("get dropdown:", searchTerms);
 
   const queryString = h_queryString({perPage:-1}, searchTerms, TABLENAME);
 

@@ -18,6 +18,8 @@ export const CreinoxTreeview = ({
   onGetBySearch,
   parentNode = 0,
   onSelect,
+  onRender,
+  onRenderTree,
   initialNode = { id: 0, path: "0" },
   selectedNode = initialNode,
   mainName = "name",
@@ -32,6 +34,7 @@ export const CreinoxTreeview = ({
     (initialNode.path && initialNode.path.split(",")) || ["0"]
   );
   const [treeObject, setTreeObject] = useState();
+  const [mappingName, setMappingName] = useState(new Map([]))
 
   //========================================handle
   const handleOnClick = (node, e) => {
@@ -130,7 +133,15 @@ export const CreinoxTreeview = ({
   const dataToTree = (dataRows) => {
     const dataRowsShorted = _.orderBy(dataRows, ["path"], ["asc"]);
     const treeObjectTemp = {};
-    dataRowsShorted.map((item) => {
+
+    // 如果有onRender，生成对应的名字以后放到map里
+    const map = new Map()
+    
+    // 按顺序把row添加到树节点上
+    for (let i = 0; i < dataRowsShorted.length; i++) {
+      
+      const item = dataRowsShorted[i];
+
       const pathArray = (item.path && item.path.split(",")) || [0];
 
       let pathWithChildren = "";
@@ -143,11 +154,28 @@ export const CreinoxTreeview = ({
 
       pathWithChildren += item.id.toString();
       _.setWith(treeObjectTemp, pathWithChildren, item, Object);
+    }
 
-      return null;
-    });
+    // 如果有单个node渲染的方法，生成map
+    if( onRender && typeof(onRender) ==='function') {
+      dataRowsShorted.map(item => { 
+        map.set(item.id, onRender(item, dataRows) || "-")
+      })
+      setMappingName(new Map(map))
+    }
+
+    // 生成id: value的map
+    if( onRenderTree && typeof(onRenderTree) ==='function') {
+      setMappingName(new Map(onRenderTree(
+        dataRowsShorted,
+        treeObjectTemp
+      )))
+    }
+
     setTreeObject(treeObjectTemp);
   };
+
+
 
   const getBranches = (node) => {
     if (node && node.children) {
@@ -166,14 +194,18 @@ export const CreinoxTreeview = ({
           ? "rgba(200,230,255, 0.7)"
           : "rgba(200,230,255, 0)";
 
-        // 显示节点
-        const label = (
-          <div style={style} onClick={handleOnClick.bind(null, childNode)}>
-            {/* 下级节点数量 */}(
-            {(childNode.children && Object.keys(childNode.children).length) ||
-              0}
-            ){/* 节点名称 */}
+        // render : 普通显示方式
 
+        const subNodeCount = (childNode.children && Object.keys(childNode.children).length) || 0
+
+
+        const displayNodeText = mappingName.has(childNode.id) ?
+        mappingName.get(childNode.id)
+        :<>
+            {/* 下级节点数量 */}
+            {subNodeCount ? `(${subNodeCount})` : ""}
+
+            {/* 节点名称 */}
             {
               childNode[subName] ? <span className="ml-2">[{childNode[subName] || null}]</span> : null
             }
@@ -183,6 +215,12 @@ export const CreinoxTreeview = ({
               className="ml-3">
               {ICONS.EDIT()}
             </IconButton> */}
+        </>
+
+        // 显示节点
+        const label = (
+          <div style={style} onClick={handleOnClick.bind(null, childNode)}>
+            {displayNodeText}
           </div>
         );
 

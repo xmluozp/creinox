@@ -3,7 +3,7 @@ import {RESTURL} from '../config'
 // import axios from 'axios'
 
 export const financialtransactionService = {
-  get_dropdown,
+  // get_dropdown,
   get_bySearch,
   get_byId,
   post_create,
@@ -15,17 +15,17 @@ const TABLENAME = "financialtransaction";
 const URL = RESTURL + `/api/financialTransaction`;
 
 
-function get_dropdown(searchTerms = {}) {
-  const requestOptions = {
-    method: "GET",
-    headers: authHeader()
-  };
+// function get_dropdown(searchTerms = {}) {
+//   const requestOptions = {
+//     method: "GET",
+//     headers: authHeader()
+//   };
 
-  console.log("get_all service:", searchTerms);
+//   console.log("get_all service:", searchTerms);
 
-  const queryString = h_queryString({perPage:-1}, searchTerms, TABLENAME);
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
-}
+//   const queryString = h_queryString({perPage:-1}, searchTerms, TABLENAME);
+//   return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+// }
 
 function get_bySearch(pagination, searchTerms = {}) {
   const requestOptions = {

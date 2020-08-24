@@ -7,6 +7,7 @@ export const financialledgerModel = {
     columns: {
         id :        {label: "ID",         type: _DATATYPES.INT },
         name:       {label: "名称",       type: _DATATYPES.VARCHAR}, 
+        ledgerName: {label: "名称",       type: _DATATYPES.VARCHAR}, 
         code:       {label: "代码",   type: _DATATYPES.VARCHAR},   
         isBuiltin:  {label: "是否系统内置",    type: _DATATYPES.BOOLEAN},
         memo:       {label: "简介",       type: _DATATYPES.TEXT},

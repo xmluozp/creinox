@@ -239,10 +239,10 @@ export const withSellcontractList = (
         url: row => CREATEURL_TRANSACTION + "/" + row.order_form_id,
         icon: ICONS.MONEY("mr-1"),
       },{
-        label: "采购",
+        label: "采购录入",
         color: "success",
         url: CREATEURL_BUY,
-        icon: ICONS.SHOPPING("mr-1"),
+        icon: ICONS.ADD("mr-1"),
       },{
         label: "详情",
         color: "primary",

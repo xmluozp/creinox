@@ -43,26 +43,30 @@ const CurrentPage = ({
   const order_form_id =
     parseInt(_.get(props, "match.params.order_form_id")) || 0;
 
+  const isFromContract = !!order_form_id;
+
   const preConditions = {
     financialAccount_id,
     order_form_id,
+    isContractPayment: isFromContract,
   };
-
-  console.log(preConditions)
 
   // ------------ 是否针对合同，收还是付 (添加取param，编辑取数据库)
   let title = "收付款";
 
-  // TODO: 考虑从合同入口
-  const EDITURL = "/financial/financialtransactions/" + financialAccount_id;
+  const EDITURL = "/financial/financialtransactions";
+
+  // const EDITURL = isFromContract ?
+  // "/financial/contractTransactions/add/" + order_form_id:
+  // "/financial/financialtransactions/" + financialAccount_id;
 
   const id = parseInt(_.get(props, "match.params.id")) || "";
   const isFromEdit = Number.isInteger(id);
   const [disabled, setdisabled] = useState(isFromEdit);
   const [isIn, setisIn] = useState(false);
 
-  const [textReceivable, settextReceivable] = useState("")
-  const [textPayable, settextPayable] = useState("")
+  const [textReceivable, settextReceivable] = useState("");
+  const [textPayable, settextPayable] = useState("");
 
   useEffect(() => {
     // if there is ID, fetch data
@@ -78,7 +82,7 @@ const CurrentPage = ({
       onPutUpdate(values);
     } else {
       onPostCreate(values, (id) => {
-        history.push(EDITURL + "/" + id);
+        history.push(EDITURL + "/" + values.financialAccount_id + "/" + id);
       });
     }
   };
@@ -91,10 +95,14 @@ const CurrentPage = ({
 
   // 切换收付款
   const handleTempIsIn = () => {
-    setisIn((v) => !v);
+
+    const newIsIn = !isIn
+
+    setisIn(newIsIn);
     const injectValues = {};
-    injectValues.temp_isIn = !isIn;
-    if (isIn) {
+    injectValues.temp_isIn = newIsIn;
+
+    if (newIsIn) {
       injectValues.amount_out = 0;
     } else {
       injectValues.amount_in = 0;
@@ -120,10 +128,18 @@ const CurrentPage = ({
     const orderFormItem = oldValue && oldValue["order_form_id.row"];
     const isContractPayment = oldValue && oldValue.isContractPayment;
 
-    // 如果非合同就不处理，如果是合同，下面还需要进一步判断是普通收付，还是合同款项
-    if (!orderFormItem) return;
-
     let returnValue = {};
+
+    // 如果非合同返回，如果是合同，下面还需要进一步判断是普通收付，还是合同款项
+    if (!orderFormItem) return null;
+
+    if (!isContractPayment) {
+      returnValue.financialLedgerDebit_id = "";
+      returnValue.financialLedgerCredit_id = "";
+      returnValue.tt_transUse = "";
+
+      return returnValue;
+    }
 
     // 判断是买还是卖合同
     let inout = "";
@@ -140,7 +156,6 @@ const CurrentPage = ({
 
     // 如果是应收应付款
     if (isContractPayment && orderFormItem) {
-
       // 卖类合同
       if (inout === "sell") {
         returnValue.financialLedgerDebit_id =
@@ -148,7 +163,8 @@ const CurrentPage = ({
         returnValue.financialLedgerCredit_id =
           enums.financialLedgerType.ReceivablePayCredit;
         returnValue.tt_transUse = `收到${orderFormItem.code}货款`;
-        returnValue.temp_isIn = true
+        returnValue.temp_isIn = true;
+        setisIn(true)
       }
       // 买类合同
       else if (inout === "buy") {
@@ -158,14 +174,16 @@ const CurrentPage = ({
           enums.financialLedgerType.PayablePayCredit;
 
         returnValue.tt_transUse = `支付${orderFormItem.code}货款`;
-        returnValue.temp_isIn = true
+        returnValue.temp_isIn = true;
+        setisIn(true)
       }
     }
 
+    // 根据合同的种类来判断对方公司
     if (inout === "sell") {
-      returnValue.company_id = orderFormItem.seller_company_id;
-    } else if (inout === "buy") {
       returnValue.company_id = orderFormItem.buyer_company_id;
+    } else if (inout === "buy") {
+      returnValue.company_id = orderFormItem.seller_company_id;
     }
 
     // enums.financialLedgerType.
@@ -178,10 +196,15 @@ const CurrentPage = ({
 
   // 选中合同触发的内容
   const handleOrderformOnSelect = (item) => {
-    if(item && item.id) {
-      settextReceivable(`收款金额 (已收: ${item.receivablePaid}/${item.receivable})`)
-      settextPayable(`付款金额 (已付: ${item.payablePaid}/${item.payable})`)
-    }   
+    // 新增的时候才能选合同
+    // if (isFromEdit) return;
+
+    if (item && item.id) {
+      settextReceivable(
+        `收款金额 (已收: ${item.receivablePaid || 0}/${item.receivable || 0})`
+      );
+      settextPayable(`付款金额 (已付: ${item.payablePaid || 0}/${item.payable || 0})`);
+    }
 
     injector({ "order_form_id.row": item }, (newValue) => {
       injector(injectOrderFormToTransaction(newValue));
@@ -190,14 +213,17 @@ const CurrentPage = ({
 
   const handleIsContractPaymentOnSwitch = (a, b, value) => {
     injector({ isContractPayment: value }, (newValue) => {
+      console.log("switch");
       injector(injectOrderFormToTransaction(newValue));
     });
   };
 
   const handleFinancialAccountOnSelect = (item) => {
-    injector({
-      currency_id: item && item.currency_id,
-    });
+    if (financialAccount_id) {
+      injector({
+        currency_id: item && item.currency_id,
+      });
+    }
   };
 
   // 根据客户的银行，读取名称和账号
@@ -210,28 +236,9 @@ const CurrentPage = ({
     }
   };
 
-  // 显示财务科目
-  const handleOnRenderFinancialLedger = (node, rows) => {
-    if (!node) return "";
 
-    const map = new Map();
+  const balance = dataById && dataById.row && isFromEdit ? `当前余额: ${dataById.row.balance}` : ""
 
-    // 整棵树变成map
-    for (let i = 0; i < rows.length; i++) {
-      if (!rows[i].id) continue;
-      map.set(rows[i].id.toString(), rows[i].name);
-    }
-
-    const pathArr = (node["path"] && node["path"].split(",")) || [];
-    if (pathArr[0] === "0") pathArr.shift();
-
-    for (let i = 0; i < pathArr.length; i++) {
-      pathArr[i] = map.get(pathArr[i]);
-    }
-    pathArr.push(node["name"]);
-
-    return pathArr.join("/");
-  };
 
   return (
     <div className="animated fadeIn">
@@ -240,7 +247,8 @@ const CurrentPage = ({
           <Card>
             <CardHeader>
               <strong>
-                <i className="icon-info pr-1"></i>id: {id}[{title}]
+                <i className="icon-info pr-1"></i>id: {id}[{title}] 
+                {balance}
               </strong>
             </CardHeader>
 
@@ -275,24 +283,20 @@ const CurrentPage = ({
                       onSwitch={handleIsContractPaymentOnSwitch}
                     />
                   </Grid>
-                  <Grid item lg={6} md={6} xs={12}>
+                  <Grid item lg={8} md={8} xs={12}>
                     <Inputs.MyComboboxAsyncFK
                       inputid="order_form_id"
+                      label="(非必填) 对应合同"
                       optionLabel="code"
                       tableName="orderform"
                       onRenderOption={handleRenderOrderformOptions}
                       onSelect={handleOrderformOnSelect}
+                      onLoad={handleOrderformOnSelect}
                       actionName="get_disposable_dropdown"
-                      disabled={disabled}
+                      disabled={disabled || isFromEdit}
                     />
                   </Grid>
-                  <Grid item lg={3} md={3} xs={12}>
-                    <Inputs.MyComboboxPaymentType
-                      inputid="paymentType_id"
-                      disabled={disabled}
-                    />
-                  </Grid>
-                  <Grid item lg={3} md={3} xs={12}>
+                  <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyDatePicker
                       inputid="transdateAt"
                       disabled={disabled}
@@ -301,44 +305,55 @@ const CurrentPage = ({
 
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyInput
-                      label = {textReceivable}
+                      label={textReceivable}
                       inputid="amount_in"
-                      disabled={disabled || isFromEdit || isIn}
-                    />
-                  </Grid>
-
-                  <Grid item lg={4} md={4} xs={12}>
-                    <Inputs.MyInput
-                      label = {textPayable}
-                      inputid="amount_out"
                       disabled={disabled || isFromEdit || !isIn}
                     />
                   </Grid>
 
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyInput
-                      inputid="balance"
-                      label="当前余额 (创建时自动生成)"
-                      disabled={true}
+                      label={textPayable}
+                      inputid="amount_out"
+                      disabled={disabled || isFromEdit || isIn}
+                    />
+                  </Grid>
+                  <Grid item lg={4} md={4} xs={12}>
+                    <Inputs.MyComboboxPaymentType
+                      inputid="paymentType_id"
+                      disabled={disabled || isFromEdit}
                     />
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyComboboxCurrency
                       inputid="currency_id"
-                      disabled={disabled}
+                      disabled={disabled || isFromEdit}
                     />
                   </Grid>
 
                   <Grid item lg={4} md={4} xs={12}>
-                    <Inputs.MyComboboxFK
-                      inputid="financialAccount_id"
-                      optionLabel="name"
-                      tableName="financialaccount"
-                      actionName="get_dropdown"
-                      disabled={!!(financialAccount_id || isFromEdit)}
-                      onLoad={handleFinancialAccountOnSelect}
-                      onSelect={handleFinancialAccountOnSelect}
-                    />
+                    {!!financialAccount_id ? (
+                      <Inputs.MyComboboxFK
+                        inputid="financialAccount_id"
+                        optionLabel="name"
+                        tableName="financialaccount"
+                        actionName="get_dropdown"
+                        disabled={true}
+                        onLoad={handleFinancialAccountOnSelect}
+                        onSelect={handleFinancialAccountOnSelect}
+                      />
+                    ) : (
+                      <Inputs.MyComboboxCascade
+                        inputid="financialAccount_id"
+                        disabled={isFromEdit}
+                        listen={{ currency_id: "currency_id" }}
+                        label="我方账户 (先选择币种)"
+                        tableName="financialaccount"
+                        optionLabel="name"
+                        actionName="get_dropdown"
+                        onSelect={handleFinancialAccountOnSelect}
+                      />
+                    )}
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyComboboxAsyncFK
@@ -353,7 +368,7 @@ const CurrentPage = ({
                     {/* cascade 的监听，左边是监听的字段名，右边是bank_account表里的字段名 */}
                     <Inputs.MyComboboxCascade
                       inputid="temp_bank"
-                      disabled={disabled}
+                      disabled={disabled || isFromEdit}
                       listen={{ company_id: "company_id" }}
                       tableName="bankaccount"
                       optionLabel="accountName"
@@ -385,7 +400,6 @@ const CurrentPage = ({
                     <Inputs.MyFinancialLedgerPicker
                       inputid="financialLedgerDebit_id"
                       disabled={disabled}
-                      onRender={handleOnRenderFinancialLedger}
                     />
                   </Grid>
 
@@ -393,7 +407,6 @@ const CurrentPage = ({
                     <Inputs.MyFinancialLedgerPicker
                       inputid="financialLedgerCredit_id"
                       disabled={disabled}
-                      onRender={handleOnRenderFinancialLedger}
                     />
                   </Grid>
 

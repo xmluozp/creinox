@@ -44,11 +44,11 @@ const CurrentPage = ({
   const handleOnSubmit = values => {
     if (isFromEdit) {
       onPutUpdate({ ...values }, () => {
-        onGetDropdown(preConditions)
+        onGetDropdown({}, preConditions)
       });
     } else {
       onPostCreate(values, () => {
-        onGetDropdown(preConditions)
+        onGetDropdown({}, preConditions)
         history.push(EDITURL + "/" + commonType);
       });
     }

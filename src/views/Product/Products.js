@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-// import _ from "lodash";
+import _ from "lodash";
 
 //------redux
 import { connect } from "react-redux";
@@ -37,7 +37,9 @@ export const withProductList = (
   const CurrentPage = ({ onDelete, pageName, ...props }) => {
 
     const [isImageListMode, setIsImageListMode] = useState(false)
-    const preConditions = pageCategoryId ? { category_id: pageCategoryId } : {}
+    const category_id_param = parseInt(_.get(props, "match.params.category_id")) || pageCategoryId || 0;
+
+    const preConditions = category_id_param ?  { category_id: category_id_param } : {}
 
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {

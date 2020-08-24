@@ -17,7 +17,7 @@ const TITLE_CREATE = "创建订单子项";
 const DATA_STORE = "sellsubitemData";
 
 const renderCommodity = (content, row) => {
-  return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].name}`;
+  return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].ename}`;
 };
 
 const renderPackAmount = (content, row) => {
@@ -273,6 +273,11 @@ export default (props) => {
         .catch((error) => {
           console.log("搜索不到对应产品", error);
         });
+    } else {
+      // 如果点了叉就清掉
+      productInjector({
+        commodity_id: 0
+      });
     }
 
     // 从报价表里取？ get_disposable_byProductId?

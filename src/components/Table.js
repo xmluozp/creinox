@@ -65,6 +65,8 @@ export const CreinoxTable = ({
     orderBy: "",
   };
 
+
+
   // const isData = data && data.pagination
 
   // 本页用来显示的数据。唯一可信数据来源是从store传下来的data
@@ -163,7 +165,8 @@ export const CreinoxTable = ({
       // 第一次取数据
       p_fetchData()
     };
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 从外部强制刷新数据用. 页码设回0, 返回用的翻页记录清空.
   React.useEffect(() => {

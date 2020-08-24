@@ -70,12 +70,12 @@ const navs = {
           authTag: "financial",
         },
         {
-          name: "申请付款",
-          url: "",
+          name: "申请收付款",
+          url: "/applications/financialTransaction/add",
           authTag: "financial",
         },
         {
-          name: "审批付款",
+          name: "审批收付款",
           url: "",
           authTag: "financial",
         }

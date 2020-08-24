@@ -53,6 +53,7 @@ export function handleResponse(response) {
     });
 }
 
+
 // test
 export function handleJsonResponse(response) {
 
@@ -101,6 +102,90 @@ export function handleOnChange(e, setFunc) {
     // console.log("funcs:", test);
 }
 
+// export function h_code_cut_padding_digits(s) {
+
+//     if (!s) return s
+
+//     let prefix = s
+//     let cur = prefix.length - 1
+//     while (cur > 0 && prefix[cur] >= '0'  && prefix[cur]  <= '9') {
+//       cur--
+//     }
+//     return prefix.substring(0, cur+1)
+// }
+
+export function h_postfix_plus_one(s) { 
+
+    if (!s) return s
+
+    const isLegit = c => (
+        (c >= '0' && c <= '9' )|| 
+        (c >= 'a' && c <= 'z' )||
+        (c >= 'A' && c <= 'Z'))
+
+    const getIsDigit = c => c >= '0' && c <= '9'
+
+    let codeStr = []
+    const sArr = s.split('')
+
+    // 截出非法字符
+    while(sArr.length >= 0) {
+        if(isLegit (sArr[sArr.length-1])) {
+            break
+        } else {
+            sArr.pop()
+        }
+    }
+
+    let curr =  sArr.length -1
+
+    // 尾部是不是数字
+    const isDigit = getIsDigit(sArr[curr])
+
+    // 截尾部
+    while( (isDigit === getIsDigit(sArr[curr])) && isLegit(sArr[curr])) {
+        codeStr.unshift(sArr[curr])
+        curr--
+    }
+
+    codeStr = codeStr.join('')
+    const prefixStr = sArr.join('').substring(0, curr + 1)
+
+    // 如果是数字，简单的+1
+    if(!isNaN(parseInt(codeStr))) {
+        return prefixStr + _.padStart( parseInt(codeStr) + 1, codeStr.length, '0')
+    } else {
+    // 如果是字母，26进制
+
+        // 如果是大写
+        if(codeStr === codeStr.toUpperCase()) {
+            return prefixStr + numToLetters(numFromLetters(codeStr.toUpperCase()) +1)
+        } else {
+            return prefixStr + numToLetters(numFromLetters(codeStr.toUpperCase()) +1).toLowerCase()
+        }
+    }
+
+}
+
+function numToLetters(num) {
+    "use strict";
+    var mod = num % 26,
+        pow = num / 26 | 0,
+        out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
+    return pow ? numToLetters(pow) + out : out;
+}
+
+function numFromLetters(str) {
+    "use strict";
+    var out = 0, len = str.length, pos = len;
+    while (--pos > -1) {
+        out += (str.charCodeAt(pos) - 64) * Math.pow(26, len - 1 - pos);
+    }
+    return out;
+}
+
+
+
 export function h_code_plus_one(s) {
 
     if (typeof(s) !== "string") return s
@@ -128,6 +213,24 @@ export function h_code_plus_one(s) {
 
     else return s
 }
+
+export function h_is_all_letters(s) {
+
+    const str = s.split('')
+    while(str.length > 0) {
+        const c = str.pop()
+        if(c >= '0' && c <= '9') {
+            return false
+        }
+    }
+
+    return true
+}
+
+
+
+
+
 
 export function h_keyNames(object) {
     const returnValue = {}

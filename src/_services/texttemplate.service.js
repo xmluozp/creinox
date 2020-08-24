@@ -17,7 +17,8 @@ const TABLENAME = "texttemplate";
 const URL = RESTURL + `/api/texttemplate`;
 const URL_TEMPLATE = RESTURL + `/api/texttemplate_all`;
 
-function get_dropdown(searchTerms = {}) {
+// TODO: 改造成autocomplete的时候用
+function get_dropdown(pagination, searchTerms = {}) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()

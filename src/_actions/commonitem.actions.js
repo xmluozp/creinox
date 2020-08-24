@@ -21,12 +21,15 @@ const {
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
-function get_dropdown({ commonType = 0 }) {
+function get_dropdown( pagination, preConditions ) {
+
+  const {commonType} = preConditions
   return (dispatch) => {
     dispatch(loading);
     return service.get_dropdown(commonType).then(
       (response) => {
         const payload = {};
+
         dispatch(loaded);
         switch (commonType) {
           case enums.commonType.currency:

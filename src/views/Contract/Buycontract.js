@@ -114,7 +114,9 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
           if (response && response.id) {
             delete response["id"];
             delete response["updateAt"];
-
+            delete response["totalPrice"];
+            delete response["paidPrice"];
+            delete response["isDone"];
             injector(response);
           }
         })

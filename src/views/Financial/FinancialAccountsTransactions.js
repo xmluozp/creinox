@@ -71,11 +71,11 @@ export const withTablePage = () => {
     }, [accountType])
 
     // ============================================= handles
-    const handleOnDelete = (id, row, pagination, searchTerms) => {
-      h_confirm("是否删除？").then(resolve => {
-        if (resolve) onDelete(id, pagination, searchTerms);
-      });
-    };
+    // const handleOnDelete = (id, row, pagination, searchTerms) => {
+    //   h_confirm("是否删除？").then(resolve => {
+    //     if (resolve) onDelete(id, pagination, searchTerms);
+    //   });
+    // };
 
     const handleOnEdit = (id) => {
       history.push(`${EDITURL}/${id}`);
