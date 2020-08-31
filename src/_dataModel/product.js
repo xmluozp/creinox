@@ -51,6 +51,6 @@ export const productModel = {
         "companyFactory.id": {label: "工厂",  type: _DATATYPES.SELECT},
 
         //============== 新建时候是否生成对应商品。非数据库字段
-        "isCreateCommodity" : {label: "直接上架为商品 (注：商品才能被销售；产品仅关联生产信息)",  type: _DATATYPES.BOOLEAN},
+        "isCreateCommodity" : {label: "设置为商品 (注：设为商品后，才可以在销售合同选择)",  type: _DATATYPES.BOOLEAN},
     }
 }

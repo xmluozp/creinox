@@ -102,7 +102,7 @@ function get_dropdown(pagination, searchTerms = {}) {
   };
 
   console.log("get_all service:", pagination);
-  const queryString = h_queryString(pagination, {}, TABLENAME);
+  const queryString = h_queryString(pagination, searchTerms, TABLENAME, false);
 
   return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }

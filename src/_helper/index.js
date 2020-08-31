@@ -458,9 +458,7 @@ export function h_popfile(path) {
 
 // 为了返回上一页保留搜索结果用。设置搜索关键词
 export function h_setHistoryQuery (key, query) {
-
     localStorage.setItem("query." + key, JSON.stringify(query));
-
 }
 export function h_removeHistoryQuery (key) {
     localStorage.removeItem("query." + key)

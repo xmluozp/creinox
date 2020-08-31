@@ -335,6 +335,7 @@ const CurrentPage = ({
                     {!!financialAccount_id ? (
                       <Inputs.MyComboboxFK
                         inputid="financialAccount_id"
+                        stateName="financialAccountDropdown"
                         optionLabel="name"
                         tableName="financialaccount"
                         actionName="get_dropdown"
@@ -361,6 +362,7 @@ const CurrentPage = ({
                       inputid="company_id"
                       tableName="company"
                       actionName="get_disposable_dropdown"
+                      preConditions={{ companyType: enums.companyType.all }}
                     />
                   </Grid>
 
@@ -416,6 +418,7 @@ const CurrentPage = ({
                   <Grid item lg={6} md={6} xs={12}>
                     <Inputs.MyComboboxFK
                       inputid="updateUser_id"
+                      stateName="updateUserDropdown"
                       optionLabel="userName"
                       tableName="user"
                       disabled={true}

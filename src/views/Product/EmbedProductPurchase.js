@@ -167,6 +167,7 @@ const FormInputs = ({onLoad}) => {
         <Grid item lg={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
+            stateName="updateUserDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={true}

@@ -6,7 +6,7 @@ export const buysubitemModel = {
     dataStore: "buysubitem",
     columns: {
         id :        {label:"ID",           type: _DATATYPES.INT },
-        sellerCode:   {label: "工厂货号",     type: _DATATYPES.VARCHAR},
+        // sellerCode:   {label: "工厂货号",     type: _DATATYPES.VARCHAR},
         isReceipt:    {label: "是否开票",     type: _DATATYPES.BOOLEAN},
 
         amount:     {label: "数量",     type: _DATATYPES.INT}, 
@@ -15,9 +15,9 @@ export const buysubitemModel = {
 
         spec:       {label: "规格",     type: _DATATYPES.VARCHAR},   
         thickness:  {label: "厚度(mm)",     type: _DATATYPES.VARCHAR},    
-        unitWeight: {label: "单位重量(KGS)",     type: _DATATYPES.DECIMAL},   
-        netWeight:  {label: "净重(KGS)",     type: _DATATYPES.DECIMAL},   
-        grossWeight:{label: "毛重(KGS)",     type: _DATATYPES.DECIMAL},   
+        unitWeight: {label: "每只产品重量(KG)",     type: _DATATYPES.DECIMAL},   
+        netWeight:  {label: "每箱净重(KGS)",     type: _DATATYPES.DECIMAL},   
+        grossWeight:{label: "每箱毛重(KGS)",     type: _DATATYPES.DECIMAL},   
 
         outerPackL: {label: "外包装长(CM)",     type: _DATATYPES.DECIMAL},   
         outerPackW: {label: "宽(CM)",     type: _DATATYPES.DECIMAL},   
@@ -33,11 +33,12 @@ export const buysubitemModel = {
 
 
         // 用来定位20 FCL, 40 FCL
-        sell_subitem_id:      {label: "对应外贸子合同",       type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["buyerCode"]},     
+        // 对应的是整个外贸子合同。这里显示外商货号这一栏。
+        sell_subitem_id:      {label: "外商货号",       type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["buyerCode"]},     
         
         // 这里应该是联动，选了sell_subitem_id以后才知道这个对应的产品是什么
-        product_id:           {label: "对应产品",     type: _DATATYPES.SELECT, ref:"product", refLabel: ["name"]},
-        buy_contract_id:      {label: "采购单",       type: _DATATYPES.SELECT, ref:"buy_contract", refLabel: ["code"]},     
+        product_id:           {label: "采购产品",     type: _DATATYPES.SELECT, ref:"product", refLabel: ["name"]},
+        buy_contract_id:      {label: "采购合同",       type: _DATATYPES.SELECT, ref:"buy_contract", refLabel: ["code"]},     
         // sell_subitem_id:      {label: "外销子订单",     type: _DATATYPES.SELECT, ref:"sell_subitem", refLabel: ["name"]},
         unitType_id:          {label: "计量单位",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
         currency_id:          {label: "币种",         type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},

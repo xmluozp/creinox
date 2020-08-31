@@ -66,9 +66,11 @@ export const withCommodityList = (
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
+      { name: "ename" },
       { name: "name" },
       { name: "code" },
-      { name: "sellPrice" },
+      { name: "price" },
+      { name: "currency_id" },
       { name: "memo" }
     ];
 

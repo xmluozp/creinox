@@ -248,6 +248,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
             inputid="follower_id"
+            stateName="followerDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={disabled}
@@ -312,13 +313,14 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           <Inputs.MyInput inputid="confirmDueDays" disabled={disabled} />
         </Grid>
 
+        {/* 客户要求默认限制广州钰诚 */}
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxAsyncFK
             disabled={disabled}
             inputid="buyer_company_id"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ companyType: enums.companyType.internal }}
+            preConditions={{ id: "1043", companyType: enums.companyType.internal }}
           />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
@@ -402,6 +404,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
+            stateName="updateUserDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={true}

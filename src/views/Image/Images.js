@@ -32,6 +32,7 @@ export const withTablePage = () => {
 
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
+    {name:"createAt"},
     { name: "name" },
     { name: "path" },
     { name: "thumbnailPath", onShow: renderOnShowThumbnail },

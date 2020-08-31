@@ -51,13 +51,15 @@ export const MySelect = React.memo(
           }}
         >
           {hasDefault ? null : <option value="" />}
-          {options.filter(v=>!!v).map((optionvalue, index) => {
-            return (
-              <option value={index} key={optionvalue}>
-                {optionvalue}
-              </option>
-            );
-          })}
+          {options
+            .filter((v) => !!v)
+            .map((optionvalue, index) => {
+              return (
+                <option value={index} key={optionvalue}>
+                  {optionvalue}
+                </option>
+              );
+            })}
         </Select>
       </FormControl>
     );
@@ -74,14 +76,15 @@ export const MyCombobox = React.memo(
     options = [],
     value = "",
     onChange = () => {},
-    onSelect = () => {},
+    onSelect = () => {}, // 从用户手动选择触发
     onLoad = () => {},
     disabled = false,
-    hasDefault = true,
+    isDefaultOnSelect = false, // 读数据的时候是否自动触发onSelect
     fullWidth = true,
     multiple = false,
     error = false,
     helperText = "",
+    isHidden = false,
     inputRef,
     ...props
   }) => {
@@ -98,9 +101,11 @@ export const MyCombobox = React.memo(
 
     // --------------------- 多选
     if (multiple) {
-      optionsFix = options.filter(v=>!!v).map((item) => {
-        return item.id;
-      });
+      optionsFix = options
+        .filter((v) => !!v)
+        .map((item) => {
+          return item.id;
+        });
       currentValue = value ? value.split(",") : [];
 
       getOptionLabel = (option) => {
@@ -108,7 +113,7 @@ export const MyCombobox = React.memo(
       };
 
       handleOnChange = (e, items) => {
-        console.log("asdfalis dhflaisd hfilausdh filasdh filausd f")
+        if (disabled) return;
         const returnValue = items.join(",");
         onChange(e, id, returnValue);
       };
@@ -123,11 +128,9 @@ export const MyCombobox = React.memo(
 
       // --------------------- 单选
     } else {
-
       getOptionLabel = (option) => {
-        
         // 如果外部有render方法，直接用外部的
-        if ( typeof(onRenderOption) === 'function') return onRenderOption(option)
+        if (typeof onRenderOption === "function") return onRenderOption(option);
 
         // 否则如果option是文本或者数字直接返回
         if (typeof option === "string" || typeof option === "number") {
@@ -146,12 +149,16 @@ export const MyCombobox = React.memo(
 
       // 200329去掉hasDefault
       // optionsFix = hasDefault && !multiple
-      optionsFix = [{ id: 0, [optionLabel]: "-" }, ...(options.filter(v=> getOptionLabel(v) !== ""))];
+      optionsFix = [
+        { id: 0, [optionLabel]: "-" },
+        ...options.filter((v) => getOptionLabel(v) !== ""),
+      ];
 
       currentValue =
         _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
       handleOnChange = (e, item) => {
+        if (disabled) return;
 
         // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
         // 200329去掉hasDefault
@@ -163,9 +170,12 @@ export const MyCombobox = React.memo(
 
         // 20200327: 多返回一个item本身. creinoxform用
         onChange(e, id, returnValue, item);
-
         // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
-        onSelect(item);
+
+        // 如果是读取数据，只有读取了以后才会触发onSelect。否则会混淆"第一次读取"和"用户操作"(意外触发inject)
+        if (e || isDefaultOnSelect) {
+          onSelect(item);
+        }
       };
 
       handleGetOptionSelected = (item, index) => {
@@ -176,23 +186,30 @@ export const MyCombobox = React.memo(
     useEffect(() => {
       // 20200810: 从内部移出来，因为第一次onload也需要触发
       onLoad(currentValue);
-    }, [currentValue])
+    }, [currentValue]);
+
+    // 第一次加载option的时候，假如只有一个选项，直接填入
+    const optionLength = (options && options.length) || 0;
+    useEffect(() => {
+      // 有的情况下不自动选
+      if (optionLength === 1) {
+        const item = options[0];
+        handleOnChange(null, item);
+      }
+    }, [optionLength]);
 
     const handleOnInputChange = (e, value, reason) => {
       if (typeof props.onInputChange === "function" && reason === "input") {
         props.onInputChange(e, value, reason);
       }
-
-      // if (reason === "clear") {
-        
-      //   console.log("clear???????")
-      //   // onChange(e, id, 0);
-      //   onChange(e, id, 0)
-      // }
+      // if (reason === "clear")
     };
+
+    const style = isHidden ? { display: "none" } : {};
 
     return (
       <Autocomplete
+        style={style}
         autoSelect={true}
         multiple={multiple}
         className={classes.root}
@@ -202,7 +219,7 @@ export const MyCombobox = React.memo(
         options={optionsFix}
         renderOption={handleRenderOption}
         getOptionLabel={getOptionLabel}
-        onChange={disabled ? null : handleOnChange}
+        onChange={handleOnChange}
         id={id}
         getOptionSelected={handleGetOptionSelected}
         value={currentValue}
@@ -233,7 +250,6 @@ export const MyComboboxAsyncFK = React.memo((props) => {
     tableName = "",
     preConditions = {},
     actionName = "get_dropdown",
-    onChange = () => {},
     onLoad = () => {},
   } = props;
 
@@ -242,13 +258,13 @@ export const MyComboboxAsyncFK = React.memo((props) => {
   // 200329用ref控制搜索，因为如果用setState，会导致一动就触发re-render，怎么输入都刷新成“无”
   const inputRef = useRef(null);
 
-  // 第一次加载，根据value为id读出来一条记录
+  // 第一次加载，根据 value 为id读出来一条记录
   useEffect(() => {
     loadData();
 
     return () => {
-      setoptions([])
-    }
+      setoptions([]);
+    };
   }, [props.value]);
 
   const loadData = () => {
@@ -258,21 +274,15 @@ export const MyComboboxAsyncFK = React.memo((props) => {
       delete preConditions.name;
 
       // inputValue这里是keyword。根据id搜索的话不需要关键字
-
-      h_fkFetchOnceAsync(
-        tableName,
-        ["", { id: props.value, ...preConditions }],
-        actionName
-      )
+      h_fkFetchOnceAsync(tableName, ["", { id: props.value }], actionName)
         .then((response) => {
           if (isSubscribed) {
-            
             onLoad(response);
             setoptions(response);
           }
         })
         .catch((error) => {
-          console.log("下拉列表为空", error);
+          console.log("下拉列表为空", props.id, props.value, error);
         });
 
       return () => {
@@ -283,7 +293,6 @@ export const MyComboboxAsyncFK = React.memo((props) => {
 
   // 根据输入内容读记录
   const handleFetchData = (e) => {
-
     if (e.key === "Enter") {
       const keyword = inputRef.current.value;
 
@@ -324,54 +333,81 @@ export const MyComboboxCascade = React.memo((props) => {
   } = props;
 
   const [options, setoptions] = useState([]);
+  const [loadedisSubscribed, setLoadedisSubscribed] = useState(true);
 
   // 结联用。从form传来的父节点:父节点值的集合。拆出父节点的值，用来监听值的变化
-  const listenValues = []
-  Object.keys(listenConditions).map(k => {
-    listenValues.push(listenConditions[k])
-  }) 
+  const listenValues = [];
+  Object.keys(listenConditions).map((k) => {
+    listenValues.push(listenConditions[k]);
+  });
 
   // 为了从外部调用  export async function h_fkFetch(table, params=[], actionName="get_dropdown") {
-  const fetchDropDown = (tableName) => {
-    let isSubscribed = true;
+  const fetchDropDown = async (tableName, listenValues, firstLoaded) => {
 
     // 如果所有listen的值都是空的，就是空选项
     let hasValue = false;
     for (let i = 0; i < listenValues.length; i++) {
-      if(listenValues[i]) {
+      if (listenValues[i]) {
         hasValue = true;
         break;
       }
     }
 
-    if(!hasValue) {
+    if (!hasValue) {
       setoptions([]);
       return;
     }
 
-    // 条件的第一个是pagination因为后台所有dropdown第一个参数都是pagination
-    h_fkFetchOnceAsync(
-      tableName,
-      [{}, { ...preConditions, ...listenConditions }],
-      actionName
-    )
-      .then((response) => {
-        if (isSubscribed) {
-          setoptions(response);
-        }
-      })
-      .catch((error) => {
-        console.log("下拉列表为空", error);
-      });
+    try {
+      // 条件里的第一个{}，是pagination，因为后台所有dropdown第一个参数都是pagination。所以传一个空的满足它
+      const response = await h_fkFetchOnceAsync(
+        tableName,
+        [{}, { ...preConditions, ...listenConditions }],
+        actionName
+      );
 
-    return () => {
-      isSubscribed = false;
-    };
-  }
+      // 若有id，看id在不在列表里，不在就取
+      if (props.value && !_h_includeId(props.value, response)) {
+        const response2 = await h_fkFetchOnceAsync(
+          tableName,
+          [{}, { id: props.value }],
+          actionName
+        );
+
+        if (response2 && response2.length > 0) {
+          response.push(response2[0]);
+        }
+      }
+
+      if (loadedisSubscribed) {
+        setoptions(response);
+      }
+    } catch (error) {
+      console.log("下拉列表为空", error);
+    }
+  };
 
   useEffect(() => {
-    return fetchDropDown(tableName)  
-  }, [tableName, ...listenValues]);
+    setLoadedisSubscribed(true);
+
+    fetchDropDown(tableName, listenValues, false);
+    return () => {
+      setoptions([]);
+      setLoadedisSubscribed(false);
+    };
+  }, [...listenValues]);
+
+
+  useEffect(() => {
+    setLoadedisSubscribed(true);
+
+    fetchDropDown(tableName, listenValues, true);
+    return () => {
+      setoptions([]);
+      setLoadedisSubscribed(false);
+    };
+  }, [tableName]);
+
 
   return <MyCombobox {...props} options={options} />;
 });
@@ -387,41 +423,50 @@ export const MyComboboxFK = React.memo((props) => {
   } = props;
 
   const [options, setoptions] = useState([]);
-
+  const [loadedisSubscribed, setLoadedisSubscribed] = useState(true);
   // 为了从外部调用
-  const fetchDropDown = (tableName, stateName) => {
-    let isSubscribed = true;
+  const fetchDropDown = async (tableName, stateName) => {
     // 条件的第一个是pagination因为后台所有dropdown第一个参数都是pagination
+    try {
+      const response1 = await h_fkFetchOnce(
+        tableName,
+        stateName,
+        [{}, preConditions],
+        actionName
+      );
 
-    h_fkFetchOnce(
-      tableName,
-      stateName,
-      [{}, { ...preConditions}],
-      actionName
-    )
-      .then((response) => {
-        if (isSubscribed) {
-          setoptions(response);
+      // 若有id，看id在不在列表里，不在就取
+      if (props.value && !_h_includeId(props.value, response1)) {
+        const response2 = await h_fkFetchOnceAsync(
+          tableName,
+          [{}, { id: props.value }],
+          actionName
+        );
+
+        if (response2 && response2.length > 0) {
+          response1.push(response2[0]);
         }
-      })
-      .catch((error) => {
-        console.log("下拉列表为空", error);
-      });
+      }
 
-    return () => {
-      setoptions([])
-      isSubscribed = false;
-    };
-  }
+      if (loadedisSubscribed) {
+        setoptions(response1);
+      }
+    } catch (error) {
+      console.log("下拉列表为空", props.id);
+    }
+  };
 
   useEffect(() => {
-    return fetchDropDown(tableName, stateName) 
+    setLoadedisSubscribed(true);
+    fetchDropDown(tableName, stateName);
+    return () => {
+      setoptions([]);
+      setLoadedisSubscribed(false);
+    };
   }, [tableName, stateName]);
 
   return <MyCombobox {...props} options={options} />;
 });
-
-
 
 export const MyComboboxPack = React.memo((props) => {
   const commonTypeName = "pack";
@@ -525,3 +570,24 @@ export const MyComboboxCommission = React.memo((props) => {
   );
 });
 
+export const MyComboboxExpressCompany = React.memo((props) => {
+  const commonTypeName = "expressCompany";
+  return (
+    <MyComboboxFK
+      tableName="commonitem"
+      stateName={`dropdown_${commonTypeName}`}
+      preConditions={{ commonType: enums.commonType[commonTypeName] }}
+      {...props}
+    />
+  );
+});
+
+// ============== helper
+const _h_includeId = (id, list) => {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i]["id"] === id) {
+      return true;
+    }
+  }
+  return false;
+};

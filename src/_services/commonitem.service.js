@@ -18,7 +18,7 @@ const URL = RESTURL + `/api/commonitem`;
 const URL_DROP_DOWN = RESTURL + `/api/commonitem_dropDown`;
 
 
-function get_dropdown(commonType) {
+function get_dropdown(commonType, searchTerms) {
 
     // const requestOptions = {
     //     method: 'GET',
@@ -33,10 +33,8 @@ function get_dropdown(commonType) {
         method: "GET",
         headers: authHeader()
       };
-      
 
-
-      const queryString = h_queryString({perPage: -1}, {commonType: commonType}, TABLENAME);
+      const queryString = h_queryString({perPage: -1}, {...searchTerms,commonType: commonType}, TABLENAME, false);
         
       return fetch(`${URL_DROP_DOWN}?${queryString}`, requestOptions).then(handleResponse);
 }

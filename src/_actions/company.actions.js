@@ -27,13 +27,13 @@ const {
 function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
-
     // 20200603: 不判断keyword是否为空因为有时候需要搜索空字符串
     preConditions.keyword = keyword
     return service.get_disposable_dropdown(preConditions)
       .then(
         response => {
           dispatch(loaded);
+          console.log("company get_disposable_dropdown", response)
           return response
         },
         error => {

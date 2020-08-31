@@ -24,8 +24,25 @@ import commodity from "./commodityReducer";
 // usage: xxxData: reducerMaker(null, tableName="XXXTABLE")
 import { reducerMaker } from "_helper/facelessMaker";
 
+// 用来存放各种下拉菜单. 因为会有比如同是port表，但是出发和到达分两个下拉菜单的情况
+const cacheReducer = (state = {}, action) => {
+  const {key, value} = action.payload || {}
+  if(!(key && value)) {
+    return state;
+  }
+
+  switch (action.type) {
+    case "CACHE":
+      return { ...state, [key]: value };
+    default:
+        return state;
+  }
+}
+
 // 多表格的时候这里是所有的reducer
 export default combineReducers({
+
+  cacheData: cacheReducer,
 
   // 全局
   authData: auth, // login status
@@ -73,3 +90,5 @@ export default combineReducers({
   rostercontactData: reducerMaker(null, "ROSTERCONTACT"),
   bankaccountData: reducerMaker(null, "BANKACCOUNT")  
 });
+
+

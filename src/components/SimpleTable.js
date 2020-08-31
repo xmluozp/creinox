@@ -13,13 +13,13 @@ import Paper from "@material-ui/core/Paper";
 
 import { dataRowsPreprocess, ActionButton } from "./Table";
 
-export const withSimpleTable = (headCells, dataModel) => {
+export const withSimpleTable = ({ headCells, dataModel }) => {
   const SimpleTable = ({ data, style, rowButtons, tableTitle, ...props }) => {
     const [listOnShow, setListOnShow] = useState([]);
 
     useEffect(() => {
       // render数据预处理用以渲染表格数据
-      data = data || []
+      data = data || [];
 
       setListOnShow(dataRowsPreprocess(data, headCells, dataModel));
     }, [data, headCells, dataModel]);
@@ -54,45 +54,75 @@ export const withSimpleTable = (headCells, dataModel) => {
           </TableHead>
           <TableBody>
             {/* ============================= row =============================== */}
-            {data && data.map((row, rowIndex) => (
-              <TableRow key={`row_${rowIndex}`}>
-                {headCells.map((column, columnIndex) => {
-                  // 取出预处理后的cell:{cellProps, columnContent}
-                  const columnObj =
-                    listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
-                  if (!columnObj) return; // 如果取不到就先不取
+            {data &&
+              data.map((row, rowIndex) => (
+                <TableRow key={`row_${rowIndex}`}>
+                  {headCells.map((column, columnIndex) => {
+                    // 取出预处理后的cell:{cellProps, columnContent}
+                    const columnObj =
+                      listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
+                    if (!columnObj) return; // 如果取不到，说明没有预处理，就不取预处理
 
-                  const columnContent = columnObj.columnContent;
-                  const cellProps = columnObj.cellProps;
+                    const columnContent = columnObj.columnContent;
+                    const cellProps = columnObj.cellProps;
 
-                  return (
-                    <TableCell key={`column_${rowIndex}_${columnIndex}`} {...cellProps}>
-                      {columnContent}
-                    </TableCell>
-                  );
-                })}
-                {/* 控制的部分 */}
-                {
-                  // 放操作按钮的格子
-                  rowButtons ? (
-                    <TableCell
-                      align="right"
-                      style={{ minWidth: 80 * rowButtons.length }}
-                    >
-                      {rowButtons.map((buttonObj, index) => (
-                        <ActionButton
-                          key={`row_${rowIndex}_button_${index}`}
-                          {...buttonObj}
-                          disabled="true"
-                          id={row.id}
-                          row={row}
-                        />
-                      ))}
-                    </TableCell>
-                  ) : null
-                }
-              </TableRow>
-            ))}
+                    return (
+                      <TableCell
+                        key={`column_${rowIndex}_${columnIndex}`}
+                        {...cellProps}
+                      >
+                        {columnContent || "-"}
+                      </TableCell>
+                    );
+                  })}
+                  {/* 控制的部分 */}
+                  {
+                    // 放操作按钮的格子
+                    rowButtons ? (
+                      <TableCell
+                        align="right"
+                        style={{ minWidth: 80 * rowButtons.length }}
+                      >
+                        {rowButtons.map((buttonObj, index) => (
+                          <ActionButton
+                            key={`row_${rowIndex}_button_${index}`}
+                            {...buttonObj}
+                            disabled="true"
+                            id={row.id}
+                            row={row}
+                          />
+                        ))}
+                      </TableCell>
+                    ) : null
+                  }
+                </TableRow>
+              ))}
+            {/* ============================= foot =============================== */}
+            {data && listOnShow && (data.length === listOnShow.length - 1) ? 
+              <TableRow key={`row_${listOnShow.length - 1}`}>            
+                  {headCells.map((column, columnIndex) => {
+                    const rowIndex = listOnShow.length - 1
+
+                    // 和上面的代码一模一样
+                    const columnObj =
+                      listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
+                    {/* if (!columnObj) return; // 如果取不到，说明没有预处理，就不取预处理 */}
+
+                    const columnContent = columnObj && columnObj.columnContent || "";
+                    const cellProps = columnObj && columnObj.cellProps || {};
+
+                    return (
+                      <TableCell
+                        key={`column_${rowIndex}_${columnIndex}`}
+                        {...cellProps}
+                      >
+                        {columnContent}
+                      </TableCell>
+                    );
+                  })}
+                  {rowButtons ? <TableCell></TableCell> : null }
+              </TableRow> : null
+            }
           </TableBody>
         </Table>
       </TableContainer>
@@ -102,4 +132,4 @@ export const withSimpleTable = (headCells, dataModel) => {
   return SimpleTable;
 };
 
-export default withSimpleTable();
+export default withSimpleTable({});

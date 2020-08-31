@@ -71,8 +71,9 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
       return newDataRows;
     };
 
-    const handleGetTargetProductId = (e, element, selectedId) => {
-      setSelectedId(selectedId);
+    const handleGetTargetProductId = (item) => {
+      const newSelectedId = (item && item.id) || 0
+      setSelectedId(newSelectedId);
     };
 
     const handleAssemble = () => {
@@ -81,22 +82,25 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
       });
     };
 
-    // const renderOnShowIsMeta = (content, row) => {
+    const renderOnShowIsMeta = (content, row) => {
 
-    //     return row.id === product_id && ICONS.TRUE("mr-4 text-success")
-    // }
-    // product_id
+      if(row.id === product_id) {
+        return <span className = "text-danger">产品本身</span>
+      } else {
+        return <span className = " text-success">附加产品</span>
+      }
+    };
     // ============================================= render cell
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
-      // {
-      //   name: "isMeta",
-      //   align: "center",
-      //   label: "主产品",
-      //   onShow: renderOnShowIsMeta,
-      //   disablePadding: true, 
-      // },
+      {
+        name: "isMeta",
+        align: "center",
+        label: "商品组合",
+        onShow: renderOnShowIsMeta,
+        disablePadding: true, 
+      },
       { name: "code" },
       { name: "name" },
       { name: "ename" },
@@ -140,16 +144,17 @@ const withProductCommodityList = (EDITURL = "/product/products") => {
           <Grid container spacing={2}>
             <Grid item lg={12} md={12} xs={12}>
               <Inputs.MyComboboxAsyncFK
-                 inputid = "temp_product"
+                inputid = "temp_product"
                 tableName="product"
-                label="用产品货号搜索产品"
+                label="搜索附加产品"
                  // 取的下拉列表包括其它商品的元产品。本应排除自己的元产品，但可以从后台限制。就不用多此一举了
                 actionName="get_disposable_dropdown" 
-                onChange={handleGetTargetProductId}
+                value = {selectedId}
+                onSelect={handleGetTargetProductId}
               />
             </Grid>
             <Grid item lg={4} md={4} xs={12}>
-              <Button onClick={handleAssemble} className="btn-success"> 添加产品 </Button>
+              <Button onClick={handleAssemble} className="btn-success"> 绑定附加产品 </Button>
             </Grid>
           </Grid>
         )}

@@ -79,6 +79,7 @@ const CurrentPage = ({
                   <Grid item lg={12} md = {12} xs={12}>
                     <Inputs.MyComboboxFK
                           inputid="financialAccount_id"
+                          stateName="financialAccountDropdown"
                           disabled={disabled}
                           label="我方账户 (仅列表界面检索用)"
                           tableName="financialaccount"

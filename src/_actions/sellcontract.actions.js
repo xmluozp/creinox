@@ -23,7 +23,6 @@ const {
 function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
-
     if(keyword) {preConditions.code = keyword}
     return service.get_disposable_dropdown(preConditions)
       .then(

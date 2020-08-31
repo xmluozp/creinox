@@ -77,22 +77,22 @@ const ActionButton = ({ id, label, onClick, color, url, icon }) => {
 };
 
 export const MyModalFormWithData = ({
-  isOpen,
   onClose,
   onSubmit,
-  isFromEdit,
   title,
-  rowId = null,
   componentInputs,
   modalFormProps = {},
   modalInputProps = {},
-
+  isFromEdit,
+  isOpen,
+  rowId,
   // redux
   dataModel,
   onGetById,
   errorById,
   dataById
 }) => {
+
   // 如果是编辑框，打开的时候读数据
   useEffect(() => {
     if (isFromEdit && isOpen && rowId) {
@@ -115,7 +115,7 @@ export const MyModalFormWithData = ({
         dataModel={dataModel}
         {...modalFormProps}
       >
-        <ModalBody>{componentInputs(modalInputProps)}</ModalBody>
+        <ModalBody>{componentInputs({isFromEdit,dataById,...modalInputProps})}</ModalBody>
         <ModalFooter>
           <Button
             type="button"

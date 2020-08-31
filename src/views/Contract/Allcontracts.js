@@ -8,7 +8,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { ICONS, enums } from "_constants";
-import { h_confirm, history } from "_helper";
+import { h_confirm, history, h_datetimeToJs_middle } from "_helper";
 import {
   CreinoxTable,
   Inputs,
@@ -78,6 +78,7 @@ export const withSellcontractList = (
 
       <Inputs.MyComboboxFK
         inputid="follower_id"
+        stateName="followerDropdown"
         optionLabel="userName"
         tableName="user"
       />
@@ -99,10 +100,10 @@ export const withSellcontractList = (
   ];
 
   // 采购合同
-  const Allcontracts_buyContract_list = withSimpleTable(
-    headCells_buy,
-    buycontractModel
-  );
+  const Allcontracts_buyContract_list = withSimpleTable({
+    headCells: headCells_buy,
+    dataModel: buycontractModel
+  });
 
   const buyContract_rowButtons = [
     {
@@ -115,7 +116,7 @@ export const withSellcontractList = (
 
   // >>> 下属产品 ---------------------------------------
   const renderCommodity = (content, row) => {
-    return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].name}`
+    return `[${row["commodity_id.row"].code}] ${row["commodity_id.row"].ename}`
   }
   
   const renderPackAmount = (content, row) => {
@@ -131,30 +132,47 @@ export const withSellcontractList = (
     { name: "unitPrice", width:120 }  
   ];
 
-  const Allcontracts_subitems_list = withSimpleTable(
-    headCells_subitems,
-    sellsubitemModel
-  );
+  const Allcontracts_subitems_list = withSimpleTable({
+    headCells: headCells_subitems,
+    dataModel: sellsubitemModel
+  });
 
+  const renderAmountOut = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
 
+  const renderAmountIn = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
   
   // >>> 下属付款记录 ---------------------------------------
   const headCells_financialTransactions = [
     { name: "id", disablePadding: true, className: "ml-2", width:80 },
-    { name: "transdateAt", width: 170},
-    { name: "amount_out", width:140  },
-    { name: "amount_in", width:140 },
+    { name: "transdateAt", width: 190, onShow: v => h_datetimeToJs_middle(v)},
+    { name: "amount_in", width:130, onWrap: renderAmountIn },
+    { name: "amount_out", width:130, onWrap: renderAmountOut },
+    { name: "currency_id", width:100},
     { name: "financialAccount_id", width:200 },
     { name: "bankaccountName", width:200 },
     { name: "bankaccountNo", width:220 },
     { name: "tt_transUse"},
   ];
 
-  const Allcontracts_financialTransaction_list = withSimpleTable(
-    headCells_financialTransactions,
-    financialtransactionModel
-  );
 
+  const Allcontracts_financialTransaction_list = withSimpleTable({
+    headCells: headCells_financialTransactions,
+    dataModel: financialtransactionModel
+  });
+  
+  const Allcontracts_financialTransaction_list_buyContract = withSimpleTable({
+    headCells: headCells_financialTransactions,
+    dataModel: financialtransactionModel
+  });
+  
 
   // 订单的子项
   // obj 这里是一个数组
@@ -163,11 +181,35 @@ export const withSellcontractList = (
 
   const collapsePanel = [
     {
-      title: "销售的商品",
+      title: "销售转账记录",
+      name: "financialTransaction_list",
+      RenderComponent: Allcontracts_financialTransaction_list,
+      props: {
+        tableTitle: "销售转账记录",
+        style: {
+          backgroundColor: "#e6eff6",
+          padding: 10,
+        },
+      },
+    },
+    {
+      title: "商品",
       name: "subitem_list", // 单条记录中取list，对应的key. (后台需要把list塞进这个key)
       RenderComponent: Allcontracts_subitems_list,
       props: {
-        tableTitle: "销售的商品",
+        tableTitle: "商品",
+        style: {
+          backgroundColor: "#e6eff6",
+          padding: 10,
+        },
+      },
+    },
+    {
+      title: "采购转账记录",
+      name: "financialTransaction_list_buyContract",
+      RenderComponent: Allcontracts_financialTransaction_list_buyContract,
+      props: {
+        tableTitle: "采购转账记录",
         style: {
           backgroundColor: "#e6eff6",
           padding: 10,
@@ -185,30 +227,6 @@ export const withSellcontractList = (
           padding: 10,
         },
         rowButtons: buyContract_rowButtons,
-      },
-    },
-    {
-      title: "付款记录",
-      name: "financialTransaction_contract_list",
-      RenderComponent: Allcontracts_financialTransaction_list,
-      props: {
-        tableTitle: "转账记录",
-        style: {
-          backgroundColor: "#e6eff6",
-          padding: 10,
-        },
-      },
-    },
-    {
-      title: "其他款项",
-      name: "financialTransaction_other_list",
-      RenderComponent: Allcontracts_financialTransaction_list,
-      props: {
-        tableTitle: "转账记录",
-        style: {
-          backgroundColor: "#e6eff6",
-          padding: 10,
-        },
       },
     },
   ];

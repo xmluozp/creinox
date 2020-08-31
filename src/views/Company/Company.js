@@ -331,6 +331,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       <Grid item lg={6} xs={12}>
         <Inputs.MyComboboxFK
           inputid="retriever_id"
+          stateName="retrieverDropdown"
           optionLabel="userName"
           tableName="user"
           disabled={disabled}
@@ -342,6 +343,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       <Grid item lg={4} xs={12}>
         <Inputs.MyComboboxFK
           inputid="updateUser_id"
+          stateName="updateUserDropdown"
           optionLabel="userName"
           tableName="user"
           disabled={true}
@@ -410,6 +412,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
       <Grid item lg={4} xs={12}>
         <Inputs.MyComboboxFK
           inputid="updateUser_id"
+          stateName="updateUserDropdown"
           optionLabel="userName"
           tableName="user"
           disabled={true}

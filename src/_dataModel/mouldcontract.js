@@ -71,8 +71,10 @@ export const mouldcontractModel = {
         // 实验性使用view
         "view_follower" :   {label: "跟单员",  type: _DATATYPES.VARCHAR},
         "view_productCode":        {label: "产品货号",     type: _DATATYPES.VARCHAR},
-        "view_image_thumbnail":  {label: "图",  type: _DATATYPES.VARCHAR},
+        "view_image_thumbnail":  {label: "产品图片",  type: _DATATYPES.VARCHAR},
         "view_buyer_company_name" : {label: "甲方公司",  type: _DATATYPES.VARCHAR},
         "view_seller_company_name" : {label: "乙方公司",  type: _DATATYPES.VARCHAR},
+
+        financialTransaction_list: {label: "转账记录",   type: _DATATYPES.ROW},
     }
 }

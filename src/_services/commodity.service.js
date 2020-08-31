@@ -33,7 +33,7 @@ function get_dropdown(pagination, searchTerms) {
 
     console.log("service get dropdown:", searchTerms);
 
-    const queryString = h_queryString(pagination, searchTerms, TABLENAME)
+    const queryString = h_queryString(pagination, searchTerms, TABLENAME, false)
 
     // const url = './dataset/commoditydata.json'
     return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);

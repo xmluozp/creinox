@@ -92,7 +92,7 @@ const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
             inputid="commodity_id"
             tableName="commodity"
             actionName="get_disposable_dropdown"
-            onChange={getSourceProductOnChange}
+            onSelect={getSourceProductOnChange}
             onLoad={onLoad}
           />
         </Grid>
@@ -221,66 +221,59 @@ export default (props) => {
   const handleGetInjector = (inj) => {
     setProductInjector(inj);
   };
-  const handleGetSourceProductOnChange = (e, element, id, item) => {
+  const handleGetSourceProductOnChange = async (item) => {
+
+    console.log("选中", item)
     const product_id = item ? item.product_id : 0;
+
+    let itemInject = {
+      commodity_id: item ? item.id: 0
+    }
 
     // 根据商品id取产品， 可以取到：规格，厚度, 单位重量, 材质，抛光
     if (item && product_id) {
-      h_fkFetch("product", [product_id], "get_disposable_byId")
-        .then((response) => {
-          if (response && response.id) {
-            // 从产品取
-            productInjector({
-              commodity_id: item.id,
-              spec: response.spec1,
-              thickness: response.thickness,
-              unitWeight: response.unitWeight,
-              texture_id: response.texture_id,
-              polishing_id: response.polishing_id,
-            });
-          }
-        })
-        .catch((error) => {
-          console.log("搜索不到对应产品", error);
-        });
+      try {
+        const response = await h_fkFetch("product", [product_id], "get_disposable_byId")
 
-      h_fkFetch("productpurchase", [product_id], "get_disposable_byProductId")
-        .then((response) => {
-          if (response && response.id) {
-            // 从产品取, 有部分字段覆盖上面的，因为虽然产品里也有相同的字段。但报价里的肯定是比较新的
-            // 有的产品没有报价，所以上面取那一次也是必要的
-            productInjector({
-              spec: response.spec1,
-              thickness: response.thickness,
-              unitWeight: response.unitWeight,
-              netWeight: response.netWeight,
-              grossWeight: response.grossWeight,
-              packAmount: response.packAmount,
-              outerPackL: response.outerPackL,
-              outerPackW: response.outerPackW,
-              outerPackH: response.outerPackH,
-
-              innerPackL: response.innerPackL,
-              innerPackW: response.innerPackW,
-              innerPackH: response.innerPackH,
-              unitType_id: response.unitType_id,
-              polishing_id: response.polishing_id,
-              texture_id: response.texture_id,
-              pack_id: response.pack_id,
-            });
+        itemInject = {
+          ...itemInject,
+          spec: response.spec1,
+          thickness: response.thickness,
+          unitWeight: response.unitWeight,
+          texture_id: response.texture_id,
+          polishing_id: response.polishing_id,
+        }   
+  
+        const purchaseRes = await h_fkFetch("productpurchase", [product_id], "get_disposable_byProductId")
+  
+        if (purchaseRes && purchaseRes.id) { 
+          itemInject = {
+            ...itemInject,
+            spec: purchaseRes.spec1,
+            thickness: purchaseRes.thickness,
+            unitWeight: purchaseRes.unitWeight,
+            netWeight: purchaseRes.netWeight,
+            grossWeight: purchaseRes.grossWeight,
+            packAmount: purchaseRes.packAmount,
+            outerPackL: purchaseRes.outerPackL,
+            outerPackW: purchaseRes.outerPackW,
+            outerPackH: purchaseRes.outerPackH,
+  
+            innerPackL: purchaseRes.innerPackL,
+            innerPackW: purchaseRes.innerPackW,
+            innerPackH: purchaseRes.innerPackH,
+            unitType_id: purchaseRes.unitType_id,
+            polishing_id: purchaseRes.polishing_id,
+            texture_id: purchaseRes.texture_id,
+            pack_id: purchaseRes.pack_id, 
           }
-        })
-        .catch((error) => {
-          console.log("搜索不到对应产品", error);
-        });
-    } else {
-      // 如果点了叉就清掉
-      productInjector({
-        commodity_id: 0
-      });
+        } 
+      } catch (error) {
+        console.log("搜索不到对应产品", error)
+      }
     }
 
-    // 从报价表里取？ get_disposable_byProductId?
+    productInjector(itemInject);
   };
 
   const handleFilterSubmit = (values, isFromEdit) => {

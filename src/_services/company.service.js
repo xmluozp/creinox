@@ -28,7 +28,18 @@ function get_disposable_dropdown(searchTerms) {
         headers: authHeader()
     };
 
-    const queryString = h_queryString({}, searchTerms, TABLENAME)
+    console.log("getdropdown with search before:", searchTerms);
+
+    if(searchTerms && searchTerms.companyType === 0) {
+        delete searchTerms.companyType
+    }
+
+    const queryString = h_queryString({}, searchTerms, TABLENAME, false)
+
+    /* 
+        公司类型如果不写，下拉菜单和搜索列表之间的cache里，searchTerms会互相覆盖。
+        所以搜索全部公司也强行指定一个类型 -1， 后台-1就是不搜索
+    */
 
     console.log("getdropdown with search:", searchTerms);
     return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);

@@ -77,7 +77,7 @@ const TableToolbarWrapper = ({
       ) : (
           <Typography className={classes.title} variant="h6" id="tableTitle">
             <span className="mr-2">{tableTitle}</span>
-            <Tooltip title="Reload">
+            <Tooltip title="刷新列表">
             <IconButton aria-label="refresh" className="text-secondary" size="small" onClick={onRefresh}>
               <i className="icon-reload" />
             </IconButton>

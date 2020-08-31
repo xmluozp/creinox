@@ -60,7 +60,7 @@ export const sellcontractModel = {
         //---------------------
         subitem_list: {label: "销售的商品",   type: _DATATYPES.ROW},
         buyContract_list: {label: "采购合同",   type: _DATATYPES.ROW},
-        financialTransaction_contract_list: {label: "付款记录",   type: _DATATYPES.ROW},
-        financialTransaction_other_list: {label: "其他款项",   type: _DATATYPES.ROW},
+        financialTransaction_list: {label: "销售转账记录",   type: _DATATYPES.ROW},
+        financialTransaction_list_buyContract: {label: "采购转账记录",   type: _DATATYPES.ROW},
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { embedListProvider } from "../Faceless/embedListProvider"; // to generate the Embed List Page with Modal
@@ -20,12 +20,10 @@ const renderSellsubitem = (content, row) => {
 };
 
 const renderProduct = (content, row) => {
-  console.log("row:", row);
   return `[${row["product_id.row"].code}] ${row["product_id.row"].name}`;
 };
 
 const renderPackAmount = (content, row) => {
-  console.log(row);
   return `${row["packAmount"]} / ${row["unitType_id.row"].ename}`;
 };
 
@@ -39,7 +37,6 @@ const headCells = [
     onShow: renderProduct,
     minWidth: 250,
   },
-  { name: "sellerCode" },
   { name: "amount" },
   {
     name: "view_packAmount_unitType",
@@ -62,6 +59,8 @@ const FormInputs = ({
   getSubitemOnChange,
   onChangeSource,
   isFromSellSubitem,
+  isFromEdit,
+  dataById,
   ...props
 }) => {
   //injectProduct
@@ -85,6 +84,19 @@ const FormInputs = ({
     return grossWeight * amount || 0;
   };
 
+
+
+  useEffect(() => {
+
+    // 如果是新建，或者是从详情页进来，已经有订单号了，就从订单取产品
+    if(!isFromEdit || (dataById && dataById.row && dataById.row.sell_subitem_id > 0)) {
+      onChangeSource(null, null, true)
+    } else {
+      onChangeSource(null, null, false)
+    }
+    return () => {  }
+  }, [dataById])
+
   // 如果从外贸订单找产品，注入的不但有product_id，还会有sell_subitem_id
   // 外贸订单找产品时候，下拉显示的是产品不是商品
   return (
@@ -92,7 +104,9 @@ const FormInputs = ({
       <Grid container spacing={2}>
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MySwitch
-            label={isFromSellSubitem ? "搜索对应订单的产品" : "搜索所有产品"}
+            label=""
+            labelTrue = "通过外商货号搜索相关产品"
+            labelFalse = "通过关键词搜索产品"
             value={isFromSellSubitem}
             onChange={onChangeSource}
           />
@@ -100,46 +114,45 @@ const FormInputs = ({
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MySwitch inputid="isReceipt" />
         </Grid>
-        {
-          //
-          isFromSellSubitem ? (
-            <>
-              <Grid item lg={4} md={6} xs={12}>
-                <Inputs.MyComboboxFK
-                  inputid="sell_subitem_id"
-                  optionLabel="buyerCode"
-                  tableName="sellsubitem"
-                  preConditions={props.preConditions}
-                  onChange={getSubitemOnChange}
-                />
-              </Grid>
-              <Grid item lg={5} md={6} xs={12}>
-                <Inputs.MyComboboxCascade
-                  inputid="product_id"
-                  listen={{"sell_subitem_id": "sell_subitem_id"}}
-                  tableName="product"
-                  optionLabel="name"
-                  actionName="get_dropdown_fromSellsubitem"
-                />
-              </Grid>
-            </>
-          ) : (
-            <Grid item lg={9} md={6} xs={12}>
-              <Inputs.MyComboboxAsyncFK
-                inputid="product_id"
-                tableName="product"
-                preConditions={props.preConditions}
-                actionName="get_disposable_dropdown"
-                onChange={getSourceProductOnChange}
-                onLoad={onLoad}
-              />
-            </Grid>
-          )
-        }
 
+        <Grid item lg={4} md={6} xs={12}>
+          <Inputs.MyComboboxFK
+            inputid="sell_subitem_id"
+            optionLabel="buyerCode"
+            tableName="sellsubitem"
+            stateName="sellSubitemDropdown"
+            preConditions={props.preConditions}
+            onSelect={getSubitemOnChange}
+            isDefaultOnSelect = {!isFromEdit}
+            isHidden = {!isFromSellSubitem}
+          />
+        </Grid>
+        {isFromSellSubitem?
+          <Grid item lg={8} md={6} xs={12}>
+          <Inputs.MyComboboxCascade
+            inputid="product_id"
+            listen={{"sell_subitem_id": "sell_subitem_id"}}
+            tableName="product"
+            optionLabel="name"
+            actionName="get_dropdown_fromSellsubitem"
+            onSelect={getSourceProductOnChange}
+            isDefaultOnSelect = {!isFromEdit}/>
+        </Grid>:
+        <Grid item lg={12} md={6} xs={12}>
+          <Inputs.MyComboboxAsyncFK
+            inputid="product_id"
+            tableName="product"
+            preConditions={props.preConditions}
+            actionName="get_disposable_dropdown"
+            onSelect={getSourceProductOnChange}
+            onLoad={onLoad}
+            isDefaultOnSelect = {!isFromEdit}/>
+        </Grid>
+        }
+{/* 
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="sellerCode" />
-        </Grid>
+        </Grid> */}
         <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyInput inputid="amount" />
         </Grid>
@@ -250,28 +263,37 @@ const EmbedBuysubitem = embedListProvider(
 );
 
 // 加了一层component为了处理injection
-export default (props) => {
+export default ({sellCompanyId,...props}) => {
   const [productInjector, setProductInjector] = useState(null);
   const [isFromSellSubitem, setisFromSellSubitem] = useState(true);
 
-  const handleChangeSource = () => {
-    setisFromSellSubitem(!isFromSellSubitem);
+  const handleChangeSource = (e, n, newValue) => {
+    setisFromSellSubitem(newValue);
   };
 
   const handleGetInjector = (inj) => {
     setProductInjector(inj);
   };
 
-  // 选择子订单自动填入信息
-  const handleGetSubitemOnChange = (e, element, id, item) => {
+  // 如果是从有子订单转为无子订单，删掉对应子订单
+  const handleFilterSubmit = values => {
+    console.log("filter")
+    const newValues = {...values}
+    if(!isFromSellSubitem) {
+      newValues.sell_subitem_id = 0
+    }
 
-    console.log("联动选中了", item)
+    return newValues
+  }
+
+  // 选择子订单自动填入信息
+  const handleGetSubitemOnChange = (item) => {
+
     if (item) {
-      productInjector({
+      const newValues = {
         sell_subitem_id: item.id,
         amount: item.amount,
         packAmount: item.packAmount,
-        unitPrice: item.unitPrice,
         spec: item.spec,
         thickness: item.thickness,
         unitWeight: item.unitWeight,
@@ -286,62 +308,76 @@ export default (props) => {
         fcl20: item.fcl20,
         fcl40: item.fcl40,
         unitType_id: item.unitType_id,
-        currency_id: item.currency_id,
         polishing_id: item.polishing_id,
         texture_id: item.texture_id,
         pack_id: item.pack_id,
-      });
+      }
+      productInjector(newValues);
     }
   };
 
   // 选择产品自动填入信息
-  const handleGetSourceProductOnChange = (e, element, id, item) => {
-    console.log("inject:", item);
+  const handleGetSourceProductOnChange = async item => {
+    
     const product_id = item ? item.id : 0;
 
     // 直接取产品， 可以取到：规格，厚度, 单位重量, 材质，抛光
     if (item && product_id) {
-      productInjector({
+
+      const newProductValues = {
         product_id: product_id,
         spec: item.spec1,
         thickness: item.thickness,
         unitWeight: item.unitWeight,
         texture_id: item.texture_id,
         polishing_id: item.polishing_id,
-      });
-
-      // 然后根据产品的报价取其他信息
-      h_fkFetch("productpurchase", [product_id], "get_disposable_byProductId")
-        .then((response) => {
-          if (response && response.id) {
-            console.log(response);
-            // 从产品取, 有部分字段覆盖上面的，因为虽然产品里也有相同的字段。但报价里的肯定是比较新的
-            // 有的产品没有报价，所以上面取那一次也是必要的
-            productInjector({
-              spec: response.spec1,
-              sellerCode: response.code,
-              thickness: response.thickness,
-              unitWeight: response.unitWeight,
-              netWeight: response.netWeight,
-              grossWeight: response.grossWeight,
-              packAmount: response.packAmount,
-              outerPackL: response.outerPackL,
-              outerPackW: response.outerPackW,
-              outerPackH: response.outerPackH,
-
-              innerPackL: response.innerPackL,
-              innerPackW: response.innerPackW,
-              innerPackH: response.innerPackH,
-              unitType_id: response.unitType_id,
-              polishing_id: response.polishing_id,
-              texture_id: response.texture_id,
-              pack_id: response.pack_id,
-            });
+      }
+      let newProductPurchaseValues = {}
+      try {
+        const response = await h_fkFetch("productpurchase", [product_id, sellCompanyId], "get_disposable_byProductId")
+        if (response && response.id) { 
+          newProductPurchaseValues = {
+            spec: response.spec1,
+            // sellerCode: response.code,
+            thickness: response.thickness,
+            unitWeight: response.unitWeight,
+            netWeight: response.netWeight,
+            grossWeight: response.grossWeight,
+            packAmount: response.packAmount,
+            outerPackL: response.outerPackL,
+            outerPackW: response.outerPackW,
+            outerPackH: response.outerPackH,
+            unitPrice: response.buyPrice,
+            currency_id: response.currency_id,
+            innerPackL: response.innerPackL,
+            innerPackW: response.innerPackW,
+            innerPackH: response.innerPackH,
+            unitType_id: response.unitType_id,
+            polishing_id: response.polishing_id,
+            texture_id: response.texture_id,
+            pack_id: response.pack_id
           }
-        })
-        .catch((error) => {
-          console.log("搜索不到对应产品", error);
-        });
+        }    
+      } catch (error) {
+        console.log("搜索不到对应产品", error);
+      }
+
+      productInjector({...newProductValues, ...newProductPurchaseValues});
+
+      // // 然后根据产品的报价取其他信息
+      // h_fkFetch("productpurchase", [product_id, sellCompanyId], "get_disposable_byProductId")
+      //   .then((response) => {
+      //     if (response && response.id) {
+
+      //       // 从产品取, 有部分字段覆盖上面的，因为虽然产品里也有相同的字段。但报价里的肯定是比较新的
+      //       productInjector({
+
+      //       });
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log("搜索不到对应产品", error);
+      //   });
     }
 
     // TODO:从报价表里取？ get_disposable_byProductId?
@@ -350,21 +386,25 @@ export default (props) => {
   return (
     <EmbedBuysubitem
       isBorder={true}
+      onFilterSubmit = {handleFilterSubmit}
       {...props}
       modalFormCreateProps={{ onGetInjector: handleGetInjector }}
       modalInputCreateProps={{
         getSourceProductOnChange: handleGetSourceProductOnChange,
         getSubitemOnChange: handleGetSubitemOnChange,
         onChangeSource: handleChangeSource,
-        isFromSellSubitem: isFromSellSubitem,
+        isFromSellSubitem,
         preConditions: props.preConditions,
+
       }}
-      modalFormEditProps={{ onGetInjector: handleGetInjector }}
+      modalFormEditProps={{ 
+        onGetInjector: handleGetInjector,
+      }}
       modalInputEditProps={{
         getSourceProductOnChange: handleGetSourceProductOnChange,
         getSubitemOnChange: handleGetSubitemOnChange,
         onChangeSource: handleChangeSource,
-        isFromSellSubitem: isFromSellSubitem,
+        isFromSellSubitem,
         preConditions: props.preConditions,
       }}
     />

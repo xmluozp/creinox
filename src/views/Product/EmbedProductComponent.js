@@ -50,6 +50,9 @@ const withProductList = (
       ? { parent_id: product_id }
       : { child_id: product_id };
 
+    const tableTitle = isParent
+    ? "产品由哪些部件构成"
+    : "是什么产品的部件";
     // ============================================= handles
     const handleOnDisassemble = (pagination, row) => {
       h_confirm("是否解除部件？").then(resolve => {
@@ -76,7 +79,9 @@ const withProductList = (
       return newDataRows;
     };
 
-    const handleGetTargetProductId = (e, element, selectedId) => {
+    const handleGetTargetProductId = (item) => {
+
+      const selectedId = (item && item.id) || 0
       setSelectedId(selectedId);
     };
 
@@ -141,7 +146,7 @@ const withProductList = (
                 label="用产品货号搜索部件"
                 value = {selectedId}
                 actionName="get_disposable_dropdown"
-                onChange={handleGetTargetProductId}
+                onSelect={handleGetTargetProductId}
                 />
             </Grid>
             <Grid item lg={4} md={4} xs={12}>
@@ -152,7 +157,7 @@ const withProductList = (
         <MyTable
           {...props}
           onRowDbClick={handleOnEdit}
-          tableTitle={pageName}
+          tableTitle={tableTitle}
           headCells={headCells}
           dataModel={dataModel}
           isBorder={false}

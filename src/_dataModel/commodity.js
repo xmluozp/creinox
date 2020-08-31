@@ -6,7 +6,7 @@ export const commodityModel = {
     dataStore: "commodity",
     columns: {
         id :        {label:"ID",        type: _DATATYPES.INT },
-        name:       {label: "商品名称",     type: _DATATYPES.VARCHAR},       
+        name:       {label: "商品/商品组合名称",     type: _DATATYPES.VARCHAR},       
         ename:       {label: "英文名(销售合同上用)",     type: _DATATYPES.VARCHAR},       
         memo:       {label: "备注",     type: _DATATYPES.TEXT},     
 
@@ -29,8 +29,8 @@ export const commodityModel = {
         image_id:   {label: "图",   type: _DATATYPES.IMAGE,  ref:"image", refLabel: ["thumbnailPath"]},
         "image_id.row": {label: "图",   type: _DATATYPES.ROW},
 
-        // 来自于销售价格表. commoditySell
-        sellPrice:   {label: "参考售价",     type: _DATATYPES.MONEY},  
+        // xx 来自于销售价格表. commoditySell xx —— 0830 不用价格表了，直接设置
+        price:   {label: "参考售价",     type: _DATATYPES.MONEY},  
         currency_id:  {label: "币种",     type: _DATATYPES.TREE, ref:"common_item", refLabel: ["name"]},
  
         //============== 搜索用关联到外表的字段: 

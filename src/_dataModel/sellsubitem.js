@@ -31,7 +31,7 @@ export const sellsubitemModel = {
         fcl40:      {label: "40 FCL",     type: _DATATYPES.DECIMAL},   
 
 
-        commodity_id:           {label: "对应商品",     type: _DATATYPES.SELECT, ref:"commodity", refLabel: ["name"]},
+        commodity_id:           {label: "销售商品",     type: _DATATYPES.SELECT, ref:"commodity", refLabel: ["name"]},
         sell_contract_id:       {label: "采购单",       type: _DATATYPES.SELECT, ref:"sell_contract", refLabel: ["code"]},     
 
         unitType_id:            {label: "计量单位",     type: _DATATYPES.SELECT, ref:"common_item", refLabel: ["name"]},
@@ -44,7 +44,7 @@ export const sellsubitemModel = {
         "imagePacking_id.row":   {label: "包装彩盒",   type: _DATATYPES.ROW},
  
         //---------------------------
-        "commodity_id.row":     {label: "对应商品",     type: _DATATYPES.ROW},
+        "commodity_id.row":     {label: "销售商品",     type: _DATATYPES.ROW},
         "sell_contract_id.row": {label: "外销合同",       type: _DATATYPES.ROW},
         // "unitType_id.row":      {label: "计量单位",         type: _DATATYPES.ROW},
         // "currency_id.row":      {label: "币种",         type: _DATATYPES.ROW},

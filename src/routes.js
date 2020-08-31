@@ -576,7 +576,7 @@ const routes = [
   {
     path: "/product/products",
     exact: true,
-    name: "产品列表",
+    name: "产品列表 (采购基本信息)",
     component: ProductProducts,
     authTag: "product"
   },
@@ -630,7 +630,7 @@ const routes = [
   {
     path: "/commodity/commodities",
     exact: true,
-    name: "商品列表",
+    name: "商品列表 (销售基本信息)",
     component: Commodities,
     authTag: "commodity"
   },

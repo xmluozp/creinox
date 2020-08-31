@@ -32,7 +32,7 @@ function get_dropdown(pagination, searchTerms) {
   };
 
   console.log("search service:", searchTerms);
-  const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+  const queryString = h_queryString(pagination, searchTerms, TABLENAME, false);
   console.log("search service:", queryString);
   // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 

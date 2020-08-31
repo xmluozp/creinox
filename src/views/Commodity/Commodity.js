@@ -56,8 +56,9 @@ export const withProduct = () => {
     };
 
     // 从产品搜索字段填入
-    const handleGetSourceProductOnChange = (e, element, id) => {
+    const handleGetSourceProductOnChange = (item) => {
 
+      const id = (item && item.id) || 0
       // 如果没有选中任何有id的选项(比如选了“无”)
       if(id <= 0) {return}
 
@@ -121,7 +122,7 @@ export const withProduct = () => {
 
                   // note: 如果没有meta产品(操作者从产品那里让它下架了)，允许重新选择一个
                   disabled={isFromEdit && defaultValues && Number.isInteger(defaultValues.product_id)}
-                  onChange={handleGetSourceProductOnChange}
+                  onSelect={handleGetSourceProductOnChange}
                 />
               </Grid>
               <Grid item lg={3} md={4} xs={12}>
@@ -134,10 +135,10 @@ export const withProduct = () => {
                 <Inputs.MyInput inputid="code" disabled={true} />
               </Grid>
               <Grid item lg={2} md={4} xs={12}>
-                <Inputs.MyInput inputid="sellPrice" disabled={true} />
+                <Inputs.MyInput inputid="price" disabled={disabled} />
               </Grid>
               <Grid item lg={2} md={4} xs={12}>
-                <Inputs.MyComboboxCurrency inputid="currency_id" disabled={true} />
+                <Inputs.MyComboboxCurrency inputid="currency_id" disabled={disabled} />
               </Grid>
 
               <Grid item lg={6} md={6} xs={12}>
@@ -162,6 +163,7 @@ export const withProduct = () => {
                   <Grid item lg={4} xs={12}>
                     <Inputs.MyComboboxFK
                       inputid="updateUser_id"
+                      stateName="updateUserDropdown"
                       optionLabel="userName"
                       tableName="user"
                       disabled={true}
@@ -217,7 +219,7 @@ export const withProduct = () => {
                   onChange={handleTabChange}
                   aria-label="tabs"
                 >
-                  <Tab label="基本属性" />
+                  <Tab label="商品属性" />
                   <Tab label="商品组合" disabled={!isFromEdit} />
                 </Tabs>
 

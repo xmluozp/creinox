@@ -16,9 +16,11 @@ import {
   withDatatableStore
 } from "components";
 
+import { withSimpleTable } from "components/SimpleTable";
+
 // ******************************************************************* page setting
 import { buycontractActions as dataActions } from "_actions";
-import { buycontractModel as dataModel } from "_dataModel";
+import { buycontractModel as dataModel, financialtransactionModel} from "_dataModel";
 
 // ******************************************************************* page setting
 
@@ -26,7 +28,8 @@ export const withBuycontractList = (
   EDITURL = "/contract/buycontracts",
   CREATEURL = "/contract/buycontracts/add"
 ) => {
-  
+  const CREATEURL_TRANSACTION = "/financial/contractTransactions/add"
+
   // inject data
   const MyTable = withDatatableStore(
     CreinoxTable, // tablecomponent
@@ -64,16 +67,60 @@ export const withBuycontractList = (
         inputid="seller_company_id"
         tableName="company"
         actionName="get_disposable_dropdown"
-        preConditions={{ }}
+        preConditions={{companyType: enums.companyType.all}}
       />
     <Inputs.MyComboboxFK
       inputid="follower_id"
+      stateName="followerDropdown"
       optionLabel="userName"
       tableName="user"/>   
     </>
   );
 
+  const renderAmountOut = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
 
+  const renderAmountIn = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
+
+  // >>> 下属付款记录 ---------------------------------------
+  const headCells_financialTransactions = [
+    { name: "id", disablePadding: true, className: "ml-2", width:80 },
+    { name: "transdateAt", width: 170},
+    { name: "amount_in", width:140, onWrap: renderAmountIn},
+    { name: "amount_out", width:140, onWrap: renderAmountOut},
+    { name: "financialAccount_id", width:200 },
+    { name: "bankaccountName", width:200 },
+    { name: "bankaccountNo", width:220 },
+    { name: "tt_transUse"},
+  ];
+
+  const financialTransaction_list = withSimpleTable({
+    headCells: headCells_financialTransactions,
+    dataModel: financialtransactionModel
+  });
+
+
+  const collapsePanel = [
+    {
+      title: "转账记录",
+      name: "financialTransaction_list",
+      RenderComponent: financialTransaction_list,
+      props: {
+        tableTitle: "转账记录",
+        style: {
+          backgroundColor: "#e6eff6",
+          padding: 10,
+        },
+      },
+    }
+  ]
 
   // **************************************************************************************************
   // **************************************************************************************************
@@ -95,6 +142,12 @@ export const withBuycontractList = (
 
     // ============================================= Table Settings
     const rowButtons = [
+      {
+        label: "收付款",
+        color: "success",
+        url: row => CREATEURL_TRANSACTION + "/" + row.order_form_id,
+        icon: ICONS.MONEY("mr-1"),
+      },
       {
         label: "详情",
         color: "primary",
@@ -123,6 +176,7 @@ export const withBuycontractList = (
         dataModel={dataModel}
         rowButtons={rowButtons}
         toolbarButtons={toolbarButtons}
+        collapsePanel={collapsePanel}
         searchBar={searchBar}
 
       />

@@ -26,7 +26,7 @@ function get_dropdown(pagination, searchTerms = {}) {
 
   console.log("get_all service:", searchTerms);
 
-  const queryString = h_queryString({perPage:-1}, searchTerms, TABLENAME);
+  const queryString = h_queryString({perPage:-1}, searchTerms, TABLENAME, false);
   return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 }
 

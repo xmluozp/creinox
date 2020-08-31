@@ -23,7 +23,7 @@ function get_dropdown(pagination, searchTerms = {}) {
 
   console.log("get_all service:", pagination);
 
-  const queryString = h_queryString(pagination, {}, TABLENAME);
+  const queryString = h_queryString(pagination, {}, TABLENAME, false);
 
   // pagination也可以在这里拆开了放进uri
 

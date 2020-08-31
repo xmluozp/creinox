@@ -40,10 +40,22 @@ export const withTablePage = () => {
     }
   };
 
+  const renderAmountOut = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
+
+  const renderAmountIn = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
+  
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
-    { name: "amount_in" },
-    { name: "amount_out" },
+    { name: "amount_in", onWrap: renderAmountIn },
+    { name: "amount_out", onWrap: renderAmountOut },
     { name: "currency_id" },
     { name: "transdateAt" },
     { name: "balance" },

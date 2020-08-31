@@ -51,7 +51,8 @@ function get_dropdown(pagination, searchTerms, isIncludeMeta) {
   const queryString = h_queryString(
     pagination,
     { ...searchTerms, isIncludeMeta: isIncludeMeta },
-    TABLENAME
+    TABLENAME,
+    false
   );
 
   return fetch(`${URL_DROP_DOWN}?${queryString}`, requestOptions).then(
@@ -75,7 +76,8 @@ function get_dropdown_fromSellcontract(pagination, searchTerms) {
   const queryString = h_queryString(
     pagination,
     { ...searchTerms},
-    TABLENAME
+    TABLENAME,
+    false
   );
 
   return fetch(`${URL_DROP_DOWN_SELLCONTRACT}?${queryString}`, requestOptions).then(
@@ -89,19 +91,21 @@ function get_dropdown_fromSellsubitem(preConditions) {
     method: "GET",
     headers: authHeader()
   };
-  console.log(
-    "service get dropdown:",
-    preConditions,
-  );
-
+  
   // 限制不让他传别的东西过来
   const queryString = h_queryString(
     {},
-    {sell_subitem_id: preConditions.sell_subitem_id},
-    TABLENAME
+    preConditions,
+    TABLENAME,
+    false
   );
 
-  return fetch(`${URL_DROP_DOWN_SELLSUBITEM}?${queryString}`, requestOptions).then(
+  // 如果直接搜id就从产品列表里搜，否则从商品关联里搜
+  return fetch(`${
+    preConditions.id ? 
+    URL :
+    URL_DROP_DOWN_SELLSUBITEM
+  }?${queryString}`, requestOptions).then(
     handleResponse
   );
 }
@@ -173,7 +177,7 @@ function get_bySearch_component(pagination, searchTerms) {
   };
 
   console.log("search service:", searchTerms);
-  const queryString = h_queryString(pagination, searchTerms, TABLENAME);
+  const queryString = h_queryString(pagination, searchTerms, TABLENAME, false);
   console.log("search service:", queryString);
 
   //  有searchTerms.parent_id和有child_id两种

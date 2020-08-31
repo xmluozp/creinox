@@ -19,6 +19,8 @@ export function h_initializeDropDownTables() {
     // commonitemActions.get_dropdown({commonType:enums.commonType.unitType})(store.dispatch);
     // commonitemActions.get_dropdown({commonType:enums.commonType.paymentType})(store.dispatch);
     // commonitemActions.get_dropdown({commonType:enums.commonType.commission})(store.dispatch);
+    // commonitemActions.get_dropdown({commonType:enums.commonType.exporessCompany})(store.dispatch);
+
 }
 
 // 上面那个方法单独运行用

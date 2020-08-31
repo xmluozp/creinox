@@ -59,7 +59,10 @@ export const withProduct = () => {
     };
 
     // 填入复制的产品
-    const handleGetSourceProductOnChange = (e, element, id) => {
+    const handleGetSourceProductOnChange = (item) => {
+
+      const id = (item && item.id) || 0
+
       if (id > 0) {
         // fetch disposable data
         h_fkFetch("product", [id], "get_disposable_byId")
@@ -71,6 +74,7 @@ export const withProduct = () => {
               delete response["updateAt"];
               delete response["createAt"];
               delete response["updateUser_id"];
+              delete response["isCreateCommodity"];
 
               productInjector(response);
             }
@@ -116,7 +120,7 @@ export const withProduct = () => {
     };
 
     // =============== 编辑页加载的值 ====================================={
-    const defaultValues = isFromEdit && dataById && dataById.row;
+    const defaultValues = isFromEdit ? dataById && dataById.row : null;
     // const image_id =
     //   dataById && dataById.row && dataById.row.image_id; // 删除用
 
@@ -146,6 +150,7 @@ export const withProduct = () => {
     const basicProperties = (
       <CreinoxForm
         defaultValues={defaultValues}
+        preConditions={{isCreateCommodity: true}}
         errors={errorById}
         isFromEdit={isFromEdit}
         actionSubmit={handleOnSubmit}
@@ -162,7 +167,7 @@ export const withProduct = () => {
                   label="参考产品"
                   actionName="get_disposable_dropdown"
                   disabled={disabled}
-                  onChange={handleGetSourceProductOnChange}
+                  onSelect={handleGetSourceProductOnChange}
                 />
               </Grid>
               <Grid item lg={4} md={4} xs={12}>
@@ -238,6 +243,7 @@ export const withProduct = () => {
               <Grid item lg={6} xs={12}>
                 <Inputs.MyComboboxFK
                   inputid="retriever_id"
+                  stateName="retrieverDropdown"
                   optionLabel="userName"
                   tableName="user"
                   disabled={disabled}
@@ -257,6 +263,7 @@ export const withProduct = () => {
                   <Grid item lg={4} xs={12}>
                     <Inputs.MyComboboxFK
                       inputid="updateUser_id"
+                      stateName="updateUserDropdown"
                       optionLabel="userName"
                       tableName="user"
                       disabled={true}

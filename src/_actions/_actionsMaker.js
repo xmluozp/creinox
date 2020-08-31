@@ -23,12 +23,10 @@ export const _am = (CONST, service) => {
         response => {   
           dispatch(loaded);
           dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
-          console.log("getDropdown action", response);
           return response;
         },
         error => {
           dispatch(loadedFailure);
-
           const errorInfo =error && error.info ? error.info : ""
           dispatch(failure(errorInfo.toString()));
         }

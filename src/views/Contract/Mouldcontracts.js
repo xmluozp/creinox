@@ -16,18 +16,20 @@ import {
   withDatatableStore,
 } from "components";
 
+import { withSimpleTable } from "components/SimpleTable";
 import { ImageThumb } from "components/ImageThumb";
 
 // ******************************************************************* page setting
 import { mouldcontractActions as dataActions } from "_actions";
-import { mouldcontractModel as dataModel } from "_dataModel";
+import { mouldcontractModel as dataModel, financialtransactionModel} from "_dataModel";
 
 // ******************************************************************* page setting
 
-export const withSellcontractList = (
+export const withMouldcontractList = (
   EDITURL = "/contract/mouldcontracts",
   CREATEURL = "/contract/mouldcontracts/add"
 ) => {
+  const CREATEURL_TRANSACTION = "/financial/contractTransactions/add"
   // inject data
   const MyTable = withDatatableStore(
     CreinoxTable, // tablecomponent
@@ -43,8 +45,8 @@ export const withSellcontractList = (
 
   // =============================== render cell
   const headCells = [
-    { name: "id", disablePadding: true, className: "ml-2" },
-    { name: "code" },
+    { name: "id", disablePadding: true, className: "ml-2",  width: 50},
+    { name: "code"},
     { name: "view_productCode" },
     { name: "view_image_thumbnail", onShow: renderOnShowThumbnail },
     { name: "activeAt" },
@@ -52,13 +54,13 @@ export const withSellcontractList = (
     { name: "view_seller_company_name" },
     { name: "prepayAt" },
     { name: "totalPrice" },
-    { name: "paidPrice" },
+    { name: "paidPrice"},
     {
       name: "isDone",
       align: "center",
       label: "完成",
       className: { true: "text-success" },
-      lookup: { true: ICONS.TRUE("mr-4") },
+      lookup: { true: ICONS.TRUE("mr-4") }
     },
     { name: "view_follower" },
   ];
@@ -83,11 +85,56 @@ export const withSellcontractList = (
       />
       <Inputs.MyComboboxFK
         inputid="follower_id"
+        stateName="followerDropdown"
         optionLabel="userName"
         tableName="user"
       />
     </>
   );
+
+  const renderAmountOut = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
+
+  const renderAmountIn = (prev, curr) => {
+    const num1 = parseFloat(prev) || 0
+    const num2 = parseFloat(curr) || 0
+    return (num1 + num2).toFixed(2)
+  }
+
+  // >>> 下属付款记录 ---------------------------------------
+  const headCells_financialTransactions = [
+    { name: "id", disablePadding: true, className: "ml-2", width:80 },
+    { name: "transdateAt", width: 170},
+    { name: "amount_in", width:140, onWrap: renderAmountIn},
+    { name: "amount_out", width:140, onWrap: renderAmountOut  },
+    { name: "financialAccount_id", width:200 },
+    { name: "bankaccountName", width:200 },
+    { name: "bankaccountNo", width:220 },
+    { name: "tt_transUse"},
+  ];
+
+  const financialTransaction_list = withSimpleTable({
+    headCells: headCells_financialTransactions,
+    dataModel: financialtransactionModel
+  });
+
+  const collapsePanel = [
+    {
+      title: "转账记录",
+      name: "financialTransaction_list",
+      RenderComponent: financialTransaction_list,
+      props: {
+        tableTitle: "转账记录",
+        style: {
+          backgroundColor: "#e6eff6",
+          padding: 10,
+        },
+      },
+    }
+  ]
 
   // **************************************************************************************************
   // **************************************************************************************************
@@ -109,6 +156,12 @@ export const withSellcontractList = (
 
     // ============================================= Table Settings
     const rowButtons = [
+      {
+        label: "收付款",
+        color: "success",
+        url: row => CREATEURL_TRANSACTION + "/" + row.order_form_id,
+        icon: ICONS.MONEY("mr-1"),
+      },
       {
         label: "详情",
         color: "primary",
@@ -137,6 +190,7 @@ export const withSellcontractList = (
         dataModel={dataModel}
         rowButtons={rowButtons}
         toolbarButtons={toolbarButtons}
+        collapsePanel={collapsePanel}
         searchBar={searchBar}
       />
     );
@@ -152,4 +206,4 @@ export const withSellcontractList = (
   return connect(null, actionCreators)(CurrentPage);
 };
 
-export default withSellcontractList();
+export default withMouldcontractList();

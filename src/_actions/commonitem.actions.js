@@ -21,12 +21,11 @@ const {
 } = _am(CONST, service);
 
 // FETCH  ---------------------------------------------
-function get_dropdown( pagination, preConditions ) {
-
-  const {commonType} = preConditions
+function get_dropdown(pagination, preConditions) {
+  const { commonType } = preConditions;
   return (dispatch) => {
     dispatch(loading);
-    return service.get_dropdown(commonType).then(
+    return service.get_dropdown(commonType, preConditions).then(
       (response) => {
         const payload = {};
 
@@ -58,6 +57,9 @@ function get_dropdown( pagination, preConditions ) {
             break;
           case enums.commonType.commission:
             payload.dropdown_commission = response;
+            break;
+          case enums.commonType.expressCompany:
+            payload.dropdown_expressCompany = response;
             break;
           default:
             break;

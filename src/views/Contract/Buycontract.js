@@ -49,6 +49,9 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
     // ******************************** injector: 用来读取最近一条合同
     const [injector, setInjector] = useState(null);
 
+    // 响应listener监控，用来搜索对应公司下的报价
+    const [sellCompanyId, setSellCompanyId] = useState(0)
+
     useEffect(() => {
       // if there is ID, fetch data
       if (id) {
@@ -163,10 +166,11 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                   aria-label="tabs"
                 >
                   <Tab label="基本信息" />
-                  <Tab label="对应商品" disabled={!isFromEdit} />
+                  <Tab label="采购产品" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}
+                {/* listener: subitem里取公司报价用 */}
                 <TabPanel value={tabSelect} index={0}>
                   <CreinoxForm
                     defaultValues={defaultData}
@@ -174,7 +178,8 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                     isFromEdit={isFromEdit}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
-                    onGetInjector={(f) => setInjector(f)}
+                    onGetInjector={f => setInjector(f)}
+                    listener = {{seller_company_id: v => setSellCompanyId(v)}}
                   >
                     <Grid container spacing={2}>
                       {formInputs(
@@ -183,7 +188,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                         parm_sc_id,
                         handleOnSelect_sc,
                         handleOnGetDefaultCode,
-                        handleOnGetInvoiceCode
+                        handleOnGetInvoiceCode,
                       )}
                     </Grid>
                     <Grid container spacing={2}>
@@ -228,6 +233,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                     onUpdate={() => {
                       onGetById(id);
                     }}
+                    sellCompanyId = {sellCompanyId}
                     preConditions={{
                       buy_contract_id: id,
                       sell_contract_id: read_sc_id,
@@ -258,6 +264,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         <Grid item lg={4} md={4} xs={12}>
           <Inputs.MyComboboxFK
             inputid="follower_id"
+            stateName="followerDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={disabled}
@@ -269,8 +276,9 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
             disabled={disabled}
             inputid="buyer_company_id"
             tableName="company"
+            stateName="creinoxCompanyDropdown"
             actionName="get_disposable_dropdown"
-            preConditions={{ id: "1046,1043" }}
+            preConditions={{ id: "1046,1043" ,companyType: enums.companyType.internal}}
           />
         </Grid>
 
@@ -278,12 +286,11 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
           <Inputs.MyComboboxAsyncFK
             disabled={disabled}
             inputid="seller_company_id"
+            stateName="allCompanyDropdown"
             tableName="company"
             actionName="get_disposable_dropdown"
             preConditions={
-              {
-                //companyType: enums.companyType.factory
-              }
+              {companyType: enums.companyType.all}
             }
           />
         </Grid>
@@ -316,20 +323,20 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
           />
         </Grid>
 
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyDatePicker inputid="activeAt" disabled={disabled} />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyRegionPicker inputid="region_id" disabled={disabled} />
         </Grid>
-        <Grid item lg={2} md={2} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyComboboxPaymentType
             inputid="paymentType_id"
             disabled={disabled}
           />
         </Grid>
 
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid item lg={3} md={3} xs={12}>
           <Inputs.MyDatePicker inputid="deliverAt" disabled={disabled} />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
@@ -382,6 +389,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
+            stateName="updateUserDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={true}

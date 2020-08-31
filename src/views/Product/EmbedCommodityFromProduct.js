@@ -42,7 +42,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     onDisassemble,
     onDelete,
     onGetBySearch,
-    pageName = "包含此产品的商品/组合商品",
+    pageName = "关联的商品/商品组合",
     onPostCreate,
     onPutUpdate,
     errorById,
@@ -68,7 +68,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     // ============================================= handles
     const handleOnDisassembleMeta = () => {
       h_confirm(
-        "是否取消商品化？(如果该商品是组合商品，所有下属子产品都会解除绑定; 不会影响到部件的绑定状态)"
+        "是否设为非商品？"
       ).then(resolve => {
         if (resolve) onDelete(commodity_id);
       }).then(()=>{
@@ -77,7 +77,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     };
 
     const handleOnDisassemble = () => {
-      h_confirm("是否解除单项绑定？").then(resolve => {
+      h_confirm("是否解除绑定？").then(resolve => {
         if (resolve) onDisassemble({}, { commodity_id, product_id });
       });
     };
@@ -109,23 +109,28 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     const handleOnSubmit = values => {
         onPutUpdate(values);
     };
+    const renderOnShowIsMeta = (content, row) => {
 
-    // const renderOnShowIsMeta = (content, row) => {
-    //   return row.product_id === product_id && ICONS.TRUE("mr-4 text-success");
-    // };
+      if(row.product_id === product_id) {
+
+        return <span className = "text-danger">产品本身</span>
+      } else {
+        return <span className = " text-success">附加产品</span>
+      }
+    };
 
     // product_id
     // ============================================= render cell
 
     const headCells = [
       { name: "id", disablePadding: true, className: "ml-2" },
-      // {
-      //   name: "isMeta",
-      //   align: "center",
-      //   label: "主产品",
-      //   onShow: renderOnShowIsMeta,
-      //   disablePadding: true
-      // },
+      {
+        name: "isMeta",
+        align: "center",
+        label: "商品组合",
+        onShow: renderOnShowIsMeta,
+        disablePadding: true, 
+      },
       { name: "code" },
       { name: "name" }
     ];
@@ -147,7 +152,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
         onClick: handleOnDisassemble,
         icon: ICONS.DELETE(),
         onShow: row => {
-          return { disabled: commodity_id === row.product_id }; // 主产品不可解绑。只可以下架
+          return { disabled: product_id === row.product_id }; // 主产品不可解绑。只可以下架
         }
       }
     ];
@@ -174,6 +179,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
                     isFromEdit={true}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
+                    isHideTool={true}
                   >
                     <Grid container spacing={2}>
                       <Grid item lg={4} md={4} xs={12}>
@@ -186,8 +192,8 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
 
                       <Grid item lg={12} md={12} xs={12}>
                         
-                        <Button type="submit" className="mr-2" color="primary">保存商品信息</Button>
-                        <Button onClick={handleOnDisassembleMeta} className="btn-danger">取消商品化</Button>
+                        <Button type="submit" className="mr-2" color="primary">更新商品名称/备注</Button>
+                        <Button onClick={handleOnDisassembleMeta} className="btn-danger">设为非商品（不在销售合同的商品选项出现）</Button>
                       </Grid>
                     </Grid>
                   </CreinoxForm>

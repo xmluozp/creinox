@@ -16,6 +16,7 @@ import Print from './Print'
  * preConditions =  新建时的，前提条件。比如产品类别
  * isFromEdit =     编辑还是新建
  * actionSubmit=    提交。param 是表单的values
+ * isHideTool=      隐藏工具条(复制粘贴打印)
  * } props
  */
 
@@ -35,6 +36,7 @@ export class CreinoxForm extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.onPaste = this.onPaste.bind(this);
     this.onCancel = this.onCancel.bind(this);
+    this.onListen = this.onListen.bind(this);
     // this.onPrint = this.onPrint.bind(this);   
   }
 
@@ -52,12 +54,34 @@ export class CreinoxForm extends React.Component {
   // when change value
   handleChange(e, key, value, ...other) {
     // console.log(key,typeof(value), e.target.value)
+    let columnKey = ""
+    let columnValue = ""
+
     if (key && typeof value !== "undefined") {
       // 防止value本身是个boolean
-      this.setState({ [key]: value });
+      columnKey = key
+      columnValue = value
     } else if (e && e.target && e.target.id) {
-      this.setState({ [e.target.id]: e.target.value });
+      // 如果不属于dataModel的input
+      columnKey = e.target.id
+      columnValue = e.target.value
     }
+
+    if(columnKey) {
+      this.setState({ [columnKey]: columnValue });
+
+      // 如果是listen的key，就触发对应的方法
+      this.onListen(columnKey, columnValue)
+    } 
+  }
+
+  onListen(key, value) {
+    if(
+      this.props.listener && 
+      this.props.listener[key] && 
+      typeof this.props.listener[key] === 'function') {
+        this.props.listener[key](value)
+    } 
   }
 
   //  ***************** 复制粘贴form的内容到localstorage
@@ -130,6 +154,7 @@ export class CreinoxForm extends React.Component {
       ...preConditions,
     });
 
+    // 设置外部injector
     if (typeof onGetInjector === "function") {
       onGetInjector( () => (injectItemFromOutside, callBack=()=> {}) => {
        
@@ -205,6 +230,7 @@ export class CreinoxForm extends React.Component {
     }
   }
 
+  // 详情页读数据用
   readValues() {
     const { defaultValues, dataModel } = this.props;
     if (!this.state.isComponentLoaded) {
@@ -215,6 +241,9 @@ export class CreinoxForm extends React.Component {
         if (this.state.hasOwnProperty(value)) {
           newState[value] = defaultValues[value];
         }
+
+        // 触发linstener
+        this.onListen(value, defaultValues[value])
 
         // 如果是row，顺便记录源id
         if (dataModel && 
@@ -409,26 +438,28 @@ const injectedInputs = ({
   let newProps
   // 判断类型，进行注入
 
+  let onChangeFunc;
+  let onChange
+
+  if(item.props.onChange && typeof(item.props.onChange) === 'function') {
+    onChangeFunc = item.props.onChange
+  } else {
+    onChangeFunc = handleChange
+  }
+
+  // 如果有伴生的onChange，在执行onChange后执行它
+  if(item.props.onChangeSideEffect && typeof(item.props.onChangeSideEffect) ==='function') {
+    onChange = (...params) => {
+      onChangeFunc(...params)
+      item.props.onChangeSideEffect(...params)
+    }
+  } else {
+    // 外部的onChange比默认的优先级更高
+    onChange = onChangeFunc
+  }
+
   // 如果id 和model对得上号;
   if (dataModel && dataModel.columns[columnId]) {
-
-    let onChangeFunc = item.props.onChange ? item.props.onChange : handleChange;
-    let onChange
-
-    // 如果有伴生的onChange，在执行onChange后执行它
-    if(item.props.onChangeSideEffect && typeof(item.props.onChangeSideEffect) ==='function') {
-      onChange = (...params) => {
-        onChangeFunc(...params)
-        item.props.onChangeSideEffect(...params)
-      }
-    } else {
-
-      // 外部的onChange比默认的优先级更高
-      onChange = onChangeFunc
-    }
-
-
-
     // TODO: 判断component类型。不同类型注入不同的东西
     newProps = {
       id: columnId,

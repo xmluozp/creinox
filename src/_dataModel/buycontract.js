@@ -47,7 +47,8 @@ export const buycontractModel = {
         "follower_id.row":          {label: "跟单员",   type: _DATATYPES.ROW},
         "buyer_company_id.row":     {label: "甲方",   type: _DATATYPES.ROW},
         "seller_company_id.row":     {label: "乙方",   type: _DATATYPES.ROW},
-        
+
+        financialTransaction_list: {label: "收付款",   type: _DATATYPES.ROW},     
     }
 }
 

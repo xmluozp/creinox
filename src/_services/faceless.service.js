@@ -12,7 +12,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
             headers: authHeader()
           };
 
-          const queryString = h_queryString(pagination, searchTerms, tableName);
+          const queryString = h_queryString(pagination, searchTerms, tableName, false);
           console.log("faceless dropdown:", queryString);
           return fetch(`${RESTURL}${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
 

@@ -111,7 +111,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
     }
 
     const handleBuySelect = (item) => {
-      injector(oldValues => {
+      injector(() => {
         if(item && (item.address || item.eaddress)) {
           return {
             buyerAddress: item.eaddress || item.address
@@ -143,7 +143,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                   aria-label="tabs"
                 >
                   <Tab label="基本信息" />
-                  <Tab label="对应商品" disabled={!isFromEdit} />
+                  <Tab label="销售商品" disabled={!isFromEdit} />
                 </Tabs>
 
                 {/* main form */}
@@ -229,6 +229,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyComboboxFK
             inputid="follower_id"
+            stateName="followerDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={disabled}
@@ -242,16 +243,20 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             tableName="company"
             actionName="get_disposable_dropdown"
             onSelect = {handleBuySelect}
+            preConditions={{ companyType: enums.companyType.all }}
           />
         </Grid>
+
+        {/* 客户要求默认限制广州钰诚和景诚 */}
         <Grid item lg={5} md={5} xs={12}>
           <Inputs.MyComboboxFK
             disabled={disabled}
             optionLabel="ename"
             inputid="seller_company_id"
+            stateName="creinoxCompanyDropdown"
             tableName="company"
             actionName="get_disposable_dropdown"
-            preConditions={{ id: "1046,1043" }}
+            preConditions={{ id: "1046,1043", companyType: enums.companyType.internal }}
             onSelect = {handleSellerSelect}
           />
           {/* 这里是特殊的有限下拉选项，选的是内部对外贸易的公司 */}
@@ -308,6 +313,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             inputid="departure_port_id"
             optionLabel="ename"
             tableName="port"
+            stateName = "portDepartureDropdown"
             disabled={disabled}
             preConditions={{ isDeparture: 1 }}
           />
@@ -317,6 +323,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
             inputid="destination_port_id"
             optionLabel="ename"
             tableName="port"
+            stateName = "portDestinationDropdown"
             disabled={disabled}
             preConditions={{ isDestination: 1 }}
           />
@@ -385,6 +392,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         <Grid item lg={6} md={6} xs={12}>
           <Inputs.MyComboboxFK
             inputid="updateUser_id"
+            stateName="updateUserDropdown"
             optionLabel="userName"
             tableName="user"
             disabled={true}

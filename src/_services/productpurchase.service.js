@@ -24,21 +24,6 @@ const URL_BY_HISTORY = RESTURL + `/api/productPurchase_historySearch`;
 const URL_BY_PRODUCT_ID = RESTURL + `/api/productPurchase_byProductId`;
 
 
-// const url = 'http://localhost:3000/api/';
-// function get_dropdown(pagination, searchTerms) {
-
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: authHeader()
-//     };
-
-//     const queryString = h_queryString(pagination, searchTerms, TABLENAME)
-
-//     const url = './dataset/productpurchasedata.json'
-//     return fetch(`${url}?${queryString}`, requestOptions).then(handleResponse);
-
-// }
-
 function get_bySearch(pagination, searchTerms, reNew = false) {
 
     const requestOptions = {
@@ -125,12 +110,15 @@ function get_bySearch_history(pagination, searchTerms) {
       return fetch(`${URL_BY_HISTORY}?${queryString}`, requestOptions).then(handleResponse);
 }
 
-function get_disposable_byProductId(product_id) {
+function get_disposable_byProductId(product_id, company_id) {
 
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
 
-  return fetch(`${URL_BY_PRODUCT_ID}/${product_id}`, requestOptions).then(handleResponse);
+  const _product_id = product_id || 0;
+  const _company_id = company_id || 0;
+
+  return fetch(`${URL_BY_PRODUCT_ID}/${_product_id}/${_company_id}`, requestOptions).then(handleResponse);
 }

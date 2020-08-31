@@ -59,10 +59,10 @@ function get_bySearch_history(pagination, searchTerms = {}) {
 }
 
 // 取根据product id最新的一条。用途：合同录入的时候，选择商品，快捷注入信息
-function get_disposable_byProductId(product_id) {
+function get_disposable_byProductId(product_id, company_id) {
   return dispatch => {
     dispatch(loading);
-    return service.get_disposable_byProductId(product_id).then(
+    return service.get_disposable_byProductId(product_id, company_id).then(
       response => {
         dispatch(loaded);
         let returnValue = {};

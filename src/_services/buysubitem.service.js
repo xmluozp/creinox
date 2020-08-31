@@ -79,6 +79,8 @@ function put_update(item) {
     headers: { ...authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify(h_nilFilter_update(item))
   };
+
+  console.log("update: ",item)
   // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }

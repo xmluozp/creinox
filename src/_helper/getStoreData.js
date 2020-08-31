@@ -41,33 +41,43 @@ export async function h_fkPicker(table, id) {
     return _.find(rows, ['id', id]);
 }
 
+// 注意：这个只抓取一次，是一次性的值.
 export async function h_fkFetchOnceAsync(table, params=[], actionName="get_dropdown") {
     
     let rows;
     const dataSource = await h_fkFetch(table, params, actionName);
-    rows = _.get(dataSource, "rows");
 
+    rows = _.get(dataSource, "rows");
     if(!rows){return Promise.reject()}
 
     return rows; 
 }
 
-// 注意：这个只抓取一次，是一次性的值
-export async function h_fkFetchOnce(table = "", stateName = "dropdown", params=[], actionName="get_dropdown") {
+// 注意：这个只抓取一次，但会存起来。第二次直接从第一次抓
+export async function h_fkFetchOnce(table = "cache", stateName = "dropdown", params=[], actionName="get_dropdown") {
 
     let rows;
     const state = store.getState();
+
     const getFromStore = _.get(state, [`${table}Data`, stateName, "rows"]);
 
-    if( getFromStore ) {
+    if( getFromStore && getFromStore.length > 0 ) {
         rows = getFromStore;
     } else {
         const dataSource = await h_fkFetch(table, params, actionName);
         rows = _.get(dataSource, "rows");
 
+        await cacheAction(stateName, rows)(store.dispatch)
         if(!rows){return Promise.reject()}
     }
     return rows; 
+}
+
+// 用来存放各种下拉菜单
+function cacheAction(key, value) {
+    return dispatch => {
+        dispatch({payload: {key, value}, type: "CACHE"});
+    }
 }
 
 export function h_dataPagination(storeName) {
@@ -80,12 +90,13 @@ export function h_dataSearchTerms(storeName) {
     return _.get(state, [`${storeName}Data`, "data", "searchTerms"]);
 }
 
-// 防止搜索结果丢失，需要从store里取旧的数据.
-export function h_queryString(pagination = {}, searchTerm = {}, storeName) {
+
+// 列表页用：防止搜索结果丢失，需要从store里取旧的搜索数据.
+export function h_queryString(pagination = {}, searchTerm = {}, storeName, getFromStore = true) {
 
     // override old data
-    const oldPagination = storeName ? h_dataPagination(storeName) : {};
-    const oldSearchTerms = storeName ? h_dataSearchTerms(storeName) : {};
+    const oldPagination = (getFromStore && storeName) ? h_dataPagination(storeName) : {};
+    const oldSearchTerms = (getFromStore && storeName) ? h_dataSearchTerms(storeName) : {};
 
     const newPagination = {...oldPagination, ...pagination}
     let newSearchTerms = {...oldSearchTerms, ...searchTerm} 
@@ -99,12 +110,14 @@ export function h_queryString(pagination = {}, searchTerm = {}, storeName) {
         if(
             ! (key === "id" && (isNaN(value) ||  parseInt(value) <= 0 )) && // 如果搜索id，特殊对待：输入0就放空(因为number input输入空会自动变成0)
             !isNaN(value) && value !== null) {
-            newSearchTerms[key] = value.toString() // 后台json只认string
-        }
-        
+            newSearchTerms[key] = value.toString().trim() // 后台json只认string
+        }       
     }
-    // console.log("newSearchTerms", newSearchTerms)
 
+    // trim 一遍
+    for (let [key, value] of Object.entries(newSearchTerms)) {
+        newSearchTerms[key] = typeof(value)==='string' ? value.trim() : value
+    }
 
     let searchString; 
     searchString = encodeURIComponent(JSON.stringify(newSearchTerms));

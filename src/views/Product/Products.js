@@ -133,6 +133,7 @@ export const withProductList = (
 
       <Inputs.MyComboboxFK
         inputid="retriever_id"
+        stateName="retrieverDropdown"
         optionLabel="userName"
         tableName="user"
       />

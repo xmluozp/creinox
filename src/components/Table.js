@@ -36,7 +36,7 @@ import { ImageList } from "./ImageList";
 // 所有pagination信息都从data来而不是本地
 export const CreinoxTable = ({
   toggle = false,
-  headCells,
+  headCells, // name, disablePadding, className, width, onShow, lookup, onWrap
   onRowDbClick,
   onRowImageClick,
   searchBar,
@@ -119,6 +119,7 @@ export const CreinoxTable = ({
 
   // table的唯一标识。用来在返回的时候，从storage里存储和读取搜索结果的历史记录用
   const getTableUniqueCode = () => {
+
     return h_getTableUniqueCode(dataModel.dataStore, tableTitle)
   }  
 
@@ -134,7 +135,9 @@ export const CreinoxTable = ({
     // h_setHistoryQuery(getTableUniqueCode(), {pagination: newPagination, searchTerms: { ...preConditions, ...newSearchTerms }})
 
     // 20200728 preConditions让给外部操控。外部换了preCondition这里就应该是新的
-    h_setHistoryQuery(getTableUniqueCode(), {pagination: newPagination, searchTerms: { ...newSearchTerms, ...preConditions }})
+    h_setHistoryQuery(
+      getTableUniqueCode(), 
+      {pagination: newPagination, searchTerms: { ...newSearchTerms, ...preConditions }})
   };
 
   // 进入页面时更新data (跳转触发)
@@ -143,7 +146,6 @@ export const CreinoxTable = ({
  
       let p, s
       const query = h_getHistoryQuery(getTableUniqueCode())
-
       // 如果是从浏览器返回，就读取历史记录的pagination
       if(props.history && props.history.action === "POP" && query) {
         p = query.pagination;
@@ -171,7 +173,12 @@ export const CreinoxTable = ({
   // 从外部强制刷新数据用. 页码设回0, 返回用的翻页记录清空.
   React.useEffect(() => {
     setPage(0)
-    h_removeHistoryQuery(getTableUniqueCode())
+
+    // 如果是页面返回，保留翻页
+    // 200822: 会导致一返回记录也清空。如果加了判断导致翻页无效
+    // if(!(props.history && props.history.action === "POP")) {
+    //   h_removeHistoryQuery(getTableUniqueCode())
+    // }    
     p_fetchData();
   }, [toggle]);
 
@@ -380,10 +387,11 @@ export const CreinoxTable = ({
               // 取出预处理后的cell:{cellProps, columnContent}
               const columnObj =
                 listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
-              if (!columnObj) return; // 如果取不到就先不取
+              // if (!columnObj) return; // 如果取不到就先不取
 
-              const columnContent = columnObj.columnContent;
-              const cellProps = columnObj.cellProps;
+              const columnContent = columnObj && columnObj.columnContent || "";
+              const cellProps = columnObj && columnObj.cellProps || {};
+
 
               // 显示tip必须要这段
               const SolveRef = React.forwardRef((props, ref) => (
@@ -402,8 +410,8 @@ export const CreinoxTable = ({
             })
           }
           {
-            // 放操作按钮的格子
-            rowButtons && rowButtons.length > 0 ? (
+            // 放操作按钮的格子 (如果有行没id，说明是最下面的统计行。需要填上空列)
+            (rowId <= 0) ? <TableCell/> : (rowButtons && rowButtons.length > 0) ? (
               <TableCell
                 align="right"
                 style={{ minWidth: 80 * rowButtons.length }}
@@ -508,6 +516,11 @@ export const CreinoxTable = ({
         {dataRows.map((row, rowIndex) => (
           <CreinoxTableRow row={row} rowIndex={rowIndex} key={row.id} />
         ))}
+
+        {dataRows && listOnShow && (dataRows.length === listOnShow.length - 1) ? 
+          <CreinoxTableRow row={listOnShow[listOnShow.length - 1]} rowIndex={listOnShow.length - 1} key={listOnShow[listOnShow.length - 1].id} /> : null
+        }
+
         {emptyRows > 0 && ( // 补行
           <TableRow style={{ height: 33 * emptyRows }}>
             <TableCell colSpan={colSpan} />
@@ -644,11 +657,19 @@ export const ActionButton = ({
 // render数据预处理函数
 export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
   const listOnShowTemp = [];
+
+  const wrapUpRow = {}
+  let isWrapUp = false;
+
   dataRows.map((row) => {
     const rowObj = {};
     headCells.map((column) => {
       let columnContent;
       const columnName = column.name;
+
+      // 最后统计用
+      const columnOnWrap = column.onWrap;
+
       let originalContent = row[columnName];
 
       //  ==================================================================== content
@@ -747,15 +768,32 @@ export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
       };
 
       rowObj[column.name] = {
-        cellProps: cellProps,
+        cellProps,
         columnContent: columnContent,
       };
+
+      // 
+      if(columnOnWrap && typeof(columnOnWrap) ==='function') {
+        isWrapUp = true
+
+        const lastColumnContent = wrapUpRow[column.name] &&  wrapUpRow[column.name].columnContent
+        wrapUpRow[column.name] = {
+          cellProps,
+          columnContent: columnOnWrap(columnContent, lastColumnContent),
+        }
+      }
 
       return null;
     });
     listOnShowTemp.push(rowObj);
     return null;
   });
+
+  // 最后一列塞入
+  if(isWrapUp) {
+    wrapUpRow.id = -1
+    listOnShowTemp.push(wrapUpRow);
+  }
 
   return listOnShowTemp;
 };

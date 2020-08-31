@@ -59,6 +59,7 @@ export const withTablePage = () => {
     <>
       <Inputs.MyComboboxFK
         inputid="financialAccount_id"
+        stateName="financialAccountDropdown"
         optionLabel="name"
         tableName="financialaccount"
       />

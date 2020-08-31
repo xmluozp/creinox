@@ -89,6 +89,7 @@ const CurrentPage = ({
                   <Grid item lg={4} xs={12}>
                     <Inputs.MyComboboxFK
                       inputid="role_id"
+                      stateName="roleDropdown"
                       optionLabel="name"
                       tableName="role"
                       disabled={disabled}
