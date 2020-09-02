@@ -10,6 +10,7 @@ export const AUTH = {
 }
 
 export const USER = constMaker("USER")
+export const USERLOG = constMaker("USERLOG")
 export const PORT = constMaker("PORT")
 
 export const ROLE = constMaker("ROLE")
@@ -45,6 +46,7 @@ export const FINANCIALLEDGER = constMaker("FINANCIALLEDGER")
 export const FINANCIALTRANSACTION = constMaker("FINANCIALTRANSACTION")
 export const FINANCIALVOUCHER = constMaker("FINANCIALVOUCHER")
 
+export const PAYMENTREQUEST = constMaker("PAYMENTREQUEST")
 //================================================= contract
 export const SELLCONTRACT = constMaker("SELLCONTRACT")
 export const SELLSUBITEM = constMaker("SELLSUBITEM")
@@ -54,6 +56,7 @@ export const BUYSUBITEM = constMaker("BUYSUBITEM")
 
 export const MOULDCONTRACT = constMaker("MOULDCONTRACT")
 
+export const EXPRESSORDER = constMaker("EXPRESSORDER")
 //================================================= product
 export const PRODUCT = constMaker("PRODUCT")
 export const CATEGORY = constMaker("CATEGORY")

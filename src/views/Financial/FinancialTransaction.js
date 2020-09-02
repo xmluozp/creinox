@@ -230,7 +230,7 @@ const CurrentPage = ({
   const handleChangeBank = (selectData) => {
     if (selectData && selectData.id) {
       injector({
-        bankaccountName: selectData.accountName,
+        bankaccountName: selectData.bankName,
         bankaccountNo: selectData.accountNo,
       });
     }

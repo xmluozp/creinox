@@ -17,6 +17,7 @@ import Print from './Print'
  * isFromEdit =     编辑还是新建
  * actionSubmit=    提交。param 是表单的values
  * isHideTool=      隐藏工具条(复制粘贴打印)
+ * listener =       监听值 {key : (value, this.state)=>{//execute}}
  * } props
  */
 
@@ -80,7 +81,7 @@ export class CreinoxForm extends React.Component {
       this.props.listener && 
       this.props.listener[key] && 
       typeof this.props.listener[key] === 'function') {
-        this.props.listener[key](value)
+        this.props.listener[key](value, this.state)
     } 
   }
 

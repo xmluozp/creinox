@@ -1,4 +1,5 @@
 export * from './user.service';
+export * from './userlog.service';
 export * from './role.service';
 export * from './print.service';
 
@@ -13,6 +14,7 @@ export * from './sellsubitem.service';
 export * from './buycontract.service';
 export * from './buysubitem.service';
 export * from './mouldcontract.service';
+export * from './expressorder.service'
 
 export * from './company.service';
 export * from './region.service';
@@ -22,6 +24,7 @@ export * from './financialaccount.service'
 export * from './financialledger.service'
 export * from './financialtransaction.service'
 export * from './financialvoucher.service'
+export * from './paymentrequest.service'
 
 export * from './product.service';
 export * from './category.service';

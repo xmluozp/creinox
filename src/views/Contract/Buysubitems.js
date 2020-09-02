@@ -84,8 +84,6 @@ const FormInputs = ({
     return grossWeight * amount || 0;
   };
 
-
-
   useEffect(() => {
 
     // 如果是新建，或者是从详情页进来，已经有订单号了，就从订单取产品

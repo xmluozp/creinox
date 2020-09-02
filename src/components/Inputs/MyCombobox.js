@@ -261,7 +261,6 @@ export const MyComboboxAsyncFK = React.memo((props) => {
   // 第一次加载，根据 value 为id读出来一条记录
   useEffect(() => {
     loadData();
-
     return () => {
       setoptions([]);
     };
@@ -270,8 +269,11 @@ export const MyComboboxAsyncFK = React.memo((props) => {
   const loadData = () => {
     if (props.value) {
       let isSubscribed = true;
+
       // 这里搜索不应该搜索名字
       delete preConditions.name;
+
+
 
       // inputValue这里是keyword。根据id搜索的话不需要关键字
       h_fkFetchOnceAsync(tableName, ["", { id: props.value }], actionName)
@@ -317,7 +319,7 @@ export const MyComboboxAsyncFK = React.memo((props) => {
       onKeyDown={handleFetchData}
       inputRef={inputRef}
       hasDefault={!!props.value}
-      label={`${props.label} [回车搜索关键词]`}
+      label={<>{props.label} [回车搜索关键词]</>}
     />
   );
 });

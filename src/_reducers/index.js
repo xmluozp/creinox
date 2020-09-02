@@ -53,6 +53,7 @@ export default combineReducers({
   // 角色
   roleData: role,
   userData: user,
+  userlogData: reducerMaker(null, "USERLOG"),
 
   // 通用
   commonitemData: commonitem,
@@ -65,8 +66,9 @@ export default combineReducers({
 
   buycontractData: reducerMaker(null, "BUYCONTRACT"),
   buysubitemData: reducerMaker(null, "BUYSUBITEM"),
-  
   mouldcontractData: reducerMaker(null, "MOULDCONTRACT"),
+  expressorderData: reducerMaker(null, "EXPRESSORDER"),
+
 
   companyData: company,
   regionData: region,
@@ -76,6 +78,7 @@ export default combineReducers({
   financialledgerData: financialledger,
   financialtransactionData: reducerMaker(null, "FINANCIALTRANSACTION"),
   financialvoucherData: reducerMaker(null, "FINANCIALVOUCHER"),
+  paymentrequestData: reducerMaker(null, "PAYMENTREQUEST"),
 
 
 

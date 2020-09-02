@@ -20,7 +20,9 @@ export const allAuthList = [
     "buycontract",
     "mouldcontract",
     "financial",
-    "financial/app"
+    "paymentRequest",
+    "expressOrder",
+    "userLog"
   ];
     
   export const allAuthListLabel = [
@@ -44,8 +46,10 @@ export const allAuthList = [
     "销售合同",
     "采购合同",
     "产品开发合同",
-    "财务管理",
-    "申请/财务类"
+    "财务管理",  
+    "付款申请",
+    "快递单",
+    "系统用户操作日志"
   ];
   
   // 根据这个列表生成object用于下拉选项

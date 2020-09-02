@@ -167,6 +167,8 @@ function put_update(item) {
     body: JSON.stringify(h_nilFilter_update(item))
   };
 
+  console.log("user update,", item)
+
   return fetch(`${URL}`, requestOptions).then(handleResponse);
 }
 

@@ -238,7 +238,6 @@ const MyFinancialLedgerPickerWrapper = (props) => {
       const nameArr = node.ledgerName.split('/')
       const cate = nameArr.shift()
 
-      console.log(cate)
       const newLedgerName = `[${cate}] ` + (nameArr ? nameArr.join('/') : "")
 
       return newLedgerName

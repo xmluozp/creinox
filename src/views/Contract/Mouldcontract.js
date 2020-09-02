@@ -315,7 +315,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
 
         {/* 客户要求默认限制广州钰诚 */}
         <Grid item lg={6} md={6} xs={12}>
-          <Inputs.MyComboboxAsyncFK
+          <Inputs.MyComboboxFK
             disabled={disabled}
             inputid="buyer_company_id"
             tableName="company"

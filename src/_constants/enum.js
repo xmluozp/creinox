@@ -7,6 +7,10 @@ export const enumsLabel = {
     commonType:["包装类别","抛光","材质","计量单位","运输方式","价格条款","币种", "付款方式", "佣金","快递公司"],
     accountType: ["", "海外账户", "本地账户" , "现金账户"],
     contractType: ["", "销售合同", "采购合同", "产品开发合同"],
+    direction: ["寄件", "收件"],  
+    expressType: ["文件", "包裹"],
+    requestType: ["合同付款", "业务付款"],
+    status: ["提交", "通过", "拒绝"]
 }
 
 
@@ -28,5 +32,7 @@ export const  enums = {
         PayablePayDebit:     8,
         PayablePayCredit:    10,
         ReceivablePayDebit:  10,
-        ReceivablePayCredit: 7}
+        ReceivablePayCredit: 7},
+        direction: {send:0, receive:1},
+    expressType: {document:0, package: 1},
 }

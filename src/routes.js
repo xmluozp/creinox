@@ -8,6 +8,8 @@ const Test = React.lazy(()=>import("./views/Test/TestPage"));
 //================ user
 const Users = React.lazy(() => import("./views/Users/Users"));
 const User = React.lazy(() => import("./views/Users/User"));
+const UserLogs = React.lazy(() => import("./views/Users/UserLogs"));
+const UserLog = React.lazy(() => import("./views/Users/UserLog"));
 const Roles = React.lazy(() => import("./views/Users/Roles"));
 const Role = React.lazy(() => import("./views/Users/Role"));
 const Commonitems = React.lazy(() => import("./views/Setting/Commonitems"));
@@ -57,6 +59,12 @@ const FinancialTransaction = React.lazy(() => import("./views/Financial/Financia
 
 const FinancialVouchers = React.lazy(() => import("./views/Financial/FinancialVouchers"));
 const FinancialVoucher = React.lazy(() => import("./views/Financial/FinancialVoucher"));
+
+//================ daily business
+const ExpressOrder = React.lazy(() => import("./views/DailyBusinesses/ExpressOrder"));
+const ExpressOrders = React.lazy(() => import("./views/DailyBusinesses/ExpressOrders"));
+const PaymentRequest = React.lazy(() => import("./views/DailyBusinesses/PaymentRequest"));
+const PaymentRequests = React.lazy(() => import("./views/DailyBusinesses/PaymentRequests"));
 
 
 //================ company types
@@ -211,7 +219,28 @@ const routes = [
     authTag: "user"
   },
 
-
+  // 用户日志
+  {
+    path: "/users/userLogs",
+    exact: true,
+    name: "操作日志 (功能未实现)",
+    component: UserLogs,
+    authTag: "userLog"
+  },
+  {
+    path: "/users/userLogs/add",
+    exact: true,
+    name: "新增",
+    component: UserLog,
+    authTag: "userLog"
+  },
+  {
+    path: "/users/userLogs/:id",
+    exact: true,
+    name: "详情",
+    component: UserLog,
+    authTag: "userLog"
+  }, 
 
   //--------------------------------------------- 通用选项表
   {
@@ -452,6 +481,55 @@ const routes = [
     component: FinancialVoucher,
     authTag: "financial"
   },
+
+
+  //--------------------------------------------- 日常事务
+  // 付款申请
+  {
+    path: "/dailyBusinesses/paymentRequests",
+    exact: true,
+    name: "付款通知单",
+    component: PaymentRequests,
+    authTag: "paymentRequest"
+  },
+  {
+    path: "/dailyBusinesses/paymentRequests/add",
+    exact: true,
+    name: "新增",
+    component: PaymentRequest,
+    authTag: "paymentRequest"
+  },
+  {
+    path: "/dailyBusinesses/paymentRequests/:id",
+    exact: true,
+    name: "详情",
+    component: PaymentRequest,
+    authTag: "paymentRequest"
+  }, 
+
+  // 快递单
+  {
+    path: "/dailyBusinesses/expressOrders",
+    exact: true,
+    name: "快递单",
+    component: ExpressOrders,
+    authTag: "expressOrder"
+  },
+  {
+    path: "/dailyBusinesses/expressOrders/add",
+    exact: true,
+    name: "新增",
+    component: ExpressOrder,
+    authTag: "expressOrder"
+  },
+  {
+    path: "/dailyBusinesses/expressOrders/:id",
+    exact: true,
+    name: "详情",
+    component: ExpressOrder,
+    authTag: "expressOrder"
+  }, 
+
 
 
   //--------------------------------------------- 公司
