@@ -28,6 +28,11 @@ export const withTablePage = () => {
   );
 
   // ============================================= render cell
+  const renderStatus = (content, row) => {
+    return <span style={{color: ["blue", "green", "red"][row.status || 0]}}>
+      {content}
+    </span>
+  }
 
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
@@ -39,13 +44,15 @@ export const withTablePage = () => {
     { name: "amount" },
     { name: "currency_id" },
     { name: "paymentType_id" },
+    { name: "status", onShow: renderStatus },
   ];
 
   // ============================================= Search Panel
   // 搜索框
   const searchBar = (
     <>
-      <Inputs.MyInput inputid="amount" />
+      <Inputs.MyInputRange inputid="amount" />
+      <Inputs.MyInput inputid="to_companyName" />
     </>
   );
   // ******************************************************************* page setting

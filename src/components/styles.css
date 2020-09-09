@@ -2,11 +2,11 @@
     color: #FF0000
 } */
 
-input, textarea {
-    color: #004a86 !important;
+input, textarea, select {
+    color: #0037ad !important;
 }
 
-input[disabled], textarea[disabled]{
+input[disabled], textarea[disabled], select[disabled]{
     color: #23282c !important;
 }
 

@@ -106,6 +106,7 @@ export const withProduct = () => {
         defaultValues={defaultValues}
         errors={errorById}
         isFromEdit={isFromEdit}
+        disabled = {disabled}
         actionSubmit={handleOnSubmit}
         dataModel={dataModel}
         onGetInjector={handleGetProductInjector}

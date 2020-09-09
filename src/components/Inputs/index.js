@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import _ from "lodash";
 // import formatCurrency from "format-currency";
 
@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
-  KeyboardDatePicker
+  KeyboardDatePicker,
 } from "@material-ui/pickers";
 
 import InputLabel from "@material-ui/core/InputLabel";
@@ -45,13 +45,17 @@ import {
   MyComboboxCurrency,
   MyComboboxPaymentType,
   MyComboboxCommission,
-  MyComboboxExpressCompany
+  MyComboboxExpressCompany,
 } from "./MyCombobox";
 
 import { MyImage } from "./MyImage";
 import { MyInputTT } from "./MyInputTT";
 
-import { MyRegionPicker, MyCategoryPicker, MyFinancialLedgerPicker } from "./MyPicker";
+import {
+  MyRegionPicker,
+  MyCategoryPicker,
+  MyFinancialLedgerPicker,
+} from "./MyPicker";
 
 // ==================================================================================Date picker
 const MyDatePicker = React.memo(
@@ -61,13 +65,20 @@ const MyDatePicker = React.memo(
     value,
     onChange = () => {},
     fullWidth = true,
-    disabled = false
+    disabled = false,
+    onLoaded = () => {},
   }) => {
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
+
     const handleOnChange = (timeString, timeObject) => {
       if (typeof onChange === "function") {
-
-        const newValue = Object.prototype.toString.call(timeObject) === "[object Date]" ? 
-        new Date(timeObject).toISOString(): timeString
+        const newValue =
+          Object.prototype.toString.call(timeObject) === "[object Date]"
+            ? new Date(timeObject).toISOString()
+            : timeString;
         onChange(null, id, newValue);
       }
     };
@@ -89,7 +100,7 @@ const MyDatePicker = React.memo(
           emptyLabel=""
           onChange={handleOnChange}
           KeyboardButtonProps={{
-            "aria-label": "select date"
+            "aria-label": "select date",
           }}
         />
       </MuiPickersUtilsProvider>
@@ -103,14 +114,22 @@ const MyDateTimePicker = React.memo(
     label = "选择日期",
     value,
     onChange = () => {},
+    onLoaded = () => {},
     fullWidth = true,
-    disabled = false
+    disabled = false,
   }) => {
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
+
     const handleOnChange = (timeString, timeObject) => {
       if (typeof onChange === "function") {
         // onChange(null, id, new Date(timeObject).toISOString());
-        const newValue = Object.prototype.toString.call(timeObject) === "[object Date]" ? 
-        new Date(timeObject).toISOString(): timeString
+        const newValue =
+          Object.prototype.toString.call(timeObject) === "[object Date]"
+            ? new Date(timeObject).toISOString()
+            : timeString;
         onChange(null, id, newValue);
       }
     };
@@ -133,7 +152,7 @@ const MyDateTimePicker = React.memo(
           emptyLabel=""
           onChange={handleOnChange}
           KeyboardButtonProps={{
-            "aria-label": "select date"
+            "aria-label": "select date",
           }}
         />
       </MuiPickersUtilsProvider>
@@ -148,8 +167,9 @@ const MyDateRangePicker = React.memo(
     label,
     value, // in case of endless loop, only used for default
     onChange,
+    onLoaded = () => {},
     fullWidth = true,
-    disabled = false
+    disabled = false,
   }) => {
     // divide two dates by ","
     // const getDateArray = combineDate => {
@@ -166,6 +186,11 @@ const MyDateRangePicker = React.memo(
     // changed: dont use default
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
 
     // otherwise only submit
     const handleChangeStart = (timeString, timeObject) => {
@@ -194,7 +219,7 @@ const MyDateRangePicker = React.memo(
               emptyLabel=""
               onChange={handleChangeStart}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                "aria-label": "change date",
               }}
             />
           </Grid>
@@ -210,7 +235,7 @@ const MyDateRangePicker = React.memo(
               emptyLabel=""
               onChange={handleChangeEnd}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                "aria-label": "change date",
               }}
             />
           </Grid>
@@ -227,6 +252,7 @@ const MyInput = React.memo(
     label = "输入",
     value = "",
     onChange = () => {},
+    onLoaded = () => {},
     onGetDefault,
     error = false,
     dataType = _DATATYPES.VARCHAR,
@@ -234,13 +260,21 @@ const MyInput = React.memo(
     fullWidth = true,
     disabled = false,
     multiline = false,
+    isNumberNullable = false, // 如果是数字，放空的时候是null还是0
     rows,
-    rowsMax = 5
+    rowsMax = 5,
+    buttons = [],
+    InputProps
   }) => {
     // ============= 修饰显示格式
     let inputStyle = {};
     let displayValue = value;
     let isNumber = false;
+
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
 
     if (
       dataType === _DATATYPES.INT ||
@@ -256,7 +290,7 @@ const MyInput = React.memo(
       isNumber = true;
     }
 
-    const handleOnChange = e => {
+    const handleOnChange = (e) => {
       value = e.target.value;
       if (isNumber) {
         value = !isNaN(value) ? Number(value) : 0;
@@ -265,14 +299,12 @@ const MyInput = React.memo(
       onChange(null, id, value);
     };
 
-   
-    const handleGetDefault = async e => {
-      if (typeof(onGetDefault) === "function") {
-        console.log("getdefault")
-        const defaultValue = await onGetDefault()
+    const handleGetDefault = async (e) => {
+      if (typeof onGetDefault === "function") {
+        const defaultValue = await onGetDefault();
         onChange(null, id, defaultValue);
       }
-    }
+    };
 
     return (
       <TextField
@@ -284,39 +316,117 @@ const MyInput = React.memo(
         label={label}
         onChange={handleOnChange}
         margin="dense"
-        value={displayValue || (isNumber ? 0 : "")}
+        value={displayValue || (isNumber && !isNumberNullable ? 0 : "")}
         helperText={!disabled && helperText}
-        multiline={multiline || dataType === _DATATYPES.TEXT || dataType === _DATATYPES.TT}
+        multiline={
+          multiline ||
+          dataType === _DATATYPES.TEXT ||
+          dataType === _DATATYPES.TT
+        }
         rows={rows}
         rowsMax={rowsMax}
         inputProps={{
-          style: { ...inputStyle }
+          style: { ...inputStyle },
         }}
-        InputProps={onGetDefault && {
-            endAdornment: (  
-              <InputAdornment position="end" onClick={handleGetDefault}>
-              <IconButton
-                  size="small"
-                  edge="end"
-                > {ICONS.ADD()}
+        InputProps={ InputProps ||
+           {
+            endAdornment: onGetDefault && <InputAdornment position="end" onClick={handleGetDefault}>
+                <IconButton size="small" edge="end">
+                  {" "}
+                  {ICONS.ADD()}
                 </IconButton>
-        
               </InputAdornment>
-            )
-        }}
+          }
+        }
       />
     );
   }
 );
 
+// ================================================================================== range number text
+const MyInputRange = React.memo(
+  ({
+    id,
+    value = "",
+    label = "输入",
+    onChange = () => {},
+    onLoaded = () => {},
+    onGetDefault,
+    helperText = "",
+    ...props
+  }) => {
+
+    // changed: dont use default
+    const [startNum, setStartNum] = useState(null);
+    const [endNum, setEndNum] = useState(null);
+    const [isSearch, setIsSearch] = useState(false)
+
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
+
+    // otherwise only submit
+    const handleChangeStart = (x1, x2, newValue) => {
+      const newCombine = `${newValue},${endNum}`;
+      if (typeof onChange === "function") onChange(null, id, newCombine);
+      setStartNum(newValue);
+    };
 
 
+    const handleChangeEnd = (x1, x2, newValue) => {
+      const newCombine = `${startNum},${newValue}`;
+      if (typeof onChange === "function") onChange(null, id, newCombine);
+      setEndNum(newValue);
+    };
+
+    const taggleIsSearch = (is) => {
+      setIsSearch(is)
+      onChange(null, id, "");
+    }
+
+    return isSearch ? <Grid container>
+          <Grid item xs={5}>
+          <MyInput
+            {...props}
+            id={`${id}_start`}
+            label={`${label || ""} 从`}
+            value={startNum}
+            emptyLabel=""
+            onChange={handleChangeStart}
+            helperText = {helperText}
+            multiline = {false}    
+            isNumberNullable = {true}
+          />
+        </Grid>
+        <Grid item xs={7}>
+          <MyInput
+            {...props}
+            id={`${id}_end`}
+            label="到"
+            value={endNum}
+            emptyLabel=""
+            onChange={handleChangeEnd}
+            multiline = {false}
+            isNumberNullable = {true}
+            InputProps = {{endAdornment: <InputAdornment position="end" onClick={() => taggleIsSearch(false)}>
+                <IconButton size="small" edge="end" className="ml-2">
+                  {ICONS.FALSE()}
+                </IconButton>
+              </InputAdornment>}}
+          />
+        </Grid>
+        </Grid>
+        : <Grid container><Grid item xs={12}>
+          <Button variant="outlined" color="primary" onClick= {() => taggleIsSearch(true)}>输入{label || ""}范围</Button></Grid></Grid>
+  }
+);
 // ================================================================================== password text
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    flexWrap: "wrap"
-  }
+    flexWrap: "wrap",
+  },
 }));
 
 const MyInputPassword = React.memo(
@@ -325,18 +435,24 @@ const MyInputPassword = React.memo(
     label = "密码",
     value = "",
     onChange = () => {},
+    onLoaded = () => {},
     error = false,
     helperText = "",
     fullWidth = true,
-    disabled = false
+    disabled = false,
   }) => {
     const classes = useStyles();
     const [showPassword, setshowPassword] = useState(false);
 
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
+
     const handleClickShowPassword = () => {
       setshowPassword(!showPassword);
     };
-    const handleMouseDownPassword = event => {
+    const handleMouseDownPassword = (event) => {
       event.preventDefault();
     };
 
@@ -380,11 +496,17 @@ const MySwitch = React.memo(
     label = "",
     value = false,
     onChange = () => {},
+    onLoaded = () => {},
     onSwitch = () => {},
     disabled = false,
     labelTrue = "是",
     labelFalse = "否",
   }) => {
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
+
     const isChecked = value === true || value === "true";
     const handleOnChange = (e, value) => {
       onChange(e, id, value);
@@ -414,6 +536,7 @@ const MySwitch = React.memo(
 // ================================================================================== switch
 const MyEditButton = React.memo(
   ({ disabled = false, setdisabled = () => {} }) => {
+    // 通知外部组件，数据加载完成
     return (
       <>
         <Button
@@ -451,11 +574,12 @@ export const Inputs = {
   MyDateRangePicker,
   MyEditButton,
   MyInput,
+  MyInputRange,
   MyInputTT,
   MyInputPassword,
   MySwitch,
   MyImage,
   MyRegionPicker,
   MyCategoryPicker,
-  MyFinancialLedgerPicker
+  MyFinancialLedgerPicker,
 };

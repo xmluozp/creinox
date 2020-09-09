@@ -179,7 +179,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
                     isFromEdit={true}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
-                    isHideTool={true}
+                    toolBar={{isHidding: true}}
                   >
                     <Grid container spacing={2}>
                       <Grid item lg={4} md={4} xs={12}>

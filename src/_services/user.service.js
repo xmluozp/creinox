@@ -101,10 +101,10 @@ function get_dropdown(pagination, searchTerms = {}) {
     headers: authHeader()
   };
 
-  console.log("get_all service:", pagination);
+  console.log("get_all service:", searchTerms);
   const queryString = h_queryString(pagination, searchTerms, TABLENAME, false);
 
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${URL_LIST}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_bySearch(pagination, searchTerms) {

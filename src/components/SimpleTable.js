@@ -43,8 +43,38 @@ export const withSimpleTable = ({ headCells, dataModel }) => {
                   dataModel.columns[headCell.name].label;
                 const label =
                   headCell.label || labelFromModel || headCell.name || "";
+                
+                const dataModelColumn = dataModel && dataModel.columns[headCell.name]
+                const minWidth = headCell.width
+                  ? headCell.width
+                  : headCell.minWidth
+                  ? headCell.minWidth
+                  : dataModelColumn && dataModelColumn.minWidth
+                  ? dataModelColumn.minWidth
+                  : dataModelColumn && dataModelColumn.label === "ID"
+                  ? 50
+                  : 100;
+                const maxWidth = headCell.width
+                  ? headCell.width
+                  : headCell.maxWidth
+                  ? headCell.maxWidth
+                  : dataModelColumn && dataModelColumn.maxWidth
+                  ? dataModelColumn.maxWidth
+                  : "auto";
 
-                return <TableCell key={`panel_${label}`}>{label}</TableCell>;
+                const width = headCell.width ? headCell.width : "auto";
+
+                return <TableCell
+                  key={`panel_${label}`}
+                  style={{
+                    whiteSpace: "nowrap",
+                    width: width,
+                    minWidth: minWidth,
+                    maxWidth: maxWidth,
+                  }}
+                >
+                  {label}
+                </TableCell>;
               })}
 
               {rowButtons && rowButtons.length > 0 ? (
@@ -98,31 +128,34 @@ export const withSimpleTable = ({ headCells, dataModel }) => {
                 </TableRow>
               ))}
             {/* ============================= foot =============================== */}
-            {data && listOnShow && (data.length === listOnShow.length - 1) ? 
-              <TableRow key={`row_${listOnShow.length - 1}`}>            
-                  {headCells.map((column, columnIndex) => {
-                    const rowIndex = listOnShow.length - 1
+            {data && listOnShow && data.length === listOnShow.length - 1 ? (
+              <TableRow key={`row_${listOnShow.length - 1}`}>
+                {headCells.map((column, columnIndex) => {
+                  const rowIndex = listOnShow.length - 1;
 
-                    // 和上面的代码一模一样
-                    const columnObj =
-                      listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
-                    {/* if (!columnObj) return; // 如果取不到，说明没有预处理，就不取预处理 */}
+                  // 和上面的代码一模一样
+                  const columnObj =
+                    listOnShow[rowIndex] && listOnShow[rowIndex][column.name];
+                  {
+                    /* if (!columnObj) return; // 如果取不到，说明没有预处理，就不取预处理 */
+                  }
 
-                    const columnContent = columnObj && columnObj.columnContent || "";
-                    const cellProps = columnObj && columnObj.cellProps || {};
+                  const columnContent =
+                    (columnObj && columnObj.columnContent) || "";
+                  const cellProps = (columnObj && columnObj.cellProps) || {};
 
-                    return (
-                      <TableCell
-                        key={`column_${rowIndex}_${columnIndex}`}
-                        {...cellProps}
-                      >
-                        {columnContent}
-                      </TableCell>
-                    );
-                  })}
-                  {rowButtons ? <TableCell></TableCell> : null }
-              </TableRow> : null
-            }
+                  return (
+                    <TableCell
+                      key={`column_${rowIndex}_${columnIndex}`}
+                      {...cellProps}
+                    >
+                      {columnContent}
+                    </TableCell>
+                  );
+                })}
+                {rowButtons ? <TableCell></TableCell> : null}
+              </TableRow>
+            ) : null}
           </TableBody>
         </Table>
       </TableContainer>

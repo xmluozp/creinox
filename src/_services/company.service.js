@@ -28,8 +28,7 @@ function get_disposable_dropdown(searchTerms) {
         headers: authHeader()
     };
 
-    console.log("getdropdown with search before:", searchTerms);
-
+    // 对应companyType是all的选项
     if(searchTerms && searchTerms.companyType === 0) {
         delete searchTerms.companyType
     }
@@ -56,7 +55,6 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
 
       console.log("search service:", searchTerms);
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
-      console.log("search service:", queryString);
       return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
 
 }

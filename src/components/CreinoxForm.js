@@ -2,22 +2,26 @@ import React from "react";
 import _, { isPlainObject } from "lodash";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { ICONS } from "_constants/icons";
-import {_DATATYPES} from "_constants/_dataTypes"
-import Print from './Print'
+import { _DATATYPES } from "_constants/_dataTypes";
+import Print from "./Print";
 
 /**
  * actionSubmit: redux action passed from parent. When submitting, form will call: fn(data)
  * @param {
  *
+ * disabled         整个锁定。
+ * renewToggle      刷新用
  * dataModel=       input根据这个来取label
  * defaultValues=   编时的默认值，从数据库取
  * preConditions =  新建时的，前提条件。比如产品类别
+ * preStates =      提交的时候用来强行覆盖用户修改的值，一般用不到
  * isFromEdit =     编辑还是新建
  * actionSubmit=    提交。param 是表单的values
  * isHideTool=      隐藏工具条(复制粘贴打印)
- * listener =       监听值 {key : (value, this.state)=>{//execute}}
+ * listener =       监听值 {key : (value, this.state)=>{//execute}}。 监听是强关联，任何数据修改都会触发
  * } props
  */
 
@@ -25,64 +29,152 @@ import Print from './Print'
 export class CreinoxForm extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isComponentLoaded: false,
-    };
     this.renderTool = this.renderTool.bind(this);
-
     this.formRef = React.createRef();
     this.submitForm = this.submitForm.bind(this);
+    this.clearLocalState = this.clearLocalState.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleOnLoading_BeginValuePass = this.handleOnLoading_BeginValuePass.bind(
+      this
+    );
+    this.handleOnLoaded_FinishValuePass = this.handleOnLoaded_FinishValuePass.bind(
+      this
+    );
+    this.checkMonitorIfFinished = this.checkMonitorIfFinished.bind(this);
+
     this.onCopy = this.onCopy.bind(this);
     this.onPaste = this.onPaste.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onListen = this.onListen.bind(this);
-    // this.onPrint = this.onPrint.bind(this);   
+
+    const initialValues = {};
+    const loadingMonitor = new Set();
+
+    // preConditions 是新增用的，是前提条件
+    const { isFromEdit, preConditions, children } = this.props;
+
+    // 根据所有的input生成一个空表单。
+    recursiveMap(children, (item) => {
+      if (item.props && item.props.inputid) {
+        initialValues[item.props.inputid] = "";
+      }
+    });
+
+    const intialStates = { ...initialValues, ...preConditions };
+
+    // 如果是详情页，顺便生成加载监控器
+    if (isFromEdit) {
+      Object.keys(intialStates).map((k) => {
+        loadingMonitor.add(k);
+      });
+    }
+
+    this.state = {
+      loadingStep1ValuesCacheReady: !isFromEdit, // 详情页的value加载到state里
+      loadingStep2ChildrenComponentMounted: true, // 子组件加载完成. 暂时用不到
+      loadingStep3ValuesPassedToComponents: !isFromEdit, // 详情页的value是否全部加载到控件里.
+      loadingMonitor, // 监控value是否全部加载到子组件
+      ...intialStates,
+    };
   }
 
-  // 提交函数
+  // 提交表单
   submitForm(e) {
     e.preventDefault();
     if (typeof this.props.actionSubmit === "function") {
       // preStates放后面不然会被一大堆 key:"" 的覆盖
       const submitValues = { ...this.state, ...this.props.preStates };
-      delete submitValues.isComponentLoaded;
+      this.clearLocalState(submitValues); // 删掉内部自己用的state
+
       this.props.actionSubmit(submitValues);
     }
   }
 
-  // when change value
+  // 更新子组件的值
   handleChange(e, key, value, ...other) {
     // console.log(key,typeof(value), e.target.value)
-    let columnKey = ""
-    let columnValue = ""
+    let columnKey = "";
+    let columnValue = "";
 
     if (key && typeof value !== "undefined") {
       // 防止value本身是个boolean
-      columnKey = key
-      columnValue = value
+      columnKey = key;
+      columnValue = value;
     } else if (e && e.target && e.target.id) {
       // 如果不属于dataModel的input
-      columnKey = e.target.id
-      columnValue = e.target.value
+      columnKey = e.target.id;
+      columnValue = e.target.value;
     }
 
-    if(columnKey) {
+    if (columnKey) {
       this.setState({ [columnKey]: columnValue });
 
-      // 如果是listen的key，就触发对应的方法
-      this.onListen(columnKey, columnValue)
-    } 
+      // 因为监听是强关联，如果是listen的key，就强行触发监听
+      this.onListen(columnKey, columnValue);
+    }
   }
 
+  // ***************** form自身的listener。根据state为key触发的事件
   onListen(key, value) {
-    if(
-      this.props.listener && 
-      this.props.listener[key] && 
-      typeof this.props.listener[key] === 'function') {
-        this.props.listener[key](value, this.state)
-    } 
+    if (
+      this.props.listener &&
+      this.props.listener[key] &&
+      typeof this.props.listener[key] === "function"
+    ) {
+      this.props.listener[key](value, this.state);
+    }
+  }
+
+  clearLocalState(values) {
+    delete values.loadingStep1ValuesCacheReady;
+    delete values.loadingStep2ChildrenComponentMounted;
+    delete values.loadingStep3ValuesPassedToComponents;
+    delete values.loadingMonitor;
+  }
+
+  // ***************** 把默认值加载到子组件里
+
+  // --- 单个组件设置监控器
+  handleOnLoading_BeginValuePass(columnName) {
+    if (
+      !(this.state.loadingMonitor && this.state.loadingMonitor.has(columnName))
+    ) {
+      this.setState((oldState) => {
+        const { loadingMonitor } = oldState;
+        const newLoadingMonitor = new Set(loadingMonitor);
+        newLoadingMonitor.add(columnName);
+        return { loadingMonitor: newLoadingMonitor };
+      });
+    }
+  }
+
+  // --- 单个组件加载完成删掉监控器
+  handleOnLoaded_FinishValuePass(columnName) {
+    const { loadingMonitor } = this.state;
+    if (loadingMonitor && loadingMonitor.has(columnName)) {
+      this.setState(
+        (oldState) => {
+          const { loadingMonitor } = oldState;
+          const newLoadingMonitor = new Set([...loadingMonitor]);
+          newLoadingMonitor.delete(columnName);
+          return { loadingMonitor: newLoadingMonitor };
+        },
+        () => {
+          this.checkMonitorIfFinished();
+        }
+      );
+    }
+  }
+
+  // --- 如果所有监视完成. 加载完成
+  checkMonitorIfFinished() {
+    if (
+      this.state.loadingMonitor &&
+      this.state.loadingMonitor.size === 0 &&
+      !this.state.loadingStep3ValuesPassedToComponents
+    ) {
+      this.setState({ loadingStep3ValuesPassedToComponents: true });
+    }
   }
 
   //  ***************** 复制粘贴form的内容到localstorage
@@ -90,29 +182,30 @@ export class CreinoxForm extends React.Component {
   onCopy() {
     const { dataModel } = this.props;
     let newState = { ...this.state };
-    delete newState.isComponentLoaded;
+    this.clearLocalState(newState); // 删掉内部自己用的state
 
     // 图片类型和图库不参与复制粘贴
     Object.keys(dataModel.columns).map((value) => {
       if (
-        newState.hasOwnProperty(value) && (
-        dataModel.columns[value].type === _DATATYPES.IMAGE ||
-        dataModel.columns[value].type === _DATATYPES.GALLERY ||
-        dataModel.columns[value].type === _DATATYPES.ROW    //因为图片展示时候会读到.row里面。这个不需要复制
-        )
+        newState.hasOwnProperty(value) &&
+        (dataModel.columns[value].type === _DATATYPES.IMAGE ||
+          dataModel.columns[value].type === _DATATYPES.GALLERY ||
+          dataModel.columns[value].type === _DATATYPES.ROW) //因为图片展示时候会读到.row里面。这个不需要复制
       ) {
-        delete newState[value]
+        delete newState[value];
       }
       return null;
     });
 
-    localStorage.setItem("form." + dataModel.dataStore, JSON.stringify(newState));
+    copy(dataModel, newState)
   }
 
   onPaste() {
     const { dataModel } = this.props;
 
-    let newState = JSON.parse(localStorage.getItem("form." + dataModel.dataStore));
+    let newState = JSON.parse(
+      localStorage.getItem("form." + dataModel.dataStore)
+    );
 
     if (newState) {
       this.setState(newState);
@@ -127,60 +220,46 @@ export class CreinoxForm extends React.Component {
     }
   }
 
-  // onPrint() {
-  //   const { dataModel } = this.props;
-  //   console.log("print", dataModel.template)
-  // }
-
-  // step 1/3: generate empty items ********************************************
+  // step 1/3: generate empty items ******************************************** Form自己加载完毕
   componentDidMount() {
     // preConditions 是新增用的，是前提条件
-    const { isFromEdit, preConditions, onGetInjector, onGetRef } = this.props;
-
-    // set initial Values (empty)
-    const initialValues = {};
-
-    // 根据所有的input生成一个空表单
-    const { children } = this.props;
-
-    recursiveMap(children, (item) => {
-      if (item.props && item.props.inputid) {
-        initialValues[item.props.inputid] = "";
-      }
-    });
-
-    this.setState({
-      isComponentLoaded: !isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
-      ...initialValues,
-      ...preConditions,
-    });
+    const { onGetInjector, onGetRef } = this.props;
 
     // 设置外部injector
     if (typeof onGetInjector === "function") {
-      onGetInjector( () => (injectItemFromOutside, callBack=()=> {}) => {
-       
+      onGetInjector(() => (injectItemFromOutside, callBack = () => {}) => {
+        // 如果数据还没进入子组件，就不要允许任何外部修改
+        if (!this.state.loadingStep3ValuesPassedToComponents) {
+          return;
+        }
+
         let newState = {};
 
         // 假如注入的是一个function
-        if(typeof(injectItemFromOutside) === 'function') {
-          newState = injectItemFromOutside(this.state)
-        }
-
-        else if(injectItemFromOutside && typeof(injectItemFromOutside) === 'object') {
-          Object.keys(injectItemFromOutside).map((value) => {
+        if (typeof injectItemFromOutside === "function") {
+          newState = injectItemFromOutside(this.state);
+        } else if (
+          injectItemFromOutside &&
+          typeof injectItemFromOutside === "object"
+        ) {
+          Object.keys(injectItemFromOutside).map((key) => {
             // 20200811: 不知道为何之前要限制只能注入已有的，所以去掉了
             // if (this.state.hasOwnProperty(value)) {
-            newState[value] = injectItemFromOutside[value];
+            newState[key] = injectItemFromOutside[key];
+
+            // 触发listener
+            this.onListen(key, injectItemFromOutside[key]);
             // }
+
             return null;
           });
         }
 
         // 可以通过这样继续处理inject: inject(values, (newValues)=> { inject(xxx) })  callback hell，以后改进
         this.setState(newState, () => {
-          if(typeof(callBack) === 'function') {
-            callBack(this.state)
-          }          
+          if (typeof callBack === "function") {
+            callBack(this.state);
+          }
         });
       });
     }
@@ -192,24 +271,13 @@ export class CreinoxForm extends React.Component {
     }
   }
 
+  // 返回值会出现在下面的componentDidUpdate() 的参数 snapshot 里面. 用 renewToggle 来刷新用：
   getSnapshotBeforeUpdate(prevProps) {
-    // 如果是编辑模式
     if (
       prevProps.renewToggle !== this.props.renewToggle &&
-      this.props.defaultValues &&
-      this.props.isFromEdit
+      this.props.defaultValues
     ) {
-      const newState = this.props.defaultValues;
-      return newState;
-    }
-
-    // 如果是新建模式
-    if (
-      prevProps.renewToggle !== this.props.renewToggle &&
-      this.props.defaultValues &&
-      !this.props.isFromEdit
-    ) {
-      const newState = this.props.defaultValues;
+      const newState = this.props.defaultValues; // TODO: preConditions？
       return newState;
     }
 
@@ -218,66 +286,134 @@ export class CreinoxForm extends React.Component {
 
   // step 2/3: generate empty items ********************************************
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (!this.state.isComponentLoaded && !_.isEmpty(this.props.defaultValues)) {
-      // 默认表单不为空。表示加载完毕
-      this.readValues();
-    }
+    const { defaultValues, isFromEdit } = this.props;
+    const { loadingStep1ValuesCacheReady } = this.state;
 
     if (snapshot) {
-      this.setState({
-        isComponentLoaded: true,
-        ...snapshot,
-      });
+      // 如果是从toggle触发的更新，就用defaultValues覆盖state. 忽略cache
+      this.readValues(snapshot);
+    }
+    // 第一次加载的时候，如果是详情页，还未cache，有默认值，就把defaultValues给cache到state里
+    else if (
+      isFromEdit &&
+      !loadingStep1ValuesCacheReady &&
+      !_.isEmpty(defaultValues)
+    ) {
+      // 设置默认值，触发更新，更新前查 loadingStep1ValuesCacheReady 。如果还没加载过就把默认值塞进state
+      this.readValues(defaultValues);
     }
   }
 
-  // 详情页读数据用
-  readValues() {
-    const { defaultValues, dataModel } = this.props;
-    if (!this.state.isComponentLoaded) {
-      const newState = {};
+  // 如果是详情页则运行以下代码：加载详情页数据，放在state里
+  readValues(defaultValues) {
+    const { dataModel } = this.props;
+    const newState = {};
 
-      // 查看默认值列表。如果有对应的key，就赋值
-      Object.keys(defaultValues).map((value) => {
-        if (this.state.hasOwnProperty(value)) {
-          newState[value] = defaultValues[value];
-        }
-
-        // 触发linstener
-        this.onListen(value, defaultValues[value])
-
-        // 如果是row，顺便记录源id
-        if (dataModel && 
-          dataModel["columns"][value] && 
-          dataModel["columns"][value].type === _DATATYPES.ROW) {
-          
-          const sourceIdName = value.split('.')[0]
-          newState[sourceIdName] = defaultValues[sourceIdName];
-        }
-
-        return null;
-      });
-
-      if (defaultValues && defaultValues.hasOwnProperty("id")) {
-        newState.id = defaultValues.id;
+    // 查看默认值列表。如果有对应的key，就赋值
+    Object.keys(defaultValues).map((key) => {
+      if (this.state.hasOwnProperty(key)) {
+        newState[key] = defaultValues[key];
       }
 
-      this.setState({
-        isComponentLoaded: true,
-        ...newState,
-      });
+      // 因为监听是强关联，如果是listen的key，就强行触发监听
+      this.onListen(key, defaultValues[key]);
+
+      // 如果是row，顺便记录源id
+      if (
+        dataModel &&
+        dataModel["columns"][key] &&
+        dataModel["columns"][key].type === _DATATYPES.ROW
+      ) {
+        const sourceIdName = key.split(".")[0];
+        newState[sourceIdName] = defaultValues[sourceIdName];
+      }
+
+      return null;
+    });
+
+    if (defaultValues && defaultValues.hasOwnProperty("id")) {
+      newState.id = defaultValues.id;
     }
+
+    this.setState({
+      loadingStep1ValuesCacheReady: true,
+      ...newState,
+    });
   }
 
   renderTool() {
-    const { dataModel, isHideTool, isFromEdit } = this.props;
+    const { dataModel, toolBar, isFromEdit, disabled } = this.props;
+    const isHideTool = toolBar && toolBar.isHidding;
+    const buttons = toolBar && toolBar.buttons;
 
+    const renderButtons = [];
+
+    // if(buttons && buttons.length > 0) {
+    //   for (let i = 0; i < buttons.length; i++) {
+    //     const el = buttons[i];
+    //     renderButtons.push( i => el)
+    //   }
+    // }
+
+    if(buttons && buttons.length > 0) {
+      for (let i = 0; i < buttons.length; i++) {
+        const el = buttons[i];
+          renderButtons.push(
+            el
+          )
+      }
+    }
+
+    // 复制按钮
+    if (!isHideTool && dataModel) {
+      renderButtons.push(<IconButton
+            aria-label="expand row"
+            size="small"
+            title="复制"
+            onClick={this.onCopy}
+          >
+            {ICONS.COPY()}
+          </IconButton>);
+    }
+
+    // 粘贴按钮
+    if (!isHideTool && dataModel && !disabled) {
+      renderButtons.push(<IconButton
+            aria-label="expand row"
+            size="small"
+            title="粘贴"
+            onClick={this.onPaste}
+          >
+            {ICONS.PASTE()}
+          </IconButton>);
+    }
+
+    if (!isHideTool && dataModel && !disabled && isFromEdit) {
+      renderButtons.push(<IconButton
+            aria-label="expand row"
+            size="small"
+            title="刷新"
+            onClick={this.onCancel}
+          >
+            {ICONS.REFRESH()}
+          </IconButton>);
+    }
+
+    // 打印按钮
+    if (dataModel && dataModel.printTemplate) {
+      renderButtons.push( i => (<Print dataModel={dataModel} id={this.state.id}  key={"toolbar"+i}/>));
+    }
+
+    if(renderButtons.length === 0) return null
+
+    // 工具条
     return (
-      <div style={{
-        margin: 5,
-        marginBottom: 10
-
-      }}>
+      <div
+        style={{
+          margin: 5,
+          marginBottom: 10,
+        }}
+      >
         <Grid
           mb={5}
           container
@@ -289,54 +425,30 @@ export class CreinoxForm extends React.Component {
             border: "1px solid #c5d2db",
             borderRadius: 15,
           }}
-        >
-          {/* 如果需要显示copytool，就在这里显示 */}
-          {!isHideTool ? (
-            <>
-              <Grid item style = {{marginRight: 10}}>
-                <IconButton
-                  aria-label="expand row"
-                  size="small"
-                  onClick={this.onCopy}
-                >
-                  {ICONS.COPY()}
-                </IconButton>
-              </Grid>
-              <Grid item style = {{marginRight: 10}}>
-                <IconButton
-                  aria-label="expand row"
-                  size="small"
-                  onClick={this.onPaste}
-                >
-                  {ICONS.PASTE()}
-                </IconButton>
-              </Grid>
-              {isFromEdit ? (
-                <Grid item style = {{marginRight: 10}}>
-                  <IconButton
-                    aria-label="expand row"
-                    size="small"
-                    onClick={this.onCancel}
-                  >
-                    {ICONS.REFRESH()}
-                  </IconButton>
-                  </Grid>
-              ) : null}
-            </>
-          ) : null}
-          
-            <Print dataModel={dataModel} id={this.state.id}/>
+        >  {renderButtons.map((item,i)=> {
+            return <Grid item style={{ marginRight: 10 }} key={"toolbar"+i}>
+              {item}
+            </Grid>})}
         </Grid>
       </div>
     );
   }
 
   render() {
-    const { children, dataModel, errors, isHideTool, isEnglish } = this.props;
+    const {
+      children,
+      dataModel,
+      errors,
+      isHideTool,
+      isEnglish,
+      isFromEdit,
+      disabled,
+    } = this.props;
     const values = this.state;
     const handleChange = this.handleChange;
 
-    if (!this.state.isComponentLoaded) {
+    // 如果defaultValues cache完毕，或者如果不是编辑模式。否则显示读取中
+    if (isFromEdit && !this.state.loadingStep1ValuesCacheReady) {
       return "loading";
     } else {
       return (
@@ -353,9 +465,7 @@ export class CreinoxForm extends React.Component {
             }
           }}
         >
-          {(!isHideTool && dataModel) || dataModel.printTemplate
-            ? this.renderTool()
-            : null}
+          {this.renderTool()}
 
           {recursiveMap(children, (item) => {
             // 遍历所有的components
@@ -364,21 +474,23 @@ export class CreinoxForm extends React.Component {
             const isFiltered =
               item.props && typeof item.props.onShow === "function"; // 是否有onshow方法
 
-            if (isInput) {
-              const isListen = item.props && item.props.listen
+            const disabledItem = item.props.disabled || disabled;
 
-              // 结联 ==============
-              const listenConditions = {}
+            if (isInput) {
+              const isListen = item.props && item.props.listen;
+
+              // 结联 ============== cascade用
+              const listenConditions = {};
               // 如果监听对象数组不为空，就把监听对象的键值对的数组传进控件。控制更新在控件内部做
               // 20200518 监听不应该是数组，而是键值对，键是源控件的column名，值是搜目标表格用的column名
-              const listen = isListen ? item.props.listen : {}
+              const listen = isListen ? item.props.listen : {};
               const listenList = Object.keys(listen);
-              if(listenList.length > 0) {
+              if (listenList.length > 0) {
                 for (let i = 0; i < listenList.length; i++) {
-                  const key = listenList[i]
-                  if(values.hasOwnProperty(key)) {
-                    listenConditions[listen[key]] = values[key]
-                  }                
+                  const key = listenList[i];
+                  if (values.hasOwnProperty(key)) {
+                    listenConditions[listen[key]] = values[key];
+                  }
                 }
               }
               // ===================
@@ -400,18 +512,23 @@ export class CreinoxForm extends React.Component {
                 dataModel,
                 value: values[columnId],
                 isEnglish,
-              }
+                parent: this,
+                disabled: disabledItem,
+              };
 
-              if(isListen) injectProps.listenConditions = listenConditions
+              if (isListen) injectProps.listenConditions = listenConditions;
 
               // 传入整体的值
-              injectProps.values = values
+              injectProps.values = values;
 
-              return injectedInputs(injectProps)
-            } else if (isFiltered) { // 有onShow方法，显示的值直接用onShow方法来
+              return injectedInputs(injectProps);
+            } else if (isFiltered) {
+              // 有onShow方法，显示的值直接用onShow方法来
               return injectedInputs({
                 item: item,
-                value: item.props.onShow(values)
+                value: item.props.onShow(values),
+                parent: this,
+                disabled: disabledItem,
               });
             } else {
               return item;
@@ -423,6 +540,7 @@ export class CreinoxForm extends React.Component {
   }
 }
 
+// 处理所有属于dataModel的控件
 const injectedInputs = ({
   item,
   handleChange,
@@ -433,63 +551,72 @@ const injectedInputs = ({
   listenConditions,
   isEnglish,
   values, // 取其他值用
+  parent,
+  disabled,
 }) => {
   let returnValue = item;
   const columnId = item.props && item.props.inputid;
-  let newProps
+  let newProps;
   // 判断类型，进行注入
 
   let onChangeFunc;
-  let onChange
+  let onChange;
 
-  if(item.props.onChange && typeof(item.props.onChange) === 'function') {
-    onChangeFunc = item.props.onChange
+  if (item.props.onChange && typeof item.props.onChange === "function") {
+    onChangeFunc = item.props.onChange;
   } else {
-    onChangeFunc = handleChange
+    onChangeFunc = handleChange;
   }
 
   // 如果有伴生的onChange，在执行onChange后执行它
-  if(item.props.onChangeSideEffect && typeof(item.props.onChangeSideEffect) ==='function') {
+  if (
+    item.props.onChangeSideEffect &&
+    typeof item.props.onChangeSideEffect === "function"
+  ) {
     onChange = (...params) => {
-      onChangeFunc(...params)
-      item.props.onChangeSideEffect(...params)
-    }
+      onChangeFunc(...params);
+      item.props.onChangeSideEffect(...params);
+    };
   } else {
     // 外部的onChange比默认的优先级更高
-    onChange = onChangeFunc
+    onChange = onChangeFunc;
   }
 
-  // 如果id 和model对得上号;
+  // 不是model的；非控制的控件也通用的属性
+  newProps = {
+    value,
+    fullWidth: true,
+    disabled,
+  };
+
+  // 只有model的；专有的属性： 如果id 和model对得上号;
   if (dataModel && dataModel.columns[columnId]) {
     // TODO: 判断component类型。不同类型注入不同的东西
     newProps = {
+      ...newProps,
       id: columnId,
       key: columnId,
-      label: item.props.label ? item.props.label :
-        isEnglish && dataModel.columns[columnId].elabel ? dataModel.columns[columnId].elabel : 
-        dataModel.columns[columnId].label,  // 判断是否显示英文版的label
+      label: item.props.label
+        ? item.props.label
+        : isEnglish && dataModel.columns[columnId].elabel
+        ? dataModel.columns[columnId].elabel
+        : dataModel.columns[columnId].label, // 判断是否显示英文版的label
       dataType: dataModel.columns[columnId].type,
       dataModeltableName: dataModel.table,
       error: isError,
       helperText: errorMessage,
-      value,
       onChange,
-      fullWidth: true,
-      listenConditions
+      listenConditions,
+    };
+
+    // 如果是ROW类型，注入源columnName以后备用。
+    if (newProps.dataType === _DATATYPES.ROW) {
+      newProps.sourceId = item.props.sourceId || values[columnId.split(".")[0]];
     }
 
-    // 如果是ROW类型，注入源ID。
-    if(newProps.dataType === _DATATYPES.ROW) {
-      newProps.sourceId = 
-      item.props.sourceId || 
-      values[columnId.split('.')[0]]
-    }
-  } else {
-    // 不是model的；非控制的控件
-    newProps = {
-      value: value,
-      fullWidth: true
-    }    
+    // 子组件用以通知此组件数据是否加载完成
+    newProps.onLoading = parent.handleOnLoading_BeginValuePass;
+    newProps.onLoaded = parent.handleOnLoaded_FinishValuePass;
   }
 
   returnValue = React.cloneElement(item, newProps);
@@ -514,12 +641,21 @@ function recursiveMap(children, fn) {
   });
 }
 
+export function copy(dataModel, newState) {
+
+  localStorage.setItem(
+    "form." + dataModel.dataStore,
+    JSON.stringify(newState)
+  );
+}
+
+
 // export class CreinoxForm extends React.Component {
 //   constructor(props) {
 //     super(props);
 
 //     this.state = {
-//       isComponentLoaded: false
+//       loadingStep1ValuesCacheReady: false
 //     };
 
 //     this.submitForm = this.submitForm.bind(this);
@@ -562,7 +698,7 @@ function recursiveMap(children, fn) {
 //     });
 
 //     this.setState({
-//       isComponentLoaded: !isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
+//       loadingStep1ValuesCacheReady: !isFromEdit, // 如果表单是空的，直接显示加载完毕，否则等待加载
 //       ...initialValues,
 //       ...preConditions
 //     });
@@ -597,7 +733,7 @@ function recursiveMap(children, fn) {
 //   // step 2/3: generate empty items ********************************************
 //   componentDidUpdate(prevProps, prevState, snapshot) {
 //     if (
-//       !this.state.isComponentLoaded &&
+//       !this.state.loadingStep1ValuesCacheReady &&
 //       !_.isEmpty(this.props.defaultValues)
 //     ) {
 //       // 默认表单不为空。表示加载完毕
@@ -606,7 +742,7 @@ function recursiveMap(children, fn) {
 
 //     if (snapshot) {
 //       this.setState({
-//         isComponentLoaded: true,
+//         loadingStep1ValuesCacheReady: true,
 //         ...snapshot
 //       });
 //     }
@@ -615,7 +751,7 @@ function recursiveMap(children, fn) {
 //   readValues() {
 //     const { defaultValues } = this.props;
 
-//     if (!this.state.isComponentLoaded) {
+//     if (!this.state.loadingStep1ValuesCacheReady) {
 //       const newState = {};
 
 //       // 查看默认值列表。如果有对应的key，就赋值
@@ -631,7 +767,7 @@ function recursiveMap(children, fn) {
 //       }
 
 //       this.setState({
-//         isComponentLoaded: true,
+//         loadingStep1ValuesCacheReady: true,
 //         ...newState
 //       });
 //     }
@@ -643,7 +779,7 @@ function recursiveMap(children, fn) {
 //     const values = this.state;
 //     const handleChange = this.handleChange.bind();
 
-//     if (!this.state.isComponentLoaded) {
+//     if (!this.state.loadingStep1ValuesCacheReady) {
 //       return "loading";
 //     } else {
 //       return (

@@ -67,9 +67,10 @@ const CurrentPage = ({
               dataModel={dataModel}
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
               isFromEdit={isFromEdit}
+              disabled = {disabled}
               actionSubmit={handleOnSubmit}
               errors={errorById}
-              isHideTool= {true}
+              toolBar={{isHidding: true}}
               listener = {{direction: v=>setDirection(v)}}
             >
               <CardBody>

@@ -1,5 +1,5 @@
 export const allAuthList = [
-    "all",
+    "all",                          // 0
     "setting",
     "user",
     "test",
@@ -9,7 +9,7 @@ export const allAuthList = [
     "companyinternal",
     "companyfactory",
     "companyoverseas",
-    "companydomestic",
+    "companydomestic",              // 10
     "companyshipping",
     "product",
     "category",
@@ -19,10 +19,12 @@ export const allAuthList = [
     "sellcontract",
     "buycontract",
     "mouldcontract",
-    "financial",
+    "financial",                    // 20
     "paymentRequest",
     "expressOrder",
-    "userLog"
+    "userLog",
+    "confirm-payment",
+    "confirm-contract"
   ];
     
   export const allAuthListLabel = [
@@ -49,7 +51,9 @@ export const allAuthList = [
     "财务管理",  
     "付款申请",
     "快递单",
-    "系统用户操作日志"
+    "系统用户操作日志",
+    "审批付款",
+    "确认合同"
   ];
   
   // 根据这个列表生成object用于下拉选项

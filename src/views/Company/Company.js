@@ -156,6 +156,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
                     }
                     errors={errorById}
                     isFromEdit={isFromEdit}
+                    disabled = {disabled}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
                     onGetInjector={handleGetInjector}

@@ -17,9 +17,10 @@ import {
 import { buycontractModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "components";
 import { enumsLabel, enums } from "_constants";
-import { history, h_fkFetch } from "_helper";
+import { history, h_fkFetch, authCheckUser } from "_helper";
 
 import Buysubitems from "./Buysubitems";
+const AUTHNAME_CONFORM = "confirm-payment"
 
 export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
   const CurrentPage = ({
@@ -34,6 +35,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
     sc_onGetById,
     onClear,
     sc_onClear,
+    user,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
@@ -139,7 +141,8 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
     };
 
     let defaultData = isFromEdit && dataById && { ...dataById.row };
-
+    const locked = defaultData && defaultData.isDone === true && !authCheckUser(user, AUTHNAME_CONFORM)
+   
     // console.log("default", defaultData )
     return (
       <>
@@ -176,23 +179,25 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                     defaultValues={defaultData}
                     errors={errorById}
                     isFromEdit={isFromEdit}
+                    disabled = {disabled}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
                     onGetInjector={f => setInjector(f)}
                     listener = {{seller_company_id: v => setSellCompanyId(v)}}
                   >
                     <Grid container spacing={2}>
-                      {formInputs(
+                      {formInputs({
                         disabled,
                         isFromEdit,
                         parm_sc_id,
-                        handleOnSelect_sc,
-                        handleOnGetDefaultCode,
-                        handleOnGetInvoiceCode,
-                      )}
+                        onSelect_sc: handleOnSelect_sc,
+                        onGetDefaultCode: handleOnGetDefaultCode,
+                        onGetInvoiceCode: handleOnGetInvoiceCode,
+                        user
+                      })}
                     </Grid>
                     <Grid container spacing={2}>
-                      {isFromEdit && ( // only show edit button when update
+                      {isFromEdit && !locked && ( // only show edit button when update
                         <Grid item>
                           <Inputs.MyEditButton
                             disabled={disabled}
@@ -200,7 +205,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                           />
                         </Grid>
                       )}
-                      {!isFromEdit && (
+                      {!isFromEdit && !locked  && (
                         <Grid item>
                           <Button
                             type="button"
@@ -238,6 +243,8 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
                       buy_contract_id: id,
                       sell_contract_id: read_sc_id,
                     }}
+
+                    disabled={locked}
                   />
                 </TabPanel>
               </Card>
@@ -249,14 +256,15 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
   };
 
   //
-  const formInputs = (
+  const formInputs = ({
     disabled,
     isFromEdit,
     parm_sc_id,
     onSelect_sc,
     onGetDefaultCode,
-    OnGetInvoiceCode
-  ) => {
+    onGetInvoiceCode,
+    user
+  }) => {
     return (
       <>
         {/* 假如从属性里获得了销售合同，就不允许手动选择 */}
@@ -308,7 +316,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
           <Inputs.MyInput
             inputid="invoiceCode"
             disabled={disabled}
-            onGetDefault={OnGetInvoiceCode}
+            onGetDefault={onGetInvoiceCode}
           />
         </Grid>
 
@@ -379,7 +387,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MySwitch inputid="isDone" disabled={disabled} />
+          <Inputs.MySwitch inputid="isDone" disabled={disabled || !authCheckUser(user, AUTHNAME_CONFORM)} />
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>

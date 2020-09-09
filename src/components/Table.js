@@ -736,32 +736,32 @@ export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
         : null;
 
       // 控制列宽，防止超过或者挤压, ID是例外
-      const minWidth = column.width
-        ? column.width
-        : column.minWidth
-        ? column.minWidth
-        : dataModelColumn && dataModelColumn.minWidth
-        ? dataModelColumn.minWidth
-        : dataModelColumn && dataModelColumn.label === "ID"
-        ? 50
-        : 100;
-      const maxWidth = column.width
-        ? column.width
-        : column.maxWidth
-        ? column.maxWidth
-        : dataModelColumn && dataModelColumn.maxWidth
-        ? dataModelColumn.maxWidth
-        : "auto";
+      // const minWidth = column.width
+      //   ? column.width
+      //   : column.minWidth
+      //   ? column.minWidth
+      //   : dataModelColumn && dataModelColumn.minWidth
+      //   ? dataModelColumn.minWidth
+      //   : dataModelColumn && dataModelColumn.label === "ID"
+      //   ? 50
+      //   : 100;
+      // const maxWidth = column.width
+      //   ? column.width
+      //   : column.maxWidth
+      //   ? column.maxWidth
+      //   : dataModelColumn && dataModelColumn.maxWidth
+      //   ? dataModelColumn.maxWidth
+      //   : "auto";
 
-      const width = column.width ? column.width: "auto"
+      // const width = column.width ? column.width: "auto"
 
       const cellProps = {
         align: column.align ? column.align : isNumber ? "right" : "left",
         style: {
           borderRight: "1px dashed rgba(224, 224, 224, 1)",
-          width:width,
-          minWidth: minWidth,
-          maxWidth: maxWidth,
+          // width:width,
+          // minWidth: minWidth,
+          // maxWidth: maxWidth,
         },
         className: className,
         onClick: handleCellClick,

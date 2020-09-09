@@ -234,7 +234,7 @@ const CurrentPage = ({
                       actionSubmit={handleOnSubmit}
                       renewToggle={renewToggle}
                       dataModel={dataModel}
-                      isHideTool
+                      toolBar={{isHidding: true}}
                     >
                       {childrenInputsEdit}
                     </CreinoxForm>
@@ -247,7 +247,7 @@ const CurrentPage = ({
                       actionSubmit={handleOnSubmit}
                       renewToggle={renewToggle}
                       dataModel={dataModel}
-                      isHideTool
+                      toolBar={{isHidding: true}}
                     >
                       {childrenInputsCreate}
                     </CreinoxForm>

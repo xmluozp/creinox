@@ -25,8 +25,6 @@ function get_dropdown(pagination, searchTerms = {}) {
     headers: authHeader()
   };
 
-  console.log("get dropdown:", searchTerms);
-
   const queryString = h_queryString({perPage:-1}, searchTerms, TABLENAME, false);
 
   // pagination也可以在这里拆开了放进uri
@@ -44,7 +42,6 @@ function get_bySearch(pagination, searchTerms = {}) {
   };
 
   const queryString = h_queryString(pagination, searchTerms, TABLENAME);
-  console.log("search service:", queryString);
 
   // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
   return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);

@@ -37,7 +37,7 @@ const searchBar = (
   </>
 );
 // ============================================= Modal inputs
-const FormInputs = ({onLoad}) => {
+const FormInputs = () => {
 
   const handleShowOuterVolume = (values) => {
 
@@ -60,7 +60,6 @@ const FormInputs = ({onLoad}) => {
             tableName="product"
             actionName="get_disposable_dropdown"
             disabled = {true}
-            onLoad = {onLoad}
           />
         </Grid>      
         <Grid item lg={8} md={8} xs={12}>

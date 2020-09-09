@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { CreinoxUploadButton } from "../CreinoxUploadButton";
 import IconButton from "@material-ui/core/IconButton";
 import { imageActions as dataActions } from "../../_actions";
@@ -10,7 +10,13 @@ import {h_popfile} from '../../_helper'
 
 // 思路：value默认是个image；上传以后变成是个file（如果onchange时不动它会导致form提交不对）
 // 在CreinoxForm里面判断，如果是图片类型，就把对应的id加入imageItem里
-export const MyImage = ({ id, value, onChange, disabled, label, sourceId }) => {
+export const MyImage = ({ id, value, onChange, disabled, label, sourceId, onLoaded = () => {} }) => {
+
+  // 通知外部组件，数据加载完成
+  useEffect(() => {
+    onLoaded(id);
+  }, []);
+
   const myImageDisplay = useRef(null);
 
   // check if going to upload a new picture to over old one

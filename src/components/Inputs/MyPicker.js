@@ -27,6 +27,7 @@ const CurrentPicker = React.memo(
     value,
     label = "输入",
     onChange = () => {}, //
+    onLoaded = () => {},
     onSelect,
     onRender,
     onRenderTreeNodes,
@@ -43,6 +44,11 @@ const CurrentPicker = React.memo(
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedNode, setSelectedNode] = useState({ id: value });
     const [text, setText] = useState("");
+
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
 
     // 初始化树，选中value所属节点
     useEffect(() => {

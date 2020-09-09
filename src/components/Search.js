@@ -65,12 +65,12 @@ export default function Search({
       <Popper open={open} anchorEl={anchorEl} placement="bottom-end" transition>
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper style={{ minWidth: "200pt", maxWidth: "80vw" }}>
+            <Paper style={{ minWidth: "360pt", maxWidth: "80vw" }}>
               <CreinoxForm
                 defaultValues={searchTerms}
                 actionSubmit={onSearch}
                 dataModel={dataModel}
-                isHideTool = {true}
+                toolBar={{isHidding: true}}
               >
                 <DialogContent>
                   <DialogContentText>搜索</DialogContentText>

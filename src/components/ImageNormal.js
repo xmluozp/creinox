@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {h_popfile} from '../_helper'
 
 const imgStyle = {
@@ -19,8 +19,14 @@ export const ImageNormal = ({
   direction,
   top,
   left,
+  onLoaded = () => {},
 }) => {
   //calculate x,y scale
+
+  // 通知外部组件，数据加载完成
+  useEffect(() => {
+    onLoaded(id);
+  }, []);
 
   if (direction === "column") {
     cont.position = "absolute";

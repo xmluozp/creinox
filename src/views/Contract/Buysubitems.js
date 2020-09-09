@@ -54,13 +54,13 @@ const searchBar = (
 );
 // ============================================= Modal inputs
 const FormInputs = ({
-  onLoad,
   getSourceProductOnChange,
   getSubitemOnChange,
   onChangeSource,
   isFromSellSubitem,
   isFromEdit,
   dataById,
+  disabled,
   ...props
 }) => {
   //injectProduct
@@ -107,6 +107,7 @@ const FormInputs = ({
             labelFalse = "通过关键词搜索产品"
             value={isFromSellSubitem}
             onChange={onChangeSource}
+            disabled = {disabled}
           />
         </Grid>
         <Grid item lg={6} md={6} xs={12}>
@@ -143,7 +144,6 @@ const FormInputs = ({
             preConditions={props.preConditions}
             actionName="get_disposable_dropdown"
             onSelect={getSourceProductOnChange}
-            onLoad={onLoad}
             isDefaultOnSelect = {!isFromEdit}/>
         </Grid>
         }
@@ -261,7 +261,7 @@ const EmbedBuysubitem = embedListProvider(
 );
 
 // 加了一层component为了处理injection
-export default ({sellCompanyId,...props}) => {
+export default ({sellCompanyId, disabled, ...props}) => {
   const [productInjector, setProductInjector] = useState(null);
   const [isFromSellSubitem, setisFromSellSubitem] = useState(true);
 
@@ -275,7 +275,7 @@ export default ({sellCompanyId,...props}) => {
 
   // 如果是从有子订单转为无子订单，删掉对应子订单
   const handleFilterSubmit = values => {
-    console.log("filter")
+
     const newValues = {...values}
     if(!isFromSellSubitem) {
       newValues.sell_subitem_id = 0
@@ -384,6 +384,7 @@ export default ({sellCompanyId,...props}) => {
   return (
     <EmbedBuysubitem
       isBorder={true}
+      disabled = {disabled}
       onFilterSubmit = {handleFilterSubmit}
       {...props}
       modalFormCreateProps={{ onGetInjector: handleGetInjector }}

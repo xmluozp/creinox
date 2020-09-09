@@ -66,13 +66,40 @@ const TableHeadWrapper = (props) => {
             (typeof headCell.className === "string" && headCell.className) ||
             "";
 
+          const dataModelColumn = dataModel && dataModel.columns[headCell.name]
+
+          // 控制列宽，防止超过或者挤压, ID是例外
+          const minWidth = headCell.width
+            ? headCell.width
+            : headCell.minWidth
+            ? headCell.minWidth
+            : dataModelColumn && dataModelColumn.minWidth
+            ? dataModelColumn.minWidth
+            : dataModelColumn && dataModelColumn.label === "ID"
+            ? 50
+            : 100;
+          const maxWidth = headCell.width
+            ? headCell.width
+            : headCell.maxWidth
+            ? headCell.maxWidth
+            : dataModelColumn && dataModelColumn.maxWidth
+            ? dataModelColumn.maxWidth
+            : "auto";
+
+          const width = headCell.width ? headCell.width: "auto"
+
           return (
             <TableCell
               key={headCell.name}
               align={headCell.align ? headCell.align : "left"}
               padding={headCell.disablePadding ? "none" : "default"}
               sortDirection={orderBy === headCell.name ? order : false}
-              style={{ whiteSpace: "nowrap" }}
+              style={{ 
+                whiteSpace: "nowrap" ,
+                width:width,
+                minWidth: minWidth,
+                maxWidth: maxWidth,
+              }}
             >
               <TableSortLabel
                 active={orderBy === headCell.name}

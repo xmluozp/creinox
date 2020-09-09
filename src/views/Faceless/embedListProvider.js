@@ -48,6 +48,7 @@ export const embedListProvider = (
     onUpdate, // 任何修改的时候触发
     isBorder = false,
     onFilterSubmit, // 提交之前过滤用(比如图片没改动，就不提交)
+    disabled = false,
     ...props
   }) => {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
@@ -123,16 +124,21 @@ export const embedListProvider = (
         color: "primary",
         onClick: handleOnEditOpen,
         icon: ICONS.EDIT("mr-1")
-      },
-      {
-        label: "删除",
-        color: "danger",
-        onClick: handleOnDelete,
-        icon: ICONS.DELETE()
       }
     ];
 
-    const toolbarButtons = [
+    if(!disabled) {
+      embedRowButtons.push(
+        {
+          label: "删除",
+          color: "danger",
+          onClick: handleOnDelete,
+          icon: ICONS.DELETE()
+        }
+      )
+    }
+
+    const toolbarButtons = !disabled && [
       {
         label: "Create",
         onClick: handleOnCreateOpen,
@@ -158,6 +164,7 @@ export const embedListProvider = (
         />
 
         <MyModalFormWithData
+          disabled = {disabled}
           isOpen={isModalEditOpen}
           isFromEdit={true}
           dataModel={dataModel}
@@ -173,7 +180,7 @@ export const embedListProvider = (
           componentInputs={FormInputs}
         />
 
-        <MyModalFormWithData
+        {!disabled && <MyModalFormWithData
           isOpen={isModalCreateOpen}
           isFromEdit={false}
           dataModel={dataModel}
@@ -186,7 +193,7 @@ export const embedListProvider = (
           modalFormProps={modalFormCreateProps}
           modalInputProps={modalInputCreateProps}
           componentInputs={FormInputs}
-        />
+        />}
       </>
     );
   };

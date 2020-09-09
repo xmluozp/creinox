@@ -25,6 +25,7 @@ const InputTT = React.memo(
     label = "输入",
     onChange = () => {}, //
     onSelect = () => {},
+    onLoaded = () => {},
     error = false,
     helperText = "",
     fullWidth = true,
@@ -51,6 +52,11 @@ const InputTT = React.memo(
     //   }
     //   return () => {};
     // }, [data, value]);
+
+    // 通知外部组件，数据加载完成
+    useEffect(() => {
+      onLoaded(id);
+    }, []);
 
     // 关闭弹出窗口
     const handleModalClose = () => {

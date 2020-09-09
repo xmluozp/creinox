@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {h_popfile} from '../_helper'
 
 
@@ -52,8 +52,13 @@ const ImageSelectable = ({
   isSelected,
   editMode,
   autoZoom = false, 
+  onLoaded = () => {},
 }) => {
   //calculate x,y scale
+  // 通知外部组件，数据加载完成
+  useEffect(() => {
+    onLoaded(id);
+  }, []);
 
   const {height, width, maxHeight, maxWidth, ...photoProps} = photo
 

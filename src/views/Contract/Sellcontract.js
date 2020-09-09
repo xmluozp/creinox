@@ -14,9 +14,10 @@ import { sellcontractActions as dataActions } from "_actions";
 import { sellcontractModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs, TabPanel } from "components";
 import { enumsLabel, enums } from "_constants";
-import { history, h_fkFetch } from "_helper";
+import { history, h_fkFetch, authCheckUser } from "_helper";
 
 import Sellsubitems from "./Sellsubitems";
+const AUTHNAME_CONFORM = "confirm-payment"
 
 export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
   const CurrentPage = ({
@@ -28,6 +29,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
     onGetDefaultCode,
     onGetInvoiceCode,
     onClear,
+    user,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
@@ -120,6 +122,9 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
       })
     }
 
+    let defaultData = isFromEdit && dataById && { ...dataById.row };
+    const locked = defaultData && defaultData.isDone === true && !authCheckUser(user, AUTHNAME_CONFORM)
+
     return (
       <>
         {/* 主框架 */}
@@ -149,27 +154,26 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                 {/* main form */}
                 <TabPanel value={tabSelect} index={0}>
                   <CreinoxForm
-                    defaultValues={
-                      isFromEdit && dataById && { ...dataById.row }
-                    }
+                    defaultValues={defaultData}
                     errors={errorById}
                     isFromEdit={isFromEdit}
+                    disabled = {disabled}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
                     onGetInjector={handleGetInjector}
                     isEnglish = {true}
                   >
                     <Grid container spacing={2}>
-                      {formInputs(
+                      {formInputs({
                         disabled,
-                        handleOnGetDefaultCode,
-                        handleOnGetInvoiceCode,
-                        handleSellerSelect,
-                        handleBuySelect
-                      )}
+                        onGetDefaultCode: handleOnGetDefaultCode,
+                        onGetInvoiceCode: handleOnGetInvoiceCode,
+                        handleSellerSelect, 
+                        handleBuySelect,
+                        user})}
                     </Grid>
                     <Grid container spacing={2}>
-                      {isFromEdit && ( // only show edit button when update
+                      {isFromEdit && !locked && ( // only show edit button when update
                         <Grid item>
                           <Inputs.MyEditButton
                             disabled={disabled}
@@ -177,7 +181,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                           />
                         </Grid>
                       )}
-                      {!isFromEdit && (
+                      {!isFromEdit && !locked && (
                         <Grid item>
                           <Button
                             type="button"
@@ -211,6 +215,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
                       onGetById(id);
                     }}
                     preConditions={{ sell_contract_id: id }}
+                    disabled={locked}
                   />
                 </TabPanel>
               </Card>
@@ -222,7 +227,14 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
   };
 
   //
-  const formInputs = (disabled, onGetDefaultCode, OnGetInvoiceCode, handleSellerSelect, handleBuySelect) => {
+  const formInputs = (
+    {
+      disabled,
+      onGetDefaultCode,
+      onGetInvoiceCode,
+      handleSellerSelect, 
+      handleBuySelect,
+      user}) => {
     return (
       <>
         {/* 基本信息 */}
@@ -272,7 +284,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
           <Inputs.MyInput inputid="code" disabled={disabled} onGetDefault={onGetDefaultCode}/>
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
-          <Inputs.MyInput inputid="invoiceCode" disabled={disabled} onGetDefault={OnGetInvoiceCode}/>
+          <Inputs.MyInput inputid="invoiceCode" disabled={disabled} onGetDefault={onGetInvoiceCode}/>
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
           <Inputs.MyInput inputid="orderNumber" disabled={disabled} />
@@ -382,7 +394,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MySwitch inputid="isDone" disabled={disabled} />
+          <Inputs.MySwitch inputid="isDone" disabled={disabled || !authCheckUser(user, AUTHNAME_CONFORM)} />
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>

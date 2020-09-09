@@ -14,7 +14,9 @@ import { mouldcontractActions as dataActions } from "_actions";
 import { mouldcontractModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs, TabPanel, Gallery } from "components";
 import { enumsLabel, enums } from "_constants";
-import { history, h_fkFetch } from "_helper";
+import { history, h_fkFetch, authCheckUser } from "_helper";
+
+const AUTHNAME_CONFORM = "confirm-payment"
 
 export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   const CurrentPage = ({
@@ -26,6 +28,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
     onGetDefaultCode,
     onGetInvoiceCode,
     onClear,
+    user,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
@@ -98,6 +101,10 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
       return defaultValue;
     };
 
+
+    let defaultData = isFromEdit && dataById && { ...dataById.row };
+    const locked = defaultData && defaultData.isDone === true && !authCheckUser(user, AUTHNAME_CONFORM)
+
     return (
       <>
         {/* 主框架 */}
@@ -124,25 +131,24 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
                 {/* main form */}
                 <TabPanel value={tabSelect} index={0}>
                   <CreinoxForm
-                    defaultValues={
-                      isFromEdit && dataById && { ...dataById.row }
-                    }
+                    defaultValues={defaultData}
                     errors={errorById}
                     isFromEdit={isFromEdit}
+                    disabled = {disabled}
                     actionSubmit={handleOnSubmit}
                     dataModel={dataModel}
                     onGetInjector={handleGetInjector}
                   >
                     <Grid container spacing={2}>
-                      {formInputs(
+                      {formInputs({
                         disabled,
                         injector,
-                        handleOnGetDefaultCode,
-                        handleOnGetInvoiceCode
-                      )}
+                        onGetDefaultCode: handleOnGetDefaultCode,
+                        onGetInvoiceCode: handleOnGetInvoiceCode,
+                        user})}
                     </Grid>
                     <Grid container spacing={2}>
-                      {isFromEdit && ( // only show edit button when update
+                      {isFromEdit && !locked && ( // only show edit button when update
                         <Grid item>
                           <Inputs.MyEditButton
                             disabled={disabled}
@@ -150,7 +156,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
                           />
                         </Grid>
                       )}
-                      {!isFromEdit && (
+                      {!isFromEdit && !locked && (
                         <Grid item>
                           <Button
                             type="button"
@@ -199,12 +205,13 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
   };
 
   //
-  const formInputs = (
+  const formInputs = ({
     disabled,
     injector,
     onGetDefaultCode,
-    OnGetInvoiceCode
-  ) => {
+    onGetInvoiceCode,
+    user
+  }) => {
     const handleChangeSellerBank = (selectData) => {
       if (selectData && selectData.id) {
         injector({
@@ -265,7 +272,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
           <Inputs.MyInput
             inputid="invoiceCode"
             disabled={disabled}
-            onGetDefault={OnGetInvoiceCode}
+            onGetDefault={onGetInvoiceCode}
           />
         </Grid>
         <Grid item lg={2} md={2} xs={12}>
@@ -394,7 +401,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>
-          <Inputs.MySwitch inputid="isDone" disabled={disabled} />
+          <Inputs.MySwitch inputid="isDone" disabled={disabled || !authCheckUser(user, AUTHNAME_CONFORM)} />
         </Grid>
 
         <Grid item lg={12} md={12} xs={12}>

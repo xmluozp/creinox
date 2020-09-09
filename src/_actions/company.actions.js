@@ -33,7 +33,6 @@ function get_disposable_dropdown(keyword, preConditions) {
       .then(
         response => {
           dispatch(loaded);
-          console.log("company get_disposable_dropdown", response)
           return response
         },
         error => {

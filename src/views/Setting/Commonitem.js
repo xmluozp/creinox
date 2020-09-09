@@ -70,6 +70,7 @@ const CurrentPage = ({
               defaultValues={defaultValues}
               preConditions={preConditions}
               isFromEdit={isFromEdit}
+              disabled = {disabled}
               actionSubmit={handleOnSubmit}
               dataModel={dataModel}
               errors={errorById}

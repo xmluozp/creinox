@@ -62,7 +62,7 @@ const searchBar = (
   </>
 );
 // ============================================= Modal inputs
-const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
+const FormInputs = ({ getSourceProductOnChange }) => {
   //injectProduct
 
   const handleShowOuterVolume = (values) => {
@@ -93,7 +93,6 @@ const FormInputs = ({ onLoad, getSourceProductOnChange }) => {
             tableName="commodity"
             actionName="get_disposable_dropdown"
             onSelect={getSourceProductOnChange}
-            onLoad={onLoad}
           />
         </Grid>
         <Grid item lg={3} md={3} xs={12}>
@@ -215,7 +214,7 @@ const EmbedSellsubitem = embedListProvider(
 );
 
 // 加了一层component为了处理injection
-export default (props) => {
+export default ({disabled, ...props}) => {
   const [productInjector, setProductInjector] = React.useState(null);
 
   const handleGetInjector = (inj) => {
@@ -289,6 +288,7 @@ export default (props) => {
   return (
     <EmbedSellsubitem
       isBorder={true}
+      disabled = {disabled}
       {...props}
       onFilterSubmit = {handleFilterSubmit}
       modalFormCreateProps={{ onGetInjector: handleGetInjector }}

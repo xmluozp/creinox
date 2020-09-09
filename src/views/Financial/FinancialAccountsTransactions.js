@@ -84,7 +84,7 @@ export const withTablePage = () => {
     // ============================================= Table Settings
     const rowButtons = [
       {
-        label: "收付款/打印对账表",
+        label: "转账记录",
         color: "primary",
         url: EDITURL,
         icon: ICONS.EDIT("mr-1")

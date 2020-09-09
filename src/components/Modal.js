@@ -90,7 +90,8 @@ export const MyModalFormWithData = ({
   dataModel,
   onGetById,
   errorById,
-  dataById
+  dataById,
+  disabled
 }) => {
 
   // 如果是编辑框，打开的时候读数据
@@ -113,9 +114,10 @@ export const MyModalFormWithData = ({
         isFromEdit={isFromEdit}
         actionSubmit={onSubmit}
         dataModel={dataModel}
+        disabled = {disabled}
         {...modalFormProps}
       >
-        <ModalBody>{componentInputs({isFromEdit,dataById,...modalInputProps})}</ModalBody>
+        <ModalBody>{componentInputs({isFromEdit,dataById,disabled,...modalInputProps})}</ModalBody>
         <ModalFooter>
           <Button
             type="button"
@@ -125,9 +127,9 @@ export const MyModalFormWithData = ({
           >
             取消
           </Button>
-          <Button type="submit" variant="contained" color="primary">
+          {!disabled && <Button type="submit" variant="contained" color="primary">
             保存
-          </Button>
+          </Button>}
         </ModalFooter>
       </CreinoxForm>
     </MyModalForm>

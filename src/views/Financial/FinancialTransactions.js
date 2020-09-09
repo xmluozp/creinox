@@ -159,7 +159,7 @@ export const withTablePage = () => {
     );
 
     const topButtons = [
-      { label: "收付款", url: CREATEURL, color: "primary" },
+      { label: "添加转账记录", url: CREATEURL, color: "primary" },
       { onRender: renderButtonPrint },
     ];
 

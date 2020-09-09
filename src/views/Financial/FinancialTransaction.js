@@ -64,6 +64,7 @@ const CurrentPage = ({
   const isFromEdit = Number.isInteger(id);
   const [disabled, setdisabled] = useState(isFromEdit);
   const [isIn, setisIn] = useState(false);
+  const [isContractPayment, setIsContractPayment] = useState(isFromContract)
 
   const [textReceivable, settextReceivable] = useState("");
   const [textPayable, settextPayable] = useState("");
@@ -94,13 +95,12 @@ const CurrentPage = ({
   };
 
   // 切换收付款
-  const handleTempIsIn = () => {
+  const handleTempIsIn = (newIsIn) => {
 
-    const newIsIn = !isIn
-
+    // const newIsIn = !isIn
     setisIn(newIsIn);
     const injectValues = {};
-    injectValues.temp_isIn = newIsIn;
+    // injectValues.temp_isIn = newIsIn;
 
     if (newIsIn) {
       injectValues.amount_out = 0;
@@ -125,6 +125,7 @@ const CurrentPage = ({
   };
 
   const injectOrderFormToTransaction = (oldValue) => {
+    console.log("test hihihi")
     const orderFormItem = oldValue && oldValue["order_form_id.row"];
     const isContractPayment = oldValue && oldValue.isContractPayment;
 
@@ -134,9 +135,11 @@ const CurrentPage = ({
     if (!orderFormItem) return null;
 
     if (!isContractPayment) {
-      returnValue.financialLedgerDebit_id = "";
-      returnValue.financialLedgerCredit_id = "";
-      returnValue.tt_transUse = "";
+
+      // 200909: 不清空因为要复制粘贴
+      // returnValue.financialLedgerDebit_id = "";
+      // returnValue.financialLedgerCredit_id = "";
+      // returnValue.tt_transUse = "";
 
       return returnValue;
     }
@@ -198,14 +201,12 @@ const CurrentPage = ({
   const handleOrderformOnSelect = (item) => {
     // 新增的时候才能选合同
     // if (isFromEdit) return;
-
     if (item && item.id) {
       settextReceivable(
         `收款金额 (已收: ${item.receivablePaid || 0}/${item.receivable || 0})`
       );
       settextPayable(`付款金额 (已付: ${item.payablePaid || 0}/${item.payable || 0})`);
     }
-
     injector({ "order_form_id.row": item }, (newValue) => {
       injector(injectOrderFormToTransaction(newValue));
     });
@@ -213,7 +214,6 @@ const CurrentPage = ({
 
   const handleIsContractPaymentOnSwitch = (a, b, value) => {
     injector({ isContractPayment: value }, (newValue) => {
-      console.log("switch");
       injector(injectOrderFormToTransaction(newValue));
     });
   };
@@ -226,6 +226,10 @@ const CurrentPage = ({
     }
   };
 
+
+
+
+
   // 根据客户的银行，读取名称和账号
   const handleChangeBank = (selectData) => {
     if (selectData && selectData.id) {
@@ -236,9 +240,7 @@ const CurrentPage = ({
     }
   };
 
-
   const balance = dataById && dataById.row && isFromEdit ? `当前余额: ${dataById.row.balance}` : ""
-
 
   return (
     <div className="animated fadeIn">
@@ -257,10 +259,14 @@ const CurrentPage = ({
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
               preConditions={preConditions}
               isFromEdit={isFromEdit}
+              disabled = {disabled}
               actionSubmit={handleOnSubmit}
               errors={errorById}
-              isHideTool={true}
               onGetInjector={handleGetInjector}
+              listener = {{
+                isContractPayment: setIsContractPayment,
+                temp_isIn: handleTempIsIn
+              }}
             >
               <CardBody>
                 {/* form */}
@@ -272,7 +278,6 @@ const CurrentPage = ({
                       labelTrue="收款"
                       labelFalse="付款"
                       disabled={disabled || isFromEdit}
-                      onChange={handleTempIsIn}
                     />
                   </Grid>
 
@@ -291,7 +296,7 @@ const CurrentPage = ({
                       tableName="orderform"
                       onRenderOption={handleRenderOrderformOptions}
                       onSelect={handleOrderformOnSelect}
-                      onLoad={handleOrderformOnSelect}
+                      isDefaultOnSelect={!isFromEdit}
                       actionName="get_disposable_dropdown"
                       disabled={disabled || isFromEdit}
                     />
@@ -340,8 +345,8 @@ const CurrentPage = ({
                         tableName="financialaccount"
                         actionName="get_dropdown"
                         disabled={true}
-                        onLoad={handleFinancialAccountOnSelect}
                         onSelect={handleFinancialAccountOnSelect}
+                        isDefaultOnSelect={!isFromEdit}
                       />
                     ) : (
                       <Inputs.MyComboboxCascade
@@ -353,12 +358,13 @@ const CurrentPage = ({
                         optionLabel="name"
                         actionName="get_dropdown"
                         onSelect={handleFinancialAccountOnSelect}
+                        isDefaultOnSelect={!isFromEdit}
                       />
                     )}
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyComboboxAsyncFK
-                      disabled={disabled}
+                      disabled={disabled || isFromEdit || isContractPayment}
                       inputid="company_id"
                       tableName="company"
                       actionName="get_disposable_dropdown"
@@ -373,9 +379,10 @@ const CurrentPage = ({
                       disabled={disabled || isFromEdit}
                       listen={{ company_id: "company_id" }}
                       tableName="bankaccount"
-                      optionLabel="accountName"
+                      optionLabel="bankName"
                       actionName="get_dropdown"
                       onSelect={handleChangeBank}
+                      isDefaultOnSelect={!isFromEdit}
                     />
                   </Grid>
 

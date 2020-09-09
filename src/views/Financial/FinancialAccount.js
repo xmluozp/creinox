@@ -72,6 +72,7 @@ const CurrentPage = ({
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
               preConditions={preConditions}
               isFromEdit={isFromEdit}
+              disabled = {disabled}
               actionSubmit={handleOnSubmit}
               errors={errorById}
             >

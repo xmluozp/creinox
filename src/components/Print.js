@@ -107,6 +107,7 @@ const Print = ({
       <IconButton
         aria-label="打印按钮"
         size="small"
+        title="打印"
         onClick={handleOnOpen.bind(null, true)}
       >
         {ICONS.PRINT()}

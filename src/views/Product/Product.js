@@ -153,6 +153,7 @@ export const withProduct = () => {
         preConditions={{isCreateCommodity: true}}
         errors={errorById}
         isFromEdit={isFromEdit}
+        disabled = {disabled}
         actionSubmit={handleOnSubmit}
         dataModel={dataModel}
         onGetInjector={handleGetProductInjector}
