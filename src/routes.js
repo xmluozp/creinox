@@ -223,7 +223,7 @@ const routes = [
   {
     path: "/users/userLogs",
     exact: true,
-    name: "操作日志 (功能未实现)",
+    name: "操作日志",
     component: UserLogs,
     authTag: "userLog"
   },

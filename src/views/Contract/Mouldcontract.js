@@ -55,7 +55,9 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
 
     const handleOnSubmit = (values) => {
       if (isFromEdit) {
-        onPutUpdate(values);
+        onPutUpdate(values, ()=> {
+          onGetById(id); // 更新不返回 orderForm 所以手动更新一下
+        });
       } else {
         // onPostCreate(values, history.location.pathname);
         onPostCreate(values, (id) => {

@@ -233,7 +233,7 @@ const navs = {
           url: "/image/images",
           authTag: "image",
         },        {
-          name: "操作日志(未实现)",
+          name: "操作日志",
           url: "/users/userLogs",
           authTag: "userLog",
         },

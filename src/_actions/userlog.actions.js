@@ -7,8 +7,9 @@ import {
 const {
   get_bySearch,
   get_byId,
-  post_create,
-  put_update,
+  // post_create,
+  // put_update,
+  _deleteMultiple,
   _delete,
   _clear
 } = _am(CONST, service);
@@ -17,8 +18,9 @@ const {
 export const userlogActions = {
   get_bySearch,
   get_byId,
-  post_create,
-  put_update,
+  // post_create,
+  _deleteMultiple,
+  // put_update,
   _delete,
   _clear
 };

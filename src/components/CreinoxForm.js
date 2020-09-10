@@ -400,8 +400,8 @@ export class CreinoxForm extends React.Component {
     }
 
     // 打印按钮
-    if (dataModel && dataModel.printTemplate) {
-      renderButtons.push( i => (<Print dataModel={dataModel} id={this.state.id}  key={"toolbar"+i}/>));
+    if (dataModel && dataModel.template) {
+      renderButtons.push( <Print dataModel={dataModel} id={this.state.id} />);
     }
 
     if(renderButtons.length === 0) return null
@@ -429,6 +429,8 @@ export class CreinoxForm extends React.Component {
             return <Grid item style={{ marginRight: 10 }} key={"toolbar"+i}>
               {item}
             </Grid>})}
+
+
         </Grid>
       </div>
     );

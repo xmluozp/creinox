@@ -8,7 +8,9 @@ export const userlogService = {
   get_byId,
   post_create,
   put_update,
-  _delete: _delete
+  _delete: _delete,
+
+  _deleteMultiple: _deleteMultiple,
 };
 
 const TABLENAME = "userLog";
@@ -69,4 +71,16 @@ function _delete(id) {
 
   return fetch(`${URL}/${id}`, requestOptions)
     .then(handleResponse);
+}
+
+function _deleteMultiple(list) {
+  const requestOptions = {
+    method: "PUT",
+    headers: { ...authHeader(), "Content-Type": "application/json" },
+    body: JSON.stringify(list),
+  };
+
+  console.log("批量删除", list);
+
+  return fetch(`${URL}_delete`, requestOptions).then(handleResponse);
 }

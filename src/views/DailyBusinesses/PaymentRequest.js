@@ -193,7 +193,7 @@ const CurrentPage = ({
         amount_out:newState.amount,
         memo:newState.memo,
       }
-      console.log("test copy", stateMapping)
+
       copy(financialtransactionModel, stateMapping)
     })
   }

@@ -11,8 +11,8 @@ import { history } from "_helper";
 
 //------redux
 import { connect } from "react-redux";
-import { portActions as dataActions } from "_actions";
-import { portModel as dataModel } from "_dataModel";
+import { userlogActions as dataActions } from "_actions";
+import { userlogModel as dataModel } from "_dataModel";
 import { CreinoxForm, Inputs } from "components";
 
 // import { h_confirm } from '_helper'
@@ -64,52 +64,19 @@ const CurrentPage = ({
               dataModel={dataModel}
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
               isFromEdit={isFromEdit}
-              disabled = {disabled}
+              disabled = {true}
               actionSubmit={handleOnSubmit}
+              toolBar = {{isHidding: true}}
               errors={errorById}
             >
               <CardBody>
                 {/* form */}
 
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <Inputs.MyInput inputid="name" disabled={disabled} />
+                  <Grid item lg={12} xs={12}>
+                    <Inputs.MyInput inputid="memo" />
                   </Grid>
-                  <Grid item lg={6} xs={12}>
-                    <Inputs.MyInput inputid="ename" disabled={disabled} />
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Inputs.MySwitch
-                      inputid="isDeparture"
-                      disabled={disabled}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Inputs.MySwitch
-                      inputid="isDestination"
-                      disabled={disabled}
-                    />
-                  </Grid>
-                </Grid>		        
-                <Grid container spacing={2}>
-                  {isFromEdit && ( // only show edit button when update
-                    <Grid item>
-                      <Inputs.MyEditButton
-                        disabled={disabled}
-                        setdisabled={setdisabled}
-                      />
-                    </Grid>
-                  )}
-                  {disabled || ( // when browsering, hide save button
-                    <Grid item>
-                      <Button type="submit" variant="contained" color="primary">
-                        保存
-                      </Button>
-                    </Grid>
-                  )}
-                </Grid>
+                </Grid>        
               </CardBody>
             </CreinoxForm>
           </Card>
@@ -123,8 +90,8 @@ const CurrentPage = ({
 
 function mapState(state) {
   return {
-    dataById: state.portData.dataById,
-    errorById: state.portData.errorById
+    dataById: state.userlogData.dataById,
+    errorById: state.userlogData.errorById
   };
 }
 

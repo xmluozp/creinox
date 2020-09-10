@@ -145,6 +145,7 @@ export const _am = (CONST, service) => {
         response => {
           dispatch(loaded);
           const info = response && response.info ? response.info : ""
+
           dispatch(success("保存成功" + info.toString()));
           dispatch(done(response, CONST.UPDATE_SUCCESS));
           callBack(response);

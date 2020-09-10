@@ -36,3 +36,11 @@ export const  enums = {
         direction: {send:0, receive:1},
     expressType: {document:0, package: 1},
 }
+
+export const enumLogType = {
+    "sell_contract":    "销售合同",
+    "sell_subitem":     "销售合同商品",
+    "buy_contract":     "采购合同",
+    "buy_subitem":      "采购合同商品",  
+    "mould_contract":   "产品开发合同"
+}

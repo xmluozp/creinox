@@ -125,7 +125,7 @@ const CurrentPage = ({
   };
 
   const injectOrderFormToTransaction = (oldValue) => {
-    console.log("test hihihi")
+
     const orderFormItem = oldValue && oldValue["order_form_id.row"];
     const isContractPayment = oldValue && oldValue.isContractPayment;
 

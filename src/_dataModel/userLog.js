@@ -7,6 +7,8 @@ export const userlogModel = {
     columns: {
         id :            {label:"ID",        type: _DATATYPES.INT },
         createAt:       {label: "时间",   type: _DATATYPES.DATETIME},
+        type:           {label: "日志类别",   type: _DATATYPES.TEXT},
+        functionName:   {label: "操作",   type: _DATATYPES.TEXT},
         memo:           {label: "备注",     type: _DATATYPES.TEXT},
         snapshotBefore: {label: "修改前",     type: _DATATYPES.TEXT},
         snapshotAfter:  {label: "修改后",     type: _DATATYPES.TEXT},
