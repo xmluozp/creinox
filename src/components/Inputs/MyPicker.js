@@ -200,17 +200,16 @@ const MyRegionPickerWrapper = (props) => {
   return (
     <CurrentPicker
       {...props}
+      subName="code"
       searchColumns={["name", "ename", "telPrefix", "code"]}
     />
   );
 };
 const MyCategoryPickerWrapper = (props) => {
-
   return (
     <CurrentPicker
       {...props}
       subName="prefix"
-
       searchColumns={["name", "ename", "prefix"]}
     />
   );

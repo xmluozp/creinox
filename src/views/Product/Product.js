@@ -31,6 +31,7 @@ export const withProduct = () => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onClear,
     onRenewCategory,
     ...props
   }) => {
@@ -45,7 +46,11 @@ export const withProduct = () => {
       if (id) {
         onGetById(id);
       }
-    }, [onGetById, id]);
+
+      return () => {
+        onClear();
+      };
+    }, [onGetById, onClear, id]);
 
     // ********************************
 
@@ -388,7 +393,8 @@ export const withProduct = () => {
     onPostCreate: dataActions.post_create,
     onRenewCategory: categoryActions.get_treeNotesById,
     onPutUpdate: dataActions.put_update,
-    onGetById: dataActions.get_byId
+    onGetById: dataActions.get_byId,
+    onClear: dataActions._clear
   };
 
   return connect(mapState, actionCreators)(CurrentPage);

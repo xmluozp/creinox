@@ -204,7 +204,7 @@ const FormInputs = ({
           <Inputs.MyInput inputid="outerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(m³)" onShow={handleShowOuterVolume} />
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowOuterVolume} disabled={true}/>
         </Grid>
 
         <Grid item lg={3} md={6} xs={12}>
@@ -217,14 +217,14 @@ const FormInputs = ({
           <Inputs.MyInput inputid="innerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume} />
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume} disabled={true}/>
         </Grid>
 
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="netWeight" />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
-          <Inputs.MyInput label="净重合计(KGS)" onShow={handleTotalNetWeight} />
+          <Inputs.MyInput label="净重合计(KGS)" onShow={handleTotalNetWeight} disabled={true}/>
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="fcl20" />
@@ -237,6 +237,7 @@ const FormInputs = ({
           <Inputs.MyInput
             label="毛重合计(KG)"
             onShow={handleTotalGrossWeight}
+            disabled={true}
           />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>

@@ -49,7 +49,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
       return () => {
         onClear();
       };
-    }, [onGetById, id]);
+    }, [onGetById, onClear, id]);
 
     // ********************************
 
@@ -359,6 +359,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
             inputid="temp_buyerbank"
             disabled={disabled}
             listen={{ buyer_company_id: "company_id" }}
+            isDefaultOnSelect
             tableName="bankaccount"
             optionLabel="accountNo"
             actionName="get_dropdown"
@@ -381,6 +382,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
             inputid="temp_sellerbank"
             disabled={disabled}
             listen={{ seller_company_id: "company_id" }}
+            isDefaultOnSelect
             tableName="bankaccount"
             optionLabel="accountNo"
             actionName="get_dropdown"
@@ -438,6 +440,7 @@ export const withMouldcontract = (EDITURL = "/contract/mouldcontracts") => {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
     onGetById: dataActions.get_byId,
+    onClear: dataActions._clear,
     onGetDefaultCode: dataActions.get_disposable_defaultCode,
     onGetInvoiceCode: dataActions.get_disposable_invoiceCode,
 

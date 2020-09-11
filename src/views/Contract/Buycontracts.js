@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useState}  from "react";
 
 // import _ from "lodash";
 // import { format } from 'date-fns'
 // import TextField from "@material-ui/core/TextField";
+import formatCurrency from "format-currency";
 
 //------redux
 import { connect } from "react-redux";
@@ -13,7 +14,8 @@ import {
   CreinoxTable,
   Inputs,
   // TabVertical, // 第三级菜单用
-  withDatatableStore
+  withDatatableStore,
+  ToolBar,
 } from "components";
 
 import { withSimpleTable } from "components/SimpleTable";
@@ -77,24 +79,21 @@ export const withBuycontractList = (
     </>
   );
 
-  const renderAmountOut = (prev, curr) => {
+  const renderAmount = (prev, curr) => {
     const num1 = parseFloat(prev) || 0
     const num2 = parseFloat(curr) || 0
     return (num1 + num2).toFixed(2)
   }
 
-  const renderAmountIn = (prev, curr) => {
-    const num1 = parseFloat(prev) || 0
-    const num2 = parseFloat(curr) || 0
-    return (num1 + num2).toFixed(2)
-  }
+  // 货币显示逗号
+  const renderWrap = content => formatCurrency(parseFloat(content))
 
   // >>> 下属付款记录 ---------------------------------------
   const headCells_financialTransactions = [
     { name: "id", disablePadding: true, className: "ml-2", width:80 },
     { name: "transdateAt", width: 170},
-    { name: "amount_in", width:140, onWrap: renderAmountIn},
-    { name: "amount_out", width:140, onWrap: renderAmountOut},
+    { name: "amount_in", width:140, onWrap: renderAmount, onShowWrap: renderWrap},
+    { name: "amount_out", width:140, onWrap: renderAmount, onShowWrap: renderWrap},
     { name: "financialAccount_id", width:200 },
     { name: "bankaccountName", width:200 },
     { name: "bankaccountNo", width:220 },
@@ -129,6 +128,9 @@ export const withBuycontractList = (
   // **************************************************************************************************
 
   const CurrentPage = ({ onDelete, pageName, ...props }) => {
+
+    const [showAll, setShowAll] = useState(false)
+
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
@@ -166,20 +168,30 @@ export const withBuycontractList = (
       { label: "Create", url: CREATEURL, color: "success", icon: ICONS.ADD() }
     ];
 
+    const topButtons = [
+      { label: "只显示未完成", onClick:()=> {setShowAll(false)}, color: "primary", variant: showAll ? "outlined": "contained"},
+      { label: "显示全部", onClick:()=> {setShowAll(true)},color: "secondary", variant: showAll ? "contained": "outlined"},
+    ];
+
     // ============================================= Render
     return (
-      <MyTable
-      {...props}
-        onRowDbClick={handleOnEdit}
-        tableTitle={pageName}
-        headCells={headCells}
-        dataModel={dataModel}
-        rowButtons={rowButtons}
-        toolbarButtons={toolbarButtons}
-        collapsePanel={collapsePanel}
-        searchBar={searchBar}
-
-      />
+      <>
+        <ToolBar buttons={topButtons} />
+        <MyTable
+        {...props}
+          onRowDbClick={handleOnEdit}
+          preConditions = {showAll ? {} : {isDone: false}}
+          tableTitle={pageName}
+          headCells={headCells}
+          dataModel={dataModel}
+          rowButtons={rowButtons}
+          toolbarButtons={toolbarButtons}
+          collapsePanel={collapsePanel}
+          searchBar={searchBar} 
+          toggle={showAll}
+          />
+          
+      </>
     );
   };
 

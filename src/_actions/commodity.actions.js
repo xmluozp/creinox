@@ -41,11 +41,32 @@ function get_byId(commodity_id = 0, product_id = 0, isMeta = false) {
 }
 
 //======================== customized
+function get_disposable_byId(id) {
+  return dispatch => {
+    dispatch(loading);
+    return service.get_byId(id).then(
+      response => {
+        dispatch(loaded);
+        let returnValue = {};
+        if (response && response.row) {
+          returnValue = response.row;
+        }
+        return returnValue;
+      },
+      error => {
+        dispatch(loadedFailure);
+        const errorInfo =error && error.info ? error.info : ""
+        dispatch(failure(errorInfo.toString()));
+      }
+    );
+  };
+}
 
 function get_disposable_dropdown(keyword, preConditions) {
   return dispatch => {
     dispatch(loading);
-    return service.get_dropdown({}, { ...preConditions, code: keyword }).then(
+    preConditions.keyword = keyword
+    return service.get_dropdown({}, preConditions).then(
       response => {
         dispatch(loaded);
         let returnValue = [];
@@ -165,6 +186,7 @@ export const commodityActions = {
 
   // customized
   get_disposable_dropdown,
+  get_disposable_byId,
   get_bySearch_getProduct,
   get_bySearch_getCommodity,
   post_create_assemble,

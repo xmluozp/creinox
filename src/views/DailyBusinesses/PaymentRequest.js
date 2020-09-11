@@ -27,6 +27,7 @@ const CurrentPage = ({
   onPostCreate,
   onPutUpdate,
   onGetById,
+  onClear,
   errorById,
   onPutApprove,
   onPutReject,
@@ -47,7 +48,11 @@ const CurrentPage = ({
     if (id) {
       onGetById(id);
     }
-  }, [onGetById, id]);
+
+    return () => {
+      onClear();
+    };
+  }, [onGetById, onClear, id]);
 
   // ********************************
 
@@ -288,6 +293,7 @@ const CurrentPage = ({
                       optionLabel="code"
                       tableName="orderform"
                       onRenderOption={handleRenderOrderformOptions}
+                      isDefaultOnSelect={!isFromEdit}
                       onSelect={handleOrderformOnSelect}
                       actionName="get_disposable_dropdown"
                       disabled={disabled}
@@ -445,6 +451,7 @@ const actionCreators = {
   onPostCreate: dataActions.post_create,
   onPutUpdate: dataActions.put_update,
   onGetById: dataActions.get_byId,
+  onClear: dataActions._clear,
   onPutApprove: dataActions.put_approve,
   onPutReject: dataActions.put_reject,
 

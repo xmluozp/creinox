@@ -63,7 +63,7 @@ export const withBuycontract = (EDITURL = "/contract/buycontracts") => {
       return () => {
         onClear();
       };
-    }, [onGetById, id]);
+    }, [onGetById, onClear, id]);
 
     //******************************************** 获取上级订单(
     // 有3种可能获取上级订单：param，直接通过buyId读取对应的sellId，下拉选择sellContract

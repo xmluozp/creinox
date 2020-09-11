@@ -84,6 +84,7 @@ export const MyCombobox = React.memo(
     onChange = () => {}, // 外部form改数据用
     onLoaded = () => {},
     onSelect = () => {}, // 从用户手动选择触发
+    listener, // 因为下拉选项不只是value所以需要一个和外部form不一样的listener
     // onLoad = () => {},   // 读出options的时候运行
     disabled = false,
     isDefaultOnSelect = false, // 读数据的时候是否自动触发onSelect (用来区分第一次加载和用户选择两种情况)
@@ -171,6 +172,13 @@ export const MyCombobox = React.memo(
         _.find(optionsFix, ["id", value]) || (optionsFix && optionsFix[0]);
 
       handleOnChange = (e, item) => {
+
+        // 如果是读取数据，只有读取了以后才会触发onSelect。否则会混淆"第一次读取"和"用户操作"(意外触发inject)
+        // e 只有用户操作的时候才会有
+        if (e || isDefaultOnSelect) {
+          onSelect(item);
+        }
+
         if (disabled) return;
 
         // 如果有id的话，返回id，否则假如有default就放空，否则返回value（为了搜索的时候可以输入内容）
@@ -184,18 +192,19 @@ export const MyCombobox = React.memo(
         // 20200327: 多返回一个item本身. creinoxform用
         onChange(e, id, returnValue, item);
         // 20200331: 用来代替onChange，因为onChange被creinoxForm征用了
-
-        // 如果是读取数据，只有读取了以后才会触发onSelect。否则会混淆"第一次读取"和"用户操作"(意外触发inject)
-        // e 只有用户操作的时候才会有
-        if (e || isDefaultOnSelect) {
-          onSelect(item);
-        }
       };
 
       handleGetOptionSelected = (item, index) => {
         return item.id === (currentValue && currentValue.id);
       };
     }
+
+
+    useEffect(() => {
+      if(listener && typeof(listener) ==='function' && value) {
+        listener(value, currentValue);
+      }      
+    }, [listener, value, currentValue]);
 
     const optionLength = (options && options.length) || 0;
 
@@ -482,7 +491,7 @@ export const MyComboboxFK = React.memo(({ onLoaded = () => {}, ...props }) => {
   const [loadedIsSubscribed, setLoadedIsSubscribed] = useState(true);
   // 为了从外部调用
 
-  // 第一此打开
+  // 第一此打开如果有默认值则加载
   const loadData = async () => {
     if (props.value) {
       // inputValue这里是keyword。根据id搜索的话不需要关键字
@@ -506,6 +515,7 @@ export const MyComboboxFK = React.memo(({ onLoaded = () => {}, ...props }) => {
     onLoaded(id);
   };
 
+  // 读取列表
   const fetchDropDown = async () => {
     // 条件的第一个是pagination因为后台所有dropdown第一个参数都是pagination
     try {

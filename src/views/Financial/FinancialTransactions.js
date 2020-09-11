@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import _ from "lodash";
+import formatCurrency from "format-currency";
 // import { format } from 'date-fns'
 // import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -40,22 +41,19 @@ export const withTablePage = () => {
     }
   };
 
-  const renderAmountOut = (prev, curr) => {
-    const num1 = parseFloat(prev) || 0
-    const num2 = parseFloat(curr) || 0
-    return (num1 + num2).toFixed(2)
-  }
-
-  const renderAmountIn = (prev, curr) => {
+  const renderAmount = (prev, curr) => {
     const num1 = parseFloat(prev) || 0
     const num2 = parseFloat(curr) || 0
     return (num1 + num2).toFixed(2)
   }
   
+  // 货币显示逗号
+  const renderWrap = content => formatCurrency(parseFloat(content))
+
   const headCells = [
     { name: "id", disablePadding: true, className: "ml-2" },
-    { name: "amount_in", onWrap: renderAmountIn },
-    { name: "amount_out", onWrap: renderAmountOut },
+    { name: "amount_in", onWrap: renderAmount, onShowWrap: renderWrap },
+    { name: "amount_out", onWrap: renderAmount, onShowWrap: renderWrap },
     { name: "currency_id" },
     { name: "transdateAt" },
     { name: "balance" },

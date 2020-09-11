@@ -32,6 +32,7 @@ const CurrentPage = ({
   onPostCreate,
   onPutUpdate,
   onGetById,
+  onClear,
   errorById,
   ...props
 }) => {
@@ -52,7 +53,7 @@ const CurrentPage = ({
   };
 
   // ------------ 是否针对合同，收还是付 (添加取param，编辑取数据库)
-  let title = "收付款";
+  let title = "转账记录";
 
   const EDITURL = "/financial/financialtransactions";
 
@@ -74,7 +75,11 @@ const CurrentPage = ({
     if (id) {
       onGetById(id);
     }
-  }, [onGetById, id]);
+
+    return () => {
+      onClear();
+    };
+  }, [onGetById, onClear, id]);
 
   // ********************************
 
@@ -177,8 +182,8 @@ const CurrentPage = ({
           enums.financialLedgerType.PayablePayCredit;
 
         returnValue.tt_transUse = `支付${orderFormItem.code}货款`;
-        returnValue.temp_isIn = true;
-        setisIn(true)
+        returnValue.temp_isIn = false;
+        setisIn(false)
       }
     }
 
@@ -219,16 +224,20 @@ const CurrentPage = ({
   };
 
   const handleFinancialAccountOnSelect = (item) => {
-    if (financialAccount_id) {
+    if (injector && typeof(injector) ==='function' && financialAccount_id) {
       injector({
         currency_id: item && item.currency_id,
       });
     }
   };
 
-
-
-
+  const handleSetCurrency = (v, item) => {
+    if (injector && typeof(injector) ==='function' && financialAccount_id) {
+      injector({
+        currency_id: item && item.currency_id,
+      });
+    } 
+  }
 
   // 根据客户的银行，读取名称和账号
   const handleChangeBank = (selectData) => {
@@ -239,6 +248,11 @@ const CurrentPage = ({
       });
     }
   };
+
+  const handleDefaultValuesOnLoad = values => {
+    values.temp_isIn = values.amount_out < values.amount_in
+    return values
+  }
 
   const balance = dataById && dataById.row && isFromEdit ? `当前余额: ${dataById.row.balance}` : ""
 
@@ -257,6 +271,7 @@ const CurrentPage = ({
             <CreinoxForm
               dataModel={dataModel}
               defaultValues={isFromEdit && dataById && { ...dataById.row }}
+              defaultValuesOnLoad = {handleDefaultValuesOnLoad}
               preConditions={preConditions}
               isFromEdit={isFromEdit}
               disabled = {disabled}
@@ -326,7 +341,7 @@ const CurrentPage = ({
                   <Grid item lg={4} md={4} xs={12}>
                     <Inputs.MyComboboxPaymentType
                       inputid="paymentType_id"
-                      disabled={disabled || isFromEdit}
+                      disabled={disabled}
                     />
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
@@ -346,6 +361,7 @@ const CurrentPage = ({
                         actionName="get_dropdown"
                         disabled={true}
                         onSelect={handleFinancialAccountOnSelect}
+                        listener={handleSetCurrency}
                         isDefaultOnSelect={!isFromEdit}
                       />
                     ) : (
@@ -474,6 +490,7 @@ const actionCreators = {
   onPostCreate: dataActions.post_create,
   onPutUpdate: dataActions.put_update,
   onGetById: dataActions.get_byId,
+  onClear: dataActions._clear
 };
 
 export default connect(mapState, actionCreators)(CurrentPage);

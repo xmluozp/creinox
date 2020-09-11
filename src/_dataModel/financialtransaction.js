@@ -13,7 +13,7 @@ export const financialtransactionModel = {
         balance:        {label: "当前余额",     type: _DATATYPES.MONEY}, 
 
         tt_transUse:    {label: "用途/摘要",   type: _DATATYPES.TT},
-        isContractPayment:  {label: "是否属于合同应收/应付款",     type: _DATATYPES.BOOLEAN},
+        isContractPayment:  {label: "是否属于合同货款",     type: _DATATYPES.BOOLEAN},
         bankaccountName: {label: "对方账户",    type: _DATATYPES.VARCHAR},
         bankaccountNo:   {label: "对方账号",    type: _DATATYPES.VARCHAR},
 

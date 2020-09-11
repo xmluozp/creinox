@@ -47,6 +47,7 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     onPutUpdate,
     errorById,
     onGetById,
+    onClear,
     dataById,
     product_id = 0,
     isParent = true,
@@ -63,7 +64,11 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
       if (product_id) {
         onGetById(0, product_id, true); // get one commodity by product + isMeta
       }
-    }, [onGetById, product_id]);
+
+      return () => {
+        onClear();
+      };
+    }, [onGetById, onClear, product_id]);
 
     // ============================================= handles
     const handleOnDisassembleMeta = () => {
@@ -107,7 +112,8 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     };
 
     const handleOnSubmit = values => {
-        onPutUpdate(values);
+      // delete values["image_id"] // defaultValues会取到产品的image。上传会失败
+      onPutUpdate(values);
     };
     const renderOnShowIsMeta = (content, row) => {
 
@@ -182,11 +188,13 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
                     toolBar={{isHidding: true}}
                   >
                     <Grid container spacing={2}>
-                      <Grid item lg={4} md={4} xs={12}>
+                      <Grid item lg={3} md={3} xs={12}>
                         <Inputs.MyInput inputid="name" />
                       </Grid>
-
-                      <Grid item lg={8} md={8} xs={12}>
+                      <Grid item lg={3} md={3} xs={12}>
+                        <Inputs.MyInput inputid="ename" />
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
                         <Inputs.MyInput inputid="memo" multiline rows={1} />
                       </Grid>
 
@@ -236,7 +244,8 @@ const withCommodityFromProductList = (EDITURL = "/commodity/commodities") => {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
     onGetBySearch: dataActions.get_bySearch_getCommodity,
-    onGetById: dataActions.get_byId
+    onGetById: dataActions.get_byId,
+    onClear: dataActions._clear
   };
 
   return connect(mapState, actionCreators)(CurrentPage);

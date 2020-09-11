@@ -31,6 +31,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onClear,
     onGetCode,
     ...props
   }) => {
@@ -49,7 +50,11 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
         onGetById(id);
         // console.log("fetch new data:", id)
       }
-    }, [onGetById, id]);
+
+      return () => {
+        onClear()
+      }
+    }, [onGetById, onClear, id]);
 
     // ********************************
 
@@ -435,6 +440,7 @@ export const withCompany = (companyType = 0, EDITURL = "") => {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
     onGetById: dataActions.get_byId,
+    onClear: dataActions._clear,
     onGetCode: dataActions.get_code,
   };
 

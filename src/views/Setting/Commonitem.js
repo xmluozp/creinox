@@ -20,6 +20,7 @@ const CurrentPage = ({
   onPostCreate,
   onPutUpdate,
   onGetById,
+  onClear,
   errorById,
   ...props
 }) => {
@@ -34,7 +35,11 @@ const CurrentPage = ({
     if (id) {
       onGetById(id);
     }
-  }, [onGetById, id]);
+
+    return () => {
+      onClear();
+    };
+  }, [onGetById, onClear, id]);
 
   // ********************************
 
@@ -147,7 +152,8 @@ const actionCreators = {
   onGetDropdown: dataActions.get_dropdown,
   onPostCreate: dataActions.post_create,
   onPutUpdate: dataActions.put_update,
-  onGetById: dataActions.get_byId
+  onGetById: dataActions.get_byId,
+  onClear: dataActions._clear
 };
 
 export default connect(mapState, actionCreators)(CurrentPage);

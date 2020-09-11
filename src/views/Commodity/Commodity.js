@@ -29,6 +29,7 @@ export const withProduct = () => {
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onClear,
     ...props
   }) => {
     const id = parseInt(_.get(props, "match.params.id")) || "";
@@ -42,7 +43,11 @@ export const withProduct = () => {
       if (id) {
         onGetById(id);
       }
-    }, [onGetById, id]);
+
+      return () => {
+        onClear()
+      }
+    }, [onGetById, onClear, id]);
 
     // ********************************
 
@@ -82,11 +87,12 @@ export const withProduct = () => {
 
     // 保存
     const handleOnSubmit = values => {
-      if (isFromEdit) {
 
+      // delete values["image_id"] // defaultValues会取到产品的image导致上传失败
+      
+      if (isFromEdit) {
         onPutUpdate(values);
       } else {
-
         onPostCreate(values, id => {
           // not using async. because I want loadingbar's codes put with callback codes
           history.push(EDITURL + "/" + id);
@@ -251,7 +257,8 @@ export const withProduct = () => {
   const actionCreators = {
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update,
-    onGetById: dataActions.get_byId
+    onGetById: dataActions.get_byId,
+    onClear: dataActions._clear
   };
 
   return connect(mapState, actionCreators)(CurrentPage);

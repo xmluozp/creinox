@@ -20,6 +20,7 @@ export const commodityService = {
 const TABLENAME = "commodity";
 
 const URL = RESTURL + `/api/commodity`;
+
 const URL_PRODUCT = RESTURL + `/api/commodity_getproduct`;
 const URL_COMMODITY = RESTURL + `/api/commodity_byproduct`;
 
@@ -30,8 +31,6 @@ function get_dropdown(pagination, searchTerms) {
         method: 'GET',
         headers: authHeader()
     };
-
-    console.log("service get dropdown:", searchTerms);
 
     const queryString = h_queryString(pagination, searchTerms, TABLENAME, false)
 

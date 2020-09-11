@@ -12,16 +12,19 @@ import Print from "./Print";
  * actionSubmit: redux action passed from parent. When submitting, form will call: fn(data)
  * @param {
  *
- * disabled         整个锁定。
- * renewToggle      刷新用
- * dataModel=       input根据这个来取label
- * defaultValues=   编时的默认值，从数据库取
- * preConditions =  新建时的，前提条件。比如产品类别
- * preStates =      提交的时候用来强行覆盖用户修改的值，一般用不到
- * isFromEdit =     编辑还是新建
- * actionSubmit=    提交。param 是表单的values
- * isHideTool=      隐藏工具条(复制粘贴打印)
- * listener =       监听值 {key : (value, this.state)=>{//execute}}。 监听是强关联，任何数据修改都会触发
+ * disabled             整个锁定。
+ * renewToggle          刷新用
+ * dataModel=           input根据这个来取label
+ * defaultValues=       编时的默认值，从数据库取
+ * defaultValuesOnLoad  读取默认值的时候筛一遍。用来给一些前端变量赋值
+ * onUnmount            控件清除时候运行。用来清数据
+ * onLoad               数据加载完成
+ * preConditions =      新建时的，前提条件。比如产品类别
+ * preStates =          提交的时候用来强行覆盖用户修改的值，一般用不到
+ * isFromEdit =         编辑还是新建
+ * actionSubmit=        提交。param 是表单的values
+ * isHideTool=          隐藏工具条(复制粘贴打印)
+ * listener =           监听值 {key : (value, this.state)=>{//execute}}。 监听是强关联，任何数据修改都会触发
  * } props
  */
 
@@ -51,7 +54,7 @@ export class CreinoxForm extends React.Component {
     const loadingMonitor = new Set();
 
     // preConditions 是新增用的，是前提条件
-    const { isFromEdit, preConditions, children } = this.props;
+    const { isFromEdit, preConditions, children, onLoad} = this.props;
 
     // 根据所有的input生成一个空表单。
     recursiveMap(children, (item) => {
@@ -76,6 +79,11 @@ export class CreinoxForm extends React.Component {
       loadingMonitor, // 监控value是否全部加载到子组件
       ...intialStates,
     };
+
+    // 运行外部的加载完成方法
+    if(onLoad && typeof(onLoad) === 'function') {
+      onLoad(intialStates)
+    }
   }
 
   // 提交表单
@@ -173,7 +181,13 @@ export class CreinoxForm extends React.Component {
       this.state.loadingMonitor.size === 0 &&
       !this.state.loadingStep3ValuesPassedToComponents
     ) {
-      this.setState({ loadingStep3ValuesPassedToComponents: true });
+      this.setState({ loadingStep3ValuesPassedToComponents: true }, ()=> {
+        
+        // 运行外部的加载完成方法
+        if(this.props.onLoad && typeof(this.props.onLoad) === 'function') {
+          this.props.onLoad(this.state)
+        }
+      });
     }
   }
 
@@ -223,7 +237,7 @@ export class CreinoxForm extends React.Component {
   // step 1/3: generate empty items ******************************************** Form自己加载完毕
   componentDidMount() {
     // preConditions 是新增用的，是前提条件
-    const { onGetInjector, onGetRef } = this.props;
+    const { onGetInjector, onGetRef, defaultValues } = this.props;
 
     // 设置外部injector
     if (typeof onGetInjector === "function") {
@@ -264,6 +278,9 @@ export class CreinoxForm extends React.Component {
       });
     }
 
+    // 如果已经有defaultValues了(不是从数据库取的，是一开始就有的)， 直接塞进去
+    if (!_.isEmpty(defaultValues)) this.readValues(defaultValues);
+
     if (typeof onGetRef === "function") {
       onGetRef(() => {
         return this;
@@ -289,6 +306,7 @@ export class CreinoxForm extends React.Component {
     const { defaultValues, isFromEdit } = this.props;
     const { loadingStep1ValuesCacheReady } = this.state;
 
+ 
     if (snapshot) {
       // 如果是从toggle触发的更新，就用defaultValues覆盖state. 忽略cache
       this.readValues(snapshot);
@@ -304,10 +322,18 @@ export class CreinoxForm extends React.Component {
     }
   }
 
-  // 如果是详情页则运行以下代码：加载详情页数据，放在state里
+
+  componentWillUnmount() {
+    const {onUnmount} = this.props
+    if(onUnmount && typeof(onUnmount) === 'function') {
+      onUnmount()
+    }    
+  }
+
+  // 如果是详情页则运行以下代码：加载详情页数据，放在state里。
   readValues(defaultValues) {
-    const { dataModel } = this.props;
-    const newState = {};
+    const { dataModel, defaultValuesOnLoad } = this.props;
+    let newState = {};
 
     // 查看默认值列表。如果有对应的key，就赋值
     Object.keys(defaultValues).map((key) => {
@@ -333,6 +359,10 @@ export class CreinoxForm extends React.Component {
 
     if (defaultValues && defaultValues.hasOwnProperty("id")) {
       newState.id = defaultValues.id;
+    }
+
+    if(defaultValuesOnLoad && typeof(defaultValuesOnLoad) === 'function') {
+      newState = defaultValuesOnLoad(newState)
     }
 
     this.setState({
@@ -441,7 +471,6 @@ export class CreinoxForm extends React.Component {
       children,
       dataModel,
       errors,
-      isHideTool,
       isEnglish,
       isFromEdit,
       disabled,

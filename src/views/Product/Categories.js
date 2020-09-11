@@ -47,6 +47,7 @@ const CurrentPage = ({
   onPostCreate,
   onPutUpdate,
   onGetById,
+  onClear,
   pageName,
   dataById,
   errorById
@@ -335,7 +336,8 @@ const actionCreators = {
   onDelete: dataActions._delete_treeNode,
   onPutUpdate: dataActions.put_update,
   onPostCreate: dataActions.post_create,
-  onGetById: dataActions.get_byId
+  onGetById: dataActions.get_byId,
+  onClear: dataActions._clear
 };
 
 export default connect(mapState, actionCreators)(CurrentPage);

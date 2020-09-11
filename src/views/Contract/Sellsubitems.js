@@ -153,7 +153,7 @@ const FormInputs = ({ getSourceProductOnChange }) => {
           <Inputs.MyInput inputid="outerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(m³)" onShow={handleShowOuterVolume} />
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowOuterVolume} disabled={true}/>
         </Grid>
 
         <Grid item lg={3} md={6} xs={12}>
@@ -166,14 +166,14 @@ const FormInputs = ({ getSourceProductOnChange }) => {
           <Inputs.MyInput inputid="innerPackH" />
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume} />
+          <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume} disabled={true}/>
         </Grid>
 
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="netWeight" />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
-          <Inputs.MyInput label="净重合计(KGS)" onShow={handleTotalNetWeight} />
+          <Inputs.MyInput label="净重合计(KGS)" onShow={handleTotalNetWeight} disabled={true}/>
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Inputs.MyInput inputid="fcl20" />
@@ -186,6 +186,7 @@ const FormInputs = ({ getSourceProductOnChange }) => {
           <Inputs.MyInput
             label="毛重合计(KGS)"
             onShow={handleTotalGrossWeight}
+            disabled={true}
           />
         </Grid>
         
@@ -221,13 +222,27 @@ export default ({disabled, ...props}) => {
     setProductInjector(inj);
   };
   const handleGetSourceProductOnChange = async (item) => {
-
-    console.log("选中", item)
     const product_id = item ? item.product_id : 0;
-
     let itemInject = {
       commodity_id: item ? item.id: 0
     }
+
+    // 根据商品id取商品， 可以取到：参考价格，币种
+    if (item && item.id) {
+      try {
+
+        const response = await h_fkFetch("commodity", [item.id], "get_disposable_byId")
+        itemInject={
+          ...itemInject,
+          unitPrice: response.price,
+          currency_id: response.currency_id
+        }
+        
+      } catch (error) {
+        console.log("搜索不到对应商品", error)
+      }
+    }
+
 
     // 根据商品id取产品， 可以取到：规格，厚度, 单位重量, 材质，抛光
     if (item && product_id) {
@@ -257,7 +272,6 @@ export default ({disabled, ...props}) => {
             outerPackL: purchaseRes.outerPackL,
             outerPackW: purchaseRes.outerPackW,
             outerPackH: purchaseRes.outerPackH,
-  
             innerPackL: purchaseRes.innerPackL,
             innerPackW: purchaseRes.innerPackW,
             innerPackH: purchaseRes.innerPackH,

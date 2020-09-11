@@ -50,7 +50,7 @@ export const withSellcontract = (EDITURL = "/contract/sellcontracts") => {
       return () => {
         onClear();
       };
-    }, [onGetById, id]);
+    }, [onGetById, onClear, id]);
 
     // ********************************
 

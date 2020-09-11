@@ -735,26 +735,6 @@ export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
         ? column.onClick.bind(null, row.id)
         : null;
 
-      // 控制列宽，防止超过或者挤压, ID是例外
-      // const minWidth = column.width
-      //   ? column.width
-      //   : column.minWidth
-      //   ? column.minWidth
-      //   : dataModelColumn && dataModelColumn.minWidth
-      //   ? dataModelColumn.minWidth
-      //   : dataModelColumn && dataModelColumn.label === "ID"
-      //   ? 50
-      //   : 100;
-      // const maxWidth = column.width
-      //   ? column.width
-      //   : column.maxWidth
-      //   ? column.maxWidth
-      //   : dataModelColumn && dataModelColumn.maxWidth
-      //   ? dataModelColumn.maxWidth
-      //   : "auto";
-
-      // const width = column.width ? column.width: "auto"
-
       const cellProps = {
         align: column.align ? column.align : isNumber ? "right" : "left",
         style: {
@@ -769,17 +749,17 @@ export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
 
       rowObj[column.name] = {
         cellProps,
-        columnContent: columnContent,
+        columnContent,
       };
 
       // 
       if(columnOnWrap && typeof(columnOnWrap) ==='function') {
         isWrapUp = true
-
+        const tempContent = row[columnName]
         const lastColumnContent = wrapUpRow[column.name] &&  wrapUpRow[column.name].columnContent
         wrapUpRow[column.name] = {
           cellProps,
-          columnContent: columnOnWrap(columnContent, lastColumnContent),
+          columnContent: columnOnWrap(tempContent, lastColumnContent),
         }
       }
 
@@ -792,6 +772,15 @@ export const dataRowsPreprocess = (dataRows, headCells, dataModel) => {
   // 最后一列塞入
   if(isWrapUp) {
     wrapUpRow.id = -1
+
+    // onShowWrap 一下
+    headCells.map((column) => {
+      const columnOnShowWrap = column.onShowWrap;
+      if(columnOnShowWrap && typeof(columnOnShowWrap) === 'function'
+        && wrapUpRow[column.name]) {
+        wrapUpRow[column.name].columnContent = columnOnShowWrap(wrapUpRow[column.name].columnContent)
+      }
+    })
     listOnShowTemp.push(wrapUpRow);
   }
 

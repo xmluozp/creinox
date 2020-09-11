@@ -89,6 +89,7 @@ export const MyModalFormWithData = ({
   // redux
   dataModel,
   onGetById,
+  onClear,
   errorById,
   dataById,
   disabled
@@ -114,6 +115,7 @@ export const MyModalFormWithData = ({
         isFromEdit={isFromEdit}
         actionSubmit={onSubmit}
         dataModel={dataModel}
+        onUnmount={onClear}
         disabled = {disabled}
         {...modalFormProps}
       >

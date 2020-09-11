@@ -38,6 +38,7 @@ export const embedListProvider = (
     onPostCreate,
     onPutUpdate,
     onGetById,
+    onClear,
     errorById,
     dataById,
     rowButtons = [],
@@ -172,6 +173,7 @@ export const embedListProvider = (
           onSubmit={handleOnEditSubmit}
           rowId={selectedRowId}
           onGetById={onGetById}
+          onClear={onClear}
           errorById={errorById}
           dataById={dataById}
           title={TITLE_EDIT}
@@ -188,6 +190,7 @@ export const embedListProvider = (
           onSubmit={handleOnCreateSubmit}
           rowId={null}
           onGetById={onGetById}
+          onClear={onClear}
           errorById={errorById}
           title={TITLE_CREATE}
           modalFormProps={modalFormCreateProps}
@@ -214,6 +217,7 @@ export const embedListProvider = (
     onDelete: dataActions._delete,
     onGetBySearch: dataActions.get_bySearch,
     onGetById: dataActions.get_byId,
+    onClear: dataActions._clear,
     onPostCreate: dataActions.post_create,
     onPutUpdate: dataActions.put_update
   };

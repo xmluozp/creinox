@@ -8,7 +8,7 @@ export const ToolBar = ({ buttons = [] }) => {
     <Box display="flex" justifyContent="flex-end" mb={1} mt={1}>
       {buttons.map((item, idx) => {
 
-        const {onRender, onClick, url, label, color, disabled} = item
+        const {onRender, onClick, url, label, color, disabled, ...props} = item
 
         if(onRender) return onRender(`toolbar_${idx}`)
         const variables = {};
@@ -27,6 +27,7 @@ export const ToolBar = ({ buttons = [] }) => {
             variant="outlined"
             className="ml-1"
             key={`toolbar_${idx}`}
+            {...props}
           >
             {label}
           </Button>

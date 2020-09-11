@@ -55,6 +55,7 @@ const Login = ({ onLogin }) => {
                           label="选择要登录的用户"
                           optionLabel="name"
                           tableName="user"
+                          stateName="userLoginList"
                           actionName="get_loginUserList"
                           value={userid}
                           onChange={(a, b, c, item) => {

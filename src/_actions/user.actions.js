@@ -60,7 +60,7 @@ function get_loginUserList() {
         dispatch(loaded);
         // dispatch(done(response, CONST.GETDROPDOWN_SUCCESS));
  
-        // console.log("dropdown test", response)
+        console.log("dropdown test", response)
         let returnValue = []
         if (response && response.rows) {
           returnValue = response.rows.map(item => {
