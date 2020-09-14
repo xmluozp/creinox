@@ -1,5 +1,5 @@
 import { authHeader, handleResponse, h_queryString , h_nilFilter, h_nilFilter_update } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -19,10 +19,10 @@ export const commodityService = {
 
 const TABLENAME = "commodity";
 
-const URL = RESTURL + `/api/commodity`;
+const URL =  `/api/commodity`;
 
-const URL_PRODUCT = RESTURL + `/api/commodity_getproduct`;
-const URL_COMMODITY = RESTURL + `/api/commodity_byproduct`;
+const URL_PRODUCT =  `/api/commodity_getproduct`;
+const URL_COMMODITY =  `/api/commodity_byproduct`;
 
 // const url = 'http://localhost:3000/api/';
 function get_dropdown(pagination, searchTerms) {
@@ -35,7 +35,7 @@ function get_dropdown(pagination, searchTerms) {
     const queryString = h_queryString(pagination, searchTerms, TABLENAME, false)
 
     // const url = './dataset/commoditydata.json'
-    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
@@ -48,7 +48,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
     
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
       console.log("search service:", queryString);
-      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
@@ -61,7 +61,7 @@ function get_byId(commodity_id, product_id) {
       };
     
       console.log("getId service,", commodity_id, product_id);
-      return fetch(`${URL}/${commodity_id}/${product_id}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}/${commodity_id}/${product_id}`, requestOptions).then(handleResponse);
 }
 
 
@@ -75,7 +75,7 @@ function post_create(item) {
         body: JSON.stringify(h_nilFilter(item))
       };    
 
-      return fetch(`${URL}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 // TODO: 只更新名称和memo。如果没有meta就定义当前提交的product_id为meta，如果已经有就不动。
@@ -86,7 +86,7 @@ function put_update(item) {
         body: JSON.stringify(h_nilFilter_update(item))
       };
     
-      return fetch(`${URL}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 // TODO: 删除商品并且删除所有相关的many to many表
@@ -97,7 +97,7 @@ function _delete(id) {
       headers: authHeader()
     };
   
-    return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 // ==============================================================================
@@ -113,7 +113,7 @@ function get_bySearch_getProduct(pagination, searchTerms) {
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
       console.log("search service group:", queryString);
       console.log("search terms group:", searchTerms); 
-      return fetch(`${URL_PRODUCT}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL_PRODUCT)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 // TODO: url 取的是 commodity_product 这张表. 根据 product 搜索，返回 commodity. 排除Meta
@@ -127,7 +127,7 @@ function get_bySearch_getCommodity(pagination, searchTerms) {
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
       console.log("search service group:", queryString);
       console.log("search terms group:", searchTerms); 
-      return fetch(`${URL_COMMODITY}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL_COMMODITY)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 // 不可重复绑定. 只能有一个 meta。不存在换meta的可能性
@@ -138,7 +138,7 @@ function post_create_assemble(item) {
         body: JSON.stringify(h_nilFilter(item))
       };
       return fetch(
-        `${URL_COMMODITY}/${item.commodity_id}/${item.product_id}`,requestOptions).then(handleResponse);
+        `${getUrl(URL_COMMODITY)}/${item.commodity_id}/${item.product_id}`,requestOptions).then(handleResponse);
 }
 
 // 主产品meta也可解绑（下架）
@@ -149,7 +149,7 @@ function _delete_disassemble(commodity_id, product_id) {
       };
     
       return fetch(
-        `${URL_COMMODITY}/${commodity_id}/${product_id}`,
+        `${getUrl(URL_COMMODITY)}/${commodity_id}/${product_id}`,
         requestOptions
       ).then(handleResponse);
 }

@@ -1,5 +1,5 @@
 import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_update } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import axios from 'axios'
 
 export const paymentrequestService = {
@@ -15,10 +15,10 @@ export const paymentrequestService = {
 };
 
 const TABLENAME = "paymentRequest";
-const URL = RESTURL + `/api/paymentRequest`;
+const URL = `/api/paymentRequest`;
 
-const URL_APPROVE = RESTURL + `/api/paymentRequest_approve`;
-const URL_REJECT = RESTURL + `/api/paymentRequest_reject`;
+const URL_APPROVE = `/api/paymentRequest_approve`;
+const URL_REJECT = `/api/paymentRequest_reject`;
 
 function get_bySearch(pagination, searchTerms = {}) {
   const requestOptions = {
@@ -29,7 +29,7 @@ function get_bySearch(pagination, searchTerms = {}) {
   const queryString = h_queryString(pagination, searchTerms, TABLENAME);
   console.log("search service:", queryString);
 
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_byId(id) {
@@ -40,7 +40,7 @@ function get_byId(id) {
 
   console.log("getId service,", id);
 
-  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 // status 和通过人无法在这里修改
@@ -53,7 +53,7 @@ function post_create(item) {
 
   console.log("处理过的json",h_nilFilter(item))
 
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 // status 和通过人无法在这里修改
@@ -64,7 +64,7 @@ function put_update(item) {
     body: JSON.stringify(h_nilFilter_update(item))
   };
 
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -74,7 +74,7 @@ function _delete(id) {
     headers: authHeader()
   };
 
-  return fetch(`${URL}/${id}`, requestOptions)
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions)
     .then(handleResponse);
 }
 
@@ -86,7 +86,7 @@ function put_approve(item) {
     body: JSON.stringify(h_nilFilter_update(item))
   };
 
-  return fetch(`${URL_APPROVE}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL_APPROVE)}`, requestOptions).then(handleResponse);
 }
 
 // 审批拒绝
@@ -97,5 +97,5 @@ function put_reject(item) {
     body: JSON.stringify(h_nilFilter_update(item))
   };
 
-  return fetch(`${URL_REJECT}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL_REJECT)}`, requestOptions).then(handleResponse);
 }

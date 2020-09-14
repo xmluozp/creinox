@@ -1,5 +1,5 @@
 import { authHeader, handleResponse,  h_queryString, h_nilFilter, h_nilFilter_update } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import axios from 'axios'
 
 export const portService = {
@@ -13,7 +13,7 @@ export const portService = {
 
 const TABLENAME = "port";
 
-const URL = RESTURL + `/api/port`;
+const URL = `/api/port`;
 
 // const testurl1 = './dataset/portdata.json'
 // const testurl2 = './dataset/portdata_byId.json'
@@ -31,7 +31,7 @@ function get_dropdown(pagination, searchTerms = {}) {
 
   // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
   // return fetch('http://localhost:3000/', requestOptions).then(handleResponse);
 }
 
@@ -44,7 +44,7 @@ function get_bySearch(pagination, searchTerms = {}) {
   const queryString = h_queryString(pagination, searchTerms, TABLENAME);
 
   // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_byId(id) {
@@ -56,7 +56,7 @@ function get_byId(id) {
   console.log("getId service,", id);
 
   // return fetch(`${testurl2}?id=${id}`, requestOptions).then(handleResponse);
-  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
@@ -68,7 +68,7 @@ function post_create(item) {
 
   console.log("处理过的json",h_nilFilter(item))
 
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 function put_update(item) {
@@ -78,7 +78,7 @@ function put_update(item) {
     body: JSON.stringify(h_nilFilter_update(item))
   };
 
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -89,6 +89,6 @@ function _delete(id) {
     headers: authHeader()
   };
 
-  return fetch(`${URL}/${id}`, requestOptions)
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions)
     .then(handleResponse);
 }

@@ -1,5 +1,5 @@
 import { authHeader, handleResponse, h_queryString, h_formData } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -17,9 +17,8 @@ export const companyService = {
 
 const TABLENAME = "company";
 
-const URL = RESTURL + `/api/company`;
-const URL_GET_CODE = RESTURL + `/api/companyGetCode`;
-
+const URL = `/api/company`;
+const URL_GET_CODE = `/api/companyGetCode`;
 
 function get_disposable_dropdown(searchTerms) {
 
@@ -41,7 +40,7 @@ function get_disposable_dropdown(searchTerms) {
     */
 
     console.log("getdropdown with search:", searchTerms);
-    return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
@@ -55,7 +54,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
 
       console.log("search service:", searchTerms);
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
-      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
@@ -67,7 +66,7 @@ function get_byId(id) {
       };
     
       console.log("getId service,", id);
-      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
@@ -78,7 +77,7 @@ function post_create(item) {
         body: h_formData(item)
       };
       delete requestOptions.headers['Content-Type'];    
-      return fetch(`${URL}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 
 }
 
@@ -90,7 +89,7 @@ function put_update(item) {
         body: h_formData(item, true)
       };
       delete requestOptions.headers['Content-Type'];
-      return fetch(`${URL}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -100,7 +99,7 @@ function _delete(id) {
         headers: authHeader()
       };
     
-      return fetch(`${URL}/${id}`, requestOptions)
+      return fetch(`${getUrl(URL)}/${id}`, requestOptions)
         .then(handleResponse);
 }
 
@@ -116,5 +115,5 @@ function get_code(companyType, keyWord) {
     // const queryString = h_queryString({}, searchTerms, TABLENAME)
 
     console.log("get code:", companyType, keyWord);
-    return fetch(`${URL_GET_CODE}/${companyType}/${keyWord}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL_GET_CODE)}/${companyType}/${keyWord}`, requestOptions).then(handleResponse);
 }

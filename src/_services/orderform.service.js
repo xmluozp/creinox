@@ -1,5 +1,5 @@
 import { authHeader, handleResponse, h_queryString} from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -9,8 +9,8 @@ export const orderformService = {
 };
 
 const TABLENAME = "orderform";
-const URL = RESTURL + `/api/orderform`;
-const URL_DROPDOWN = RESTURL + `/api/orderform_dropDown`;
+const URL = `/api/orderform`;
+const URL_DROPDOWN = `/api/orderform_dropDown`;
 
 
 
@@ -25,7 +25,7 @@ function get_disposable_dropdown(searchTerms) {
     const queryString = h_queryString({}, searchTerms, TABLENAME)
 
     console.log("getdropdown with search:", searchTerms);
-    return fetch(`${URL_DROPDOWN}?${queryString}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL_DROPDOWN)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 function get_byId(id) {
@@ -38,5 +38,5 @@ function get_byId(id) {
       console.log("getId service,", id);
       // return fetch(`${testurl2}`, requestOptions).then(handleResponse);
 
-      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }

@@ -5,7 +5,7 @@ import {
   h_nilFilter,
   h_nilFilter_update
 } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -23,9 +23,8 @@ export const userService = {
 };
 
 const TABLENAME = "user";
-const URL = RESTURL + `/api/user`;
-const URL_LIST = RESTURL + `/api/userList`;
-
+const URL = `/api/user`;
+const URL_LIST = `/api/userList`;
 
 function login(nameAndPassword) {
   const requestOptions = {
@@ -56,7 +55,7 @@ function login(nameAndPassword) {
   //     resolve(response);
   // });
 
-  return fetch(`${URL}/login`, requestOptions)
+  return fetch(`${getUrl(URL)}/login`, requestOptions)
     .then(handleResponse)
     .then(response => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -71,7 +70,7 @@ function get_loginUserList() {
     headers: authHeader()
   };
 
-  return fetch(`${URL_LIST}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL_LIST)}`, requestOptions).then(handleResponse);
 }
 
 
@@ -104,7 +103,7 @@ function get_dropdown(pagination, searchTerms = {}) {
   console.log("get_all service:", searchTerms);
   const queryString = h_queryString(pagination, searchTerms, TABLENAME, false);
 
-  return fetch(`${URL_LIST}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL_LIST)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_bySearch(pagination, searchTerms) {
@@ -127,9 +126,10 @@ function get_bySearch(pagination, searchTerms) {
     headers: authHeader()
   };
 
+  console.log(getUrl(URL))
   const queryString = h_queryString(pagination, searchTerms, TABLENAME);
   console.log("search service:", queryString);
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_byId(id) {
@@ -148,7 +148,7 @@ function get_byId(id) {
   };
 
   console.log("getId service,", id);
-  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
@@ -157,7 +157,7 @@ function post_create(item) {
     headers: { ...authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify(h_nilFilter(item))
   };
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 function put_update(item) {
@@ -169,7 +169,7 @@ function put_update(item) {
 
   console.log("user update,", item)
 
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -180,5 +180,5 @@ function _delete(id) {
     headers: authHeader()
   };
 
-  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }

@@ -1,7 +1,8 @@
 import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
+
 
 export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
 
@@ -14,7 +15,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
 
           const queryString = h_queryString(pagination, searchTerms, tableName, false);
           console.log("faceless dropdown:", queryString);
-          return fetch(`${RESTURL}${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
+          return fetch(`${getUrl(targetUrl)}?${queryString}`, requestOptions).then(handleResponse);
 
     }      
     
@@ -27,7 +28,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
         
           const queryString = h_queryString(pagination, searchTerms, tableName);
           console.log("faceless search service:", queryString);
-          return fetch(`${RESTURL}${targetUrl}?${queryString}`, requestOptions).then(handleResponse);
+          return fetch(`${getUrl(targetUrl)}?${queryString}`, requestOptions).then(handleResponse);
 
     }
     
@@ -40,7 +41,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
           };
         
           console.log("getId service,", `${targetUrl}/${id}`);
-          return fetch(`${RESTURL}${targetUrl}/${id}`, requestOptions).then(handleResponse);
+          return fetch(`${getUrl(targetUrl)}/${id}`, requestOptions).then(handleResponse);
     }
     
     function post_create(item) {
@@ -53,7 +54,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
         
           console.log("处理过的json: create",h_nilFilter(item), targetUrl)
           
-          return fetch(`${RESTURL}${targetUrl}`, requestOptions).then(handleResponse);
+          return fetch(`${getUrl(targetUrl)}`, requestOptions).then(handleResponse);
     }
     
     function put_update(item) {
@@ -63,7 +64,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
             body: JSON.stringify(h_nilFilter_update(item))
           };
           console.log("处理过的json: update",h_nilFilter(item), targetUrl)
-          return fetch(`${RESTURL}${targetUrl}`, requestOptions).then(handleResponse);
+          return fetch(`${getUrl(targetUrl)}`, requestOptions).then(handleResponse);
     }
     
     // prefixed function name with underscore because delete is a reserved word in javascript
@@ -74,7 +75,7 @@ export const withFacelessService = (tableName="faceless",  targetUrl = "") => {
           headers: authHeader()
         };
       
-        return fetch(`${RESTURL}${targetUrl}/${id}`, requestOptions)
+        return fetch(`${getUrl(targetUrl)}/${id}`, requestOptions)
           .then(handleResponse);
     }
     

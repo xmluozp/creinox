@@ -7,7 +7,7 @@ import {
 } from '_helper';
 // import _ from 'lodash';
 // import axios from 'axios'
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 
 export const productService = {
   get_dropdown,
@@ -26,13 +26,11 @@ export const productService = {
 
 const TABLENAME = "product";
 
-const URL = RESTURL + `/api/product`;
-const URL_DROP_DOWN = RESTURL + `/api/product_dropDown`;
-const URL_DROP_DOWN_SELLCONTRACT = RESTURL + `/api/product_dropDown_sellContract`;
-const URL_DROP_DOWN_SELLSUBITEM = RESTURL + `/api/product_dropDown_sellSubitem`;
-
-
-const URL_COMPONENT = RESTURL + `/api/product_component`;
+const URL =  `/api/product`;
+const URL_DROP_DOWN =  `/api/product_dropDown`;
+const URL_DROP_DOWN_SELLCONTRACT = `/api/product_dropDown_sellContract`;
+const URL_DROP_DOWN_SELLSUBITEM = `/api/product_dropDown_sellSubitem`;
+const URL_COMPONENT = `/api/product_component`;
 
 function get_dropdown(pagination, searchTerms, isIncludeMeta) {
   // TODO: isIncludeMeta 会返回全部产品。否则返回没成为commodity的
@@ -55,7 +53,7 @@ function get_dropdown(pagination, searchTerms, isIncludeMeta) {
     false
   );
 
-  return fetch(`${URL_DROP_DOWN}?${queryString}`, requestOptions).then(
+  return fetch(`${getUrl(URL_DROP_DOWN)}?${queryString}`, requestOptions).then(
     handleResponse
   );
 }
@@ -80,7 +78,7 @@ function get_dropdown_fromSellcontract(pagination, searchTerms) {
     false
   );
 
-  return fetch(`${URL_DROP_DOWN_SELLCONTRACT}?${queryString}`, requestOptions).then(
+  return fetch(`${getUrl(URL_DROP_DOWN_SELLCONTRACT)}?${queryString}`, requestOptions).then(
     handleResponse
   );
 }
@@ -102,9 +100,10 @@ function get_dropdown_fromSellsubitem(preConditions) {
 
   // 如果直接搜id就从产品列表里搜，否则从商品关联里搜
   return fetch(`${
-    preConditions.id ? 
-    URL :
-    URL_DROP_DOWN_SELLSUBITEM
+    getUrl(
+      preConditions.id ? 
+      URL :
+      URL_DROP_DOWN_SELLSUBITEM)
   }?${queryString}`, requestOptions).then(
     handleResponse
   );
@@ -118,9 +117,9 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
 
   const queryString = h_queryString(pagination, searchTerms, TABLENAME);
 
-  console.log("search service:", `${URL}?${queryString}`);
+  console.log("search service:", `${getUrl(URL)}?${queryString}`);
 
-  return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_byId(id) {
@@ -130,7 +129,7 @@ function get_byId(id) {
   };
 
   console.log("getId service,", id);
-  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
@@ -142,7 +141,7 @@ function post_create(item) {
     body: h_formData(item)
   };
   delete requestOptions.headers["Content-Type"];
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 function put_update(item) {
@@ -153,7 +152,7 @@ function put_update(item) {
     body: h_formData(item, true)
   };
   delete requestOptions.headers["Content-Type"];
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -164,7 +163,7 @@ function _delete(id) {
     headers: authHeader()
   };
 
-  return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 // ==============================================================================
@@ -181,7 +180,7 @@ function get_bySearch_component(pagination, searchTerms) {
   console.log("search service:", queryString);
 
   //  有searchTerms.parent_id和有child_id两种
-  return fetch(`${URL_COMPONENT}?${queryString}`, requestOptions).then(
+  return fetch(`${getUrl(URL_COMPONENT)}?${queryString}`, requestOptions).then(
     handleResponse
   );
 }
@@ -195,7 +194,7 @@ function post_create_assemble(item) {
     body: JSON.stringify(h_nilFilter(item))
   };
   return fetch(
-    `${URL_COMPONENT}/${item.parent_id}/${item.child_id}`,
+    `${getUrl(URL_COMPONENT)}/${item.parent_id}/${item.child_id}`,
     requestOptions
   ).then(handleResponse);
 }
@@ -209,7 +208,7 @@ function _delete_disassemble(item) {
   };
 
   return fetch(
-    `${URL_COMPONENT}/${item.parent_id}/${item.child_id}`,
+    `${getUrl(URL_COMPONENT)}/${item.parent_id}/${item.child_id}`,
     requestOptions
   ).then(handleResponse);
 }

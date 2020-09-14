@@ -1,5 +1,5 @@
 import { authHeader, handleResponse, h_queryString, h_nilFilter, h_nilFilter_update } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -15,8 +15,8 @@ export const buycontractService = {
 };
 
 const TABLENAME = "buycontract";
-const URL = RESTURL + `/api/buycontract`;
-const URL_GET_LAST = RESTURL + `/api/buycontract_getlast`;
+const URL =`/api/buycontract`;
+const URL_GET_LAST =`/api/buycontract_getlast`;
 
 // 20200506: 好像没用
 // function get_dropdown(companyType) {
@@ -46,7 +46,7 @@ function get_bySearch(pagination, searchTerms, reNew = false) {
       console.log("search service:", queryString);
       // return fetch(`${testurl1}`, requestOptions).then(handleResponse);
 
-      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
@@ -60,7 +60,7 @@ function get_byId(id) {
       console.log("getId service,", id);
       // return fetch(`${testurl2}`, requestOptions).then(handleResponse);
 
-      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
 }
 
 // DONETODO: 取最新的一条
@@ -73,7 +73,7 @@ function get_last() {
   
     console.log("getLast service,");
 
-    return fetch(`${URL_GET_LAST}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL_GET_LAST)}`, requestOptions).then(handleResponse);
 }
 
 function post_create(item) {
@@ -86,7 +86,7 @@ function post_create(item) {
     console.log("处理过的json",h_nilFilter(item))
 
     // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
-    return fetch(`${URL}`, requestOptions).then(handleResponse);
+    return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 
@@ -97,7 +97,7 @@ function put_update(item) {
     body: JSON.stringify(h_nilFilter_update(item))
   };
   // return fetch(`${testurl2}`, requestOptions).then(handleResponse); 
-  return fetch(`${URL}`, requestOptions).then(handleResponse);
+  return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -108,7 +108,7 @@ function _delete(id) {
         headers: authHeader()
       };
     
-      return fetch(`${URL}/${id}`, requestOptions)
+      return fetch(`${getUrl(URL)}/${id}`, requestOptions)
         .then(handleResponse);
 }
 

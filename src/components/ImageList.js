@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import ImageSelectable from "./ImageSelectable";
 import RPGallary from "react-photo-gallery";
-// import {RESTURL} from '../config'
 
 // tileData 格式：数据库的image表的model
 export const ImageList = ({

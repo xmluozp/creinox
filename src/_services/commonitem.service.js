@@ -1,5 +1,5 @@
 import { authHeader, handleResponse, h_nilFilter_update, h_nilFilter, h_queryString } from '_helper';
-import {RESTURL} from '../config'
+import {getUrl} from '../config'
 // import _ from 'lodash';
 // import axios from 'axios'
 
@@ -14,8 +14,8 @@ export const commonitemService = {
 
 const TABLENAME = "commonitem";
 
-const URL = RESTURL + `/api/commonitem`;
-const URL_DROP_DOWN = RESTURL + `/api/commonitem_dropDown`;
+const URL = `/api/commonitem`;
+const URL_DROP_DOWN = `/api/commonitem_dropDown`;
 
 
 function get_dropdown(commonType, searchTerms) {
@@ -36,7 +36,7 @@ function get_dropdown(commonType, searchTerms) {
 
       const queryString = h_queryString({perPage: -1}, {...searchTerms,commonType: commonType}, TABLENAME, false);
         
-      return fetch(`${URL_DROP_DOWN}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL_DROP_DOWN)}?${queryString}`, requestOptions).then(handleResponse);
 }
 
 function get_bySearch(pagination, searchTerms) {
@@ -62,7 +62,7 @@ function get_bySearch(pagination, searchTerms) {
     
       const queryString = h_queryString(pagination, searchTerms, TABLENAME);
       console.log("search service:", queryString);
-      return fetch(`${URL}?${queryString}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}?${queryString}`, requestOptions).then(handleResponse);
 
 }
 
@@ -85,7 +85,7 @@ function get_byId(id) {
       };
     
       console.log("getId service,", id);
-      return fetch(`${URL}/${id}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}/${id}`, requestOptions).then(handleResponse);
     
 }
 
@@ -108,7 +108,7 @@ function post_create(item) {
     
       console.log("处理过的json",h_nilFilter(item))
     
-      return fetch(`${URL}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
     
 }
 
@@ -133,7 +133,7 @@ function put_update(item) {
 
       console.log("put update:", item)
     
-      return fetch(`${URL}`, requestOptions).then(handleResponse);
+      return fetch(`${getUrl(URL)}`, requestOptions).then(handleResponse);
     
 }
 
@@ -148,7 +148,7 @@ function _delete(id) {
       headers: authHeader()
     };
   
-    return fetch(`${URL}/${id}`, requestOptions)
+    return fetch(`${getUrl(URL)}/${id}`, requestOptions)
       .then(handleResponse);
 }
 
