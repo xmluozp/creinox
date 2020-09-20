@@ -150,6 +150,11 @@ export const CreinoxTable = ({
       if(props.history && props.history.action === "POP" && query) {
         p = query.pagination;
         s = query.searchTerms;
+        setPage(p.page)
+        setPerPage(p.perPage)
+        setOrder(p.order)
+        setOrderBy(p.orderBy)
+
       } else {
         p = defaultPagination;
         s = {}
@@ -214,7 +219,7 @@ export const CreinoxTable = ({
 
   const handleChangePage = (e, newPage) => {
 
-    console.log("change page", page, newPage)
+    console.log("change page: page, newPage", page, newPage)
     if (page === newPage) return;
 
     setPage(newPage);

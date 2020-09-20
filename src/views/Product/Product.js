@@ -354,6 +354,7 @@ export const withProduct = () => {
                   {basicProperties}
                 </TabPanel>
                 <TabPanel value={tabSelect} index={1}>
+                  <span className="tableTip">根据 【工厂 + 币种 + 备注】 组合，显示新录入的报价</span>
                   <EmbedProductPurchaseGroup
                     rowButtons={embedRowButtons}
                     preConditions={{ product_id: id }}

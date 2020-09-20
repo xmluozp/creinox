@@ -70,6 +70,7 @@ export const withMouldcontractList = (
   // =============================== Search Panel
   const searchBar = (
     <>
+      <Inputs.MyInputRange inputid="totalPrice" />
       <Inputs.MyInput inputid="code" />
       <Inputs.MyDateRangePicker inputid="activeAt" />
       <Inputs.MyInput inputid="order_memo" />

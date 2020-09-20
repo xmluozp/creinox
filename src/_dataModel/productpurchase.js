@@ -33,6 +33,7 @@ export const productpurchaseModel = {
         innerPackL:  {label: "内包装长(CM)",     type: _DATATYPES.DECIMAL},   
         innerPackW:  {label: "宽(CM)",     type: _DATATYPES.DECIMAL},   
         innerPackH:  {label: "高(CM)",     type: _DATATYPES.DECIMAL},   
+        memo:  {label: "备注",     type: _DATATYPES.VARCHAR},   
 
 
         updateAt:     {label: "最后操作时间", type: _DATATYPES.DATETIME},

@@ -2,6 +2,16 @@
     color: #FF0000
 } */
 
+
+.tableTip{
+
+    color: #ffffff;
+    background-color: #c4bcb1;
+    padding: 4px 8px 4px 8px;
+    border-radius: 4px;
+    font-size: .8em
+}
+
 input, textarea, select {
     color: #0037ad !important;
 }

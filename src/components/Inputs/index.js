@@ -325,9 +325,11 @@ const MyInput = React.memo(
         }
         rows={rows}
         rowsMax={rowsMax}
-        inputProps={{
+        inputProps={{step: 0.01,
           style: { ...inputStyle },
         }}
+
+
         InputProps={ InputProps ||
            {
             endAdornment: onGetDefault && <InputAdornment position="end" onClick={handleGetDefault}>
@@ -417,7 +419,7 @@ const MyInputRange = React.memo(
           />
         </Grid>
         </Grid>
-        : <Grid container><Grid item xs={12}>
+        : <Grid container><Grid item xs={12} className="mb-2 mt-2">
           <Button variant="outlined" color="primary" onClick= {() => taggleIsSearch(true)}>输入{label || ""}范围</Button></Grid></Grid>
   }
 );

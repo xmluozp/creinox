@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 // import _ from "lodash";
 // import { format } from 'date-fns'
@@ -8,7 +8,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { ICONS } from "_constants";
 import { h_confirm, history } from "_helper";
-import { CreinoxTable,Inputs, withDatatableStore } from "components";
+import { CreinoxTable,Inputs, withDatatableStore, ToolBar } from "components";
 
 // ******************************************************************* page setting
 import { paymentrequestActions as dataActions } from "_actions";
@@ -68,6 +68,9 @@ export const withTablePage = () => {
    * @param {} param0
    */
   const CurrentPage = ({ onDelete, pageName, ...props }) => {
+
+    const [showAll, setShowAll] = useState(false)
+
     // ============================================= handles
     const handleOnDelete = (id, row, pagination, searchTerms) => {
       h_confirm("是否删除？").then(resolve => {
@@ -99,18 +102,26 @@ export const withTablePage = () => {
       { label: "Create", url: CREATEURL, color: "success", icon: ICONS.ADD() }
     ];
 
+    const topButtons = [
+      { label: "只显示待审批", onClick:()=> {setShowAll(false)}, color: "primary", variant: showAll ? "outlined": "contained"},
+      { label: "显示全部", onClick:()=> {setShowAll(true)},color: "secondary", variant: showAll ? "contained": "outlined"},
+    ];
+
     // ============================================= Render
     return (
       <>
+      <ToolBar buttons={topButtons} />
         <MyTable
         {...props}
           onRowDbClick={handleOnEdit}
-          tableTitle={pageName}
+          preConditions = {showAll ? {status: 1} : {status: 0}}
+          tableTitle={(showAll ? "所有":"待审批") + pageName}
           headCells={headCells}
           dataModel={dataModel}
           rowButtons={rowButtons}
           toolbarButtons={toolbarButtons}
           searchBar={searchBar}
+          toggle={showAll}
         />
       </>
     );

@@ -10,7 +10,7 @@ export const enumsLabel = {
     direction: ["寄件", "收件"],  
     expressType: ["文件", "包裹"],
     requestType: ["合同付款", "业务付款"],
-    status: ["提交", "通过", "拒绝"]
+    status: ["待审批", "通过", "拒绝"]
 }
 
 

@@ -16,11 +16,12 @@ const DATA_STORE = "productpurchaseData";
 // ============================================= render cell
 const headCells = [
   { name: "id", disablePadding: true, className: "ml-2" },
+  { name: "company_id" },
+  { name: "currency_id" },
+  { name: "memo" },
   { name: "activeAt" },
   { name: "code" },
-  { name: "company_id" },
   { name: "buyPrice" },
-  { name: "currency_id" },
   { name: "expireAt" },
   { name: "spec1" },
   { name: "texture_id" },
@@ -161,7 +162,9 @@ const FormInputs = () => {
           <Inputs.MyInput label="体积(m³)" onShow={handleShowInnerVolume}/>
         </Grid>
 
-
+        <Grid item lg={12} md={12} xs={12}>
+          <Inputs.MyInput inputid="memo"/>
+        </Grid>
 
         <Grid item lg={6} xs={12}>
           <Inputs.MyComboboxFK

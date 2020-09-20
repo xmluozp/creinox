@@ -24,14 +24,14 @@ export const allAuthList = [
     "expressOrder",
     "userLog",
     "confirm-payment",
-    "confirm-contract"
+    "confirm-contract",
   ];
     
   export const allAuthListLabel = [
     "所有权限(超级管理员用)",
-    "系统",
+    "其他选项与分类",
     "用户",
-    "测试",
+    "测试(内部专用)",
     "国家地区",
     "通用选项",
     "图片",
@@ -53,7 +53,7 @@ export const allAuthList = [
     "快递单",
     "系统用户操作日志",
     "审批付款",
-    "确认合同"
+    "确认合同",
   ];
   
   // 根据这个列表生成object用于下拉选项

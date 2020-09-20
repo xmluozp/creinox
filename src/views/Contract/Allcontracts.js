@@ -7,7 +7,6 @@ import formatCurrency from "format-currency";
 
 //------redux
 import { connect } from "react-redux";
-
 import { ICONS, enums } from "_constants";
 import { h_confirm, history, h_datetimeToJs_middle } from "_helper";
 import {
@@ -67,17 +66,15 @@ export const withSellcontractList = (
   // =============================== Search Panel
   const searchBar = (
     <>
+      <Inputs.MyInputRange inputid="totalPrice" />
       <Inputs.MyInput inputid="code" />
       <Inputs.MyDateRangePicker inputid="activeAt" />
-      <Inputs.MyInput inputid="ename" />
       <Inputs.MyComboboxAsyncFK
         inputid="buyer_company_id"
         tableName="company"
         actionName="get_disposable_dropdown"
         preConditions={{ companyType: enums.companyType.overseasCustomer }}
       />
-
-
       <Inputs.MyComboboxFK
         inputid="follower_id"
         stateName="followerDropdown"

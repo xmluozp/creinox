@@ -62,9 +62,9 @@ export const withBuycontractList = (
   // =============================== Search Panel
   const searchBar = (
     <>
+    <Inputs.MyInputRange inputid="totalPrice" />
     <Inputs.MyInput  inputid="code"/>
     <Inputs.MyDateRangePicker inputid="activeAt" />
-    <Inputs.MyInput  inputid="ename"/>
     <Inputs.MyComboboxAsyncFK
         inputid="seller_company_id"
         tableName="company"

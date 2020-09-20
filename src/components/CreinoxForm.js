@@ -430,7 +430,7 @@ export class CreinoxForm extends React.Component {
     }
 
     // 打印按钮
-    if (dataModel && dataModel.template) {
+    if (!isHideTool && dataModel && dataModel.template) {
       renderButtons.push( <Print dataModel={dataModel} id={this.state.id} />);
     }
 

@@ -208,7 +208,7 @@ const navs = {
       name: "用户权限",
       url: "#",
       icon: "icon-puzzle",
-      authTag: "setting",
+      authTag: "user",
       children: [
         {
           name: "用户",
@@ -223,15 +223,15 @@ const navs = {
       ],
     },
     {
-      name: "内部数据",
+      name: "系统日志",
       url: "#",
       icon: "icon-puzzle",
-      authTag: "setting",
+      authTag: "userLog",
       children: [
         {
           name: "已上传图片",
           url: "/image/images",
-          authTag: "image",
+          authTag: "userLog",
         },        {
           name: "操作日志",
           url: "/users/userLogs",

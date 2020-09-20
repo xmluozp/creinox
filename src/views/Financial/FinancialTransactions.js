@@ -67,6 +67,9 @@ export const withTablePage = () => {
   // 搜索框
   const searchBar = (
     <>
+      <Inputs.MyInputRange inputid="amount_in" />
+      <Inputs.MyInputRange inputid="amount_out" />
+
       <Inputs.MySwitch inputid="isContractPayment" />
       <Inputs.MyInput inputid="tt_transUse" />
       <Inputs.MyComboboxAsyncFK
